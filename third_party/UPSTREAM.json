@@ -21,5 +21,15 @@
   "libpng": {
     "notes": "Copied from SDL3_image external libpng for FreeType PNG/CBDT",
     "source": "sdl3_image/external/libpng"
+  },
+  "sdl3": {
+    "repository": "https://github.com/libsdl-org/SDL.git",
+    "tag": "release-3.2.8",
+    "notes": "Copied from pp-browser third_party/sdl3 for Tier B"
+  },
+  "sdl3_image": {
+    "repository": "https://github.com/libsdl-org/SDL_image.git",
+    "tag": "release-3.2.4",
+    "notes": "Copied from pp-browser third_party/sdl3_image; external/ codecs committed as source"
   }
 }
