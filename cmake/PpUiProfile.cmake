@@ -14,6 +14,9 @@ function(pp_ui_apply_rmlui_profile)
 
   if(PP_UI_BUILD_TESTS)
     set(RMLUI_TESTS ON CACHE BOOL "Build RmlUi unit tests" FORCE)
+    # Force SDL_GL3 so CI/Linux never auto-selects GLFW.
+    set(RMLUI_BACKEND SDL_GL3 CACHE STRING "RmlUi samples/tests backend" FORCE)
+    set(RMLUI_SDL_VERSION_MAJOR "3" CACHE STRING "SDL major version for RmlUi backends" FORCE)
   elseif(NOT RMLUI_TESTS)
     set(RMLUI_TESTS OFF CACHE BOOL "Build RmlUi unit tests" FORCE)
   endif()

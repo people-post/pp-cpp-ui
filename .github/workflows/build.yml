@@ -1,6 +1,6 @@
 name: build
 
-# Multi-platform CI for pp-cpp-ui (RmlUi fork + font/SVG deps).
+# Multi-platform CI for pp-cpp-ui (RmlUi + SDL/GL backend + unit tests).
 
 on:
   push:
@@ -29,7 +29,14 @@ jobs:
 
       - name: Install Linux deps
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libpng-dev zlib1g-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libpng-dev zlib1g-dev \
+            libx11-dev libxext-dev libxcursor-dev libxinerama-dev \
+            libxi-dev libxrandr-dev libxfixes-dev \
+            libgl-dev \
+            libpulse-dev libasound2-dev
 
       - name: Configure
         shell: bash
@@ -39,9 +46,13 @@ jobs:
             generator=(-G Ninja)
           fi
           cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
-            -DPP_UI_BUILD_TESTS=OFF \
+            -DPP_UI_BUILD_TESTS=ON \
             "${generator[@]}"
 
-      - name: Build RmlUi core
+      - name: Build backend + unit tests
         shell: bash
-        run: cmake --build build --config Release -j 2 --target rmlui_core
+        run: cmake --build build --config Release -j 2 --target pp_ui_backend rmlui_unit_tests
+
+      - name: Run unit tests
+        shell: bash
+        run: ctest --test-dir build -C Release --output-on-failure
