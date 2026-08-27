@@ -1,0 +1,47 @@
+name: build
+
+# Multi-platform CI for pp-cpp-ui (RmlUi fork + font/SVG deps).
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022, macos-14]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        if: runner.os == 'Windows'
+
+      - name: Install Windows deps
+        if: runner.os == 'Windows'
+        run: choco install ninja --no-progress -y
+
+      - name: Install Linux deps
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libpng-dev zlib1g-dev
+
+      - name: Configure
+        shell: bash
+        run: |
+          generator=()
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            generator=(-G Ninja)
+          fi
+          cmake -B build -S . -DCMAKE_BUILD_TYPE=Release \
+            -DPP_UI_BUILD_TESTS=OFF \
+            "${generator[@]}"
+
+      - name: Build RmlUi core
+        shell: bash
+        run: cmake --build build --config Release -j 2 --target rmlui_core
