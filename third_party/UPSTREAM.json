@@ -1,0 +1,25 @@
+{
+  "freetype": {
+    "repository": "https://github.com/freetype/freetype.git",
+    "tag": "VER-2-13-3",
+    "commit": "42608f77f20749dd6ddc9e0536788eaad70ea4b5"
+  },
+  "lunasvg": {
+    "repository": "https://github.com/sammycage/lunasvg.git",
+    "tag": "v3.5.0",
+    "commit": "83c58df8103dc7dca423dfd824992af94d49bed6"
+  },
+  "harfbuzz": {
+    "repository": "https://github.com/harfbuzz/harfbuzz.git",
+    "tag": "9.0.0",
+    "notes": "Vendored for RmlUi HarfBuzz font engine"
+  },
+  "zlib": {
+    "notes": "Copied from SDL3_image external zlib for FreeType PNG/CBDT",
+    "source": "sdl3_image/external/zlib"
+  },
+  "libpng": {
+    "notes": "Copied from SDL3_image external libpng for FreeType PNG/CBDT",
+    "source": "sdl3_image/external/libpng"
+  }
+}
