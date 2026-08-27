@@ -1,2 +1,2 @@
-# app-cpp-ui
+# pp-cpp-ui
 Ui library for cpp projects
