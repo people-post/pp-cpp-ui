@@ -6,18 +6,17 @@ function(pp_ui_add_vendored_deps)
   # FreeType needs zlib+libpng for Noto Color Emoji CBDT bitmaps.
   set(FT_DISABLE_HARFBUZZ ON CACHE BOOL "" FORCE)
   set(FT_DISABLE_BZIP2 ON CACHE BOOL "" FORCE)
+  set(FT_DISABLE_BROTLI ON CACHE BOOL "" FORCE)
+  set(FT_REQUIRE_BROTLI OFF CACHE BOOL "" FORCE)
   set(FT_DISABLE_PNG OFF CACHE BOOL "" FORCE)
   set(FT_REQUIRE_PNG ON CACHE BOOL "" FORCE)
   set(FT_DISABLE_ZLIB OFF CACHE BOOL "" FORCE)
   set(FT_REQUIRE_ZLIB ON CACHE BOOL "" FORCE)
 
-  if(WIN32)
-    set(ZLIB_FOUND FALSE)
-    set(PNG_FOUND FALSE)
-  else()
-    find_package(ZLIB QUIET)
-    find_package(PNG QUIET)
-  endif()
+  # Always vendor zlib+libpng. find_package(PNG) on macOS picks Homebrew shared
+  # dylibs that Developer ID / notarized apps cannot load (Team ID mismatch).
+  set(ZLIB_FOUND FALSE)
+  set(PNG_FOUND FALSE)
 
   if(NOT ZLIB_FOUND OR NOT PNG_FOUND)
     message(STATUS "pp-cpp-ui: vendoring zlib+libpng for FreeType color emoji")
