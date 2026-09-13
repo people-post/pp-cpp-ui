@@ -2,7 +2,7 @@
 #include <ui/layout/Box.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/dom/Element.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/Profiling.h>

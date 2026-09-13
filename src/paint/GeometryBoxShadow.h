@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/paint/RenderBox.h>
 #include <ui/base/Types.h>
 namespace ui {

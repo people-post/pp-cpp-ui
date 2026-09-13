@@ -74,9 +74,7 @@ CORE_CONSUMERS = {"core", "svg", "debugger", "platform", "render"}
 # Tracked debt from the first ADR 002 baseline (module pair → reason).
 # Shrink this set; do not grow it without updating ADR 002.
 DEBT_ALLOWLIST: dict[tuple[str, str], str] = {
-    ("base", "style"): "Variant/TypeConverter/NumericValue hold style types",
     ("base", "core"): "Clock/Log use Core::GetSystemInterface",
-    ("paint", "style"): "GeometryBoxShadow uses DecorationTypes",
     ("paint", "layout"): "Mesh/geometry helpers take Box",
     ("paint", "text"): "MeshUtilities uses FontEngineInterface",
     ("paint", "dom"): "GeometryBoxShadow uses Element",

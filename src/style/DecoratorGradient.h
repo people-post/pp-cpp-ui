@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/style/Decorator.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/ID.h>

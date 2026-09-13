@@ -11,7 +11,7 @@
 ```text
 include/ui/
   config/            Build-time config
-  base/              Types, math, containers, utilities
+  base/              Types, math, containers, utilities, Unit/Animation/decoration values
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model
   dom/               Element, document, context, events, factory
@@ -63,6 +63,9 @@ L12  platform | render    owned backends
    and backends (`platform`, `render`) may include `core`. Lower modules must
    not call `Core::Get*()`; prefer injection via `Context` / interfaces.
 3. **`base` stays dumb.** No includes of `style` or any higher module.
+   Value types used by `Variant` (`Unit`, `Animation`/`TransitionList`,
+   `DecorationTypes`) live in `base`. Style-only `TypeConverter` specializations
+   live in `src/style/TypeConverterStyle.cpp`.
 4. **`style` does not own DOM.** No `style → dom` (apply style through DOM-owned
    APIs or narrow callbacks).
 5. **`dom` does not know concrete widgets, xml, or data.** Factory registration

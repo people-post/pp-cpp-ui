@@ -86,6 +86,7 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/TransformState.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TransformState.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TransformUtilities.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TypeConverterStyle.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TransformUtilities.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/UserAgentStyleSheet.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/UserAgentStyleSheet.h"

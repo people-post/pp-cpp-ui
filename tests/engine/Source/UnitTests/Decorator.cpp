@@ -2,7 +2,7 @@
 #include "../Common/TestsInterface.h"
 #include "../Common/TestsShell.h"
 #include "../Common/TypesToString.h"
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>

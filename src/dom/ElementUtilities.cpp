@@ -2,7 +2,7 @@
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
 #include <ui/core/Core.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementScroll.h>
 #include <ui/dom/Factory.h>

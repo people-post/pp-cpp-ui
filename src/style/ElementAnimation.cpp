@@ -1,5 +1,5 @@
 #include "ElementAnimation.h"
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/style/Decorator.h>
 #include <ui/dom/Element.h>
 #include <ui/style/Filter.h>

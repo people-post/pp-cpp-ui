@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/style/Animation.h>
+#include <ui/base/Animation.h>
 #include <ui/base/Header.h>
 #include <ui/base/TypeConverter.h>
 #include <ui/base/Types.h>

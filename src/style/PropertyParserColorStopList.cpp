@@ -1,6 +1,6 @@
 #include "PropertyParserColorStopList.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <string.h>
 
 namespace ui {

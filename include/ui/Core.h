@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/style/Animation.h>
+#include <ui/base/Animation.h>
 #include <ui/layout/Box.h>
 #include <ui/paint/CallbackTexture.h>
 #include <ui/paint/CompiledFilterShader.h>
@@ -13,7 +13,7 @@
 #include <ui/data/DataTypeRegister.h>
 #include <ui/data/DataTypes.h>
 #include <ui/data/DataVariable.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/style/Decorator.h>
 #include <ui/style/EffectSpecification.h>
 #include <ui/dom/Element.h>
@@ -67,7 +67,7 @@
 #include <ui/base/TypeConverter.h>
 #include <ui/base/Types.h>
 #include <ui/paint/UniqueRenderResource.h>
-#include <ui/style/Unit.h>
+#include <ui/base/Unit.h>
 #include <ui/paint/Vertex.h>
 #include <ui/xml/XMLNodeHandler.h>
 #include <ui/xml/XMLParser.h>

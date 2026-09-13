@@ -1,7 +1,7 @@
 #include <ui/render/Renderer_GL3.h>
 #include <ui/render/GlBackend.h>
 #include <ui/core/Core.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/core/FileInterface.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Log.h>

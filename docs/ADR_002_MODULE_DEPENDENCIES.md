@@ -53,11 +53,12 @@ without defining layers, allowed bridges, or enforcement.
 ## Consequences
 
 - Refactors prioritize clearing allowlisted debt in this order:
-  1. `base → style`
+  1. ~~`base → style`~~ (cleared: `Unit` / `Animation` / `DecorationTypes` live in `base`;
+     style-only `TypeConverter` specializations live in `src/style/TypeConverterStyle.cpp`)
   2. `style → dom` (and other `style` upward edges)
   3. `* → core` singleton use below plugins
   4. `dom → widgets` / `dom → xml` / `dom → data`
-  5. Tighten paint/layout/text bridges
+  5. Tighten paint/layout/text bridges (`paint → style` also cleared with DecorationTypes move)
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

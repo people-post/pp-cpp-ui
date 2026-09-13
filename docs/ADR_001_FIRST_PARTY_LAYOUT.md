@@ -59,3 +59,10 @@ at `include/ui/` for convenience.
 Module include edges follow the DAG in [ADR 002](ADR_002_MODULE_DEPENDENCIES.md)
 (`scripts/check_module_deps.py`).
 
+## Amendment — style value types in base
+
+`Unit`, `Animation` / `TransitionList`, and `DecorationTypes` (`ColorStop`,
+`BoxShadow`) live under `include/ui/base/` so `base` does not include `style`.
+Style-only `TypeConverter` specializations are implemented in
+`src/style/TypeConverterStyle.cpp`.
+

@@ -1,5 +1,5 @@
 #include "PropertyParserBoxShadow.h"
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/base/StringUtilities.h>
 namespace ui {
 

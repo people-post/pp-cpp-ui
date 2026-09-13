@@ -1,7 +1,7 @@
 #include "GeometryBoxShadow.h"
 #include <ui/layout/Box.h>
 #include <ui/paint/CompiledFilterShader.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/dom/Element.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Math.h>

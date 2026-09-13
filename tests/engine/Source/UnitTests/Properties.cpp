@@ -1,7 +1,7 @@
 #include "../Common/TestsInterface.h"
 #include <ui/dom/Context.h>
 #include <ui/core/Core.h>
-#include <ui/style/DecorationTypes.h>
+#include <ui/base/DecorationTypes.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/style/PropertyDictionary.h>
