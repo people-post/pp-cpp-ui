@@ -79,10 +79,8 @@ DEBT_ALLOWLIST: dict[tuple[str, str], str] = {
     ("paint", "dom"): "GeometryBoxShadow uses Element",
     ("layout", "text"): "inline layout uses ElementText / fonts",
     ("text", "widgets"): "ElementText/SelectionController ↔ ElementSelectableText",
-    ("dom", "xml"): "Document/Context load via Stream*",
+    ("dom", "xml"): "Document/Context load via Stream* / XMLParser",
     ("dom", "data"): "Context/Element hold DataModel",
-    ("dom", "widgets"): "Factory/scroll concrete widgets",
-    ("dom", "core"): "widespread Core::Get*()",
 }
 
 INC_RE = re.compile(r'#\s*include\s+[<"]([^>"]+)[>"]')

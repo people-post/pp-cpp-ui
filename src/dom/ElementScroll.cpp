@@ -6,7 +6,7 @@
 #include <ui/dom/Event.h>
 #include <ui/dom/Factory.h>
 #include "layout/LayoutDetails.h"
-#include "widgets/WidgetScroll.h"
+#include "WidgetScroll.h"
 
 namespace ui {
 

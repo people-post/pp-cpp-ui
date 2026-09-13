@@ -1,17 +1,10 @@
 #include <ui/dom/Factory.h>
-#include <ui/core/Core.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/ContextInstancer.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementInstancer.h>
 #include <ui/text/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
-#include <ui/widgets/ElementForm.h>
-#include <ui/widgets/ElementFormControlInput.h>
-#include <ui/widgets/ElementFormControlSelect.h>
-#include <ui/widgets/ElementFormControlTextArea.h>
-#include <ui/widgets/ElementProgress.h>
-#include <ui/widgets/ElementTabSet.h>
 #include <ui/dom/EventListenerInstancer.h>
 #include <ui/xml/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
@@ -19,8 +12,8 @@
 #include <ui/base/SystemInterface.h>
 #include "ContextInstancerDefault.h"
 #include "base/ControlledLifetimeResource.h"
-#include "data/DataControllerDefault.h"
-#include "data/DataViewDefault.h"
+#include "data/DataController.h"
+#include "data/DataView.h"
 #include "DecoratorGradient.h"
 #include "DecoratorNinePatch.h"
 #include "DecoratorShader.h"
@@ -30,12 +23,6 @@
 #include "DecoratorTiledImage.h"
 #include "DecoratorTiledVertical.h"
 #include "ElementHandle.h"
-#include "widgets/ElementImage.h"
-#include "widgets/ElementLabel.h"
-#include "widgets/ElementTextSelection.h"
-#include "widgets/XMLNodeHandlerSelect.h"
-#include "widgets/XMLNodeHandlerTabSet.h"
-#include "widgets/XMLNodeHandlerTextArea.h"
 #include "EventInstancerDefault.h"
 #include "FilterBasic.h"
 #include "FilterBlur.h"
@@ -44,14 +31,10 @@
 #include "text/FontEffectGlow.h"
 #include "text/FontEffectOutline.h"
 #include "text/FontEffectShadow.h"
-#include "core/PluginRegistry.h"
+#include "dom/PluginRegistry.h"
 #include "xml/StreamFile.h"
 #include "StyleSheetFactory.h"
 #include "xml/TemplateCache.h"
-#include "xml/XMLNodeHandlerBody.h"
-#include "xml/XMLNodeHandlerDefault.h"
-#include "xml/XMLNodeHandlerHead.h"
-#include "xml/XMLNodeHandlerTemplate.h"
 #include "xml/XMLParseTools.h"
 #include <algorithm>
 
@@ -62,24 +45,11 @@ struct DefaultInstancers {
 	UniquePtr<ContextInstancer> context_default;
 	UniquePtr<EventInstancer> event_default;
 
-	// Basic elements
+	// Basic elements (widget/data/XML defaults registered from core)
 	ElementInstancerElement element_default;
 	ElementInstancerText element_text;
-	ElementInstancerGeneric<ElementImage> element_img;
 	ElementInstancerGeneric<ElementHandle> element_handle;
 	ElementInstancerGeneric<ElementDocument> element_body;
-
-	// Control elements
-	ElementInstancerGeneric<ElementForm> form;
-	ElementInstancerGeneric<ElementFormControlInput> input;
-	ElementInstancerGeneric<ElementFormControlSelect> select;
-	ElementInstancerGeneric<ElementLabel> element_label;
-
-	ElementInstancerGeneric<ElementFormControlTextArea> textarea;
-	ElementInstancerGeneric<ElementTextSelection> selection;
-	ElementInstancerGeneric<ElementTabSet> tabset;
-
-	ElementInstancerGeneric<ElementProgress> progress;
 
 	// Decorators
 	DecoratorTextInstancer decorator_text;
@@ -106,25 +76,6 @@ struct DefaultInstancers {
 	FontEffectGlowInstancer font_effect_glow;
 	FontEffectOutlineInstancer font_effect_outline;
 	FontEffectShadowInstancer font_effect_shadow;
-
-	// Data binding views
-	DataViewInstancerDefault<DataViewAttribute> data_view_attribute;
-	DataViewInstancerDefault<DataViewAttributeIf> data_view_attribute_if;
-	DataViewInstancerDefault<DataViewClass> data_view_class;
-	DataViewInstancerDefault<DataViewIf> data_view_if;
-	DataViewInstancerDefault<DataViewVisible> data_view_visible;
-	DataViewInstancerDefault<DataViewRml> data_view_rml;
-	DataViewInstancerDefault<DataViewStyle> data_view_style;
-	DataViewInstancerDefault<DataViewText> data_view_text;
-	DataViewInstancerDefault<DataViewValue> data_view_value;
-	DataViewInstancerDefault<DataViewChecked> data_view_checked;
-	DataViewInstancerDefault<DataViewAlias> data_view_alias;
-
-	DataViewInstancerDefault<DataViewFor> structural_data_view_for;
-
-	// Data binding controllers
-	DataControllerInstancerDefault<DataControllerEvent> data_controller_event;
-	DataControllerInstancerDefault<DataControllerValue> data_controller_value;
 };
 
 struct FactoryData {
@@ -172,25 +123,11 @@ void Factory::Initialise()
 	if (!event_listener_instancer)
 		event_listener_instancer = nullptr;
 
-	// Basic element instancers
+	// Basic element instancers (widget/data/XML defaults registered from core)
 	RegisterElementInstancer("*", &default_instancers.element_default);
-	RegisterElementInstancer("img", &default_instancers.element_img);
 	RegisterElementInstancer("#text", &default_instancers.element_text);
 	RegisterElementInstancer("handle", &default_instancers.element_handle);
 	RegisterElementInstancer("body", &default_instancers.element_body);
-
-	// Control element instancers
-	RegisterElementInstancer("form", &default_instancers.form);
-	RegisterElementInstancer("input", &default_instancers.input);
-	RegisterElementInstancer("select", &default_instancers.select);
-	RegisterElementInstancer("label", &default_instancers.element_label);
-
-	RegisterElementInstancer("textarea", &default_instancers.textarea);
-	RegisterElementInstancer("#selection", &default_instancers.selection);
-	RegisterElementInstancer("tabset", &default_instancers.tabset);
-
-	RegisterElementInstancer("progress", &default_instancers.progress);
-	RegisterElementInstancer("progressbar", &default_instancers.progress);
 
 	// Decorator instancers
 	RegisterDecoratorInstancer("text", &default_instancers.decorator_text);
@@ -231,41 +168,6 @@ void Factory::Initialise()
 	RegisterFontEffectInstancer("outline", &default_instancers.font_effect_outline);
 	RegisterFontEffectInstancer("shadow", &default_instancers.font_effect_shadow);
 
-	// Data binding views
-	// clang-format off
-	RegisterDataViewInstancer(&default_instancers.data_view_attribute,      "attr",    false);
-	RegisterDataViewInstancer(&default_instancers.data_view_attribute_if,   "attrif",  false);
-	RegisterDataViewInstancer(&default_instancers.data_view_class,          "class",   false);
-	RegisterDataViewInstancer(&default_instancers.data_view_if,             "if",      false);
-	RegisterDataViewInstancer(&default_instancers.data_view_visible,        "visible", false);
-	RegisterDataViewInstancer(&default_instancers.data_view_rml,            "rml",     false);
-	RegisterDataViewInstancer(&default_instancers.data_view_style,          "style",   false);
-	RegisterDataViewInstancer(&default_instancers.data_view_text,           "text",    false);
-	RegisterDataViewInstancer(&default_instancers.data_view_value,          "value",   false);
-	RegisterDataViewInstancer(&default_instancers.data_view_checked,        "checked", false);
-	RegisterDataViewInstancer(&default_instancers.data_view_alias,          "alias",   false);
-	RegisterDataViewInstancer(&default_instancers.structural_data_view_for, "for",     true );
-	// clang-format on
-
-	// Data binding controllers
-	RegisterDataControllerInstancer(&default_instancers.data_controller_value, "checked");
-	RegisterDataControllerInstancer(&default_instancers.data_controller_event, "event");
-	RegisterDataControllerInstancer(&default_instancers.data_controller_value, "value");
-
-	// XML nodes that only contain CDATA
-	XMLParser::RegisterPersistentCDATATag("script");
-	XMLParser::RegisterPersistentCDATATag("style");
-
-	// XML node handlers
-	XMLParser::RegisterNodeHandler("", MakeShared<XMLNodeHandlerDefault>());
-	XMLParser::RegisterNodeHandler("body", MakeShared<XMLNodeHandlerBody>());
-	XMLParser::RegisterNodeHandler("head", MakeShared<XMLNodeHandlerHead>());
-	XMLParser::RegisterNodeHandler("template", MakeShared<XMLNodeHandlerTemplate>());
-
-	// XML node handlers for control elements
-	XMLParser::RegisterNodeHandler("tabset", MakeShared<XMLNodeHandlerTabSet>());
-	XMLParser::RegisterNodeHandler("textarea", MakeShared<XMLNodeHandlerTextArea>());
-	XMLParser::RegisterNodeHandler("select", MakeShared<XMLNodeHandlerSelect>());
 }
 
 void Factory::Shutdown()
@@ -274,7 +176,6 @@ void Factory::Shutdown()
 	event_listener_instancer = nullptr;
 	event_instancer = nullptr;
 
-	XMLParser::ReleaseHandlers();
 
 	factory_data.Shutdown();
 }

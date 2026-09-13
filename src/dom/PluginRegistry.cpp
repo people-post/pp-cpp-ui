@@ -1,5 +1,5 @@
 #include "PluginRegistry.h"
-#include <ui/core/Plugin.h>
+#include <ui/dom/Plugin.h>
 #include "base/ControlledLifetimeResource.h"
 #include <algorithm>
 

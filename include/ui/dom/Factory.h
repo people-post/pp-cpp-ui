@@ -1,9 +1,11 @@
 #pragma once
 
 #include <ui/base/Header.h>
-#include <ui/xml/XMLParser.h>
+#include <ui/base/Types.h>
 
 namespace ui {
+
+class Stream;
 
 class Context;
 class ContextInstancer;

@@ -61,10 +61,13 @@ without defining layers, allowed bridges, or enforcement.
      types. `ComputedValues` holds only an `Element*` and out-of-line accessors.)
   3. ~~most `* → core` via host getters~~ — `SystemInterface` / `FileInterface` (+ getters)
      live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `text`.
-     Cleared `base|data|layout|paint|text|widgets|xml → core`. Remaining: `dom → core`
-     (PluginRegistry / Core.h).
-  4. `dom → widgets` / `dom → xml` / `dom → data`
-  5. Tighten paint/layout/text bridges (`paint → style` also cleared with DecorationTypes move)
+     Cleared `base|data|layout|paint|text|widgets|xml → core`.
+  4. ~~`dom → core`~~ — `Plugin` / `PluginRegistry` live in `dom`; `ScriptInterface` in `base`;
+     `Element.h` no longer includes `Core.h`.
+  5. ~~`dom → widgets`~~ — default widget/data/XML control registration lives in
+     `src/core/RegisterDefaultFactories.cpp`; `WidgetScroll` moved into `dom`.
+  6. Remaining upward: `dom → xml`, `dom → data`; then tighten paint/layout/text bridges
+     (`paint → style` also cleared with DecorationTypes move)
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

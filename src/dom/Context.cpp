@@ -1,5 +1,5 @@
 #include <ui/dom/Context.h>
-#include <ui/core/Core.h>
+#include <ui/text/TextInputHandler.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/ContextInstancer.h>
 #include <ui/data/DataModelHandle.h>
@@ -14,7 +14,7 @@
 #include "ClickRouting.h"
 #include "data/DataModel.h"
 #include "EventDispatcher.h"
-#include "core/PluginRegistry.h"
+#include "dom/PluginRegistry.h"
 #include "text/SelectionContentBuilder.h"
 #include "text/SelectionController.h"
 #include "ScrollController.h"

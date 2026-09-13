@@ -2,7 +2,7 @@
 
 #include <ui/base/Header.h>
 #include <ui/dom/Input.h>
-#include <ui/core/ScriptInterface.h>
+#include <ui/base/ScriptInterface.h>
 #include <ui/dom/ScrollTypes.h>
 #include <ui/text/TextLoupe.h>
 #include <ui/base/Traits.h>

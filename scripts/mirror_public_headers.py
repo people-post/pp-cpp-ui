@@ -128,8 +128,8 @@ PUB: dict[str, str] = {
     # core bootstrap
     "Core.h": "core",
     "FileInterface.h": "core",
-    "Plugin.h": "core",
-    "ScriptInterface.h": "core",
+    "Plugin.h": "dom",
+    "ScriptInterface.h": "base",
     "SystemInterface.h": "core",
     # widgets (from Core/Elements/)
     "ElementForm.h": "widgets",

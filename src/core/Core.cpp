@@ -3,9 +3,10 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementInstancer.h>
 #include <ui/dom/Factory.h>
+#include "RegisterDefaultFactories.h"
 #include <ui/base/FileInterface.h>
 #include <ui/text/FontEngineInterface.h>
-#include <ui/core/Plugin.h>
+#include <ui/dom/Plugin.h>
 #include <ui/paint/RenderInterface.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/style/StyleSheetSpecification.h>
@@ -19,7 +20,7 @@
 #include "dom/EventSpecification.h"
 #include "FileInterfaceDefault.h"
 #include "layout/LayoutPools.h"
-#include "PluginRegistry.h"
+#include "dom/PluginRegistry.h"
 #include "paint/RenderManagerAccess.h"
 #include "dom/StyleSheetFactory.h"
 #include "dom/UserAgentStyleSheet.h"
@@ -135,6 +136,7 @@ bool Initialise()
 	TemplateCache::Initialise();
 
 	Factory::Initialise();
+	RegisterDefaultFactories::Initialise();
 
 	// Initialise plugins integrated with Core.
 #ifdef UI_LOTTIE_PLUGIN
@@ -165,6 +167,7 @@ void Shutdown()
 
 	BoxShadowCache::Shutdown();
 
+	RegisterDefaultFactories::Shutdown();
 	Factory::Shutdown();
 	TemplateCache::Shutdown();
 	UserAgentStyleSheet::Shutdown();

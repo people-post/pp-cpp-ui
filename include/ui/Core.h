@@ -42,7 +42,7 @@
 #include <ui/paint/Mesh.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/NumericValue.h>
-#include <ui/core/Plugin.h>
+#include <ui/dom/Plugin.h>
 #include <ui/style/PropertiesIteratorView.h>
 #include <ui/style/Property.h>
 #include <ui/style/PropertyDefinition.h>
@@ -58,6 +58,7 @@
 #include <ui/style/StyleSheetContainer.h>
 #include <ui/style/StyleSheetSpecification.h>
 #include <ui/style/StyleTypes.h>
+#include <ui/base/ScriptInterface.h>
 #include <ui/base/SystemInterface.h>
 #include <ui/text/TextShapingContext.h>
 #include <ui/paint/Texture.h>

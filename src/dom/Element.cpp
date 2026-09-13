@@ -1,5 +1,4 @@
 #include <ui/dom/Element.h>
-#include <ui/core/Core.h>
 #include <ui/dom/Context.h>
 #include <ui/base/Dictionary.h>
 #include <ui/dom/ElementDocument.h>
@@ -27,7 +26,7 @@
 #include "EventDispatcher.h"
 #include "EventSpecification.h"
 #include "layout/LayoutEngine.h"
-#include "core/PluginRegistry.h"
+#include "dom/PluginRegistry.h"
 #include "base/Pool.h"
 #include "style/PropertiesIterator.h"
 #include "text/SelectionContentBuilder.h"

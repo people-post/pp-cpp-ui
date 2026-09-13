@@ -3,7 +3,7 @@
 #include <ui/base/Dictionary.h>
 #include <ui/base/Header.h>
 #include <ui/base/ID.h>
-#include <ui/core/ScriptInterface.h>
+#include <ui/base/ScriptInterface.h>
 
 namespace ui {
 

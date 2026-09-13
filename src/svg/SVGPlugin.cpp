@@ -2,7 +2,7 @@
 #include <ui/dom/ElementInstancer.h>
 #include <ui/dom/Factory.h>
 #include <ui/base/Log.h>
-#include <ui/core/Plugin.h>
+#include <ui/dom/Plugin.h>
 #include <ui/svg/ElementSVG.h>
 #include "DecoratorSVG.h"
 #include "SVGCache.h"

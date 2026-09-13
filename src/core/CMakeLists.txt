@@ -3,11 +3,10 @@
 
 target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/Core.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/RegisterDefaultFactories.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/RegisterDefaultFactories.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FileInterfaceDefault.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FileInterfaceDefault.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/Plugin.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/PluginRegistry.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/PluginRegistry.h"
 )
 
 # Single private root: use #include "module/Header.h" for cross-module private headers.

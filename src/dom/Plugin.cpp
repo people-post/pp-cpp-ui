@@ -1,4 +1,4 @@
-#include <ui/core/Plugin.h>
+#include <ui/dom/Plugin.h>
 namespace ui {
 
 Plugin::~Plugin() {}

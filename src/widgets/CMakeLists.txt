@@ -31,8 +31,6 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/InputTypeText.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetDropDown.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetDropDown.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetScroll.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetScroll.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetSlider.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetSlider.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/WidgetTextInput.cpp"

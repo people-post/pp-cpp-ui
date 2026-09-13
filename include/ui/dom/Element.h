@@ -1,13 +1,12 @@
 #pragma once
 
 #include <ui/layout/Box.h>
-#include <ui/core/Core.h>
 #include <ui/dom/Event.h>
 #include <ui/base/Header.h>
 #include <ui/base/ObserverPtr.h>
 #include <ui/style/Property.h>
 #include <ui/paint/RenderBox.h>
-#include <ui/core/ScriptInterface.h>
+#include <ui/base/ScriptInterface.h>
 #include <ui/dom/ScrollTypes.h>
 #include <ui/text/SelectionTypes.h>
 #include <ui/style/StyleTypes.h>
@@ -41,6 +40,8 @@ class StyleSheetContainer;
 class TransformState;
 struct ElementMeta;
 struct StackingContextChild;
+
+UI_CORE_API void ReleaseFontResources();
 
 /**
     A generic element in the DOM tree.
@@ -814,7 +815,7 @@ private:
 	friend class ui::ReplacedBox;
 	friend class ui::LayoutEngine;
 	friend class ui::ElementScroll;
-	friend UI_CORE_API void ui::ReleaseFontResources();
+	friend UI_CORE_API void ReleaseFontResources();
 };
 
 } // namespace ui
