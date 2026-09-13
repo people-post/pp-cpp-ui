@@ -1,6 +1,6 @@
 # pp-cpp-ui
 
-Shared C++ UI stack for People Post apps: first-party UI engine (pp-cpp-ui-derived),
+Shared C++ UI stack for People Post apps: first-party UI engine (RmlUi-derived),
 FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 
 ## Layout
@@ -8,7 +8,7 @@ FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md).
 
 ```text
-include/ui/        Engine + backend public API (`pp-cpp-ui/` shims kept)
+include/ui/        Engine + backend public API (`#include <ui/…>`, `namespace ui`)
 src/core|svg|debugger|platform|render
 third_party/       freetype, harfbuzz, lunasvg, zlib, libpng, sdl3, sdl3_image
 tests/             Engine unit tests + support harness
@@ -18,11 +18,12 @@ tests/             Engine unit tests + support harness
 
 | Target | Alias | Role |
 |--------|-------|------|
-| `ui_core` | `ui::Core` | UI engine core (+ SVG / HarfBuzz) |
-| `ui_debugger` | `ui::Debugger` | Debugger |
+| `ui_core` | `ui::core` | UI engine core (+ SVG / HarfBuzz) |
+| `ui_debugger` | `ui::debugger` | Debugger |
+| `ui_engine` | `ui::engine` | INTERFACE → core (+ debugger when enabled) |
 | `pp_ui_core` | `pp::ui_core` | INTERFACE → core + `include/` |
 | `pp_ui_backend` | `pp::ui_backend` | STATIC SDL/GL3 platform + renderer |
-| `pp_ui` | `pp::ui` | INTERFACE umbrella (`rml` + `backend`) |
+| `pp_ui` | `pp::ui` | INTERFACE umbrella (`ui_core` + `backend`) |
 
 Also provides vendored `Freetype::Freetype`, `harfbuzz::harfbuzz`, `lunasvg::lunasvg`,
 `SDL3::*`, `SDL3_image::*` (skipped when a parent already defined those targets).
@@ -60,12 +61,16 @@ target_link_libraries(your_target PUBLIC pp_ui)
 # SDL: PP_UI_SDL3_TARGET / PP_UI_SDL3_IMAGE_TARGET
 ```
 
-For a local sibling checkout (`../pp-cpp-ui`), pass `-DPP_CPP_UI_SOURCE_DIR=...` or rely on
-auto-detect from pp-browser.
+```cpp
+#include <ui/Core/Core.h>
+using namespace ui;  // or qualify ui::
+```
+
+For a local sibling checkout (`../pp-cpp-ui`), pass `-DPP_CPP_UI_SOURCE_DIR=...`.
 
 Release flow: land on `develop` → merge to `main` → tag `vX.Y.Z` on `main`.
 
 ## Provenance
 
-Engine code started as an pp-cpp-ui 6.2 hard fork; it is now owned first-party source.
+Engine code started as an RmlUi 6.2 hard fork; it is now owned first-party source.
 See [docs/PROVENANCE.md](docs/PROVENANCE.md).

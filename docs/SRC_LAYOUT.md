@@ -30,6 +30,6 @@ ui::Element* el = ...;
 
 CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`, `pp::ui_backend`, `pp::ui`.
 
-## Test data path shim
+## Test data path
 
-`tests/Tests` → `tests/engine` so legacy fixture virtual paths under `../Tests/Data/...` still resolve.
+`tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...` still resolve.

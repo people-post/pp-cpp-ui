@@ -1,6 +1,6 @@
 name: build
 
-# Multi-platform CI for pp-cpp-ui (RmlUi + SDL/GL backend + unit tests).
+# Multi-platform CI for pp-cpp-ui (UI engine + SDL/GL backend + unit tests).
 
 on:
   push:

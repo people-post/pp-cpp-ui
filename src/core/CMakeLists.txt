@@ -492,7 +492,7 @@ endif()
 # automatically and can be removed from the following call. The same applies to many other calls to install(TARGETS...).
 # Note that GNUInstallDirs should still be included in the project root.
 install(TARGETS ui_core
-	EXPORT RmlUiTargets
+	EXPORT UiTargets
 	${UI_RUNTIME_DEPENDENCY_SET_ARG}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
