@@ -204,7 +204,7 @@ def main() -> None:
             if path.startswith("ui/Core/Elements/"):
                 new_path = basename_to_inc.get(path.rsplit("/", 1)[-1])
             elif path.startswith("ui/Core/Containers/"):
-                new_path = "ui/base/Containers/" + path[len("ui/Core/Containers/") :]
+                new_path = "ui/base/containers/" + path[len("ui/Core/Containers/") :]
             elif path.startswith("ui/Core/"):
                 base = path[len("ui/Core/") :]
                 if "/" not in base:
@@ -212,13 +212,13 @@ def main() -> None:
             elif path.startswith("Core/Elements/"):
                 new_path = basename_to_inc.get(path.rsplit("/", 1)[-1])
             elif path.startswith("Core/Containers/"):
-                new_path = "ui/base/Containers/" + path[len("Core/Containers/") :]
+                new_path = "ui/base/containers/" + path[len("Core/Containers/") :]
             elif path.startswith("Core/"):
                 base = path[len("Core/") :]
                 if "/" not in base:
                     new_path = basename_to_inc.get(base)
             elif path.startswith("../Config/"):
-                new_path = "ui/Config/" + path[len("../Config/") :]
+                new_path = "ui/config/" + path[len("../Config/") :]
             elif path.startswith("../") and path.count("/") == 1:
                 new_path = basename_to_inc.get(path[3:])
             elif "/" not in path and path in basename_to_inc:

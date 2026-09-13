@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/xml/XMLParser.h>
-#include <ui/SVG/ElementSVG.h>
+#include <ui/svg/ElementSVG.h>
 #include "xml/XMLNodeHandlerDefault.h"
 
 namespace ui {

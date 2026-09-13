@@ -116,7 +116,7 @@ endif()
 
 if(UI_CUSTOM_CONFIGURATION AND UI_CUSTOM_CONFIGURATION_FILE)
 	target_compile_definitions(ui_core PUBLIC "UI_CUSTOM_CONFIGURATION_FILE=\"${UI_CUSTOM_CONFIGURATION_FILE}\"")
-	message(STATUS "Including ${UI_CUSTOM_CONFIGURATION_FILE} instead of <ui/Config/Config.h>")
+	message(STATUS "Including ${UI_CUSTOM_CONFIGURATION_FILE} instead of <ui/config/Config.h>")
 endif()
 if(UI_CUSTOM_CONFIGURATION AND UI_CUSTOM_INCLUDE_DIRS)
 	target_include_directories(ui_core PUBLIC ${UI_CUSTOM_INCLUDE_DIRS})

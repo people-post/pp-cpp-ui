@@ -48,3 +48,9 @@ Private engine includes use a single `-I src` root with module-qualified paths
 header is a one-line redirect. This removes basename collisions from stacking
 every `src/<module>` on the include path.
 
+## Amendment — lowercase public folders
+
+Public include directories use lowercase names (`config/`, `debugger/`, `svg/`,
+`base/containers/`), matching `src/`. Umbrella headers `Core.h` / `Debugger.h` remain
+at `include/ui/` for convenience.
+

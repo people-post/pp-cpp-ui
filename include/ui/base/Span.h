@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/Config/Config.h>
+#include <ui/config/Config.h>
 #include <ui/base/Header.h>
 #include <stdint.h>
 #include <type_traits>

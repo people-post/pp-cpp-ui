@@ -10,7 +10,7 @@ are split by module.
 
 ```text
 include/ui/
-  Config/            Build-time config
+  config/            Build-time config
   base/              Types, math, containers, utilities
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model
@@ -21,7 +21,7 @@ include/ui/
   paint/             Geometry, textures, render interfaces
   widgets/           Forms, inputs, tabset, progress
   core/              Bootstrap (Core, plugins, system/file interfaces)
-  SVG/ Debugger/     Optional plugins
+  svg/ debugger/     Optional plugins
   platform/ render/  Owned SDL / GL3 backend headers
   Core.h Debugger.h  Convenience umbrellas
 src/

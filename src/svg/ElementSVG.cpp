@@ -1,4 +1,4 @@
-#include <ui/SVG/ElementSVG.h>
+#include <ui/svg/ElementSVG.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/paint/Geometry.h>
 #include <ui/style/PropertyIdSet.h>

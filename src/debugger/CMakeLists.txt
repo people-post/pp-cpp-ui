@@ -36,8 +36,8 @@ target_include_directories(ui_debugger INTERFACE
 # Setting them as PRIVATE so that it's addition doesn't propagate, it won't affect availability since
 # the entire include directory has already been declared as public
 target_sources(ui_debugger PRIVATE
-	"${PP_UI_INCLUDE_DIR}/ui/Debugger/Debugger.h"
-	"${PP_UI_INCLUDE_DIR}/ui/Debugger/Header.h"
+	"${PP_UI_INCLUDE_DIR}/ui/debugger/Debugger.h"
+	"${PP_UI_INCLUDE_DIR}/ui/debugger/Header.h"
 	"${PP_UI_INCLUDE_DIR}/ui/Debugger.h"
 )
 

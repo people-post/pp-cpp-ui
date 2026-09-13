@@ -1,4 +1,4 @@
-#include <ui/Debugger/Debugger.h>
+#include <ui/debugger/Debugger.h>
 #include <ui/core/Core.h>
 #include "DebuggerPlugin.h"
 

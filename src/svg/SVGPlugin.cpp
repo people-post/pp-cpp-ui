@@ -3,7 +3,7 @@
 #include <ui/dom/Factory.h>
 #include <ui/base/Log.h>
 #include <ui/core/Plugin.h>
-#include <ui/SVG/ElementSVG.h>
+#include <ui/svg/ElementSVG.h>
 #include "DecoratorSVG.h"
 #include "SVGCache.h"
 #include "XMLNodeHandlerSVG.h"
