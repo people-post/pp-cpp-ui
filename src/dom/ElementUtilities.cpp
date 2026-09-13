@@ -10,13 +10,13 @@
 #include <ui/base/Math.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/text/TextShapingContext.h>
-#include "DataController.h"
-#include "DataModel.h"
-#include "DataView.h"
+#include "data/DataController.h"
+#include "data/DataModel.h"
+#include "data/DataView.h"
 #include "ElementBackgroundBorder.h"
-#include "LayoutDetails.h"
-#include "LayoutEngine.h"
-#include "TransformState.h"
+#include "layout/LayoutDetails.h"
+#include "layout/LayoutEngine.h"
+#include "style/TransformState.h"
 #include <limits>
 
 namespace ui {

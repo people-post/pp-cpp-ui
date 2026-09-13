@@ -1,6 +1,6 @@
 #include "DataController.h"
 #include <ui/dom/Element.h>
-#include "EventSpecification.h"
+#include "dom/EventSpecification.h"
 
 namespace ui {
 

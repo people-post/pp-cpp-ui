@@ -1,4 +1,4 @@
-#include "../default/FontTypes.h"
+#include "text/default/FontTypes.h"
 #include "FontGlyph.h"
 #include <ui/Core.h>
 

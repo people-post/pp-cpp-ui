@@ -10,13 +10,13 @@
 #include <ui/style/Property.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/text/TextShapingContext.h>
-#include "ComputeProperty.h"
-#include "ElementDefinition.h"
-#include "ElementStyle.h"
-#include "TransformState.h"
+#include "style/ComputeProperty.h"
+#include "dom/ElementDefinition.h"
+#include "dom/ElementStyle.h"
+#include "style/TransformState.h"
 #include "SelectionContentBuilder.h"
 #include "SelectionHighlight.h"
-#include "ElementSelectableText.h"
+#include "widgets/ElementSelectableText.h"
 #include <limits>
 
 namespace ui {

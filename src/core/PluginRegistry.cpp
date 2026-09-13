@@ -1,6 +1,6 @@
 #include "PluginRegistry.h"
 #include <ui/core/Plugin.h>
-#include "ControlledLifetimeResource.h"
+#include "base/ControlledLifetimeResource.h"
 #include <algorithm>
 
 namespace ui {

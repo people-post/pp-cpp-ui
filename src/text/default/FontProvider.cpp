@@ -4,7 +4,7 @@
 #include <ui/base/Log.h>
 #include <ui/base/Math.h>
 #include <ui/base/StringUtilities.h>
-#include "ComputeProperty.h"
+#include "style/ComputeProperty.h"
 #include "FontFace.h"
 #include "FontFamily.h"
 #include "FreeTypeInterface.h"

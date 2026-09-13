@@ -4,7 +4,7 @@
 #include <ui/paint/Geometry.h>
 #include <ui/base/ID.h>
 #include <ui/style/Spritesheet.h>
-#include "Pool.h"
+#include "base/Pool.h"
 
 namespace ui {
 

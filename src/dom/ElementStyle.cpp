@@ -15,9 +15,9 @@
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetSpecification.h>
 #include <ui/style/TransformPrimitive.h>
-#include "ComputeProperty.h"
+#include "style/ComputeProperty.h"
 #include "ElementDefinition.h"
-#include "PropertiesIterator.h"
+#include "style/PropertiesIterator.h"
 #include <algorithm>
 
 namespace ui {

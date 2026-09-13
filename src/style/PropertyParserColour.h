@@ -2,7 +2,7 @@
 
 #include <ui/style/PropertyParser.h>
 #include <ui/base/Types.h>
-#include "ControlledLifetimeResource.h"
+#include "base/ControlledLifetimeResource.h"
 
 namespace ui {
 

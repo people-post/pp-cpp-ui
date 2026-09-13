@@ -4,7 +4,7 @@
 #include <ui/text/FontGlyph.h>
 #include <ui/paint/Geometry.h>
 #include <ui/paint/MeshUtilities.h>
-#include "TextureLayout.h"
+#include "text/harfbuzz/TextureLayout.h"
 
 namespace ui {
 

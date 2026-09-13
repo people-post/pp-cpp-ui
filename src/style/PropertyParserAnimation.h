@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/style/PropertyParser.h>
-#include "ControlledLifetimeResource.h"
+#include "base/ControlledLifetimeResource.h"
 
 namespace ui {
 

@@ -5,12 +5,12 @@
 #include <ui/dom/ElementScroll.h>
 #include <ui/base/Traits.h>
 #include <ui/base/Types.h>
-#include "ControlledLifetimeResource.h"
+#include "base/ControlledLifetimeResource.h"
 #include "ElementBackgroundBorder.h"
 #include "ElementEffects.h"
 #include "ElementStyle.h"
 #include "EventDispatcher.h"
-#include "Pool.h"
+#include "base/Pool.h"
 
 namespace ui {
 

@@ -10,7 +10,7 @@
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/Property.h>
-#include "DataModel.h"
+#include "data/DataModel.h"
 
 namespace ui {
 

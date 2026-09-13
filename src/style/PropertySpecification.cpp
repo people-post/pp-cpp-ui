@@ -4,7 +4,7 @@
 #include <ui/base/Profiling.h>
 #include <ui/style/PropertyDefinition.h>
 #include <ui/style/PropertyDictionary.h>
-#include "IdNameMap.h"
+#include "base/IdNameMap.h"
 #include "PropertyShorthandDefinition.h"
 #include <algorithm>
 #include <limits.h>

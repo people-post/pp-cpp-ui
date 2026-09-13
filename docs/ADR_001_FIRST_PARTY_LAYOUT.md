@@ -40,3 +40,11 @@ Sources and public headers are split into focused modules while keeping a single
 Public includes: `#include <ui/dom/Element.h>` (no `ui/Core/` prefix). Convenience
 umbrella `#include <ui/Core.h>` remains.
 
+## Amendment — private include root
+
+Private engine includes use a single `-I src` root with module-qualified paths
+(`#include "layout/LayoutEngine.h"`). Same-folder includes stay bare.
+`SelectionController`’s full API is public under `include/ui/text/`; the private
+header is a one-line redirect. This removes basename collisions from stacking
+every `src/<module>` on the include path.
+

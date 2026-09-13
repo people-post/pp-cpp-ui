@@ -8,7 +8,7 @@
 #include <ui/base/Variant.h>
 #include "DataExpression.h"
 #include "DataModel.h"
-#include "XMLParseTools.h"
+#include "xml/XMLParseTools.h"
 
 namespace ui {
 

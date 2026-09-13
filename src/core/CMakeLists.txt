@@ -12,19 +12,10 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/SystemInterface.cpp"
 )
 
-# Private module roots so #include "Foo.h" resolves across the engine.
+# Single private root: use #include "module/Header.h" for cross-module private headers.
+# Same-folder #include "Header.h" still works via the including file's directory.
 target_include_directories(ui_core PRIVATE
-	"${CMAKE_SOURCE_DIR}/src/base"
-	"${CMAKE_SOURCE_DIR}/src/style"
-	"${CMAKE_SOURCE_DIR}/src/layout"
-	"${CMAKE_SOURCE_DIR}/src/dom"
-	"${CMAKE_SOURCE_DIR}/src/text"
-	"${CMAKE_SOURCE_DIR}/src/xml"
-	"${CMAKE_SOURCE_DIR}/src/data"
-	"${CMAKE_SOURCE_DIR}/src/paint"
-	"${CMAKE_SOURCE_DIR}/src/widgets"
-	"${CMAKE_SOURCE_DIR}/src/core"
-	"${CMAKE_SOURCE_DIR}/src/svg"
+	"${CMAKE_SOURCE_DIR}/src"
 )
 
 set_common_target_options(ui_core)

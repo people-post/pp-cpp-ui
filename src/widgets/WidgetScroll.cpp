@@ -6,8 +6,8 @@
 #include <ui/dom/Event.h>
 #include <ui/dom/Factory.h>
 #include <ui/style/Property.h>
-#include "Clock.h"
-#include "LayoutDetails.h"
+#include "base/Clock.h"
+#include "layout/LayoutDetails.h"
 #include <algorithm>
 
 namespace ui {

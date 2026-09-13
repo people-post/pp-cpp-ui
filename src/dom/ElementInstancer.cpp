@@ -1,9 +1,9 @@
 #include <ui/dom/ElementInstancer.h>
 #include <ui/text/ElementText.h>
-#include "ControlledLifetimeResource.h"
-#include "ElementSelectableText.h"
-#include "Pool.h"
-#include "XMLParseTools.h"
+#include "base/ControlledLifetimeResource.h"
+#include "widgets/ElementSelectableText.h"
+#include "base/Pool.h"
+#include "xml/XMLParseTools.h"
 
 namespace ui {
 

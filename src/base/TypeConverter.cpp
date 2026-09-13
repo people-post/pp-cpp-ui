@@ -9,9 +9,9 @@
 #include <ui/style/StyleSheetTypes.h>
 #include <ui/style/Transform.h>
 #include <ui/style/TransformPrimitive.h>
-#include "PropertyParserColour.h"
-#include "PropertyParserDecorator.h"
-#include "TransformUtilities.h"
+#include "style/PropertyParserColour.h"
+#include "style/PropertyParserDecorator.h"
+#include "style/TransformUtilities.h"
 
 namespace ui {
 

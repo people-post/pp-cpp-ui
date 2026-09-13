@@ -3,7 +3,7 @@
 #include "DataController.h"
 #include "DataExpression.h"
 #include "DataModel.h"
-#include "EventSpecification.h"
+#include "dom/EventSpecification.h"
 
 namespace ui {
 

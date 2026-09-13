@@ -7,7 +7,7 @@
 #include <ui/style/StyleSheet.h>
 #include <ui/paint/Texture.h>
 #include <ui/base/URL.h>
-#include "TextureDatabase.h"
+#include "paint/TextureDatabase.h"
 
 namespace ui {
 

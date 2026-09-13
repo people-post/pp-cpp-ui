@@ -7,8 +7,8 @@
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/Profiling.h>
 #include <ui/paint/RenderManager.h>
-#include "BoxShadowCache.h"
-#include "GeometryBoxShadow.h"
+#include "style/BoxShadowCache.h"
+#include "paint/GeometryBoxShadow.h"
 
 namespace ui {
 

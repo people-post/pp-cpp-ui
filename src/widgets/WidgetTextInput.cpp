@@ -15,9 +15,9 @@
 #include <ui/core/SystemInterface.h>
 #include <ui/text/TextInputContext.h>
 #include <ui/text/TextInputHandler.h>
-#include "Clock.h"
+#include "base/Clock.h"
 #include <ui/paint/RenderManager.h>
-#include "SelectionHighlight.h"
+#include "text/SelectionHighlight.h"
 #include "ElementTextSelection.h"
 #include <algorithm>
 #include <limits.h>

@@ -3,9 +3,9 @@
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/Profiling.h>
 #include <ui/paint/RenderManager.h>
-#include "ControlledLifetimeResource.h"
+#include "base/ControlledLifetimeResource.h"
 #include "BoxShadowHash.h"
-#include "GeometryBoxShadow.h"
+#include "paint/GeometryBoxShadow.h"
 
 namespace ui {
 

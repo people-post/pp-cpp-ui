@@ -1,5 +1,5 @@
 #include "PropertyParserColour.h"
-#include "ControlledLifetimeResource.h"
+#include "base/ControlledLifetimeResource.h"
 #include <algorithm>
 #include <cmath>
 #include <string.h>

@@ -1,5 +1,5 @@
 #include "FontFace.h"
-#include "../default/FreeTypeInterface.h"
+#include "text/default/FreeTypeInterface.h"
 
 FontFace::FontFace(FontFaceHandleFreetype _face, Style::FontStyle _style, Style::FontWeight _weight)
 {

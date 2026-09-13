@@ -53,3 +53,16 @@ CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`, `pp::ui_
 ## Test data path
 
 `tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...` still resolve.
+
+## Private includes
+
+Cross-module engine headers use a single `-I src` root and qualified paths:
+
+```cpp
+#include "text/SelectionController.h"
+#include "debugger/Geometry.h"
+#include "layout/LayoutEngine.h"
+```
+
+Same-folder includes (`#include "LayoutEngine.h"` from `layout/LayoutEngine.cpp`) stay unqualified.
+Public headers always use `<ui/module/Name.h>`.

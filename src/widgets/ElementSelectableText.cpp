@@ -7,9 +7,9 @@
 #include <ui/dom/Factory.h>
 #include <ui/text/FontEngineInterface.h>
 #include <ui/paint/RenderManager.h>
-#include "SelectionContentBuilder.h"
-#include "SelectionController.h"
-#include "SelectionHighlight.h"
+#include "text/SelectionContentBuilder.h"
+#include "text/SelectionController.h"
+#include "text/SelectionHighlight.h"
 
 #include <algorithm>
 #include <limits>

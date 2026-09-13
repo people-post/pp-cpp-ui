@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../default/FontTypes.h"
+#include "text/default/FontTypes.h"
 #include <ui/Core.h>
 
 using ui::byte;

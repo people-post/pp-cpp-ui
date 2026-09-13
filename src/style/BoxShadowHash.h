@@ -7,7 +7,7 @@
 #include <ui/style/Unit.h>
 #include <ui/base/Utilities.h>
 #include "BoxShadowCache.h"
-#include "GeometryBoxShadow.h"
+#include "paint/GeometryBoxShadow.h"
 
 namespace std {
 

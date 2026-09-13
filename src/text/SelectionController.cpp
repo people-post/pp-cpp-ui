@@ -5,7 +5,7 @@
 #include <ui/paint/RenderManager.h>
 #include <ui/core/SystemInterface.h>
 #include "SelectionHighlight.h"
-#include "ElementSelectableText.h"
+#include "widgets/ElementSelectableText.h"
 
 #include <algorithm>
 #include <limits>

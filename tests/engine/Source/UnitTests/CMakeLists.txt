@@ -41,16 +41,7 @@ add_executable(${TARGET_NAME}
 set_common_target_options(${TARGET_NAME})
 
 target_include_directories(${TARGET_NAME} PRIVATE
-	"${CMAKE_SOURCE_DIR}/src/base"
-	"${CMAKE_SOURCE_DIR}/src/style"
-	"${CMAKE_SOURCE_DIR}/src/layout"
-	"${CMAKE_SOURCE_DIR}/src/dom"
-	"${CMAKE_SOURCE_DIR}/src/text"
-	"${CMAKE_SOURCE_DIR}/src/xml"
-	"${CMAKE_SOURCE_DIR}/src/data"
-	"${CMAKE_SOURCE_DIR}/src/paint"
-	"${CMAKE_SOURCE_DIR}/src/widgets"
-	"${CMAKE_SOURCE_DIR}/src/core"
+	"${CMAKE_SOURCE_DIR}/src"
 )
 
 target_link_libraries(${TARGET_NAME} PRIVATE

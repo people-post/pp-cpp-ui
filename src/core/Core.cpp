@@ -12,26 +12,26 @@
 #include <ui/core/SystemInterface.h>
 #include <ui/text/TextInputHandler.h>
 #include <ui/base/Types.h>
-#include "BoxShadowCache.h"
-#include "ComputeProperty.h"
-#include "ControlledLifetimeResource.h"
-#include "ElementMeta.h"
-#include "EventSpecification.h"
+#include "style/BoxShadowCache.h"
+#include "style/ComputeProperty.h"
+#include "base/ControlledLifetimeResource.h"
+#include "dom/ElementMeta.h"
+#include "dom/EventSpecification.h"
 #include "FileInterfaceDefault.h"
-#include "../layout/LayoutPools.h"
+#include "layout/LayoutPools.h"
 #include "PluginRegistry.h"
-#include "RenderManagerAccess.h"
-#include "StyleSheetFactory.h"
-#include "UserAgentStyleSheet.h"
-#include "StyleSheetParser.h"
-#include "TemplateCache.h"
+#include "paint/RenderManagerAccess.h"
+#include "style/StyleSheetFactory.h"
+#include "style/UserAgentStyleSheet.h"
+#include "style/StyleSheetParser.h"
+#include "xml/TemplateCache.h"
 
 #ifdef UI_FONT_ENGINE_FREETYPE
-	#include "../text/default/FontEngineInterfaceDefault.h"
+	#include "text/default/FontEngineInterfaceDefault.h"
 #endif
 
 #ifdef UI_SVG_PLUGIN
-	#include "SVGPlugin.h"
+	#include "svg/SVGPlugin.h"
 #endif
 
 #include <algorithm>
