@@ -47,15 +47,15 @@ WidgetSlider::~WidgetSlider()
 	if (track)
 		parent->RemoveChild(track);
 
-	parent->RemoveEventListener(EventId::Blur, this);
-	parent->RemoveEventListener(EventId::Focus, this);
-	parent->RemoveEventListener(EventId::Keydown, this, true);
-	parent->RemoveEventListener(EventId::Mousedown, this);
-	parent->RemoveEventListener(EventId::Mouseup, this);
-	parent->RemoveEventListener(EventId::Mouseout, this);
-	parent->RemoveEventListener(EventId::Drag, this);
-	parent->RemoveEventListener(EventId::Dragstart, this);
-	parent->RemoveEventListener(EventId::Dragend, this);
+	parent->Events().DetachEvent(EventId::Blur, this);
+	parent->Events().DetachEvent(EventId::Focus, this);
+	parent->Events().DetachEvent(EventId::Keydown, this, true);
+	parent->Events().DetachEvent(EventId::Mousedown, this);
+	parent->Events().DetachEvent(EventId::Mouseup, this);
+	parent->Events().DetachEvent(EventId::Mouseout, this);
+	parent->Events().DetachEvent(EventId::Drag, this);
+	parent->Events().DetachEvent(EventId::Dragstart, this);
+	parent->Events().DetachEvent(EventId::Dragend, this);
 
 	for (int i = 0; i < 2; i++)
 	{
@@ -84,21 +84,21 @@ bool WidgetSlider::Initialise()
 	arrows[1] = parent->AppendChild(std::move(arrow1_element), false);
 
 	const Property drag_property = Property(Style::Drag::Drag);
-	track->SetProperty(PropertyId::Drag, drag_property);
-	progress->SetProperty(PropertyId::Drag, drag_property);
-	bar->SetProperty(PropertyId::Drag, drag_property);
+	track->Style().SetProperty(PropertyId::Drag, drag_property);
+	progress->Style().SetProperty(PropertyId::Drag, drag_property);
+	bar->Style().SetProperty(PropertyId::Drag, drag_property);
 
 	// Attach the listeners
 	// All listeners are attached to parent, ensuring that we don't get duplicate events when it bubbles from child to parent
-	parent->AddEventListener(EventId::Blur, this);
-	parent->AddEventListener(EventId::Focus, this);
-	parent->AddEventListener(EventId::Keydown, this, true);
-	parent->AddEventListener(EventId::Mousedown, this);
-	parent->AddEventListener(EventId::Mouseup, this);
-	parent->AddEventListener(EventId::Mouseout, this);
-	parent->AddEventListener(EventId::Drag, this);
-	parent->AddEventListener(EventId::Dragstart, this);
-	parent->AddEventListener(EventId::Dragend, this);
+	parent->Events().AttachEvent(EventId::Blur, this);
+	parent->Events().AttachEvent(EventId::Focus, this);
+	parent->Events().AttachEvent(EventId::Keydown, this, true);
+	parent->Events().AttachEvent(EventId::Mousedown, this);
+	parent->Events().AttachEvent(EventId::Mouseup, this);
+	parent->Events().AttachEvent(EventId::Mouseout, this);
+	parent->Events().AttachEvent(EventId::Drag, this);
+	parent->Events().AttachEvent(EventId::Dragstart, this);
+	parent->Events().AttachEvent(EventId::Dragend, this);
 
 	return true;
 }

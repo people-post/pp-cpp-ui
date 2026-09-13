@@ -310,13 +310,13 @@ void ElementHandle::ProcessDefaultAction(Event& event)
 				const Vector2f new_position_bottom_right = (move_data.original_position_bottom_right - delta).Round();
 
 				if (move_data.top_left.x)
-					move_target->SetProperty(PropertyId::Left, Property(new_position_top_left.x, Unit::PX));
+					move_target->Style().SetProperty(PropertyId::Left, Property(new_position_top_left.x, Unit::PX));
 				if (move_data.top_left.y)
-					move_target->SetProperty(PropertyId::Top, Property(new_position_top_left.y, Unit::PX));
+					move_target->Style().SetProperty(PropertyId::Top, Property(new_position_top_left.y, Unit::PX));
 				if (move_data.bottom_right.x)
-					move_target->SetProperty(PropertyId::Right, Property(new_position_bottom_right.x, Unit::PX));
+					move_target->Style().SetProperty(PropertyId::Right, Property(new_position_bottom_right.x, Unit::PX));
 				if (move_data.bottom_right.y)
-					move_target->SetProperty(PropertyId::Bottom, Property(new_position_bottom_right.y, Unit::PX));
+					move_target->Style().SetProperty(PropertyId::Bottom, Property(new_position_bottom_right.y, Unit::PX));
 			}
 
 			if (size_target)
@@ -325,13 +325,13 @@ void ElementHandle::ProcessDefaultAction(Event& event)
 				const Vector2f new_position_bottom_right = (size_data.original_position_bottom_right - delta).Round();
 
 				if (size_data.width_height.x)
-					size_target->SetProperty(PropertyId::Width, Property(new_size.x, Unit::PX));
+					size_target->Style().SetProperty(PropertyId::Width, Property(new_size.x, Unit::PX));
 				if (size_data.width_height.y)
-					size_target->SetProperty(PropertyId::Height, Property(new_size.y, Unit::PX));
+					size_target->Style().SetProperty(PropertyId::Height, Property(new_size.y, Unit::PX));
 				if (size_data.bottom_right.x)
-					size_target->SetProperty(PropertyId::Right, Property(new_position_bottom_right.x, Unit::PX));
+					size_target->Style().SetProperty(PropertyId::Right, Property(new_position_bottom_right.x, Unit::PX));
 				if (size_data.bottom_right.y)
-					size_target->SetProperty(PropertyId::Bottom, Property(new_position_bottom_right.y, Unit::PX));
+					size_target->Style().SetProperty(PropertyId::Bottom, Property(new_position_bottom_right.y, Unit::PX));
 			}
 
 			Dictionary parameters;

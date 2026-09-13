@@ -5,7 +5,7 @@
 #include <ui/style/PropertyDefinition.h>
 #include <ui/style/StyleSheetSpecification.h>
 #include "dom/ElementDefinition.h"
-#include "dom/ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "StyleSheetNode.h"
 #include <algorithm>
 

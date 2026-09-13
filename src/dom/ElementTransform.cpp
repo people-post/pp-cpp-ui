@@ -3,7 +3,7 @@
 #include <ui/base/Math.h>
 #include <ui/style/ComputedValues.h>
 #include "ElementMeta.h"
-#include "ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "style/TransformState.h"
 #include "style/TransformUtilities.h"
 

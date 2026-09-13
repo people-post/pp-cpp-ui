@@ -1,7 +1,9 @@
 #pragma once
 
+#include <ui/base/Header.h>
 #include <ui/dom/Event.h>
 #include <ui/base/Types.h>
+
 namespace ui {
 
 class Element;
@@ -19,30 +21,32 @@ struct EventListenerEntry {
 };
 
 /**
-    The Event Dispatcher manages a list of event listeners and triggers the events via EventHandlers
-    whenever requested.
-*/
+    Manages an element's event listeners and dispatch.
 
-class EventDispatcher {
+    Prefer `element->Events()` for attach/detach; Element string façades remain for name→id lookup.
+ */
+
+class UI_CORE_API EventDispatcher {
 public:
 	/// Constructor
 	/// @param element Element this dispatcher acts on
-	EventDispatcher(Element* element);
-
-	/// Destructor
+	explicit EventDispatcher(Element* element);
 	~EventDispatcher();
+
+	EventDispatcher(const EventDispatcher&) = delete;
+	EventDispatcher& operator=(const EventDispatcher&) = delete;
 
 	/// Attaches a new listener to the specified event name.
 	/// @param[in] type Type of the event to attach to.
 	/// @param[in] event_listener The event listener to be notified when the event fires.
 	/// @param[in] in_capture_phase Should the listener be notified in the capture phase.
-	void AttachEvent(EventId id, EventListener* event_listener, bool in_capture_phase);
+	void AttachEvent(EventId id, EventListener* event_listener, bool in_capture_phase = false);
 
 	/// Detaches a listener from the specified event name
 	/// @param[in] type Type of the event to attach to
 	/// @param[in] event_listener The event listener to be notified when the event fires
 	/// @param[in] in_capture_phase Should the listener be notified in the capture phase
-	void DetachEvent(EventId id, EventListener* listener, bool in_capture_phase);
+	void DetachEvent(EventId id, EventListener* listener, bool in_capture_phase = false);
 
 	/// Detaches all events from this dispatcher and all child dispatchers.
 	void DetachAllEvents();

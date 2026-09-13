@@ -11,7 +11,7 @@
 #include <ui/base/StreamMemory.h>
 #include <ui/base/SystemInterface.h>
 #include "ClickRouting.h"
-#include "EventDispatcher.h"
+#include <ui/dom/EventDispatcher.h>
 #include "dom/PluginRegistry.h"
 #include "SelectionContentBuilder.h"
 #include <ui/dom/SelectionController.h>
@@ -164,7 +164,7 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	root = Factory::InstanceElement(nullptr, "*", "#root", XMLAttributes());
 	root->SetId(name);
 	root->BoxModel().SetOffset(Vector2f(0, 0), nullptr);
-	root->SetProperty(PropertyId::ZIndex, Property(0, Unit::NUMBER));
+	root->Style().SetProperty(PropertyId::ZIndex, Property(0, Unit::NUMBER));
 
 	cursor_proxy = Factory::InstanceElement(nullptr, documents_base_tag, documents_base_tag, XMLAttributes());
 	ElementDocument* cursor_proxy_document = ui_dynamic_cast<ElementDocument*>(cursor_proxy.get());
@@ -174,14 +174,14 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	// The cursor proxy takes the style from its cloned element's document. The latter may define style rules for `<body>` which we don't want on the
 	// proxy. Thus, we override some properties here that we in particular don't want to inherit from the client document, especially those that
 	// result in decoration of the body element.
-	cursor_proxy_document->SetProperty(PropertyId::BackgroundColor, Property(Colourb(255, 255, 255, 0), Unit::COLOUR));
-	cursor_proxy_document->SetProperty(PropertyId::BorderTopWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::BorderRightWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::BorderBottomWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::BorderLeftWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::Decorator, Property());
-	cursor_proxy_document->SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Visible));
-	cursor_proxy_document->SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Visible));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BackgroundColor, Property(Colourb(255, 255, 255, 0), Unit::COLOUR));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderTopWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderRightWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderBottomWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderLeftWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::Decorator, Property());
+	cursor_proxy_document->Style().SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Visible));
+	cursor_proxy_document->Style().SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Visible));
 
 	document_focus_history.push_back(root.get());
 	focus = root.get();
@@ -1798,12 +1798,12 @@ void Context::CreateDragClone(Element* element)
 	if (Element* parent = element->GetParentNode())
 		parent->Project(projected_mouse_position);
 
-	drag_clone->SetProperty(PropertyId::Position, Property(Style::Position::Absolute));
-	drag_clone->SetProperty(PropertyId::Left, Property(absolute_pos.x - projected_mouse_position.x, Unit::PX));
-	drag_clone->SetProperty(PropertyId::Top, Property(absolute_pos.y - projected_mouse_position.y, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::Position, Property(Style::Position::Absolute));
+	drag_clone->Style().SetProperty(PropertyId::Left, Property(absolute_pos.x - projected_mouse_position.x, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::Top, Property(absolute_pos.y - projected_mouse_position.y, Unit::PX));
 	// We remove margins so that percentage- and auto-margins are evaluated correctly.
-	drag_clone->SetProperty(PropertyId::MarginLeft, Property(0.f, Unit::PX));
-	drag_clone->SetProperty(PropertyId::MarginTop, Property(0.f, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::MarginLeft, Property(0.f, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::MarginTop, Property(0.f, Unit::PX));
 	drag_clone->SetPseudoClass("drag", true);
 }
 

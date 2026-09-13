@@ -159,13 +159,13 @@ bool StyleSheetNode::Match(const Element* element, const Element* scope) const
 
 	for (auto& name : selector.class_names)
 	{
-		if (!element->IsClassSet(name))
+		if (!element->Style().IsClassSet(name))
 			return false;
 	}
 
 	for (auto& name : selector.pseudo_class_names)
 	{
-		if (!element->IsPseudoClassSet(name))
+		if (!element->Style().IsPseudoClassSet(name))
 			return false;
 	}
 
@@ -336,7 +336,7 @@ bool StyleSheetNode::IsApplicable(const Element* element, const Element* scope) 
 	// particular order for performance reasons.
 	for (const String& name : selector.pseudo_class_names)
 	{
-		if (!element->IsPseudoClassSet(name))
+		if (!element->Style().IsPseudoClassSet(name))
 			return false;
 	}
 
@@ -345,7 +345,7 @@ bool StyleSheetNode::IsApplicable(const Element* element, const Element* scope) 
 
 	for (const String& name : selector.class_names)
 	{
-		if (!element->IsClassSet(name))
+		if (!element->Style().IsClassSet(name))
 			return false;
 	}
 

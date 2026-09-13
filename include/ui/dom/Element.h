@@ -2,7 +2,10 @@
 
 #include <ui/layout/Box.h>
 #include <ui/dom/ElementBox.h>
+#include <ui/dom/ElementScroll.h>
+#include <ui/dom/ElementStyle.h>
 #include <ui/dom/Event.h>
+#include <ui/dom/EventDispatcher.h>
 #include <ui/base/Header.h>
 #include <ui/base/FontMetrics.h>
 #include <ui/base/ObserverPtr.h>
@@ -22,14 +25,11 @@ class Context;
 class DataModel;
 class Decorator;
 class ElementInstancer;
-class EventDispatcher;
 class EventListener;
 class ElementBackgroundBorder;
 class ElementDefinition;
 class ElementDocument;
 class ElementEffects;
-class ElementScroll;
-class ElementStyle;
 class LayoutEngine;
 namespace LayoutElement {
 class ElementAccess;

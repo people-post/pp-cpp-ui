@@ -6,7 +6,7 @@
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Context.h>
 #include <ui/base/Log.h>
-#include "ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "StyleSheetNode.h"
 #include "StyleSheetParser.h"
 #include "dom/PluginRegistry.h"

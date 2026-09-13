@@ -3,7 +3,7 @@
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/Event.h>
 #include "ElementMeta.h"
-#include "EventDispatcher.h"
+#include <ui/dom/EventDispatcher.h>
 #include "EventSpecification.h"
 
 namespace ui {

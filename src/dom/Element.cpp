@@ -22,8 +22,8 @@
 #include "ElementDefinition.h"
 #include "ElementEffects.h"
 #include "ElementMeta.h"
-#include "ElementStyle.h"
-#include "EventDispatcher.h"
+#include <ui/dom/ElementStyle.h>
+#include <ui/dom/EventDispatcher.h>
 #include "EventSpecification.h"
 #include "layout/LayoutEngine.h"
 #include "dom/PluginRegistry.h"

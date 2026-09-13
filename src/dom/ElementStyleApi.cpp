@@ -7,7 +7,7 @@
 #include <ui/style/ComputedValues.h>
 #include <ui/style/PropertiesIteratorView.h>
 #include "ElementMeta.h"
-#include "ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "style/PropertiesIterator.h"
 
 namespace ui {
@@ -261,7 +261,7 @@ void Element::DirtyFontFaceRecursive()
 }
 PropertiesIteratorView Element::IterateLocalProperties() const
 {
-	return PropertiesIteratorView(MakeUnique<PropertiesIterator>(Style().Iterate()));
+	return PropertiesIteratorView(Style().Iterate());
 }
 
 } // namespace ui

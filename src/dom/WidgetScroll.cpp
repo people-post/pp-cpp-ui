@@ -44,20 +44,20 @@ WidgetScroll::~WidgetScroll()
 {
 	if (bar != nullptr)
 	{
-		bar->RemoveEventListener(EventId::Drag, this);
-		bar->RemoveEventListener(EventId::Dragstart, this);
+		bar->Events().DetachEvent(EventId::Drag, this);
+		bar->Events().DetachEvent(EventId::Dragstart, this);
 	}
 
 	if (track != nullptr)
-		track->RemoveEventListener(EventId::Click, this);
+		track->Events().DetachEvent(EventId::Click, this);
 
 	for (int i = 0; i < 2; i++)
 	{
 		if (arrows[i] != nullptr)
 		{
-			arrows[i]->RemoveEventListener(EventId::Mousedown, this);
-			arrows[i]->RemoveEventListener(EventId::Mouseup, this);
-			arrows[i]->RemoveEventListener(EventId::Mouseout, this);
+			arrows[i]->Events().DetachEvent(EventId::Mousedown, this);
+			arrows[i]->Events().DetachEvent(EventId::Mouseup, this);
+			arrows[i]->Events().DetachEvent(EventId::Mouseout, this);
 		}
 	}
 }
@@ -97,19 +97,19 @@ bool WidgetScroll::Initialise(Orientation _orientation)
 	arrows[0] = parent->AppendChild(std::move(arrow0_element), false);
 	arrows[1] = parent->AppendChild(std::move(arrow1_element), false);
 
-	bar->SetProperty(PropertyId::Drag, Property(Style::Drag::Drag));
+	bar->Style().SetProperty(PropertyId::Drag, Property(Style::Drag::Drag));
 
 	// Attach the listeners as appropriate.
-	bar->AddEventListener(EventId::Drag, this);
-	bar->AddEventListener(EventId::Dragstart, this);
+	bar->Events().AttachEvent(EventId::Drag, this);
+	bar->Events().AttachEvent(EventId::Dragstart, this);
 
-	track->AddEventListener(EventId::Click, this);
+	track->Events().AttachEvent(EventId::Click, this);
 
 	for (int i = 0; i < 2; i++)
 	{
-		arrows[i]->AddEventListener(EventId::Mousedown, this);
-		arrows[i]->AddEventListener(EventId::Mouseup, this);
-		arrows[i]->AddEventListener(EventId::Mouseout, this);
+		arrows[i]->Events().AttachEvent(EventId::Mousedown, this);
+		arrows[i]->Events().AttachEvent(EventId::Mouseup, this);
+		arrows[i]->Events().AttachEvent(EventId::Mouseout, this);
 	}
 
 	return true;

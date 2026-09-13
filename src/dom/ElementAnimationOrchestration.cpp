@@ -6,7 +6,7 @@
 #include "base/Clock.h"
 #include "ElementAnimation.h"
 #include "ElementMeta.h"
-#include "ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "EventSpecification.h"
 #include <algorithm>
 

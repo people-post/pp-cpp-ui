@@ -186,7 +186,7 @@ bool DataViewClass::Update(DataModel& model)
 	if (element && GetExpression().Run(expr_interface, variant))
 	{
 		const bool activate = variant.Get<bool>();
-		const bool is_set = element->IsClassSet(class_name);
+		const bool is_set = element->Style().IsClassSet(class_name);
 		if (activate != is_set)
 		{
 			element->SetClass(class_name, activate);
@@ -240,9 +240,9 @@ bool DataViewIf::Update(DataModel& model)
 		if (is_visible != value)
 		{
 			if (value)
-				element->RemoveProperty(PropertyId::Display);
+				element->Style().RemoveProperty(PropertyId::Display);
 			else
-				element->SetProperty(PropertyId::Display, Property(Style::Display::None));
+				element->Style().SetProperty(PropertyId::Display, Property(Style::Display::None));
 			result = true;
 		}
 	}
@@ -269,9 +269,9 @@ bool DataViewVisible::Update(DataModel& model)
 		if (is_visible != value)
 		{
 			if (value)
-				element->RemoveProperty(PropertyId::Visibility);
+				element->Style().RemoveProperty(PropertyId::Visibility);
 			else
-				element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+				element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 			result = true;
 		}
 	}
@@ -480,7 +480,7 @@ bool DataViewFor::Initialize(DataModel& model, Element* element, const String& i
 	if (container_address.empty())
 		return false;
 
-	element->SetProperty(PropertyId::Display, Property(Style::Display::None));
+	element->Style().SetProperty(PropertyId::Display, Property(Style::Display::None));
 
 	// Copy over the attributes, but remove the 'data-for' which would otherwise recreate the data-for loop on all
 	// constructed children recursively. There is also no need for the 'rmlui-inner-rml' attribute if that is present.

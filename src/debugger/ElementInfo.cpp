@@ -189,12 +189,12 @@ void ElementInfo::ProcessEvent(Event& event)
 				}
 				else if (id == "show_source")
 				{
-					show_source_element = !target_element->IsClassSet("active");
+					show_source_element = !target_element->Style().IsClassSet("active");
 					target_element->SetClass("active", show_source_element);
 				}
 				else if (id == "enable_element_select")
 				{
-					enable_element_select = !target_element->IsClassSet("active");
+					enable_element_select = !target_element->Style().IsClassSet("active");
 					target_element->SetClass("active", enable_element_select);
 				}
 				else if (target_element->GetTagName() == "pseudo" && source_element)
@@ -203,7 +203,7 @@ void ElementInfo::ProcessEvent(Event& event)
 
 					if (!name.empty())
 					{
-						bool pseudo_active = target_element->IsClassSet("active");
+						bool pseudo_active = target_element->Style().IsClassSet("active");
 						if (name == "focus")
 						{
 							if (!pseudo_active)
@@ -322,7 +322,7 @@ void ElementInfo::ProcessEvent(Event& event)
 				if (id == "show_source")
 				{
 					// Disable the preview of the source element view
-					if (show_source_element && !target_element->IsClassSet("active"))
+					if (show_source_element && !target_element->Style().IsClassSet("active"))
 						show_source_element = false;
 				}
 
@@ -701,11 +701,11 @@ void ElementInfo::UpdateTitle()
 
 	if (title_content && enable_select && show_source && update_source)
 	{
-		if (enable_select->IsPseudoClassSet("hover"))
+		if (enable_select->Style().IsPseudoClassSet("hover"))
 			title_content->SetInnerRML("<em>(select elements)</em>");
-		else if (show_source->IsPseudoClassSet("hover"))
+		else if (show_source->Style().IsPseudoClassSet("hover"))
 			title_content->SetInnerRML("<em>(draw element dimensions)</em>");
-		else if (update_source->IsPseudoClassSet("hover"))
+		else if (update_source->Style().IsPseudoClassSet("hover"))
 			title_content->SetInnerRML("<em>(update info continuously)</em>");
 		else if (source_element)
 			title_content->SetInnerRML(source_element->GetTagName());

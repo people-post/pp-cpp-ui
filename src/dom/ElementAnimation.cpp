@@ -11,7 +11,7 @@
 #include <ui/style/Transform.h>
 #include <ui/style/TransformPrimitive.h>
 #include "style/ComputeProperty.h"
-#include "dom/ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "style/TransformUtilities.h"
 
 namespace ui {

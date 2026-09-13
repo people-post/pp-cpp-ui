@@ -154,7 +154,7 @@ void ElementProgress::GenerateGeometry()
 	geometry_dirty = false;
 
 	// Warn the user when using the old approach of adding the 'fill-image' property to the 'fill' element.
-	if (fill->GetLocalProperty(PropertyId::FillImage))
+	if (fill->Style().GetLocalProperty(PropertyId::FillImage))
 		Log::Message(Log::LT_WARNING,
 			"Breaking change: The 'fill-image' property now needs to be set on the <progress> element, instead of its inner <fill> element. Please "
 			"update your RCSS source to fix progress bars in this document.");

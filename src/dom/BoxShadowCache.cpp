@@ -44,7 +44,7 @@ static BoxShadowGeometryInfo ResolveBoxShadowGeometry(Element* element, const Co
 	Vector2f element_offset_in_texture;
 	Vector2i texture_dimensions;
 
-	const Property* p_box_shadow = element->GetLocalProperty(PropertyId::BoxShadow);
+	const Property* p_box_shadow = element->Style().GetLocalProperty(PropertyId::BoxShadow);
 	UI_ASSERT(p_box_shadow->value.GetType() == Variant::BOXSHADOWLIST);
 	BoxShadowList shadow_list = p_box_shadow->value.Get<BoxShadowList>();
 

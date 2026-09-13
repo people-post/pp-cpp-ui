@@ -7,8 +7,8 @@
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
 #include "dom/DocumentHeader.h"
-#include "ElementStyle.h"
-#include "EventDispatcher.h"
+#include <ui/dom/ElementStyle.h>
+#include <ui/dom/EventDispatcher.h>
 #include "layout/LayoutDetails.h"
 #include "layout/LayoutEngine.h"
 #include "base/StreamFile.h"

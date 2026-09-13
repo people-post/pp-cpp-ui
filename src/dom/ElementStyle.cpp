@@ -1,4 +1,4 @@
-#include "ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/ElementDocument.h>
@@ -34,6 +34,8 @@ ElementStyle::ElementStyle(Element* _element)
 {
 	element = _element;
 }
+
+ElementStyle::~ElementStyle() = default;
 
 const Property* ElementStyle::GetLocalProperty(PropertyId id, const PropertyDictionary& inline_properties, const ElementDefinition* definition)
 {
@@ -424,9 +426,9 @@ void ElementStyle::DirtyInheritedProperties()
 void ElementStyle::DirtyPropertiesWithUnits(Units units)
 {
 	// Dirty all the properties of this element that use the unit(s).
-	for (auto it = Iterate(); !it.AtEnd(); ++it)
+	for (auto it = Iterate(); !it->AtEnd(); ++(*it))
 	{
-		auto name_property_pair = *it;
+		auto name_property_pair = **it;
 		PropertyId id = name_property_pair.first;
 		const Property& property = name_property_pair.second;
 		if (Any(property.unit & units))
@@ -449,7 +451,7 @@ bool ElementStyle::AnyPropertiesDirty() const
 	return !dirty_properties.Empty();
 }
 
-PropertiesIterator ElementStyle::Iterate() const
+UniquePtr<PropertiesIterator> ElementStyle::Iterate() const
 {
 	// Note: Value initialized iterators are only guaranteed to compare equal in C++14, and only for iterators
 	// satisfying the ForwardIterator requirements.
@@ -471,7 +473,7 @@ PropertiesIterator ElementStyle::Iterate() const
 		it_definition = definition_properties.begin();
 		it_definition_end = definition_properties.end();
 	}
-	return PropertiesIterator(it_style_begin, it_style_end, it_definition, it_definition_end);
+	return MakeUnique<PropertiesIterator>(it_style_begin, it_style_end, it_definition, it_definition_end);
 }
 
 void ElementStyle::DirtyProperty(PropertyId id)
@@ -568,9 +570,9 @@ PropertyIdSet ElementStyle::ComputeValues(Style::ComputedValues& values, const S
 
 	bool dirty_font_face_handle = false;
 
-	for (auto it = Iterate(); !it.AtEnd(); ++it)
+	for (auto it = Iterate(); !it->AtEnd(); ++(*it))
 	{
-		auto name_property_pair = *it;
+		auto name_property_pair = **it;
 		const PropertyId id = name_property_pair.first;
 		const Property* p = &name_property_pair.second;
 

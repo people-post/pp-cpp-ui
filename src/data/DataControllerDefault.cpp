@@ -12,7 +12,7 @@ DataControllerValue::DataControllerValue(Element* element) : DataController(elem
 DataControllerValue::~DataControllerValue()
 {
 	if (Element* element = GetElement())
-		element->RemoveEventListener(EventId::Change, this);
+		element->Events().DetachEvent(EventId::Change, this);
 }
 
 bool DataControllerValue::Initialize(DataModel& model, Element* element, const String& variable_name, const String& /*modifier*/)
@@ -26,7 +26,7 @@ bool DataControllerValue::Initialize(DataModel& model, Element* element, const S
 	if (model.GetVariable(variable_address))
 		address = std::move(variable_address);
 
-	element->AddEventListener(EventId::Change, this);
+	element->Events().AttachEvent(EventId::Change, this);
 
 	return true;
 }

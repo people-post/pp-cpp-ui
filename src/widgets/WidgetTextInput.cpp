@@ -168,21 +168,21 @@ WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
 	keyboard_showed = false;
 
 	parent = _parent;
-	parent->SetProperty(PropertyId::WhiteSpace, Property(Style::WhiteSpace::Pre));
-	parent->SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Hidden));
-	parent->SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Hidden));
-	parent->SetProperty(PropertyId::Drag, Property(Style::Drag::Drag));
-	parent->SetProperty(PropertyId::WordBreak, Property(Style::WordBreak::BreakWord));
-	parent->SetProperty(PropertyId::TextTransform, Property(Style::TextTransform::None));
-	parent->SetProperty(PropertyId::Clip, Property(Style::Clip::Type::Auto));
+	parent->Style().SetProperty(PropertyId::WhiteSpace, Property(Style::WhiteSpace::Pre));
+	parent->Style().SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Hidden));
+	parent->Style().SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Hidden));
+	parent->Style().SetProperty(PropertyId::Drag, Property(Style::Drag::Drag));
+	parent->Style().SetProperty(PropertyId::WordBreak, Property(Style::WordBreak::BreakWord));
+	parent->Style().SetProperty(PropertyId::TextTransform, Property(Style::TextTransform::None));
+	parent->Style().SetProperty(PropertyId::Clip, Property(Style::Clip::Type::Auto));
 
-	parent->AddEventListener(EventId::Keydown, this, true);
-	parent->AddEventListener(EventId::Textinput, this, true);
-	parent->AddEventListener(EventId::Focus, this, true);
-	parent->AddEventListener(EventId::Blur, this, true);
-	parent->AddEventListener(EventId::Mousedown, this, true);
-	parent->AddEventListener(EventId::Dblclick, this, true);
-	parent->AddEventListener(EventId::Drag, this, true);
+	parent->Events().AttachEvent(EventId::Keydown, this, true);
+	parent->Events().AttachEvent(EventId::Textinput, this, true);
+	parent->Events().AttachEvent(EventId::Focus, this, true);
+	parent->Events().AttachEvent(EventId::Blur, this, true);
+	parent->Events().AttachEvent(EventId::Mousedown, this, true);
+	parent->Events().AttachEvent(EventId::Dblclick, this, true);
+	parent->Events().AttachEvent(EventId::Drag, this, true);
 
 	ElementPtr unique_text = Factory::InstanceElement(parent, "#text", "#text", XMLAttributes());
 	text_element = ui_dynamic_cast<ElementText*>(unique_text.get());
@@ -231,22 +231,22 @@ WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
 
 WidgetTextInput::~WidgetTextInput()
 {
-	parent->RemoveEventListener(EventId::Keydown, this, true);
-	parent->RemoveEventListener(EventId::Textinput, this, true);
-	parent->RemoveEventListener(EventId::Focus, this, true);
-	parent->RemoveEventListener(EventId::Blur, this, true);
-	parent->RemoveEventListener(EventId::Mousedown, this, true);
-	parent->RemoveEventListener(EventId::Dblclick, this, true);
-	parent->RemoveEventListener(EventId::Drag, this, true);
+	parent->Events().DetachEvent(EventId::Keydown, this, true);
+	parent->Events().DetachEvent(EventId::Textinput, this, true);
+	parent->Events().DetachEvent(EventId::Focus, this, true);
+	parent->Events().DetachEvent(EventId::Blur, this, true);
+	parent->Events().DetachEvent(EventId::Mousedown, this, true);
+	parent->Events().DetachEvent(EventId::Dblclick, this, true);
+	parent->Events().DetachEvent(EventId::Drag, this, true);
 
 	// This widget might be parented by an input element, which may now be constructing a completely different type.
 	// Thus, remove all properties set by this widget so they don't affect the new type.
-	parent->RemoveProperty(PropertyId::WhiteSpace);
-	parent->RemoveProperty(PropertyId::OverflowX);
-	parent->RemoveProperty(PropertyId::OverflowY);
-	parent->RemoveProperty(PropertyId::Drag);
-	parent->RemoveProperty(PropertyId::WordBreak);
-	parent->RemoveProperty(PropertyId::TextTransform);
+	parent->Style().RemoveProperty(PropertyId::WhiteSpace);
+	parent->Style().RemoveProperty(PropertyId::OverflowX);
+	parent->Style().RemoveProperty(PropertyId::OverflowY);
+	parent->Style().RemoveProperty(PropertyId::Drag);
+	parent->Style().RemoveProperty(PropertyId::WordBreak);
+	parent->Style().RemoveProperty(PropertyId::TextTransform);
 
 	// Remove all the children added by the text widget.
 	parent->RemoveChild(text_element);
@@ -403,7 +403,7 @@ void WidgetTextInput::UpdateSelectionColours()
 {
 	Colourb selected_text_color;
 	ResolveSelectionBackground(parent, selection_colour, &selected_text_color, SelectionColorFallback::EditorInverse);
-	selected_text_element->SetProperty(PropertyId::Color, Property(selected_text_color, Unit::COLOUR));
+	selected_text_element->Style().SetProperty(PropertyId::Color, Property(selected_text_color, Unit::COLOUR));
 
 	// Color may have changed, so we update the cursor geometry.
 	GenerateCursor();
@@ -1569,7 +1569,7 @@ Vector2f WidgetTextInput::FormatText(float height_constraint)
 	if (new_ink_overflow != ink_overflow)
 	{
 		ink_overflow = new_ink_overflow;
-		parent->SetProperty(PropertyId::Clip, Property(ink_overflow ? Style::Clip::Type::Always : Style::Clip::Type::Auto));
+		parent->Style().SetProperty(PropertyId::Clip, Property(ink_overflow ? Style::Clip::Type::Always : Style::Clip::Type::Auto));
 	}
 
 	UpdateSelectionHandleGeometry();
@@ -1584,7 +1584,7 @@ void WidgetTextInput::GenerateCursor()
 
 	Colourb color = parent->GetComputedValues().color();
 
-	if (const Property* property = parent->GetProperty(PropertyId::CaretColor))
+	if (const Property* property = parent->Style().GetProperty(PropertyId::CaretColor))
 	{
 		if (property->unit == Unit::COLOUR)
 			color = property->Get<Colourb>();

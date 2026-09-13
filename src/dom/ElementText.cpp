@@ -11,7 +11,7 @@
 #include <ui/font/TextShapingContext.h>
 #include "style/ComputeProperty.h"
 #include "dom/ElementDefinition.h"
-#include "dom/ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "style/TransformState.h"
 #include "SelectionContentBuilder.h"
 #include "SelectionHighlight.h"

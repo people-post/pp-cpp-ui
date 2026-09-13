@@ -77,7 +77,7 @@ void ResolveSelectionBackground(Element* style_root, ColourbPremultiplied& fill,
 	Colourb resolved_text_color;
 	if (selected_text_color)
 	{
-		const Property* colour_property = selection_element ? selection_element->GetLocalProperty(PropertyId::Color) : nullptr;
+		const Property* colour_property = selection_element ? selection_element->Style().GetLocalProperty(PropertyId::Color) : nullptr;
 		if (colour_property)
 		{
 			resolved_text_color = colour_property->Get<Colourb>();
@@ -97,7 +97,7 @@ void ResolveSelectionBackground(Element* style_root, ColourbPremultiplied& fill,
 	}
 
 	const Property* background_property =
-		selection_element ? selection_element->GetLocalProperty(PropertyId::BackgroundColor) : nullptr;
+		selection_element ? selection_element->Style().GetLocalProperty(PropertyId::BackgroundColor) : nullptr;
 	if (background_property)
 	{
 		fill = background_property->Get<Colourb>().ToPremultiplied();

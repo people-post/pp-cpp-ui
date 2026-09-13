@@ -1,4 +1,4 @@
-#include "EventDispatcher.h"
+#include <ui/dom/EventDispatcher.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/Event.h>
 #include <ui/dom/EventListener.h>

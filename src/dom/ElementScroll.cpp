@@ -54,7 +54,7 @@ void ElementScroll::EnableScrollbar(Orientation orientation, float element_width
 	if (!scrollbars[orientation].enabled)
 	{
 		CreateScrollbar(orientation);
-		scrollbars[orientation].element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
+		scrollbars[orientation].element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
 		scrollbars[orientation].enabled = true;
 	}
 
@@ -79,11 +79,11 @@ void ElementScroll::DisableScrollbar(Orientation orientation)
 {
 	if (scrollbars[orientation].enabled)
 	{
-		scrollbars[orientation].element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+		scrollbars[orientation].element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 		scrollbars[orientation].enabled = false;
 
 		if (corner)
-			corner->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+			corner->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 	}
 }
 
@@ -193,7 +193,7 @@ void ElementScroll::FormatScrollbars()
 				Vector2f(scrollbars[VERTICAL].size, scrollbars[HORIZONTAL].size) - corner_box.GetPosition(BoxArea::Margin),
 			element, true);
 
-		corner->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
+		corner->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
 	}
 }
 
@@ -214,8 +214,8 @@ bool ElementScroll::CreateScrollbar(Orientation orientation)
 	ElementPtr scrollbar_element =
 		Factory::InstanceElement(element, "*", orientation == VERTICAL ? "scrollbarvertical" : "scrollbarhorizontal", XMLAttributes());
 	scrollbars[orientation].element = scrollbar_element.get();
-	scrollbars[orientation].element->SetProperty(PropertyId::Clip, Property(1, Unit::NUMBER));
-	scrollbars[orientation].element->SetProperty(PropertyId::Drag, Property(Style::Drag::Block));
+	scrollbars[orientation].element->Style().SetProperty(PropertyId::Clip, Property(1, Unit::NUMBER));
+	scrollbars[orientation].element->Style().SetProperty(PropertyId::Drag, Property(Style::Drag::Block));
 
 	scrollbars[orientation].widget = MakeUnique<WidgetScroll>(scrollbars[orientation].element);
 	scrollbars[orientation].widget->Initialise(orientation == VERTICAL ? WidgetScroll::VERTICAL : WidgetScroll::HORIZONTAL);
@@ -234,8 +234,8 @@ bool ElementScroll::CreateCorner()
 
 	ElementPtr corner_element = Factory::InstanceElement(element, "*", "scrollbarcorner", XMLAttributes());
 	corner = corner_element.get();
-	corner->SetProperty(PropertyId::Clip, Property(1, Unit::NUMBER));
-	corner->SetProperty(PropertyId::Drag, Property(Style::Drag::Block));
+	corner->Style().SetProperty(PropertyId::Clip, Property(1, Unit::NUMBER));
+	corner->Style().SetProperty(PropertyId::Drag, Property(Style::Drag::Block));
 
 	Element* child = element->AppendChild(std::move(corner_element), false);
 	UpdateScrollElementProperties(child);

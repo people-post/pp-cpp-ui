@@ -6,7 +6,7 @@
 #include <ui/paint/RenderBox.h>
 #include <ui/base/Math.h>
 #include "ElementMeta.h"
-#include "ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 
 namespace ui {
 

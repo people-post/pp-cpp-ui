@@ -87,12 +87,12 @@ void ElementTabSet::SetActiveTab(int tab_index)
         if (old_window)
         {
             old_window->SetPseudoClass("selected", false);
-			old_window->SetProperty(PropertyId::Display, Property(Style::Display::None));
+			old_window->Style().SetProperty(PropertyId::Display, Property(Style::Display::None));
         }
 		if (new_window)
         {
             new_window->SetPseudoClass("selected", true);
-			new_window->RemoveProperty(PropertyId::Display);
+			new_window->Style().RemoveProperty(PropertyId::Display);
         }
 
 		active_tab = tab_index;
@@ -146,7 +146,7 @@ void ElementTabSet::OnChildAdd(Element* child)
 	if (child->GetParentNode() == GetChildByTag("tabs"))
 	{
 		// Set up the new button and append it
-		child->RemoveProperty(PropertyId::Display);
+		child->Style().RemoveProperty(PropertyId::Display);
 
 		if (child->GetParentNode()->GetChild(active_tab) == child)
 			child->SetPseudoClass("selected", true);
@@ -155,13 +155,13 @@ void ElementTabSet::OnChildAdd(Element* child)
 	if (child->GetParentNode() == GetChildByTag("panels"))
 	{
 		// Hide the new tab window
-		child->SetProperty(PropertyId::Display, Property(Style::Display::None));
+		child->Style().SetProperty(PropertyId::Display, Property(Style::Display::None));
 
 		// Make the new element visible if its the active tab
 		if (child->GetParentNode()->GetChild(active_tab) == child)
         {
 			child->SetPseudoClass("selected", true);
-			child->RemoveProperty(PropertyId::Display);
+			child->Style().RemoveProperty(PropertyId::Display);
         }
 	}
 }
