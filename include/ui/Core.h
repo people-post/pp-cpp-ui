@@ -19,6 +19,8 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementInstancer.h>
+#include <ui/dom/ElementBackgroundBorder.h>
+#include <ui/dom/ElementEffects.h>
 #include <ui/dom/ElementScroll.h>
 #include <ui/dom/EventDispatcher.h>
 #include <ui/dom/ElementStyle.h>

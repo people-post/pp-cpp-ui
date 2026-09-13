@@ -18,9 +18,9 @@
 #include "base/Clock.h"
 #include "style/ComputeProperty.h"
 #include "ElementAnimation.h"
-#include "ElementBackgroundBorder.h"
+#include <ui/dom/ElementBackgroundBorder.h>
 #include "ElementDefinition.h"
-#include "ElementEffects.h"
+#include <ui/dom/ElementEffects.h>
 #include "ElementMeta.h"
 #include <ui/dom/ElementStyle.h>
 #include <ui/dom/EventDispatcher.h>

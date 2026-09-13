@@ -1,7 +1,9 @@
 #pragma once
 
 #include <ui/layout/Box.h>
+#include <ui/dom/ElementBackgroundBorder.h>
 #include <ui/dom/ElementBox.h>
+#include <ui/dom/ElementEffects.h>
 #include <ui/dom/ElementScroll.h>
 #include <ui/dom/ElementStyle.h>
 #include <ui/dom/Event.h>
@@ -26,10 +28,8 @@ class DataModel;
 class Decorator;
 class ElementInstancer;
 class EventListener;
-class ElementBackgroundBorder;
 class ElementDefinition;
 class ElementDocument;
-class ElementEffects;
 class LayoutEngine;
 namespace LayoutElement {
 class ElementAccess;

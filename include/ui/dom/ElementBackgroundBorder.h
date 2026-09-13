@@ -1,15 +1,27 @@
 #pragma once
 
+#include <ui/base/Header.h>
 #include <ui/paint/CallbackTexture.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Types.h>
 namespace ui {
 
+class Element;
 struct BoxShadowRenderable;
 
-class ElementBackgroundBorder {
+/**
+    Generates and renders an element's background and border geometry.
+
+    Prefer `element->BackgroundBorder()`.
+ */
+
+class UI_CORE_API ElementBackgroundBorder {
 public:
 	ElementBackgroundBorder();
+	~ElementBackgroundBorder() = default;
+
+	ElementBackgroundBorder(const ElementBackgroundBorder&) = delete;
+	ElementBackgroundBorder& operator=(const ElementBackgroundBorder&) = delete;
 	void Render(Element* element);
 
 	void DirtyBackground();

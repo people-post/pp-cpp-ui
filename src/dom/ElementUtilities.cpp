@@ -9,7 +9,7 @@
 #include <ui/base/Math.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/font/TextShapingContext.h>
-#include "ElementBackgroundBorder.h"
+#include <ui/dom/ElementBackgroundBorder.h>
 #include "layout/LayoutDetails.h"
 #include "layout/LayoutEngine.h"
 #include "style/TransformState.h"
