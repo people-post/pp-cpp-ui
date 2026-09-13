@@ -180,7 +180,7 @@ void DecoratorStraightGradient::ReleaseElementData(DecoratorDataHandle element_d
 void DecoratorStraightGradient::RenderElement(Element* element, DecoratorDataHandle element_data) const
 {
 	auto* data = reinterpret_cast<Geometry*>(element_data);
-	data->Render(element->GetAbsoluteOffset(BoxArea::Border));
+	data->Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border));
 }
 
 DecoratorStraightGradientInstancer::DecoratorStraightGradientInstancer()
@@ -284,7 +284,7 @@ void DecoratorLinearGradient::ReleaseElementData(DecoratorDataHandle handle) con
 void DecoratorLinearGradient::RenderElement(Element* element, DecoratorDataHandle handle) const
 {
 	ShaderElementData* element_data = reinterpret_cast<ShaderElementData*>(handle);
-	element_data->geometry.Render(element->GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
+	element_data->geometry.Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
 }
 
 DecoratorLinearGradient::LinearGradientShape DecoratorLinearGradient::CalculateShape(Vector2f dim) const
@@ -452,7 +452,7 @@ void DecoratorRadialGradient::ReleaseElementData(DecoratorDataHandle handle) con
 void DecoratorRadialGradient::RenderElement(Element* element, DecoratorDataHandle handle) const
 {
 	ShaderElementData* element_data = reinterpret_cast<ShaderElementData*>(handle);
-	element_data->geometry.Render(element->GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
+	element_data->geometry.Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
 }
 
 DecoratorRadialGradient::RadialGradientShape DecoratorRadialGradient::CalculateRadialGradientShape(Element* element, Vector2f dimensions) const
@@ -649,7 +649,7 @@ void DecoratorConicGradient::ReleaseElementData(DecoratorDataHandle handle) cons
 void DecoratorConicGradient::RenderElement(Element* element, DecoratorDataHandle handle) const
 {
 	ShaderElementData* element_data = reinterpret_cast<ShaderElementData*>(handle);
-	element_data->geometry.Render(element->GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
+	element_data->geometry.Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
 }
 
 DecoratorConicGradientInstancer::DecoratorConicGradientInstancer()

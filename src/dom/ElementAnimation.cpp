@@ -11,7 +11,7 @@
 #include <ui/style/Transform.h>
 #include <ui/style/TransformPrimitive.h>
 #include "style/ComputeProperty.h"
-#include "dom/ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "style/TransformUtilities.h"
 
 namespace ui {
@@ -173,8 +173,8 @@ static NumericValue InterpolateNumericValue(NumericValue v0, NumericValue v1, fl
 	// When mixing lengths or relative sizes, resolve them to pixel lengths and interpolate. This only works if we have a definition.
 	if (Any(v0.unit & Unit::NUMBER_LENGTH_PERCENT) && Any(v1.unit & Unit::NUMBER_LENGTH_PERCENT) && definition)
 	{
-		float f0 = element.GetStyle()->ResolveRelativeLength(v0, definition->GetRelativeTarget());
-		float f1 = element.GetStyle()->ResolveRelativeLength(v1, definition->GetRelativeTarget());
+		float f0 = element.Style().ResolveRelativeLength(v0, definition->GetRelativeTarget());
+		float f1 = element.Style().ResolveRelativeLength(v1, definition->GetRelativeTarget());
 		return NumericValue{Mix(f0, f1, alpha), Unit::PX};
 	}
 

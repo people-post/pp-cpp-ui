@@ -340,7 +340,7 @@ void ElementSelectableText::RebuildLayout()
 		float descent = 0.f;
 		GetLineFontMetrics(text_element, ascent, descent);
 
-		const Vector2f text_origin = text_element->GetAbsoluteOffset() - render_origin;
+		const Vector2f text_origin = text_element->BoxModel().GetAbsoluteOffset() - render_origin;
 		int flat_cursor = segment.flat_begin;
 
 		const ElementText::LineList& layout_lines = text_element->GetLines();

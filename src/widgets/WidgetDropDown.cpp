@@ -23,21 +23,21 @@ WidgetDropDown::WidgetDropDown(ElementFormControl* element)
 	value_element = parent_element->AppendChild(Factory::InstanceElement(parent_element, "*", "selectvalue", XMLAttributes()), false);
 	selection_element = parent_element->AppendChild(Factory::InstanceElement(parent_element, "*", "selectbox", XMLAttributes()), false);
 
-	value_element->SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Hidden));
-	value_element->SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Hidden));
+	value_element->Style().SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Hidden));
+	value_element->Style().SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Hidden));
 
-	selection_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
-	selection_element->SetProperty(PropertyId::ZIndex, Property(1.0f, Unit::NUMBER));
-	selection_element->SetProperty(PropertyId::Clip, Property(Style::Clip::Type::None));
-	selection_element->SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Auto));
+	selection_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	selection_element->Style().SetProperty(PropertyId::ZIndex, Property(1.0f, Unit::NUMBER));
+	selection_element->Style().SetProperty(PropertyId::Clip, Property(Style::Clip::Type::None));
+	selection_element->Style().SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Auto));
 
 	// Prevent scrolling in the parent document when the mouse is inside the selection box.
-	selection_element->SetProperty(PropertyId::OverscrollBehavior, Property(Style::OverscrollBehavior::Contain));
+	selection_element->Style().SetProperty(PropertyId::OverscrollBehavior, Property(Style::OverscrollBehavior::Contain));
 
-	parent_element->AddEventListener(EventId::Click, this, true);
-	parent_element->AddEventListener(EventId::Blur, this);
-	parent_element->AddEventListener(EventId::Focus, this);
-	parent_element->AddEventListener(EventId::Keydown, this, true);
+	parent_element->Events().AttachEvent(EventId::Click, this, true);
+	parent_element->Events().AttachEvent(EventId::Blur, this);
+	parent_element->Events().AttachEvent(EventId::Focus, this);
+	parent_element->Events().AttachEvent(EventId::Keydown, this, true);
 }
 
 WidgetDropDown::~WidgetDropDown()
@@ -46,12 +46,12 @@ WidgetDropDown::~WidgetDropDown()
 	//   However, we do need to remove events of children.
 	const int num_options = selection_element->GetNumChildren();
 	for (int i = 0; i < num_options; i++)
-		selection_element->GetChild(i)->RemoveEventListener(EventId::Click, this);
+		selection_element->GetChild(i)->Events().DetachEvent(EventId::Click, this);
 
-	parent_element->RemoveEventListener(EventId::Click, this, true);
-	parent_element->RemoveEventListener(EventId::Blur, this);
-	parent_element->RemoveEventListener(EventId::Focus, this);
-	parent_element->RemoveEventListener(EventId::Keydown, this, true);
+	parent_element->Events().DetachEvent(EventId::Click, this, true);
+	parent_element->Events().DetachEvent(EventId::Blur, this);
+	parent_element->Events().DetachEvent(EventId::Focus, this);
+	parent_element->Events().DetachEvent(EventId::Keydown, this, true);
 
 	DetachScrollEvent();
 }
@@ -125,48 +125,48 @@ void WidgetDropDown::OnRender()
 		// We try to respect user values of 'height', 'min-height', and 'max-height'. However, when we need to shrink the box
 		// we will override the 'height' property.
 
-		const float initial_used_height = selection_element->GetBox().GetSize().y;
-		const Vector2f initial_scroll_offset = {selection_element->GetScrollLeft(), selection_element->GetScrollTop()};
+		const float initial_used_height = selection_element->BoxModel().GetBox().GetSize().y;
+		const Vector2f initial_scroll_offset = {selection_element->Scroll().GetScrollLeft(), selection_element->Scroll().GetScrollTop()};
 
 		// Previously set 'height' property from this procedure must be removed for the calculations below to work as intended.
 		if (selection_element->GetLocalStyleProperties().count(PropertyId::Height) == 1)
 		{
-			selection_element->RemoveProperty(PropertyId::Height);
+			selection_element->Style().RemoveProperty(PropertyId::Height);
 			selection_element->GetOwnerDocument()->UpdateDocument();
 		}
 
 		Box box;
-		ElementUtilities::BuildBox(box, parent_element->GetBox().GetSize(), selection_element);
+		ElementUtilities::BuildBox(box, parent_element->BoxModel().GetBox().GetSize(), selection_element);
 
 		// The user can use 'margin-left/top/bottom' to offset the box away from the 'select' element, respectively
 		// horizontally, vertically when box below, and vertically when box above.
 		const float offset_x = box.GetEdge(BoxArea::Margin, BoxEdge::Left);
-		const float offset_y_below = parent_element->GetBox().GetSize(BoxArea::Border).y + box.GetEdge(BoxArea::Margin, BoxEdge::Top);
+		const float offset_y_below = parent_element->BoxModel().GetBox().GetSize(BoxArea::Border).y + box.GetEdge(BoxArea::Margin, BoxEdge::Top);
 		const float offset_y_above = -box.GetEdge(BoxArea::Margin, BoxEdge::Bottom);
 
 		float window_height = 100'000.f;
 		if (Context* context = parent_element->GetContext())
 			window_height = float(context->GetDimensions().y);
 
-		const float absolute_y = parent_element->GetAbsoluteOffset(BoxArea::Border).y;
+		const float absolute_y = parent_element->BoxModel().GetAbsoluteOffset(BoxArea::Border).y;
 
 		const float height_below = window_height - absolute_y - offset_y_below;
 		const float height_above = absolute_y + offset_y_above;
 
 		// Format the selection box and retrieve the 'native' height occupied by all the options, while respecting
 		// the 'min/max-height' properties.
-		ElementUtilities::FormatElement(selection_element, parent_element->GetBox().GetSize(BoxArea::Border));
+		ElementUtilities::FormatElement(selection_element, parent_element->BoxModel().GetBox().GetSize(BoxArea::Border));
 		const float content_height = selection_element->GetOffsetHeight();
 
 		if (content_height < height_below)
 		{
 			// Position box below
-			selection_element->SetOffset(Vector2f(offset_x, offset_y_below), parent_element);
+			selection_element->BoxModel().SetOffset(Vector2f(offset_x, offset_y_below), parent_element);
 		}
 		else if (content_height < height_above)
 		{
 			// Position box above
-			selection_element->SetOffset(Vector2f(offset_x, -content_height + offset_y_above), parent_element);
+			selection_element->BoxModel().SetOffset(Vector2f(offset_x, -content_height + offset_y_above), parent_element);
 		}
 		else
 		{
@@ -194,18 +194,18 @@ void WidgetDropDown::OnRender()
 			// the document. However, the re-layout is not really needed, since the document's layout is independent of
 			// the selection element's size, and we do all the formatting for the element here. We really only call
 			// `UpdateDocument` to update the properties. See also `RemoveProperty` for height above.
-			selection_element->SetProperty(PropertyId::Height, Property(height, Unit::PX));
+			selection_element->Style().SetProperty(PropertyId::Height, Property(height, Unit::PX));
 			selection_element->GetOwnerDocument()->UpdateDocument();
-			ElementUtilities::FormatElement(selection_element, parent_element->GetBox().GetSize(BoxArea::Border));
+			ElementUtilities::FormatElement(selection_element, parent_element->BoxModel().GetBox().GetSize(BoxArea::Border));
 
 			// Set the scroll offset back, since it may have been clamped during the first element formatting.
-			selection_element->SetScrollLeft(initial_scroll_offset.x);
-			selection_element->SetScrollTop(initial_scroll_offset.y);
+			selection_element->Scroll().SetScrollLeft(initial_scroll_offset.x);
+			selection_element->Scroll().SetScrollTop(initial_scroll_offset.y);
 
-			selection_element->SetOffset(Vector2f(offset_x, offset_y), parent_element);
+			selection_element->BoxModel().SetOffset(Vector2f(offset_x, offset_y), parent_element);
 		}
 
-		const float new_used_height = selection_element->GetBox().GetSize().y;
+		const float new_used_height = selection_element->BoxModel().GetBox().GetSize().y;
 		const bool should_scroll_into_view =
 			(box_opened_since_last_format || value_changed_since_last_box_format || initial_used_height != new_used_height);
 
@@ -219,7 +219,7 @@ void WidgetDropDown::OnRender()
 				ScrollBehavior::Instant,
 				ScrollParentage::Closest,
 			};
-			GetOption(selection)->ScrollIntoView(scroll_options);
+			GetOption(selection)->Scroll().ScrollIntoView(scroll_options);
 		}
 
 		box_opened_since_last_format = false;
@@ -229,8 +229,8 @@ void WidgetDropDown::OnRender()
 
 	if (value_layout_dirty)
 	{
-		ElementUtilities::FormatElement(value_element, parent_element->GetBox().GetSize(BoxArea::Border));
-		value_element->SetOffset(parent_element->GetBox().GetPosition(BoxArea::Content), parent_element);
+		ElementUtilities::FormatElement(value_element, parent_element->BoxModel().GetBox().GetSize(BoxArea::Border));
+		value_element->BoxModel().SetOffset(parent_element->BoxModel().GetBox().GetPosition(BoxArea::Content), parent_element);
 
 		value_layout_dirty = false;
 	}
@@ -296,7 +296,7 @@ void WidgetDropDown::SetSelection(Element* select_option, bool force)
 
 		if (select_option == option)
 		{
-			if (!option->IsPseudoClassSet("checked"))
+			if (!option->Style().IsPseudoClassSet("checked"))
 				newly_selected = true;
 			option->SetAttribute("selected", String());
 			option->SetPseudoClass("checked", true);
@@ -424,9 +424,9 @@ void WidgetDropDown::OnChildAdd(Element* element)
 		return;
 
 	// Force to block display. Register a click handler so we can be notified of selection.
-	element->SetProperty(PropertyId::Display, Property(Style::Display::Block));
-	element->SetProperty(PropertyId::Clip, Property(Style::Clip::Type::Auto));
-	element->AddEventListener(EventId::Click, this);
+	element->Style().SetProperty(PropertyId::Display, Property(Style::Display::Block));
+	element->Style().SetProperty(PropertyId::Clip, Property(Style::Clip::Type::Auto));
+	element->Events().AttachEvent(EventId::Click, this);
 
 	// Select the option if appropriate.
 	if (element->HasAttribute("selected"))
@@ -441,7 +441,7 @@ void WidgetDropDown::OnChildRemove(Element* element)
 	if (element->GetParentNode() != selection_element)
 		return;
 
-	element->RemoveEventListener(EventId::Click, this);
+	element->Events().DetachEvent(EventId::Click, this);
 
 	if (element->HasAttribute("selected"))
 		SetSelection(nullptr);
@@ -453,13 +453,13 @@ void WidgetDropDown::OnChildRemove(Element* element)
 void WidgetDropDown::AttachScrollEvent()
 {
 	if (ElementDocument* document = parent_element->GetOwnerDocument())
-		document->AddEventListener(EventId::Scroll, this, true);
+		document->Events().AttachEvent(EventId::Scroll, this, true);
 }
 
 void WidgetDropDown::DetachScrollEvent()
 {
 	if (ElementDocument* document = parent_element->GetOwnerDocument())
-		document->RemoveEventListener(EventId::Scroll, this, true);
+		document->Events().DetachEvent(EventId::Scroll, this, true);
 }
 
 void WidgetDropDown::ProcessEvent(Event& event)
@@ -602,7 +602,7 @@ void WidgetDropDown::ShowSelectBox()
 		return;
 
 	selected_value_on_box_open = parent_element->GetAttribute<String>("value", "");
-	selection_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
+	selection_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
 	selection_element->SetPseudoClass("checked", true);
 	value_element->SetPseudoClass("checked", true);
 	button_element->SetPseudoClass("checked", true);
@@ -618,8 +618,8 @@ void WidgetDropDown::HideSelectBox()
 	if (!box_visible)
 		return;
 
-	selection_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
-	selection_element->RemoveProperty(PropertyId::Height);
+	selection_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	selection_element->Style().RemoveProperty(PropertyId::Height);
 	selection_element->SetPseudoClass("checked", false);
 	value_element->SetPseudoClass("checked", false);
 	button_element->SetPseudoClass("checked", false);

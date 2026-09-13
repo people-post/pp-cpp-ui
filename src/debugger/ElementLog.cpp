@@ -55,14 +55,14 @@ ElementLog::~ElementLog()
 	RemoveEventListener(EventId::Click, this);
 
 	if (beacon && beacon->GetFirstChild())
-		beacon->GetFirstChild()->RemoveEventListener(EventId::Click, this);
+		beacon->GetFirstChild()->Events().DetachEvent(EventId::Click, this);
 
 	if (beacon && beacon->GetParentNode())
 		beacon->GetParentNode()->RemoveChild(beacon);
 
 	if (message_content)
 	{
-		message_content->RemoveEventListener(EventId::Resize, this);
+		message_content->Events().DetachEvent(EventId::Resize, this);
 	}
 }
 
@@ -74,7 +74,7 @@ bool ElementLog::Initialise()
 	message_content = GetElementById("content");
 	if (message_content)
 	{
-		message_content->AddEventListener(EventId::Resize, this);
+		message_content->Events().AttachEvent(EventId::Resize, this);
 	}
 
 	SharedPtr<StyleSheetContainer> style_sheet = Factory::InstanceStyleSheetString(String(common_rcss) + String(log_rcss));
@@ -92,12 +92,12 @@ bool ElementLog::Initialise()
 		return false;
 
 	beacon->SetId("rmlui-debug-log-beacon");
-	beacon->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	beacon->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 	beacon->SetInnerRML(beacon_rml);
 
 	Element* button = beacon->GetFirstChild();
 	if (button)
-		beacon->GetFirstChild()->AddEventListener(EventId::Click, this);
+		beacon->GetFirstChild()->Events().AttachEvent(EventId::Click, this);
 
 	style_sheet = Factory::InstanceStyleSheetString(String(common_rcss) + String(beacon_rcss));
 	if (!style_sheet)
@@ -146,7 +146,7 @@ void ElementLog::AddLogMessage(Log::Type type, const String& message)
 		{
 			if (type < current_beacon_level)
 			{
-				beacon->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
+				beacon->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
 
 				current_beacon_level = type;
 				Element* beacon_button = beacon->GetFirstChild();
@@ -218,7 +218,7 @@ void ElementLog::ProcessEvent(Event& event)
 			if (event.GetTargetElement() == beacon->GetFirstChild())
 			{
 				Show();
-				beacon->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+				beacon->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 				current_beacon_level = Log::LT_MAX;
 			}
 			else if (event.GetTargetElement()->GetId() == "close_button")
@@ -259,7 +259,7 @@ void ElementLog::ProcessEvent(Event& event)
 	if (event == EventId::Resize && auto_scroll)
 	{
 		if (message_content != nullptr && message_content->HasChildNodes())
-			message_content->GetLastChild()->ScrollIntoView();
+			message_content->GetLastChild()->Scroll().ScrollIntoView();
 	}
 }
 

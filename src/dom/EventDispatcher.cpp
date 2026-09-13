@@ -1,4 +1,4 @@
-#include "EventDispatcher.h"
+#include <ui/dom/EventDispatcher.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/Event.h>
 #include <ui/dom/EventListener.h>
@@ -69,7 +69,7 @@ void EventDispatcher::DetachAllEvents()
 	listeners.clear();
 
 	for (int i = 0; i < element->GetNumChildren(true); ++i)
-		element->GetChild(i)->GetEventDispatcher()->DetachAllEvents();
+		element->GetChild(i)->Events().DetachAllEvents();
 }
 
 /*
@@ -114,7 +114,7 @@ bool EventDispatcher::DispatchEvent(Element* target_element, const EventId id, c
 	Element* walk_element = target_element;
 	while (walk_element)
 	{
-		EventDispatcher* dispatcher = walk_element->GetEventDispatcher();
+		EventDispatcher* dispatcher = &walk_element->Events();
 		dispatcher->CollectListeners(dom_distance_from_target, id, phases_to_execute, listeners);
 
 		if (dom_distance_from_target == 0)

@@ -1,4 +1,4 @@
-#include "ElementBackgroundBorder.h"
+#include <ui/dom/ElementBackgroundBorder.h>
 #include <ui/layout/Box.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
@@ -32,12 +32,12 @@ void ElementBackgroundBorder::Render(Element* element)
 
 	if (Background* shadow = GetBackground(BackgroundType::BoxShadowAndBackgroundBorder))
 	{
-		const Vector2f offset = element->GetAbsoluteOffset(BoxArea::Border);
+		const Vector2f offset = element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 		shadow->box_shadow_and_background_border->geometry.Render(offset, shadow->box_shadow_and_background_border->texture);
 	}
 	else if (Background* background = GetBackground(BackgroundType::BackgroundBorder))
 	{
-		const Vector2f offset = element->GetAbsoluteOffset(BoxArea::Border);
+		const Vector2f offset = element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 		background->geometry.Render(offset);
 	}
 }
@@ -131,7 +131,7 @@ void ElementBackgroundBorder::GenerateGeometry(Element* element)
 	Geometry& geometry = GetOrCreateBackground(BackgroundType::BackgroundBorder).geometry;
 	Mesh mesh = geometry.Release(Geometry::ReleaseMode::ClearMesh);
 
-	for (int i = 0; i < element->GetNumBoxes(); i++)
+	for (int i = 0; i < element->BoxModel().GetNumBoxes(); i++)
 		MeshUtilities::GenerateBackgroundBorder(mesh, element->GetRenderBox(BoxArea::Padding, i), background_color, border_colors.data());
 
 	geometry = render_manager->MakeGeometry(std::move(mesh));

@@ -149,7 +149,7 @@ void DecoratorNinePatch::ReleaseElementData(DecoratorDataHandle element_data) co
 void DecoratorNinePatch::RenderElement(Element* element, DecoratorDataHandle element_data) const
 {
 	Geometry* data = reinterpret_cast<Geometry*>(element_data);
-	data->Render(element->GetAbsoluteOffset(BoxArea::Border), GetTexture());
+	data->Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border), GetTexture());
 }
 
 DecoratorNinePatchInstancer::DecoratorNinePatchInstancer()

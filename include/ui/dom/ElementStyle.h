@@ -1,27 +1,37 @@
 #pragma once
 
+#include <ui/base/Header.h>
 #include <ui/style/ComputedValues.h>
+#include <ui/style/PropertyDefinition.h>
 #include <ui/style/PropertyDictionary.h>
 #include <ui/style/PropertyIdSet.h>
 #include <ui/base/Types.h>
+
 namespace ui {
 
+class Element;
 class ElementDefinition;
 class PropertiesIterator;
-enum class RelativeTarget;
 
 enum class PseudoClassState : uint8_t { Clear = 0, Set = 1, Override = 2 };
 using PseudoClassMap = SmallUnorderedMap<String, PseudoClassState>;
 
 /**
     Manages an element's style and property information.
+
+    Prefer `element->Style()` for property access. Element::SetClass / SetPseudoClass
+    remain preferred when sibling-combinator definition dirtying is required.
  */
 
-class ElementStyle {
+class UI_CORE_API ElementStyle {
 public:
 	/// Constructor
 	/// @param[in] element The element this structure belongs to.
-	ElementStyle(Element* element);
+	explicit ElementStyle(Element* element);
+	~ElementStyle();
+
+	ElementStyle(const ElementStyle&) = delete;
+	ElementStyle& operator=(const ElementStyle&) = delete;
 
 	/// Update this definition if required
 	void UpdateDefinition();
@@ -110,7 +120,8 @@ public:
 
 	/// Returns an iterator for iterating the local properties of this element.
 	/// Note: Modifying the element's style invalidates its iterator.
-	PropertiesIterator Iterate() const;
+	/// Prefer Element::IterateLocalProperties() from public call sites.
+	UniquePtr<PropertiesIterator> Iterate() const;
 
 private:
 	// Sets a list of properties as dirty.

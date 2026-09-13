@@ -64,7 +64,7 @@ void ElementProgress::OnRender()
 		GenerateGeometry();
 
 	// Render the geometry at the fill element's content region.
-	geometry.Render(fill->GetAbsoluteOffset(), texture);
+	geometry.Render(fill->BoxModel().GetAbsoluteOffset(), texture);
 }
 
 void ElementProgress::OnAttributeChange(const ElementAttributes& changed_attributes)
@@ -144,7 +144,7 @@ void ElementProgress::OnResize()
 	fill_size = element_size - edge_size;
 
 	fill_box.SetContent(fill_size);
-	fill->SetBox(fill_box);
+	fill->BoxModel().SetBox(fill_box);
 
 	geometry_dirty = true;
 }
@@ -154,7 +154,7 @@ void ElementProgress::GenerateGeometry()
 	geometry_dirty = false;
 
 	// Warn the user when using the old approach of adding the 'fill-image' property to the 'fill' element.
-	if (fill->GetLocalProperty(PropertyId::FillImage))
+	if (fill->Style().GetLocalProperty(PropertyId::FillImage))
 		Log::Message(Log::LT_WARNING,
 			"Breaking change: The 'fill-image' property now needs to be set on the <progress> element, instead of its inner <fill> element. Please "
 			"update your RCSS source to fix progress bars in this document.");
@@ -186,10 +186,10 @@ void ElementProgress::GenerateGeometry()
 		case Direction::Count: break;
 		}
 
-		Box fill_box = fill->GetBox();
+		Box fill_box = fill->BoxModel().GetBox();
 		fill_box.SetContent(render_size);
-		fill->SetBox(fill_box);
-		fill->SetOffset(offset, this);
+		fill->BoxModel().SetBox(fill_box);
+		fill->BoxModel().SetOffset(offset, this);
 	}
 
 	Mesh mesh = geometry.Release(Geometry::ReleaseMode::ClearMesh);

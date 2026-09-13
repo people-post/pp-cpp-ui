@@ -1,7 +1,13 @@
 #pragma once
 
 #include <ui/layout/Box.h>
+#include <ui/dom/ElementBackgroundBorder.h>
+#include <ui/dom/ElementBox.h>
+#include <ui/dom/ElementEffects.h>
+#include <ui/dom/ElementScroll.h>
+#include <ui/dom/ElementStyle.h>
 #include <ui/dom/Event.h>
+#include <ui/dom/EventDispatcher.h>
 #include <ui/base/Header.h>
 #include <ui/base/FontMetrics.h>
 #include <ui/base/ObserverPtr.h>
@@ -21,13 +27,9 @@ class Context;
 class DataModel;
 class Decorator;
 class ElementInstancer;
-class EventDispatcher;
 class EventListener;
-class ElementBackgroundBorder;
 class ElementDefinition;
 class ElementDocument;
-class ElementScroll;
-class ElementStyle;
 class LayoutEngine;
 namespace LayoutElement {
 class ElementAccess;
@@ -409,27 +411,34 @@ public:
 
 	/// Gets the left scroll offset of the element.
 	/// @return The element's left scroll offset.
+	/// @note Prefer Scroll().GetScrollLeft().
 	float GetScrollLeft();
 	/// Sets the left scroll offset of the element.
 	/// @param[in] scroll_left The element's new left scroll offset.
 	/// @param[in] clamp When true (default), clamps to the valid scroll range; false allows rubber-band overscroll.
+	/// @note Prefer Scroll().SetScrollLeft().
 	void SetScrollLeft(float scroll_left, bool clamp = true);
 	/// Gets the top scroll offset of the element.
 	/// @return The element's top scroll offset.
+	/// @note Prefer Scroll().GetScrollTop().
 	float GetScrollTop();
 	/// Sets the top scroll offset of the element.
 	/// @param[in] scroll_top The element's new top scroll offset.
 	/// @param[in] clamp When true (default), clamps to the valid scroll range; false allows rubber-band overscroll.
+	/// @note Prefer Scroll().SetScrollTop().
 	void SetScrollTop(float scroll_top, bool clamp = true);
 	/// Gets the width of the scrollable content of the element; it includes the element padding but not its margin.
 	/// @return The width (in pixels) of the scrollable content of the element.
+	/// @note Prefer Scroll().GetScrollWidth().
 	float GetScrollWidth();
 	/// Gets the height of the scrollable content of the element; it includes the element padding but not its margin.
 	/// @return The height (in pixels) of the scrollable content of the element.
+	/// @note Prefer Scroll().GetScrollHeight().
 	float GetScrollHeight();
 
 	/// Gets the object representing the declarations of an element's style attributes.
 	/// @return The element's style.
+	/// @note Prefer Style().
 	ElementStyle* GetStyle() const;
 
 	/// Gets the document this element belongs to.
@@ -590,18 +599,33 @@ public:
 	//@}
 
 	/**
+	    @name Parts
+	    Preferred access to Element collaborators (entity + parts). See docs/ELEMENT_PARTS.md.
+	    Legacy GetStyle remains as an alias; prefer Style() where ElementStyle is complete.
+	 */
+	//@{
+	ElementStyle& Style();
+	const ElementStyle& Style() const;
+	/// Box-model part (offsets, clip, laid-out boxes). Named BoxModel to avoid clashing with type ui::Box.
+	ElementBox BoxModel();
+	ElementScroll& Scroll();
+	const ElementScroll& Scroll() const;
+	EventDispatcher& Events();
+	const EventDispatcher& Events() const;
+	ElementEffects& Effects();
+	const ElementEffects& Effects() const;
+	ElementBackgroundBorder& BackgroundBorder();
+	const ElementBackgroundBorder& BackgroundBorder() const;
+	//@}
+
+	/**
 	    @name Internal Functions
 	 */
 	//@{
-	/// Access the event dispatcher for this element.
-	EventDispatcher* GetEventDispatcher() const;
 	/// Returns event types with the number of listeners for debugging.
 	String GetEventDispatcherSummary() const;
-	/// Access the element background and border.
-	ElementBackgroundBorder* GetElementBackgroundBorder() const;
-	/// Returns the element's scrollbar functionality.
-	ElementScroll* GetElementScroll() const;
 	/// Returns the element's nearest scroll container that can be scrolled, if any.
+	/// @note Prefer Scroll().GetClosestScrollableContainer().
 	Element* GetClosestScrollableContainer();
 	/// Returns the element's transform state.
 	const TransformState* GetTransformState() const noexcept;
@@ -803,7 +827,8 @@ private:
 	};
 	using PositionedBoxList = Vector<PositionedBox>;
 	Box main_box;
-	PositionedBoxList additional_boxes;
+	/// Extra boxes (e.g. split inlines). Allocate on first AddBox — most nodes only need main_box.
+	UniquePtr<PositionedBoxList> additional_boxes;
 
 	// And of the element's scrollable content.
 	Vector2f scrollable_overflow_rectangle;
@@ -811,13 +836,33 @@ private:
 	float baseline;
 	float z_index;
 
-	ElementList stacking_context;
+	/// Local stacking-context child list. Allocate when acting as a stacking context.
+	UniquePtr<ElementList> stacking_context;
 
 	UniquePtr<TransformState> transform_state;
 
-	ElementAnimationList animations;
+	/// Running animations / transitions. Allocate on first animation.
+	UniquePtr<ElementAnimationList> animations;
 
 	ElementMeta* meta;
+
+	ElementAnimationList& EnsureAnimations();
+	bool HasAnimations() const { return animations && !animations->empty(); }
+
+	ElementList& EnsureStackingContext()
+	{
+		if (!stacking_context)
+			stacking_context = MakeUnique<ElementList>();
+		return *stacking_context;
+	}
+
+	PositionedBoxList& EnsureAdditionalBoxes()
+	{
+		if (!additional_boxes)
+			additional_boxes = MakeUnique<PositionedBoxList>();
+		return *additional_boxes;
+	}
+	int GetAdditionalBoxCount() const { return additional_boxes ? (int)additional_boxes->size() : 0; }
 
 	friend class ui::Context;
 	friend class ui::ElementStyle;

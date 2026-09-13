@@ -44,7 +44,7 @@ static BoxShadowGeometryInfo ResolveBoxShadowGeometry(Element* element, const Co
 	Vector2f element_offset_in_texture;
 	Vector2i texture_dimensions;
 
-	const Property* p_box_shadow = element->GetLocalProperty(PropertyId::BoxShadow);
+	const Property* p_box_shadow = element->Style().GetLocalProperty(PropertyId::BoxShadow);
 	UI_ASSERT(p_box_shadow->value.GetType() == Variant::BOXSHADOWLIST);
 	BoxShadowList shadow_list = p_box_shadow->value.Get<BoxShadowList>();
 
@@ -76,7 +76,7 @@ static BoxShadowGeometryInfo ResolveBoxShadowGeometry(Element* element, const Co
 		Rectanglef texture_region;
 
 		// Extend the render-texture further to cover all the element's boxes.
-		for (int i = 0; i < element->GetNumBoxes(); i++)
+		for (int i = 0; i < element->BoxModel().GetNumBoxes(); i++)
 		{
 			const RenderBox box = element->GetRenderBox(BoxArea::Border, i);
 			texture_region = texture_region.Join(Rectanglef::FromPositionSize(box.GetBorderOffset(), box.GetFillSize()));
@@ -94,7 +94,7 @@ static BoxShadowGeometryInfo ResolveBoxShadowGeometry(Element* element, const Co
 	RenderBoxList padding_render_boxes{};
 	RenderBoxList border_render_boxes{};
 
-	for (int i = 0; i < element->GetNumBoxes(); i++)
+	for (int i = 0; i < element->BoxModel().GetNumBoxes(); i++)
 	{
 		padding_render_boxes.push_back(element->GetRenderBox(BoxArea::Padding, i));
 		border_render_boxes.push_back(element->GetRenderBox(BoxArea::Border, i));

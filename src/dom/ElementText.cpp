@@ -11,7 +11,7 @@
 #include <ui/font/TextShapingContext.h>
 #include "style/ComputeProperty.h"
 #include "dom/ElementDefinition.h"
-#include "dom/ElementStyle.h"
+#include <ui/dom/ElementStyle.h>
 #include "style/TransformState.h"
 #include "SelectionContentBuilder.h"
 #include "SelectionHighlight.h"
@@ -54,7 +54,7 @@ static TextOverflowResolved ResolveTextOverflow(Element* parent, FontFaceHandle 
 	if (text_overflow == Style::TextOverflow::Clip)
 		return {};
 
-	const Box& box = parent->GetBox();
+	const Box& box = parent->BoxModel().GetBox();
 	const BoxArea clip_area = parent->GetClipArea();
 
 	auto AccumulateRightSideEdgesUpTo = [](const Box& box, BoxArea up_to_area) -> float {
@@ -64,7 +64,7 @@ static TextOverflowResolved ResolveTextOverflow(Element* parent, FontFaceHandle 
 		return result;
 	};
 
-	const float overflow_width = parent->GetScrollLeft() + box.GetSize().x + AccumulateRightSideEdgesUpTo(box, clip_area);
+	const float overflow_width = parent->Scroll().GetScrollLeft() + box.GetSize().x + AccumulateRightSideEdgesUpTo(box, clip_area);
 
 	constexpr char ellipsis_chars[] = "\xE2\x80\xA6"; // U+2026
 	constexpr char dots_chars[] = "...";

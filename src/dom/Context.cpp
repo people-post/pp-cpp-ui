@@ -11,9 +11,10 @@
 #include <ui/base/StreamMemory.h>
 #include <ui/base/SystemInterface.h>
 #include "ClickRouting.h"
-#include "EventDispatcher.h"
+#include <ui/dom/EventDispatcher.h>
 #include "dom/PluginRegistry.h"
 #include "SelectionContentBuilder.h"
+#include <ui/dom/FocusController.h>
 #include <ui/dom/SelectionController.h>
 #include "ScrollController.h"
 #include "base/StreamFile.h"
@@ -163,8 +164,8 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 
 	root = Factory::InstanceElement(nullptr, "*", "#root", XMLAttributes());
 	root->SetId(name);
-	root->SetOffset(Vector2f(0, 0), nullptr);
-	root->SetProperty(PropertyId::ZIndex, Property(0, Unit::NUMBER));
+	root->BoxModel().SetOffset(Vector2f(0, 0), nullptr);
+	root->Style().SetProperty(PropertyId::ZIndex, Property(0, Unit::NUMBER));
 
 	cursor_proxy = Factory::InstanceElement(nullptr, documents_base_tag, documents_base_tag, XMLAttributes());
 	ElementDocument* cursor_proxy_document = ui_dynamic_cast<ElementDocument*>(cursor_proxy.get());
@@ -174,17 +175,15 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	// The cursor proxy takes the style from its cloned element's document. The latter may define style rules for `<body>` which we don't want on the
 	// proxy. Thus, we override some properties here that we in particular don't want to inherit from the client document, especially those that
 	// result in decoration of the body element.
-	cursor_proxy_document->SetProperty(PropertyId::BackgroundColor, Property(Colourb(255, 255, 255, 0), Unit::COLOUR));
-	cursor_proxy_document->SetProperty(PropertyId::BorderTopWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::BorderRightWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::BorderBottomWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::BorderLeftWidth, Property(0, Unit::PX));
-	cursor_proxy_document->SetProperty(PropertyId::Decorator, Property());
-	cursor_proxy_document->SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Visible));
-	cursor_proxy_document->SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Visible));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BackgroundColor, Property(Colourb(255, 255, 255, 0), Unit::COLOUR));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderTopWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderRightWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderBottomWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::BorderLeftWidth, Property(0, Unit::PX));
+	cursor_proxy_document->Style().SetProperty(PropertyId::Decorator, Property());
+	cursor_proxy_document->Style().SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Visible));
+	cursor_proxy_document->Style().SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Visible));
 
-	document_focus_history.push_back(root.get());
-	focus = root.get();
 	hover = nullptr;
 	active = nullptr;
 	drag = nullptr;
@@ -201,6 +200,9 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	enable_cursor = true;
 
 	scroll_controller = MakeUnique<ScrollController>();
+	focus_controller = MakeUnique<FocusController>(this);
+	focus_controller->PushDocument(root.get());
+	focus_controller->SetFocusElement(root.get());
 	selection_controller = MakeUnique<SelectionController>(this);
 }
 
@@ -232,7 +234,7 @@ void Context::SetDimensions(const Vector2i _dimensions)
 	{
 		dimensions = _dimensions;
 		render_manager->SetViewport(dimensions);
-		root->SetBox(Box(Vector2f(dimensions)));
+		root->BoxModel().SetBox(Box(Vector2f(dimensions)));
 		root->DirtyLayout();
 
 		for (int i = 0; i < root->GetNumChildren(); ++i)
@@ -346,7 +348,7 @@ bool Context::Render()
 	if (drag_clone)
 	{
 		static_cast<ElementDocument&>(*cursor_proxy).UpdateDocument();
-		cursor_proxy->SetOffset(
+		cursor_proxy->BoxModel().SetOffset(
 			Vector2f((float)Math::Clamp(mouse_position.x, 0, dimensions.x), (float)Math::Clamp(mouse_position.y, 0, dimensions.y)), nullptr);
 		cursor_proxy->Render();
 	}
@@ -461,17 +463,7 @@ void Context::UnloadDocument(ElementDocument* _document)
 		unloaded_documents.push_back(root->RemoveChild(document));
 	}
 
-	// Remove the item from the focus history.
-	ElementList::iterator itr = std::find(document_focus_history.begin(), document_focus_history.end(), document);
-	if (itr != document_focus_history.end())
-		document_focus_history.erase(itr);
-
-	// Focus to the previous document if the old document is the current focus.
-	if (focus && focus->GetOwnerDocument() == document)
-	{
-		focus = nullptr;
-		document_focus_history.back()->GetFocusLeafNode()->Focus();
-	}
+	focus_controller->OnDocumentUnload(document);
 
 	// Clear the active element if the old document is the active element.
 	if (active && active->GetOwnerDocument() == document)
@@ -574,12 +566,17 @@ Element* Context::GetHoverElement()
 
 Element* Context::GetFocusElement()
 {
-	return focus;
+	return focus_controller->GetFocusElement();
 }
 
 Element* Context::GetRootElement()
 {
 	return root.get();
+}
+
+FocusController* Context::GetFocusController()
+{
+	return focus_controller.get();
 }
 
 SelectionController* Context::GetSelectionController()
@@ -737,12 +734,7 @@ void Context::PushDocumentToBack(ElementDocument* document)
 
 void Context::UnfocusDocument(ElementDocument* document)
 {
-	auto it = std::find(document_focus_history.begin(), document_focus_history.end(), document);
-	if (it != document_focus_history.end())
-		document_focus_history.erase(it);
-
-	if (!document_focus_history.empty())
-		document_focus_history.back()->GetFocusLeafNode()->Focus();
+	focus_controller->UnfocusDocument(document);
 }
 
 void Context::AddEventListener(const String& event, EventListener* listener, bool in_capture_phase)
@@ -765,7 +757,7 @@ bool Context::ProcessKeyDown(Input::KeyIdentifier key_identifier, int key_modifi
 	GenerateKeyEventParameters(parameters, key_identifier);
 	GenerateKeyModifierEventParameters(parameters, key_modifier_state);
 
-	if (focus)
+	if (Element* focus = focus_controller->GetFocusElement())
 		return focus->DispatchEvent(EventId::Keydown, parameters);
 	else
 		return root->DispatchEvent(EventId::Keydown, parameters);
@@ -778,7 +770,7 @@ bool Context::ProcessKeyUp(Input::KeyIdentifier key_identifier, int key_modifier
 	GenerateKeyEventParameters(parameters, key_identifier);
 	GenerateKeyModifierEventParameters(parameters, key_modifier_state);
 
-	if (focus)
+	if (Element* focus = focus_controller->GetFocusElement())
 		return focus->DispatchEvent(EventId::Keyup, parameters);
 	else
 		return root->DispatchEvent(EventId::Keyup, parameters);
@@ -801,7 +793,9 @@ bool Context::ProcessTextInput(Character character)
 
 bool Context::ProcessTextInput(const String& string)
 {
-	Element* target = (focus ? focus : root.get());
+	Element* target = focus_controller->GetFocusElement();
+	if (!target)
+		target = root.get();
 
 	Dictionary parameters;
 	parameters["text"] = string;
@@ -898,7 +892,7 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 		if (hover)
 		{
 			new_focus = FindFocusElement(hover);
-			if (new_focus && new_focus != focus && new_focus->GetComputedValues().focus() != Style::Focus::None)
+			if (new_focus && new_focus != focus_controller->GetFocusElement() && new_focus->GetComputedValues().focus() != Style::Focus::None)
 				new_focus->Focus();
 		}
 
@@ -1010,7 +1004,7 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 
 		// Dispatch a mouse scroll event, this gives elements an opportunity to block autoscroll from being initialized.
 		if (hover->DispatchEvent(EventId::Mousescroll, scroll_parameters))
-			scroll_controller->ActivateAutoscroll(hover->GetClosestScrollableContainer(), mouse_position);
+			scroll_controller->ActivateAutoscroll(hover->Scroll().GetClosestScrollableContainer(), mouse_position);
 	}
 
 	return !IsMouseInteracting();
@@ -1137,7 +1131,7 @@ bool Context::ProcessMouseWheel(Vector2f wheel_delta, int key_modifier_state)
 
 	const float unit_scroll_length = UNIT_SCROLL_LENGTH * density_independent_pixel_ratio;
 	const Vector2f scroll_length = wheel_delta * unit_scroll_length;
-	Element* target = hover->GetClosestScrollableContainer();
+	Element* target = hover->Scroll().GetClosestScrollableContainer();
 
 	if (scroll_controller->GetMode() == ScrollController::Mode::Smoothscroll && scroll_controller->GetTarget() == target)
 		scroll_controller->IncrementSmoothscrollTarget(scroll_length);
@@ -1224,7 +1218,7 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 
 	Element* touch_element = GetElementAtPoint(touch.position);
 	state->touch_target = touch_element ? touch_element->GetObserverPtr() : ObserverPtr<Element>{};
-	Element* scrollable = touch_element ? touch_element->GetClosestScrollableContainer() : nullptr;
+	Element* scrollable = touch_element ? touch_element->Scroll().GetClosestScrollableContainer() : nullptr;
 	state->scroll_container = scrollable ? scrollable->GetObserverPtr() : ObserverPtr<Element>{};
 
 	// Interrupt any coast / rubber-band settle when a new touch begins.
@@ -1327,10 +1321,10 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 				velocity = (oldest_in_window->position - newest.position) / dt;
 		}
 
-		const float scroll_top = scroll_container->GetScrollTop();
-		const float scroll_left = scroll_container->GetScrollLeft();
-		const float max_top = Math::Max(0.f, scroll_container->GetScrollHeight() - scroll_container->GetClientHeight());
-		const float max_left = Math::Max(0.f, scroll_container->GetScrollWidth() - scroll_container->GetClientWidth());
+		const float scroll_top = scroll_container->Scroll().GetScrollTop();
+		const float scroll_left = scroll_container->Scroll().GetScrollLeft();
+		const float max_top = Math::Max(0.f, scroll_container->Scroll().GetScrollHeight() - scroll_container->GetClientHeight());
+		const float max_left = Math::Max(0.f, scroll_container->Scroll().GetScrollWidth() - scroll_container->GetClientWidth());
 		constexpr float overscroll_eps = 0.5f;
 		const bool overscrolled = scroll_top < -overscroll_eps || scroll_left < -overscroll_eps || scroll_top > max_top + overscroll_eps ||
 			scroll_left > max_left + overscroll_eps;
@@ -1462,16 +1456,7 @@ void Context::OnElementDetach(Element* element)
 	// Focus normally cleared and set by parent during Element::RemoveChild.
 	// However, there are some exceptions, such as when an there are multiple
 	// ElementDocuments in the hierarchy above the current element.
-	if (element == focus)
-		focus = nullptr;
-
-	// If the element is a document lower down in the hierarchy, we may need to remove it from the focus history.
-	if (element->GetOwnerDocument() == element)
-	{
-		auto it = std::find(document_focus_history.begin(), document_focus_history.end(), element);
-		if (it != document_focus_history.end())
-			document_focus_history.erase(it);
-	}
+	focus_controller->OnElementDetach(element);
 
 	if (scroll_controller->GetTarget() == element)
 		scroll_controller->Reset();
@@ -1490,75 +1475,7 @@ void Context::OnElementDetach(Element* element)
 
 bool Context::OnFocusChange(Element* new_focus, bool focus_visible)
 {
-	UI_ASSERT(new_focus);
-
-	ElementSet old_chain;
-	ElementSet new_chain;
-
-	Element* old_focus = focus;
-	ElementDocument* old_document = old_focus ? old_focus->GetOwnerDocument() : nullptr;
-	ElementDocument* new_document = new_focus->GetOwnerDocument();
-
-	// If the current focus is modal and the new focus is cannot receive focus from modal, deny the request.
-	if (old_document && old_document->IsModal() && (!new_document || !(new_document->IsModal() || new_document->IsFocusableFromModal())))
-		return false;
-
-	// If the document of the new focus has been closed, deny the request.
-	if (std::find_if(unloaded_documents.begin(), unloaded_documents.end(),
-			[&](const auto& unloaded_document) { return unloaded_document.get() == new_document; }) != unloaded_documents.end())
-	{
-		return false;
-	}
-
-	// Build the old chains
-	Element* element = old_focus;
-	while (element)
-	{
-		old_chain.insert(element);
-		element = element->GetParentNode();
-	}
-
-	// Build the new chain
-	element = new_focus;
-	while (element)
-	{
-		new_chain.insert(element);
-		element = element->GetParentNode();
-	}
-
-	// Send out blur/focus events.
-	Dictionary parameters;
-	SendEvents(old_chain, new_chain, EventId::Blur, parameters);
-
-	if (focus_visible)
-		parameters["focus_visible"] = true;
-
-	SendEvents(new_chain, old_chain, EventId::Focus, parameters);
-
-	focus = new_focus;
-
-	// Raise the element's document to the front, if desired.
-	ElementDocument* document = focus->GetOwnerDocument();
-	if (document != nullptr)
-	{
-		Style::ZIndex z_index_property = document->GetComputedValues().z_index();
-		if (z_index_property.type == Style::ZIndex::Auto)
-			document->PullToFront();
-	}
-
-	// Update the focus history
-	if (old_document != new_document)
-	{
-		// If documents have changed, add the new document to the end of the history
-		ElementList::iterator itr = std::find(document_focus_history.begin(), document_focus_history.end(), new_document);
-		if (itr != document_focus_history.end())
-			document_focus_history.erase(itr);
-
-		if (new_document != nullptr)
-			document_focus_history.push_back(new_document);
-	}
-
-	return true;
+	return focus_controller->OnFocusChange(new_focus, focus_visible);
 }
 
 void Context::GenerateClickEvent(Element* element)
@@ -1695,11 +1612,14 @@ Element* Context::GetElementAtPoint(Vector2f point, const Element* ignore_elemen
 	ElementDocument* focus_document = nullptr;
 
 	// If we have modal focus, only check down documents that can receive focus from modals.
-	if (element == root.get() && focus)
+	if (element == root.get())
 	{
-		focus_document = focus->GetOwnerDocument();
-		if (focus_document && focus_document->IsModal())
-			is_modal = true;
+		if (Element* focus = focus_controller->GetFocusElement())
+		{
+			focus_document = focus->GetOwnerDocument();
+			if (focus_document && focus_document->IsModal())
+				is_modal = true;
+		}
 	}
 
 	// Check any elements within our stacking context. We want to return the lowest-down element
@@ -1709,9 +1629,10 @@ Element* Context::GetElementAtPoint(Vector2f point, const Element* ignore_elemen
 		if (element->stacking_context_dirty)
 			element->BuildLocalStackingContext();
 
-		for (int i = (int)element->stacking_context.size() - 1; i >= 0; --i)
+		if (element->stacking_context)
+		for (int i = (int)element->stacking_context->size() - 1; i >= 0; --i)
 		{
-			Element* stacking_child = element->stacking_context[i];
+			Element* stacking_child = (*element->stacking_context)[i];
 			if (ignore_element)
 			{
 				// Check if the element is a descendant of the element we're ignoring.
@@ -1792,17 +1713,17 @@ void Context::CreateDragClone(Element* element)
 	cursor_proxy->AppendChild(std::move(element_drag_clone));
 
 	// Position the clone. Use projected mouse coordinates to handle any ancestor transforms.
-	const Vector2f absolute_pos = element->GetAbsoluteOffset(BoxArea::Border);
+	const Vector2f absolute_pos = element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 	Vector2f projected_mouse_position = Vector2f(mouse_position);
 	if (Element* parent = element->GetParentNode())
 		parent->Project(projected_mouse_position);
 
-	drag_clone->SetProperty(PropertyId::Position, Property(Style::Position::Absolute));
-	drag_clone->SetProperty(PropertyId::Left, Property(absolute_pos.x - projected_mouse_position.x, Unit::PX));
-	drag_clone->SetProperty(PropertyId::Top, Property(absolute_pos.y - projected_mouse_position.y, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::Position, Property(Style::Position::Absolute));
+	drag_clone->Style().SetProperty(PropertyId::Left, Property(absolute_pos.x - projected_mouse_position.x, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::Top, Property(absolute_pos.y - projected_mouse_position.y, Unit::PX));
 	// We remove margins so that percentage- and auto-margins are evaluated correctly.
-	drag_clone->SetProperty(PropertyId::MarginLeft, Property(0.f, Unit::PX));
-	drag_clone->SetProperty(PropertyId::MarginTop, Property(0.f, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::MarginLeft, Property(0.f, Unit::PX));
+	drag_clone->Style().SetProperty(PropertyId::MarginTop, Property(0.f, Unit::PX));
 	drag_clone->SetPseudoClass("drag", true);
 }
 
@@ -1858,7 +1779,7 @@ void Context::ReleaseUnloadedDocuments()
 
 		// Clear the deleted list.
 		for (size_t i = 0; i < documents.size(); ++i)
-			documents[i]->GetEventDispatcher()->DetachAllEvents();
+			documents[i]->Events().DetachAllEvents();
 		documents.clear();
 	}
 }

@@ -1,7 +1,9 @@
 #pragma once
 
+#include <ui/base/Header.h>
 #include <ui/paint/CompiledFilterShader.h>
 #include <ui/base/Types.h>
+
 namespace ui {
 
 class Decorator;
@@ -12,12 +14,17 @@ enum class RenderStage { Enter, Decoration, Exit };
 
 /**
     Manages and renders an element's effects: decorators, filters, backdrop filters, and mask images.
+
+    Prefer `element->Effects()`.
  */
 
-class ElementEffects {
+class UI_CORE_API ElementEffects {
 public:
-	ElementEffects(Element* element);
+	explicit ElementEffects(Element* element);
 	~ElementEffects();
+
+	ElementEffects(const ElementEffects&) = delete;
+	ElementEffects& operator=(const ElementEffects&) = delete;
 
 	void InstanceEffects();
 

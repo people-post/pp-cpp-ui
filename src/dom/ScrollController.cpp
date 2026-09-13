@@ -289,9 +289,9 @@ void ScrollController::RestoreOverscrollAfterLayout()
 
 	// Layout may have clamped past-edge offsets; re-apply the visual rubber-band for this frame.
 	if (AxisScrollable(0, range.x))
-		el->SetScrollLeft(desired.x, false);
+		el->Scroll().SetScrollLeft(desired.x, false);
 	if (AxisScrollable(1, range.y))
-		el->SetScrollTop(desired.y, false);
+		el->Scroll().SetScrollTop(desired.y, false);
 	target = previous_target;
 }
 
@@ -482,9 +482,9 @@ bool ScrollController::HasVisualOverscroll() const
 	Element* el = target ? target : overscroll_element;
 	if (!el)
 		return false;
-	const Vector2f offset = {el->GetScrollLeft(), el->GetScrollTop()};
-	const Vector2f range = {Math::Max(0.f, el->GetScrollWidth() - el->GetClientWidth()),
-		Math::Max(0.f, el->GetScrollHeight() - el->GetClientHeight())};
+	const Vector2f offset = {el->Scroll().GetScrollLeft(), el->Scroll().GetScrollTop()};
+	const Vector2f range = {Math::Max(0.f, el->Scroll().GetScrollWidth() - el->GetClientWidth()),
+		Math::Max(0.f, el->Scroll().GetScrollHeight() - el->GetClientHeight())};
 	constexpr float eps = 0.5f;
 	return offset.x < -eps || offset.y < -eps || offset.x > range.x + eps || offset.y > range.y + eps;
 }
@@ -492,14 +492,14 @@ bool ScrollController::HasVisualOverscroll() const
 Vector2f ScrollController::GetScrollOffset() const
 {
 	UI_ASSERT(target);
-	return {target->GetScrollLeft(), target->GetScrollTop()};
+	return {target->Scroll().GetScrollLeft(), target->Scroll().GetScrollTop()};
 }
 
 Vector2f ScrollController::GetScrollRange() const
 {
 	UI_ASSERT(target);
-	return {Math::Max(0.f, target->GetScrollWidth() - target->GetClientWidth()),
-		Math::Max(0.f, target->GetScrollHeight() - target->GetClientHeight())};
+	return {Math::Max(0.f, target->Scroll().GetScrollWidth() - target->GetClientWidth()),
+		Math::Max(0.f, target->Scroll().GetScrollHeight() - target->GetClientHeight())};
 }
 
 Vector2f ScrollController::GetClientSize() const
@@ -513,17 +513,17 @@ void ScrollController::SetScrollOffset(Vector2f offset, bool clamp)
 	UI_ASSERT(target);
 	const Vector2f range = GetScrollRange();
 	if (AxisScrollable(0, range.x))
-		target->SetScrollLeft(offset.x, clamp);
+		target->Scroll().SetScrollLeft(offset.x, clamp);
 	else
-		target->SetScrollLeft(Math::Clamp(target->GetScrollLeft(), 0.f, range.x), true);
+		target->Scroll().SetScrollLeft(Math::Clamp(target->Scroll().GetScrollLeft(), 0.f, range.x), true);
 	if (AxisScrollable(1, range.y))
-		target->SetScrollTop(offset.y, clamp);
+		target->Scroll().SetScrollTop(offset.y, clamp);
 	else
-		target->SetScrollTop(Math::Clamp(target->GetScrollTop(), 0.f, range.y), true);
+		target->Scroll().SetScrollTop(Math::Clamp(target->Scroll().GetScrollTop(), 0.f, range.y), true);
 
 	if (!clamp)
 	{
-		pending_overscroll_offset = {target->GetScrollLeft(), target->GetScrollTop()};
+		pending_overscroll_offset = {target->Scroll().GetScrollLeft(), target->Scroll().GetScrollTop()};
 		has_pending_overscroll = true;
 		overscroll_element = target;
 	}
@@ -549,10 +549,10 @@ void ScrollController::ClearPendingOverscroll()
 		Element* el = target ? target : overscroll_element;
 		if (el)
 		{
-			const float max_x = Math::Max(0.f, el->GetScrollWidth() - el->GetClientWidth());
-			const float max_y = Math::Max(0.f, el->GetScrollHeight() - el->GetClientHeight());
-			el->SetScrollLeft(Math::Clamp(el->GetScrollLeft(), 0.f, max_x), true);
-			el->SetScrollTop(Math::Clamp(el->GetScrollTop(), 0.f, max_y), true);
+			const float max_x = Math::Max(0.f, el->Scroll().GetScrollWidth() - el->GetClientWidth());
+			const float max_y = Math::Max(0.f, el->Scroll().GetScrollHeight() - el->GetClientHeight());
+			el->Scroll().SetScrollLeft(Math::Clamp(el->Scroll().GetScrollLeft(), 0.f, max_x), true);
+			el->Scroll().SetScrollTop(Math::Clamp(el->Scroll().GetScrollTop(), 0.f, max_y), true);
 		}
 	}
 	pending_overscroll_offset = {};
@@ -636,13 +636,13 @@ void ScrollController::PerformScrollOnTarget(Vector2f delta_distance, bool allow
 	const bool clamp = !(allow_overscroll && visually_overscrolled);
 
 	if (AxisScrollable(0, range.x))
-		target->SetScrollLeft(offset.x, clamp);
+		target->Scroll().SetScrollLeft(offset.x, clamp);
 	if (AxisScrollable(1, range.y))
-		target->SetScrollTop(offset.y, clamp);
+		target->Scroll().SetScrollTop(offset.y, clamp);
 
 	if (!clamp)
 	{
-		pending_overscroll_offset = {target->GetScrollLeft(), target->GetScrollTop()};
+		pending_overscroll_offset = {target->Scroll().GetScrollLeft(), target->Scroll().GetScrollTop()};
 		has_pending_overscroll = true;
 		overscroll_element = target;
 	}
@@ -670,8 +670,8 @@ void ScrollController::IncrementSmoothscrollTarget(Vector2f delta_distance)
 	}
 
 	// Clamp the delta distance to the scrollable area.
-	const Vector2f scroll_offset = {target->GetScrollLeft(), target->GetScrollTop()};
-	const Vector2f max_offset = {target->GetScrollWidth() - target->GetClientWidth(), target->GetScrollHeight() - target->GetClientHeight()};
+	const Vector2f scroll_offset = {target->Scroll().GetScrollLeft(), target->Scroll().GetScrollTop()};
+	const Vector2f max_offset = {target->Scroll().GetScrollWidth() - target->GetClientWidth(), target->Scroll().GetScrollHeight() - target->GetClientHeight()};
 
 	const Vector2f target_offset = scroll_offset + smoothscroll_target_distance - smoothscroll_scrolled_distance;
 	const Vector2f clamped_delta = Math::Clamp(delta_distance + target_offset, Vector2f(0.f), max_offset) - target_offset;
@@ -684,10 +684,10 @@ void ScrollController::Reset()
 	Element* el = target ? target : overscroll_element;
 	if (el && has_pending_overscroll)
 	{
-		const float max_x = Math::Max(0.f, el->GetScrollWidth() - el->GetClientWidth());
-		const float max_y = Math::Max(0.f, el->GetScrollHeight() - el->GetClientHeight());
-		el->SetScrollLeft(Math::Clamp(el->GetScrollLeft(), 0.f, max_x), true);
-		el->SetScrollTop(Math::Clamp(el->GetScrollTop(), 0.f, max_y), true);
+		const float max_x = Math::Max(0.f, el->Scroll().GetScrollWidth() - el->GetClientWidth());
+		const float max_y = Math::Max(0.f, el->Scroll().GetScrollHeight() - el->GetClientHeight());
+		el->Scroll().SetScrollLeft(Math::Clamp(el->Scroll().GetScrollLeft(), 0.f, max_x), true);
+		el->Scroll().SetScrollTop(Math::Clamp(el->Scroll().GetScrollTop(), 0.f, max_y), true);
 	}
 
 	mode = Mode::None;

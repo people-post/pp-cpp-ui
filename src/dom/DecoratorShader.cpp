@@ -60,7 +60,7 @@ void DecoratorShader::ReleaseElementData(DecoratorDataHandle handle) const
 void DecoratorShader::RenderElement(Element* element, DecoratorDataHandle handle) const
 {
 	ShaderElementData* element_data = reinterpret_cast<ShaderElementData*>(handle);
-	element_data->geometry.Render(element->GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
+	element_data->geometry.Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border), {}, element_data->shader);
 }
 
 DecoratorShaderInstancer::DecoratorShaderInstancer()

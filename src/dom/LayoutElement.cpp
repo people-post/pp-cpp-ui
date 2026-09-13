@@ -15,7 +15,7 @@ public:
 	static void UpdateOffset(Element* element) { element->UpdateOffset(); }
 	static void SetBaseline(Element* element, float baseline) { element->SetBaseline(baseline); }
 	static void OnLayout(Element* element) { element->OnLayout(); }
-	static void ClampScrollOffsetRecursive(Element* element) { element->ClampScrollOffsetRecursive(); }
+	static void ClampScrollOffsetRecursive(Element* element) { element->Scroll().ClampScrollOffsetRecursive(); }
 };
 
 namespace {
@@ -30,25 +30,25 @@ ElementScroll::Orientation ToScrollOrientation(LayoutScrollbarAxis axis)
 float GetScrollbarSize(Element* element, LayoutScrollbarAxis axis)
 {
 	UI_ASSERT(element);
-	return element->GetElementScroll()->GetScrollbarSize(ToScrollOrientation(axis));
+	return element->Scroll().GetScrollbarSize(ToScrollOrientation(axis));
 }
 
 void EnableScrollbar(Element* element, LayoutScrollbarAxis axis, float element_width)
 {
 	UI_ASSERT(element);
-	element->GetElementScroll()->EnableScrollbar(ToScrollOrientation(axis), element_width);
+	element->Scroll().EnableScrollbar(ToScrollOrientation(axis), element_width);
 }
 
 void DisableScrollbar(Element* element, LayoutScrollbarAxis axis)
 {
 	UI_ASSERT(element);
-	element->GetElementScroll()->DisableScrollbar(ToScrollOrientation(axis));
+	element->Scroll().DisableScrollbar(ToScrollOrientation(axis));
 }
 
 void FormatScrollbars(Element* element)
 {
 	UI_ASSERT(element);
-	element->GetElementScroll()->FormatScrollbars();
+	element->Scroll().FormatScrollbars();
 }
 
 float GetStringWidth(Element* element, StringView string)
@@ -124,25 +124,25 @@ const FontMetrics& GetFontMetrics(Element* element)
 const Box& GetBox(Element* element)
 {
 	UI_ASSERT(element);
-	return element->GetBox();
+	return element->BoxModel().GetBox();
 }
 
 void SetBox(Element* element, const Box& box)
 {
 	UI_ASSERT(element);
-	element->SetBox(box);
+	element->BoxModel().SetBox(box);
 }
 
 void AddBox(Element* element, const Box& box, Vector2f offset)
 {
 	UI_ASSERT(element);
-	element->AddBox(box, offset);
+	element->BoxModel().AddBox(box, offset);
 }
 
 void SetOffset(Element* element, Vector2f offset, Element* offset_parent, bool offset_fixed)
 {
 	UI_ASSERT(element);
-	element->SetOffset(offset, offset_parent, offset_fixed);
+	element->BoxModel().SetOffset(offset, offset_parent, offset_fixed);
 }
 
 void UpdateOffset(Element* element)
@@ -208,7 +208,7 @@ Element* GetOffsetParent(Element* element)
 Vector2f GetRelativeOffset(Element* element, BoxArea area)
 {
 	UI_ASSERT(element);
-	return element->GetRelativeOffset(area);
+	return element->BoxModel().GetRelativeOffset(area);
 }
 
 bool IsReplaced(Element* element)

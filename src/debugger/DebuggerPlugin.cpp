@@ -111,9 +111,9 @@ bool DebuggerPlugin::SetContext(Context* context)
 void DebuggerPlugin::SetVisible(bool visibility)
 {
 	if (visibility)
-		menu_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
+		menu_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Visible));
 	else
-		menu_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+		menu_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 }
 
 bool DebuggerPlugin::IsVisible()
@@ -142,10 +142,10 @@ void DebuggerPlugin::Render()
 				if (element->IsVisible())
 				{
 					ElementUtilities::ApplyTransform(*element);
-					for (int j = 0; j < element->GetNumBoxes(); ++j)
+					for (int j = 0; j < element->BoxModel().GetNumBoxes(); ++j)
 					{
 						const RenderBox box = element->GetRenderBox(BoxArea::Border, j);
-						Geometry::RenderOutline(element->GetAbsoluteOffset(BoxArea::Border) + box.GetBorderOffset(), box.GetFillSize(),
+						Geometry::RenderOutline(element->BoxModel().GetAbsoluteOffset(BoxArea::Border) + box.GetBorderOffset(), box.GetFillSize(),
 							Colourb(255, 0, 0, 128), 1);
 					}
 
@@ -278,7 +278,7 @@ bool DebuggerPlugin::LoadMenuElement()
 		return false;
 
 	menu_element->SetId("rmlui-debug-menu");
-	menu_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	menu_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 	menu_element->SetInnerRML(menu_rml);
 
 	SharedPtr<StyleSheetContainer> style_sheet = Factory::InstanceStyleSheetString(menu_rcss);
@@ -296,7 +296,7 @@ bool DebuggerPlugin::LoadMenuElement()
 	for (auto* id : {"event-log-button", "debug-info-button", "outlines-button", "data-models-button"})
 	{
 		Element* button = menu_element->GetElementById(id);
-		button->AddEventListener(EventId::Click, this);
+		button->Events().AttachEvent(EventId::Click, this);
 	}
 
 	return true;
@@ -310,7 +310,7 @@ bool DebuggerPlugin::LoadInfoElement()
 	if (!info_element)
 		return false;
 
-	info_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	info_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 
 	if (!info_element->Initialise())
 	{
@@ -319,8 +319,8 @@ bool DebuggerPlugin::LoadInfoElement()
 		return false;
 	}
 
-	info_element->AddEventListener(EventId::Hide, this);
-	info_element->AddEventListener(EventId::Show, this);
+	info_element->Events().AttachEvent(EventId::Hide, this);
+	info_element->Events().AttachEvent(EventId::Show, this);
 
 	return true;
 }
@@ -333,7 +333,7 @@ bool DebuggerPlugin::LoadLogElement()
 	if (!log_element)
 		return false;
 
-	log_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	log_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 
 	if (!log_element->Initialise())
 	{
@@ -342,8 +342,8 @@ bool DebuggerPlugin::LoadLogElement()
 		return false;
 	}
 
-	log_element->AddEventListener(EventId::Hide, this);
-	log_element->AddEventListener(EventId::Show, this);
+	log_element->Events().AttachEvent(EventId::Hide, this);
+	log_element->Events().AttachEvent(EventId::Show, this);
 
 	// Make the system interface; this will trap the log messages for us.
 	application_interface = ui::GetSystemInterface();
@@ -361,7 +361,7 @@ bool DebuggerPlugin::LoadDataExplorerElement()
 	if (!data_explorer_element)
 		return false;
 
-	data_explorer_element->SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
+	data_explorer_element->Style().SetProperty(PropertyId::Visibility, Property(Style::Visibility::Hidden));
 
 	if (!data_explorer_element->Initialise(debug_context))
 	{
@@ -370,8 +370,8 @@ bool DebuggerPlugin::LoadDataExplorerElement()
 		return false;
 	}
 
-	data_explorer_element->AddEventListener(EventId::Hide, this);
-	data_explorer_element->AddEventListener(EventId::Show, this);
+	data_explorer_element->Events().AttachEvent(EventId::Hide, this);
+	data_explorer_element->Events().AttachEvent(EventId::Show, this);
 
 	return true;
 }

@@ -6,10 +6,10 @@
 #include <ui/base/Traits.h>
 #include <ui/base/Types.h>
 #include "base/ControlledLifetimeResource.h"
-#include "ElementBackgroundBorder.h"
-#include "ElementEffects.h"
-#include "ElementStyle.h"
-#include "EventDispatcher.h"
+#include <ui/dom/ElementBackgroundBorder.h>
+#include <ui/dom/ElementEffects.h>
+#include <ui/dom/ElementStyle.h>
+#include <ui/dom/EventDispatcher.h>
 #include "base/Pool.h"
 
 namespace ui {

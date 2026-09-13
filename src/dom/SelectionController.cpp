@@ -92,7 +92,7 @@ int SelectionController::HitTestGlobal(Vector2f absolute_mouse) const
 		if (!block.root)
 			continue;
 
-		const Vector2f offset = block.root->GetAbsoluteOffset(BoxArea::Border);
+		const Vector2f offset = block.root->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 		const Vector2f size(block.root->GetOffsetWidth(), block.root->GetOffsetHeight());
 		const bool inside = absolute_mouse.x >= offset.x && absolute_mouse.x <= offset.x + size.x && absolute_mouse.y >= offset.y &&
 			absolute_mouse.y <= offset.y + size.y;

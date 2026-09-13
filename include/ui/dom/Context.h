@@ -23,6 +23,7 @@ struct DataModelDeleter {
 class DataModelConstructor;
 class DataTypeRegister;
 class ScrollController;
+class FocusController;
 class SelectionController;
 class RenderManager;
 class TextInputHandler;
@@ -127,6 +128,8 @@ public:
 	/// @return The root element.
 	Element* GetRootElement();
 
+	/// Returns the context focus controller (focused element + document focus history).
+	FocusController* GetFocusController();
 	/// Returns the document-wide static text selection controller.
 	SelectionController* GetSelectionController();
 
@@ -341,16 +344,13 @@ private:
 	ElementSet hover_chain;
 	// List of elements that are currently in active state.
 	ElementList active_chain;
-	// History of windows that have had focus
-	ElementList document_focus_history;
-
 	// Documents that have been unloaded from the context but not yet released.
 	OwnedElementList unloaded_documents;
 
 	// Root of the element tree.
 	ElementPtr root;
-	// The element that currently has input focus.
-	Element* focus;
+	// Focus state (current element + document history).
+	UniquePtr<FocusController> focus_controller; // [not-null]
 	// The top-most element being hovered over.
 	Element* hover;
 	// The element that was being hovered over when the primary mouse button was pressed most recently.
@@ -515,6 +515,7 @@ private:
 	static void SendEvents(const ElementSet& old_items, const ElementSet& new_items, EventId id, const Dictionary& parameters);
 
 	friend class ui::Element;
+	friend class ui::FocusController;
 };
 
 } // namespace ui
