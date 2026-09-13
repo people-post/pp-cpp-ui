@@ -126,3 +126,13 @@ stay unqualified. Public headers always use `<ui/module/Name.h>`.
 
 `tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...`
 still resolve.
+
+## Owned static bulk (light headers)
+
+Large static payloads stay in-repo without a generator, but out of hot headers:
+
+| Owned artifact | Location | Header strategy |
+|----------------|----------|-----------------|
+| Debugger fonts | `src/debugger/FontSource.cpp` | Light `FontSource.h` (`extern` only) |
+| GLAD GL 3.3 loader | `src/render/gl/Include_GL3.h` + `glad.cpp` | Render-private; impl in its own TU |
+| Hash containers | `src/base/containers/` | Included via `Config.h` aliases; see `OWNERSHIP.md` |

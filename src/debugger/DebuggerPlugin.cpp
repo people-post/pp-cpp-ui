@@ -263,8 +263,9 @@ bool DebuggerPlugin::LoadFont()
 {
 	const String font_family_name = "rmlui-debugger-font";
 
-	return (LoadFontFace({courier_prime_code, sizeof(courier_prime_code)}, font_family_name, Style::FontStyle::Normal, Style::FontWeight::Normal) &&
-		LoadFontFace({courier_prime_code_italic, sizeof(courier_prime_code_italic)}, font_family_name, Style::FontStyle::Italic,
+	using namespace DebuggerFonts;
+	return (LoadFontFace({courier_prime_code, courier_prime_code_size}, font_family_name, Style::FontStyle::Normal, Style::FontWeight::Normal) &&
+		LoadFontFace({courier_prime_code_italic, courier_prime_code_italic_size}, font_family_name, Style::FontStyle::Italic,
 			Style::FontWeight::Normal));
 }
 

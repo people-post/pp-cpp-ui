@@ -27,9 +27,9 @@
 		#include <set>
 		#include <unordered_set>
 	#else
-		#include "../base/containers/itlib/flat_map.hpp"
-		#include "../base/containers/itlib/flat_set.hpp"
-		#include "../base/containers/robin_hood.h"
+		#include <itlib/flat_map.hpp>
+		#include <itlib/flat_set.hpp>
+		#include <robin_hood.h>
 	#endif // UI_NO_THIRDPARTY_CONTAINERS
 
 namespace ui {

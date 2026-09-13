@@ -30,8 +30,7 @@
 	#include UI_GL3_CUSTOM_LOADER
 #else
 	#define UI_SHADER_HEADER_VERSION PP_BROWSER_SHADER_HEADER_GL
-	#define GLAD_GL_IMPLEMENTATION
-	#include <ui/render/detail/Include_GL3.h>
+	#include "gl/Include_GL3.h"
 #endif
 
 // Determines the anti-aliasing quality when creating layers. Enables better-looking visuals, especially when transforms are applied.

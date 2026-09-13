@@ -17,9 +17,10 @@ target_include_directories(ui_core PRIVATE
 
 set_common_target_options(ui_core)
 
-target_include_directories(ui_core PRIVATE "${PP_UI_INCLUDE_DIR}")
+target_include_directories(ui_core PRIVATE "${PP_UI_INCLUDE_DIR}" "${CMAKE_SOURCE_DIR}/src/base/containers")
 target_include_directories(ui_core INTERFACE
 	"$<BUILD_INTERFACE:${PP_UI_INCLUDE_DIR}>"
+	"$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/base/containers>"
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
