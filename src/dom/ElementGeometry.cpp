@@ -115,7 +115,7 @@ void Element::SetScrollableOverflowRectangle(Vector2f _scrollable_overflow_recta
 }
 void Element::SetBox(const Box& box)
 {
-	if (box != main_box || additional_boxes.size() > 0)
+	if (box != main_box || GetAdditionalBoxCount() > 0)
 	{
 #ifdef UI_DEBUG
 		for (const BoxEdge edge : {BoxEdge::Top, BoxEdge::Right, BoxEdge::Bottom, BoxEdge::Left})
@@ -127,7 +127,7 @@ void Element::SetBox(const Box& box)
 #endif
 
 		main_box = box;
-		additional_boxes.clear();
+		additional_boxes.reset();
 
 		OnResize();
 		rounded_main_padding_size_dirty = true;
@@ -138,7 +138,7 @@ void Element::SetBox(const Box& box)
 }
 void Element::AddBox(const Box& box, Vector2f offset)
 {
-	additional_boxes.emplace_back(PositionedBox{box, offset});
+	EnsureAdditionalBoxes().emplace_back(PositionedBox{box, offset});
 	OnResize();
 	BackgroundBorder().DirtyBackground();
 	BackgroundBorder().DirtyBorder();
@@ -153,11 +153,11 @@ const Box& Element::GetBox(int index, Vector2f& offset)
 	offset = Vector2f(0);
 
 	const int additional_box_index = index - 1;
-	if (index < 1 || additional_box_index >= (int)additional_boxes.size())
+	if (index < 1 || additional_box_index >= (int)GetAdditionalBoxCount())
 		return main_box;
 
-	offset = additional_boxes[additional_box_index].offset;
-	return additional_boxes[additional_box_index].box;
+	offset = (*additional_boxes)[additional_box_index].offset;
+	return (*additional_boxes)[additional_box_index].box;
 }
 RenderBox Element::GetRenderBox(BoxArea fill_area, int index)
 {
@@ -173,9 +173,9 @@ RenderBox Element::GetRenderBox(BoxArea fill_area, int index)
 	};
 	auto GetBoxAndOffset = [this, index]() {
 		const int additional_box_index = index - 1;
-		if (index < 1 || additional_box_index >= (int)additional_boxes.size())
+		if (index < 1 || additional_box_index >= (int)GetAdditionalBoxCount())
 			return BoxReference{main_box, rounded_main_padding_size, {}};
-		const PositionedBox& positioned_box = additional_boxes[additional_box_index];
+		const PositionedBox& positioned_box = (*additional_boxes)[additional_box_index];
 		return BoxReference{positioned_box.box, positioned_box.box.GetSize(BoxArea::Padding), positioned_box.offset.Round()};
 	};
 
@@ -203,7 +203,7 @@ RenderBox Element::GetRenderBox(BoxArea fill_area, int index)
 }
 int Element::GetNumBoxes()
 {
-	return 1 + (int)additional_boxes.size();
+	return 1 + GetAdditionalBoxCount();
 }
 float Element::GetBaseline() const
 {

@@ -1709,9 +1709,10 @@ Element* Context::GetElementAtPoint(Vector2f point, const Element* ignore_elemen
 		if (element->stacking_context_dirty)
 			element->BuildLocalStackingContext();
 
-		for (int i = (int)element->stacking_context.size() - 1; i >= 0; --i)
+		if (element->stacking_context)
+		for (int i = (int)element->stacking_context->size() - 1; i >= 0; --i)
 		{
-			Element* stacking_child = element->stacking_context[i];
+			Element* stacking_child = (*element->stacking_context)[i];
 			if (ignore_element)
 			{
 				// Check if the element is a descendant of the element we're ignoring.

@@ -12,6 +12,13 @@
 
 namespace ui {
 
+ElementAnimationList& Element::EnsureAnimations()
+{
+	if (!animations)
+		animations = MakeUnique<ElementAnimationList>();
+	return *animations;
+}
+
 bool Element::Animate(const String& property_name, const Property& target_value, float duration, Tween tween, int num_iterations,
 	bool alternate_direction, float delay, const Property* start_value)
 {
@@ -22,6 +29,8 @@ bool Element::Animate(const String& property_name, const Property& target_value,
 bool Element::Animate(PropertyId id, const Property& target_value, float duration, Tween tween, int num_iterations, bool alternate_direction,
 	float delay, const Property* start_value)
 {
+	auto& animations = EnsureAnimations();
+
 	bool result = false;
 	auto it_animation = StartAnimation(id, start_value, num_iterations, alternate_direction, delay, false);
 	if (it_animation != animations.end())
@@ -41,6 +50,8 @@ bool Element::AddAnimationKey(const String& property_name, const Property& targe
 
 bool Element::AddAnimationKey(PropertyId id, const Property& target_value, float duration, Tween tween)
 {
+	auto& animations = EnsureAnimations();
+
 	ElementAnimation* animation = nullptr;
 	for (auto& existing_animation : animations)
 	{
@@ -61,6 +72,8 @@ bool Element::AddAnimationKey(PropertyId id, const Property& target_value, float
 ElementAnimationList::iterator Element::StartAnimation(PropertyId property_id, const Property* start_value, int num_iterations,
 	bool alternate_direction, float delay, bool initiated_by_animation_property)
 {
+	auto& animations = EnsureAnimations();
+
 	auto it = std::find_if(animations.begin(), animations.end(), [&](const ElementAnimation& el) { return el.GetPropertyId() == property_id; });
 
 	if (it != animations.end())
@@ -115,6 +128,8 @@ ElementAnimationList::iterator Element::StartAnimation(PropertyId property_id, c
 
 bool Element::AddAnimationKeyTime(PropertyId property_id, const Property* target_value, float time, Tween tween)
 {
+	auto& animations = EnsureAnimations();
+
 	if (!target_value)
 		target_value = Style().GetProperty(property_id);
 	if (!target_value)
@@ -140,6 +155,8 @@ bool Element::AddAnimationKeyTime(PropertyId property_id, const Property* target
 
 bool Element::StartTransition(const Transition& transition, const Property& start_value, const Property& target_value)
 {
+	auto& animations = EnsureAnimations();
+
 	auto it = std::find_if(animations.begin(), animations.end(), [&](const ElementAnimation& el) { return el.GetPropertyId() == transition.id; });
 
 	if (it != animations.end() && !it->IsTransition())
@@ -179,6 +196,11 @@ void Element::HandleTransitionProperty()
 	if (dirty_transition)
 	{
 		dirty_transition = false;
+
+		if (!animations)
+			return;
+
+		auto& animations = *this->animations;
 
 		// Remove all transitions that are no longer in our local list
 		const TransitionList* keep_transitions = GetComputedValues().transition();
@@ -222,6 +244,8 @@ void Element::HandleTransitionProperty()
 
 void Element::HandleAnimationProperty()
 {
+	auto& animations = EnsureAnimations();
+
 	// Note: We are effectively restarting all animations whenever 'dirty_animation' is set. Use the dirty flag with care,
 	// or find another approach which only updates actual "dirty" animations.
 	if (dirty_animation)
@@ -229,7 +253,7 @@ void Element::HandleAnimationProperty()
 		dirty_animation = false;
 
 		const AnimationList* animation_list = meta->computed_values.animation();
-		bool element_has_animations = ((animation_list && !animation_list->empty()) || !animations.empty());
+		bool element_has_animations = ((animation_list && !animation_list->empty()) || HasAnimations());
 		const StyleSheet* stylesheet = nullptr;
 
 		if (element_has_animations)
@@ -292,46 +316,47 @@ void Element::HandleAnimationProperty()
 
 void Element::AdvanceAnimations()
 {
-	if (!animations.empty())
+	if (!HasAnimations())
+		return;
+
+	auto& animations = *this->animations;
+	double time = Clock::GetElapsedTime();
+
+	for (auto& animation : animations)
 	{
-		double time = Clock::GetElapsedTime();
-
-		for (auto& animation : animations)
-		{
-			Property property = animation.UpdateAndGetProperty(time, *this);
-			if (property.unit != Unit::UNKNOWN)
-				SetProperty(animation.GetPropertyId(), property);
-		}
-
-		// Move all completed animations to the end of the list
-		auto it_completed =
-			std::partition(animations.begin(), animations.end(), [](const ElementAnimation& animation) { return !animation.IsComplete(); });
-
-		Vector<Dictionary> dictionary_list;
-		Vector<bool> is_transition;
-		dictionary_list.reserve(animations.end() - it_completed);
-		is_transition.reserve(animations.end() - it_completed);
-
-		for (auto it = it_completed; it != animations.end(); ++it)
-		{
-			const String& property_name = StyleSheetSpecification::GetPropertyName(it->GetPropertyId());
-
-			dictionary_list.emplace_back();
-			dictionary_list.back().emplace("property", Variant(property_name));
-			is_transition.push_back(it->IsTransition());
-
-			// Remove completed transition- and animation-initiated properties.
-			// Should behave like in HandleTransitionProperty() and HandleAnimationProperty() respectively.
-			if (it->GetOrigin() != ElementAnimationOrigin::User)
-				RemoveProperty(it->GetPropertyId());
-		}
-
-		// Need to erase elements before submitting event, as iterators might be invalidated when calling external code.
-		animations.erase(it_completed, animations.end());
-
-		for (size_t i = 0; i < dictionary_list.size(); i++)
-			DispatchEvent(is_transition[i] ? EventId::Transitionend : EventId::Animationend, dictionary_list[i]);
+		Property property = animation.UpdateAndGetProperty(time, *this);
+		if (property.unit != Unit::UNKNOWN)
+			SetProperty(animation.GetPropertyId(), property);
 	}
+
+	// Move all completed animations to the end of the list
+	auto it_completed =
+		std::partition(animations.begin(), animations.end(), [](const ElementAnimation& animation) { return !animation.IsComplete(); });
+
+	Vector<Dictionary> dictionary_list;
+	Vector<bool> is_transition;
+	dictionary_list.reserve(animations.end() - it_completed);
+	is_transition.reserve(animations.end() - it_completed);
+
+	for (auto it = it_completed; it != animations.end(); ++it)
+	{
+		const String& property_name = StyleSheetSpecification::GetPropertyName(it->GetPropertyId());
+
+		dictionary_list.emplace_back();
+		dictionary_list.back().emplace("property", Variant(property_name));
+		is_transition.push_back(it->IsTransition());
+
+		// Remove completed transition- and animation-initiated properties.
+		// Should behave like in HandleTransitionProperty() and HandleAnimationProperty() respectively.
+		if (it->GetOrigin() != ElementAnimationOrigin::User)
+			RemoveProperty(it->GetPropertyId());
+	}
+
+	// Need to erase elements before submitting event, as iterators might be invalidated when calling external code.
+	animations.erase(it_completed, animations.end());
+
+	for (size_t i = 0; i < dictionary_list.size(); i++)
+		DispatchEvent(is_transition[i] ? EventId::Transitionend : EventId::Animationend, dictionary_list[i]);
 }
 
 } // namespace ui

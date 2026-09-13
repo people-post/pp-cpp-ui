@@ -832,7 +832,8 @@ private:
 	};
 	using PositionedBoxList = Vector<PositionedBox>;
 	Box main_box;
-	PositionedBoxList additional_boxes;
+	/// Extra boxes (e.g. split inlines). Allocate on first AddBox — most nodes only need main_box.
+	UniquePtr<PositionedBoxList> additional_boxes;
 
 	// And of the element's scrollable content.
 	Vector2f scrollable_overflow_rectangle;
@@ -840,13 +841,33 @@ private:
 	float baseline;
 	float z_index;
 
-	ElementList stacking_context;
+	/// Local stacking-context child list. Allocate when acting as a stacking context.
+	UniquePtr<ElementList> stacking_context;
 
 	UniquePtr<TransformState> transform_state;
 
-	ElementAnimationList animations;
+	/// Running animations / transitions. Allocate on first animation.
+	UniquePtr<ElementAnimationList> animations;
 
 	ElementMeta* meta;
+
+	ElementAnimationList& EnsureAnimations();
+	bool HasAnimations() const { return animations && !animations->empty(); }
+
+	ElementList& EnsureStackingContext()
+	{
+		if (!stacking_context)
+			stacking_context = MakeUnique<ElementList>();
+		return *stacking_context;
+	}
+
+	PositionedBoxList& EnsureAdditionalBoxes()
+	{
+		if (!additional_boxes)
+			additional_boxes = MakeUnique<PositionedBoxList>();
+		return *additional_boxes;
+	}
+	int GetAdditionalBoxCount() const { return additional_boxes ? (int)additional_boxes->size() : 0; }
 
 	friend class ui::Context;
 	friend class ui::ElementStyle;

@@ -61,9 +61,10 @@ void Element::BuildLocalStackingContext()
 	AddChildrenToStackingContext(stacking_children);
 	std::stable_sort(stacking_children.begin(), stacking_children.end());
 
-	stacking_context.resize(stacking_children.size());
+	ElementList& local_stacking = EnsureStackingContext();
+	local_stacking.resize(stacking_children.size());
 	for (size_t i = 0; i < stacking_children.size(); i++)
-		stacking_context[i] = stacking_children[i].element;
+		local_stacking[i] = stacking_children[i].element;
 }
 
 void Element::AddChildrenToStackingContext(Vector<StackingContextChild>& stacking_children)

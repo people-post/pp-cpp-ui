@@ -123,7 +123,7 @@ void Element::Update(float dp_ratio, Vector2f vp_dimensions)
 	for (size_t i = 0; i < children.size(); i++)
 		children[i]->Update(dp_ratio, vp_dimensions);
 
-	if (!animations.empty() && IsVisible(true))
+	if (HasAnimations() && IsVisible(true))
 	{
 		if (Context* ctx = GetContext())
 			ctx->RequestNextUpdate(0);
@@ -187,8 +187,11 @@ void Element::Render()
 	}
 
 	// Render all elements in our local stacking context.
-	for (Element* element : stacking_context)
-		element->Render();
+	if (stacking_context)
+	{
+		for (Element* element : *stacking_context)
+			element->Render();
+	}
 
 	Effects().RenderEffects(RenderStage::Exit);
 }
@@ -737,7 +740,7 @@ void Element::OnPropertyChange(const PropertyIdSet& changed_properties)
 
 				// If we are no longer acting as a local stacking context, then we clear the list and are all set. Otherwise, we need to rebuild our
 				// local stacking context.
-				stacking_context.clear();
+				stacking_context.reset();
 				stacking_context_dirty = local_stacking_context;
 			}
 

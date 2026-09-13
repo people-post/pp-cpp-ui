@@ -1,6 +1,6 @@
 # Element as entity + parts
 
-**Status:** in progress (Phases 1–3 TU splits landed; sizeof next)  
+**Status:** in progress (Phases 1–4 landed; flat-API retirement / controllers next)  
 **Related:** [ADR 002](ADR_002_MODULE_DEPENDENCIES.md), [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md), [SRC_LAYOUT.md](SRC_LAYOUT.md)
 
 ## Charter
