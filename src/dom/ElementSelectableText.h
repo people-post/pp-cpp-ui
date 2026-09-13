@@ -3,7 +3,7 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/EventListener.h>
 #include <ui/paint/Geometry.h>
-#include <ui/font/SelectionTypes.h>
+#include <ui/dom/SelectionTypes.h>
 #include "ElementTextSelection.h"
 
 namespace ui {

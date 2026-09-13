@@ -46,7 +46,7 @@ on layout). Layout keeps only the header + `Element` forward declaration.
 `("layout", "dom")` from `ALLOWED_BRIDGES`.
 
 **Follow-up (done):** `text → dom` cleared by moving `ElementText` and selection
-UI into `dom/`; `text/` is font/shaping only. No upward bridges into `dom` remain.
+UI into `dom/`; `font/` is font/shaping only. No upward bridges into `dom` remain.
 
 ## Non-goals
 

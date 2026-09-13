@@ -66,7 +66,7 @@ without defining layers, allowed bridges, or enforcement.
      Stream-using loaders live under `src/dom/`; `style` keeps parsers/spec/value
      types. `ComputedValues` holds only an `Element*` and out-of-line accessors.)
   3. ~~most `* → core` via host getters~~ — `SystemInterface` / `FileInterface` (+ getters)
-     live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `font`.
+     live in `base` (including `TextInputHandler`); `FontEngineInterface` getters live in `font`.
      Cleared `base|data|layout|paint|font|widgets|xml → core`.
   4. ~~`dom → core`~~ — `Plugin` / `PluginRegistry` live in `dom`; `ScriptInterface` in `base`;
      `Element.h` no longer includes `Core.h`.
@@ -94,3 +94,4 @@ without defining layers, allowed bridges, or enforcement.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.
   15. Renamed module `text` → `font` (`include/ui/font/`, `src/font/`).
+  16. Moved `SelectionTypes` into `dom/`; moved host `TextInputContext` / `TextInputHandler` / `TextLoupe` into `base/` (alongside `SystemInterface`). `font/` keeps font engine, effects, and shaping only.

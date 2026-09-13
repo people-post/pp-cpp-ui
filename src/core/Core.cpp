@@ -11,7 +11,7 @@
 #include <ui/paint/RenderManager.h>
 #include <ui/style/StyleSheetSpecification.h>
 #include <ui/base/SystemInterface.h>
-#include <ui/font/TextInputHandler.h>
+#include <ui/base/TextInputHandler.h>
 #include <ui/base/Types.h>
 #include "dom/BoxShadowCache.h"
 #include "style/ComputeProperty.h"

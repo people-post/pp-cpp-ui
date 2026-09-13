@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/font/SelectionTypes.h>
+#include <ui/dom/SelectionTypes.h>
 #include <ui/base/Types.h>
 namespace ui {
 

@@ -12,8 +12,8 @@
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/base/SystemInterface.h>
-#include <ui/font/TextInputContext.h>
-#include <ui/font/TextInputHandler.h>
+#include <ui/base/TextInputContext.h>
+#include <ui/base/TextInputHandler.h>
 #include "base/Clock.h"
 #include <ui/paint/RenderManager.h>
 #include "dom/SelectionHighlight.h"

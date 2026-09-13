@@ -7,7 +7,7 @@
 #include <ui/base/SystemInterface.h>
 #include <ui/base/FileInterface.h>
 #include <ui/font/FontEngineInterface.h>
-#include <ui/font/TextInputHandler.h>
+#include <ui/base/TextInputHandler.h>
 
 namespace ui {
 

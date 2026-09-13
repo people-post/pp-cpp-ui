@@ -76,4 +76,4 @@ specifications without including `dom` / `font` / `xml`.
 
 ## Amendment — host interfaces in base/text
 
-Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `font`. Cleared `base|data|layout|paint|font|widgets|xml → core`.
+Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` getters live in `font`; `TextInputHandler` getters live in `base`. Cleared `base|data|layout|paint|font|widgets|xml → core`.

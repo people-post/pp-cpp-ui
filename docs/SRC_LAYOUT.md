@@ -11,11 +11,11 @@
 ```text
 include/ui/
   config/            Build-time config
-  base/              Types, math, containers, utilities, Unit/Animation/decoration values, Input enums
+  base/              Types, math, containers, utilities, Unit/Animation/decoration values, Input enums, host TextInput*/TextLoupe
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model, LayoutTextElement seam
   dom/               Element, document, context, events, factory, ElementText, selection
-  font/              Fonts, shaping, font effects (ElementText lives in dom)
+  font/              Fonts, shaping, font effects (ElementText / selection in dom; TextInput* in base)
   xml/               RML/XML streams & parsers
   data/              Data model
   paint/             Geometry, textures, render interfaces
@@ -84,7 +84,7 @@ L12  platform | render    owned backends
 (none into `dom`)
 
 `layout → dom` and former `text → dom` cleared: layout uses `LayoutElement`; `ElementText` /
-selection live in `dom`. Module `font/` (renamed from `text/`) is font/shaping only
+selection live in `dom`. Module `font/` (renamed from `text/`) is font/shaping only; `SelectionTypes` lives in `dom/`, host `TextInput*` / `TextLoupe` in `base/`
 (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
 
 ### Enforcement

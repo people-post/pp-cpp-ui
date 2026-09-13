@@ -11,7 +11,6 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffectShadow.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffectShadow.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterface.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/TextInputHandler.cpp"
 )
 
 if(UI_FONT_ENGINE STREQUAL "freetype")

@@ -9,7 +9,7 @@
 #include <ui/paint/RenderBox.h>
 #include <ui/base/ScriptInterface.h>
 #include <ui/dom/ScrollTypes.h>
-#include <ui/font/SelectionTypes.h>
+#include <ui/dom/SelectionTypes.h>
 #include <ui/style/StyleTypes.h>
 #include <ui/style/Transform.h>
 #include <ui/base/Tween.h>

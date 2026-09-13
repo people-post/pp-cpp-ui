@@ -3,7 +3,7 @@
 #include <ui/base/Header.h>
 
 #include <ui/base/Input.h>
-#include <ui/font/SelectionTypes.h>
+#include <ui/dom/SelectionTypes.h>
 #include <ui/base/Types.h>
 #include <ui/base/Vector2.h>
 

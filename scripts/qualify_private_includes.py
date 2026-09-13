@@ -31,7 +31,7 @@ def main() -> None:
     sc_priv = SRC / "font" / "SelectionController.h"
     if sc_priv.is_file():
         priv = sc_priv.read_text(encoding="utf-8")
-        pub = priv.replace('#include "SelectionTypes.h"', "#include <ui/font/SelectionTypes.h>")
+        pub = priv.replace('#include "SelectionTypes.h"', "#include <ui/dom/SelectionTypes.h>")
         if "UI_CORE_API" not in pub and "class SelectionController" in pub:
             pub = pub.replace("class SelectionController", "class UI_CORE_API SelectionController")
         if "#include <ui/base/Header.h>" not in pub:
