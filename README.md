@@ -64,7 +64,8 @@ target_link_libraries(your_target PUBLIC pp_ui)
 ```
 
 ```cpp
-#include <ui/core/Core.h>using namespace ui;  // or qualify ui::
+#include <ui/core/Core.h>
+using namespace ui;  // or qualify ui::
 ```
 
 For a local sibling checkout (`../pp-cpp-ui`), pass `-DPP_CPP_UI_SOURCE_DIR=...`.
