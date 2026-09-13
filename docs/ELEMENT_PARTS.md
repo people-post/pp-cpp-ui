@@ -1,6 +1,6 @@
 # Element as entity + parts
 
-**Status:** in progress (Phases 1–5a landed; Style/Events public headers + remaining flat retirement next)  
+**Status:** in progress (Phases 1–5b landed; controllers / layout port next)  
 **Related:** [ADR 002](ADR_002_MODULE_DEPENDENCIES.md), [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md), [SRC_LAYOUT.md](SRC_LAYOUT.md)
 
 ## Charter
@@ -23,16 +23,16 @@
 
 ## Parts
 
-| Part | Type (today) | Presence | Accessor |
-|------|----------------|----------|----------|
-| Style | `ElementStyle` | Mandatory (Meta) | `Style()` |
-| Box | `ElementBox` (view → later storage) | Mandatory (hot) | `BoxModel()` |
-| Scroll | `ElementScroll` | Mandatory (Meta) | `Scroll()` |
-| Events | `EventDispatcher` | Mandatory (Meta) | `Events()` |
-| Effects | `ElementEffects` | Mandatory (Meta) | `Effects()` |
-| Background/border | `ElementBackgroundBorder` | Mandatory (Meta) | `BackgroundBorder()` |
-| Transform | `TransformState` | Optional / cold | later `Transform()` |
-| Animation | animation list | Optional / cold | later `Animation()` |
+| Part | Type (today) | Presence | Accessor | Public header |
+|------|----------------|----------|----------|---------------|
+| Style | `ElementStyle` | Mandatory (Meta) | `Style()` | `ui/dom/ElementStyle.h` |
+| Box | `ElementBox` (view → later storage) | Mandatory (hot) | `BoxModel()` | `ui/dom/ElementBox.h` |
+| Scroll | `ElementScroll` | Mandatory (Meta) | `Scroll()` | `ui/dom/ElementScroll.h` |
+| Events | `EventDispatcher` | Mandatory (Meta) | `Events()` | `ui/dom/EventDispatcher.h` |
+| Effects | `ElementEffects` | Mandatory (Meta) | `Effects()` | (private for now) |
+| Background/border | `ElementBackgroundBorder` | Mandatory (Meta) | `BackgroundBorder()` | (private for now) |
+| Transform | `TransformState` | Optional / cold | later `Transform()` | |
+| Animation | animation list | Optional / cold | later `Animation()` | |
 
 Session policy (focus path, selection gestures, animation clock) belongs on Document/Context controllers, not on Element.
 
@@ -40,11 +40,11 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 
 1. **Expose parts** — accessors + `ElementBox` view; legacy getters alias; `sizeof` unchanged. ✓
 2. **Engine call sites** — migrate `src/` to parts-first. ✓
-3. **Split TUs** — animation, stacking, transform, geometry, tree, style façade, scroll API, events extracted. ✓ (`Element.cpp` ~1k lines; further attribute/lifecycle optional)
-4. **Conservative `sizeof`** — `animations`, `stacking_context`, `additional_boxes` are `UniquePtr` (allocate-on-use); hot BoxModel fields stay in-line. ✓ (`sizeof(Element)` 392 → 344)
+3. **Split TUs** — animation, stacking, transform, geometry, tree, style façade, scroll API, events extracted. ✓
+4. **Conservative `sizeof`** — cold fields allocate-on-use; hot BoxModel fields stay in-line. ✓ (`sizeof(Element)` 392 → 344)
 5. **Retire flat API** — in progress:
-   - **5a** ✓ Scroll offset/overflow APIs live on `ElementScroll`; Element methods are thin façades (`Prefer Scroll()`). Engine call sites use `Scroll()` / `BoxModel()` where types are public. Removed unused `GetElementScroll` / `GetElementEffects` / `GetElementBackgroundBorder` / `GetEventDispatcher` aliases.
-   - **5b** (next) Publicize `ElementStyle` (and `EventDispatcher` if needed) under `include/ui/…` so `Style()` / `Events()` are usable outside `src/dom/`, then migrate/remove flat style & event façades.
+   - **5a** ✓ Scroll offset/overflow on `ElementScroll`; Element façades thin; unused part-pointer aliases removed.
+   - **5b** ✓ Publicize `ElementStyle` + `EventDispatcher` under `include/ui/dom/`; `Element.h` includes them so `Style()` / `Events()` are complete types. Engine call sites use `Style().SetProperty(PropertyId…)` / `Events().AttachEvent(EventId…)` where safe. Keep `Element::SetClass` / `SetPseudoClass` / string `SetProperty` / string `AddEventListener` façades (definition dirtying / name→id lookup).
 6. **Controllers** — selection/focus/animation ownership on Document/Context.
 7. **Layout port** — narrow `LayoutElement` toward BoxModel + style queries.
 
@@ -53,4 +53,5 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 - No new product features as methods on `Element` when they belong on a part or controller.
 - Do not pimpl the whole Element (hot path).
 - Do not reintroduce `layout →` concrete Element includes outside `LayoutElement` / agreed ports.
-- Do not call `Style().…` from TUs that only see a forward-declared `ElementStyle` (incomplete type) until 5b lands — use Element façades or include the style header.
+- Prefer `Style()` / `Events()` / `Scroll()` / `BoxModel()` over flat Element methods when the part API covers the call.
+- Prefer `Element::SetClass` / `SetPseudoClass` over `Style().SetClass` when sibling-combinator definition dirtying is required.
