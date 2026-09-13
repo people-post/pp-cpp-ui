@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/xml/Stream.h>
+#include <ui/base/Stream.h>
 #include <ui/base/Types.h>
 namespace ui {
 

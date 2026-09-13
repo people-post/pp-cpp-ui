@@ -2,7 +2,6 @@
 #include <ui/text/ElementText.h>
 #include "base/ControlledLifetimeResource.h"
 #include "base/Pool.h"
-#include "xml/XMLParseTools.h"
 
 namespace ui {
 

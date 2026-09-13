@@ -1,5 +1,6 @@
 # Auto-maintained module sources for ui_core.
 target_sources(ui_core PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/DataExpressionTools.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Clock.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Clock.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ControlledLifetimeResource.h"
@@ -15,6 +16,10 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/Pool.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Pool.inl"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Profiling.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/Stream.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StreamFile.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StreamFile.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/StreamMemory.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/StringUtilities.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SystemInterface.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Traits.cpp"

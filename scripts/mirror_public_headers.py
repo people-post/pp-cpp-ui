@@ -102,8 +102,8 @@ PUB: dict[str, str] = {
     "TextShapingContext.h": "text",
     # xml
     "BaseXMLParser.h": "xml",
-    "Stream.h": "xml",
-    "StreamMemory.h": "xml",
+    "Stream.h": "base",
+    "StreamMemory.h": "base",
     "XMLNodeHandler.h": "xml",
     "XMLParser.h": "xml",
     # data

@@ -1,7 +1,7 @@
 #include "UserAgentStyleSheet.h"
 
 #include <ui/base/Log.h>
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/style/StyleSheetContainer.h>
 #include <cstring>
 

@@ -3,7 +3,7 @@
 #include <ui/dom/Factory.h>
 #include <ui/base/Log.h>
 #include <ui/base/Profiling.h>
-#include <ui/xml/Stream.h>
+#include <ui/base/Stream.h>
 #include <ui/base/Types.h>
 #include <ui/base/URL.h>
 #include <ui/xml/XMLNodeHandler.h>

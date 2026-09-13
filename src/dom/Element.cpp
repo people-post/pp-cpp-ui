@@ -34,7 +34,6 @@
 #include "StyleSheetParser.h"
 #include "style/TransformState.h"
 #include "style/TransformUtilities.h"
-#include "xml/XMLParseTools.h"
 #include <algorithm>
 #include <cmath>
 #include <limits>

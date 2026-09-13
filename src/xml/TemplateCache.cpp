@@ -1,6 +1,6 @@
 #include "TemplateCache.h"
 #include <ui/base/Log.h>
-#include "StreamFile.h"
+#include "base/StreamFile.h"
 #include "Template.h"
 
 namespace ui {

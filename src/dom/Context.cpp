@@ -9,7 +9,7 @@
 #include <ui/dom/Factory.h>
 #include <ui/base/Profiling.h>
 #include <ui/paint/RenderManager.h>
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/base/SystemInterface.h>
 #include "ClickRouting.h"
 #include "data/DataModel.h"
@@ -18,7 +18,7 @@
 #include "text/SelectionContentBuilder.h"
 #include "text/SelectionController.h"
 #include "ScrollController.h"
-#include "xml/StreamFile.h"
+#include "base/StreamFile.h"
 #include <algorithm>
 #include <clocale>
 #include <iterator>

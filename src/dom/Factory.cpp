@@ -6,7 +6,7 @@
 #include <ui/text/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/EventListenerInstancer.h>
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
 #include <ui/base/SystemInterface.h>
@@ -32,10 +32,10 @@
 #include "text/FontEffectOutline.h"
 #include "text/FontEffectShadow.h"
 #include "dom/PluginRegistry.h"
-#include "xml/StreamFile.h"
+#include "base/StreamFile.h"
 #include "StyleSheetFactory.h"
-#include "xml/TemplateCache.h"
-#include "xml/XMLParseTools.h"
+#include <ui/base/DataExpressionTools.h>
+#include <ui/xml/XMLParser.h>
 #include <algorithm>
 
 namespace ui {
@@ -250,7 +250,7 @@ bool Factory::InstanceElementText(Element* parent, const String& in_text)
 	char previous = 0;
 	for (const char c : text)
 	{
-		const char* error_str = XMLParseTools::ParseDataBrackets(inside_brackets, inside_string, c, previous);
+		const char* error_str = DataExpressionTools::ParseDataBrackets(inside_brackets, inside_string, c, previous);
 		if (error_str)
 		{
 			Log::Message(Log::LT_WARNING, "Failed to instance text element '%s'. %s", text.c_str(), error_str);
@@ -427,10 +427,6 @@ void Factory::ClearStyleSheetCache()
 	StyleSheetFactory::ClearStyleSheetCache();
 }
 
-void Factory::ClearTemplateCache()
-{
-	TemplateCache::Clear();
-}
 
 void Factory::RegisterEventInstancer(EventInstancer* instancer)
 {

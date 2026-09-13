@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/base/Header.h>
-#include <ui/xml/Stream.h>
+#include <ui/base/Stream.h>
 
 namespace ui {
 

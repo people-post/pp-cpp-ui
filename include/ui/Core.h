@@ -53,6 +53,8 @@
 #include <ui/paint/RenderInterface.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/style/Spritesheet.h>
+#include <ui/base/Stream.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>

@@ -1,7 +1,7 @@
 #include "../Common/TestsShell.h"
 #include <ui/core/Core.h>
 #include <ui/style/Spritesheet.h>
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
 #include <doctest.h>

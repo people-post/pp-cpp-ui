@@ -9,6 +9,7 @@
 #include <ui/widgets/ElementProgress.h>
 #include <ui/widgets/ElementTabSet.h>
 #include <ui/xml/XMLParser.h>
+#include "xml/TemplateCache.h"
 
 #include "base/ControlledLifetimeResource.h"
 #include "data/DataController.h"
@@ -144,4 +145,13 @@ void Shutdown()
 }
 
 } // namespace RegisterDefaultFactories
+} // namespace ui
+
+namespace ui {
+
+void Factory::ClearTemplateCache()
+{
+	TemplateCache::Clear();
+}
+
 } // namespace ui

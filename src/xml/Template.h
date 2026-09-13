@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include "DocumentHeader.h"
 
 namespace ui {

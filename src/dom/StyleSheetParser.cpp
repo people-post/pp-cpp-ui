@@ -5,7 +5,7 @@
 #include <ui/base/Profiling.h>
 #include <ui/style/PropertyDefinition.h>
 #include <ui/style/PropertySpecification.h>
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
 #include <ui/style/StyleSheetSpecification.h>

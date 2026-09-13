@@ -3,7 +3,7 @@
 #include <ui/text/ElementText.h>
 #include <ui/dom/Factory.h>
 #include <ui/base/Profiling.h>
-#include <ui/xml/StreamMemory.h>
+#include <ui/base/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
 #include "xml/DocumentHeader.h"
@@ -11,12 +11,11 @@
 #include "EventDispatcher.h"
 #include "layout/LayoutDetails.h"
 #include "layout/LayoutEngine.h"
-#include "xml/StreamFile.h"
+#include "base/StreamFile.h"
 #include "StyleSheetFactory.h"
 #include "xml/Template.h"
 #include "UserAgentStyleSheet.h"
 #include "xml/TemplateCache.h"
-#include "xml/XMLParseTools.h"
 #include <limits.h>
 
 namespace ui {
