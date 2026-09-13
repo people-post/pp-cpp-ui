@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/paint/RenderInterface.h>
 #include <ui/base/SystemInterface.h>
 #include <ui/base/Types.h>

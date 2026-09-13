@@ -80,6 +80,9 @@ without defining layers, allowed bridges, or enforcement.
      (`paint → style` also cleared with DecorationsTypes move).
   12. ~~`layout → dom`~~ — cleared: layout-owned `LayoutElement` API with
       implementation in `src/dom/LayoutElement.cpp` (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
+  13. Host input enums (`Input.h`) moved `dom` → `base` so non-DOM modules
+      (text selection, platforms, widgets) need not take a `* → dom` edge for keys/buttons.
+      Remaining `text → dom` is intentional: `ElementText` / selection Element subclasses.
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

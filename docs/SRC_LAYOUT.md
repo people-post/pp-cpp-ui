@@ -11,7 +11,7 @@
 ```text
 include/ui/
   config/            Build-time config
-  base/              Types, math, containers, utilities, Unit/Animation/decoration values
+  base/              Types, math, containers, utilities, Unit/Animation/decoration values, Input enums
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model, LayoutTextElement seam
   dom/               Element, document, context, events, factory

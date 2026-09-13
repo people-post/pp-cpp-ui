@@ -1,6 +1,6 @@
 #include <ui/platform/Platform_SDL.h>
 #include <ui/dom/Context.h>
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/base/SystemInterface.h>
 static ui::TouchList TouchEventToTouchList(SDL_Event& ev, ui::Context* context, SDL_FingerID finger_id)

@@ -36,7 +36,7 @@
 #include <ui/paint/Geometry.h>
 #include <ui/base/Header.h>
 #include <ui/base/ID.h>
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/base/Log.h>
 #include <ui/base/Math.h>
 #include <ui/paint/Mesh.h>

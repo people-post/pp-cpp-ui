@@ -4,7 +4,7 @@
 #include <ui/dom/ElementUtilities.h>
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/dom/Factory.h>
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/base/Profiling.h>
 #include "base/Clock.h"
 

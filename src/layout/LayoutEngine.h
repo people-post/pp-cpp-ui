@@ -3,6 +3,8 @@
 #include <ui/base/Types.h>
 namespace ui {
 
+class Element;
+
 /**
     See the CSS glossary for terms used in the layout engine:
     https://www.w3.org/TR/css-display-3/#glossary

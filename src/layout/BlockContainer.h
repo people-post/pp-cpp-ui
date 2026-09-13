@@ -5,6 +5,8 @@
 
 namespace ui {
 
+class Element;
+
 class FloatedBoxSpace;
 class LineBox;
 class InlineBox;

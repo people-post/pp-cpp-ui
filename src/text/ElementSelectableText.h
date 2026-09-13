@@ -3,7 +3,6 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/EventListener.h>
 #include <ui/paint/Geometry.h>
-#include <ui/dom/Input.h>
 #include <ui/text/SelectionTypes.h>
 #include "ElementTextSelection.h"
 

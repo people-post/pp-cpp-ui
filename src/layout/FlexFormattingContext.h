@@ -5,6 +5,8 @@
 
 namespace ui {
 
+class Element;
+
 class LayoutBox;
 class ContainerBox;
 class FlexContainer;

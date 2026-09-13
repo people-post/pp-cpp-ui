@@ -4,7 +4,7 @@
 #include <ui/dom/Context.h>
 #include <ui/core/Core.h>
 #include <ui/dom/ElementDocument.h>
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/Debugger.h>
 
 static ui::UniquePtr<ShellFileInterface> file_interface;

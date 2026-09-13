@@ -3,6 +3,8 @@
 #include <ui/base/Types.h>
 namespace ui {
 
+class Element;
+
 using LayoutOverflowHandle = int;
 using LayoutFragmentHandle = int;
 

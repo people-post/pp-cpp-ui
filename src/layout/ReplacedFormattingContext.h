@@ -6,6 +6,8 @@
 
 namespace ui {
 
+class Element;
+
 /*
     A formatting context that handles replaced elements.
 

@@ -5,6 +5,8 @@
 
 namespace ui {
 
+class Element;
+
 class InlineBoxBase : public InlineLevelBox {
 public:
 	InlineLevelBox* AddChild(UniquePtr<InlineLevelBox> child);

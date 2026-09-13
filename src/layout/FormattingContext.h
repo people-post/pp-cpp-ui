@@ -3,6 +3,8 @@
 #include <ui/base/Types.h>
 namespace ui {
 
+class Element;
+
 class Box;
 class ContainerBox;
 class LayoutBox;

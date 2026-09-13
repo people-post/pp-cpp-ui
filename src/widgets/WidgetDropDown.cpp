@@ -6,7 +6,7 @@
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/dom/Event.h>
 #include <ui/dom/Factory.h>
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/Property.h>

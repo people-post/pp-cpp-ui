@@ -5,6 +5,8 @@
 
 namespace ui {
 
+class Element;
+
 class Box;
 class BlockContainer;
 class ContainerBox;

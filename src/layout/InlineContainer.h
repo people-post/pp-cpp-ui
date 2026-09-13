@@ -7,6 +7,8 @@
 
 namespace ui {
 
+class Element;
+
 class BlockContainer;
 class LineBox;
 

@@ -7,7 +7,7 @@
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/dom/Factory.h>
 #include <ui/text/FontEngineInterface.h>
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/base/Math.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/StringUtilities.h>

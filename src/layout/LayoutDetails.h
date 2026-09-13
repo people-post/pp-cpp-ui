@@ -4,6 +4,8 @@
 #include <ui/base/Types.h>
 namespace ui {
 
+class Element;
+
 class Box;
 class BlockContainer;
 class ContainerBox;

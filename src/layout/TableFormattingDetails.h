@@ -6,6 +6,8 @@
 
 namespace ui {
 
+class Element;
+
 class TableWrapper;
 struct ComputedAxisSize;
 

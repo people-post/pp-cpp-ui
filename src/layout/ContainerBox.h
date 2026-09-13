@@ -7,6 +7,8 @@
 
 namespace ui {
 
+class Element;
+
 /**
     Abstraction for layout boxes that can act as a containing block.
 

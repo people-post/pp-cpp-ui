@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/dom/Input.h>
+#include <ui/base/Input.h>
 #include <ui/base/SystemInterface.h>
 #include <ui/base/Types.h>
 #if UI_SDL_VERSION_MAJOR == 3

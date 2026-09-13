@@ -87,7 +87,7 @@ PUB: dict[str, str] = {
     "EventListener.h": "dom",
     "EventListenerInstancer.h": "dom",
     "Factory.h": "dom",
-    "Input.h": "dom",
+    "Input.h": "base",
     "ScrollTypes.h": "dom",
     # text
     "ElementText.h": "text",
