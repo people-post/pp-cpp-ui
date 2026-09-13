@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_data
+ui_add_module(data DEPENDS ui_dom)
+
+# Auto-maintained sources for ui_data.
+target_sources(ui_data PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementData.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ContextData.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementUtilitiesData.cpp"

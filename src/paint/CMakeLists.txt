@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_paint
+ui_add_module(paint DEPENDS ui_base)
+
+# Auto-maintained sources for ui_paint.
+target_sources(ui_paint PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/CallbackTexture.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/CompiledFilterShader.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Geometry.cpp"

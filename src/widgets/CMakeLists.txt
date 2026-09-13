@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_widgets
+ui_add_module(widgets DEPENDS ui_data ui_xml)
+
+# Auto-maintained sources for ui_widgets.
+target_sources(ui_widgets PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementForm.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementFormControl.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementFormControlInput.cpp"

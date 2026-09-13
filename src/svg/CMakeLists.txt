@@ -1,6 +1,9 @@
-# This plugin targets ui_core directly and is incorporated into the core library when enabled.
+# Module library: ui_svg
+ui_add_module(svg DEPENDS ui_widgets)
 
-target_sources(ui_core PRIVATE
+# SVG plugin library ui_svg (linked into umbrella ui_core when enabled).
+
+target_sources(ui_svg PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/DecoratorSVG.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DecoratorSVG.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementSVG.cpp"
@@ -13,4 +16,6 @@ target_sources(ui_core PRIVATE
 	"${PP_UI_INCLUDE_DIR}/ui/svg/ElementSVG.h"
 )
 
-target_compile_definitions(ui_core PRIVATE "UI_SVG_PLUGIN")
+target_compile_definitions(ui_svg PUBLIC "UI_SVG_PLUGIN")
+
+target_link_libraries(ui_svg PUBLIC lunasvg::lunasvg)
