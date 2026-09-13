@@ -1,6 +1,6 @@
 # Element as entity + parts
 
-**Status:** in progress (Phases 1–3 landed; more TU splits + sizeof next)  
+**Status:** in progress (Phases 1–3 TU splits landed; sizeof next)  
 **Related:** [ADR 002](ADR_002_MODULE_DEPENDENCIES.md), [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md), [SRC_LAYOUT.md](SRC_LAYOUT.md)
 
 ## Charter
@@ -40,7 +40,7 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 
 1. **Expose parts** — accessors + `ElementBox` view; legacy getters alias; `sizeof` unchanged. ✓
 2. **Engine call sites** — migrate `src/` to parts-first. ✓
-3. **Split TUs** — animation / stacking / transform orchestration extracted from `Element.cpp`. ✓ (geometry/tree/style façade TUs follow)
+3. **Split TUs** — animation, stacking, transform, geometry, tree, style façade, scroll API, events extracted. ✓ (`Element.cpp` ~1k lines; further attribute/lifecycle optional)
 4. **Conservative `sizeof`** — cold fields allocate-on-use; keep BoxModel hot data in-line.
 5. **Retire flat API** — remove duplicate Element methods once consumers moved.
 6. **Controllers** — selection/focus/animation ownership on Document/Context.
