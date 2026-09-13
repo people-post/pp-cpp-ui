@@ -2,6 +2,7 @@
 
 include("${CMAKE_SOURCE_DIR}/cmake/engine/Utilities.cmake")
 include("${CMAKE_SOURCE_DIR}/cmake/engine/UiModule.cmake")
+include("${CMAKE_SOURCE_DIR}/cmake/engine/UiModuleTests.cmake")
 
 # Layer order matches ADR 002 (low → high). Optional svg before core so the umbrella can link it.
 add_subdirectory(base)

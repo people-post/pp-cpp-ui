@@ -122,3 +122,7 @@ install(TARGETS ui_core
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install_target_pdb(ui_core)
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

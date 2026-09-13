@@ -1,6 +1,5 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-// Include common tests source
-#include "../Common/TestsInterface.cpp"
-#include "../Common/TestsShell.cpp"
+// Harness (TestsShell / TestsInterface) comes from linking ui_tests_common —
+// do not #include those .cpp files here (avoids duplicate TUs / ODR risk).

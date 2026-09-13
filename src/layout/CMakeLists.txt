@@ -40,3 +40,7 @@ target_sources(ui_layout PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/TableFormattingDetails.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TableFormattingDetails.h"
 )
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

@@ -20,3 +20,7 @@ target_sources(ui_xml PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLParseTools.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLParser.cpp"
 )
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

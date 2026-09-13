@@ -1,41 +1,15 @@
 set(TARGET_NAME "ui_unit_tests")
 
+# Thin runner: modules register sources via ui_add_module_tests() from
+# src/<module>/tests/CMakeLists.txt (collected on UI_UNIT_TEST_SOURCES).
+get_property(UI_UNIT_TEST_SOURCES GLOBAL PROPERTY UI_UNIT_TEST_SOURCES)
+if(NOT UI_UNIT_TEST_SOURCES)
+	message(FATAL_ERROR "ui_unit_tests: no module test sources registered (UI_UNIT_TEST_SOURCES empty)")
+endif()
+
 add_executable(${TARGET_NAME}
-	Animation.cpp
-	ClickRouting.cpp
-	Core.cpp
-	DataBinding.cpp
-	DataExpression.cpp
-	DataModel.cpp
-	Debugger.cpp
-	Decorator.cpp
-	Element.cpp
-	ElementBackgroundBorder.cpp
-	ElementDocument.cpp
-	ElementHandle.cpp
-	ElementFormControlSelect.cpp
-	ElementImage.cpp
-	ElementStyle.cpp
-	EventListener.cpp
-	Filter.cpp
-	FlexFormatting.cpp
-	Layout.cpp
-	Localization.cpp
 	main.cpp
-	Math.cpp
-	MediaQuery.cpp
-	Properties.cpp
-	PropertySpecification.cpp
-	Selectors.cpp
-	Specificity_Basic.cpp
-	Specificity_MediaQuery.cpp
-	StableVector.cpp
-	StringUtilities.cpp
-	StyleSheetParser.cpp
-	Template.cpp
-	URL.cpp
-	Variant.cpp
-	XMLParser.cpp
+	${UI_UNIT_TEST_SOURCES}
 )
 
 set_common_target_options(${TARGET_NAME})

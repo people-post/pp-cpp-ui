@@ -28,11 +28,12 @@ src/
   base style layout dom font xml data paint widgets core
   font/default font/harfbuzz
   svg debugger platform render
+  <module>/tests/    Module unit tests (`*_test.cpp`)
 third_party/
 cmake/
 docs/
 tests/
-  engine/            Unit tests
+  engine/            Runner, harness (Common), fixtures, visual/bench
   support/           Shell + SDL_GL3 reference backend only
 ```
 
@@ -121,6 +122,29 @@ Cross-module engine headers use a single `-I src` root and qualified paths:
 
 Same-folder includes (`#include "LayoutEngine.h"` from `layout/LayoutEngine.cpp`)
 stay unqualified. Public headers always use `<ui/module/Name.h>`.
+
+## Unit tests
+
+Colocate module-owned tests under `src/<module>/tests/*_test.cpp` (same module
+DAG as production code). Keep shared harness, fixtures, visual tests, and
+benchmarks under `tests/`. One executable `ui_unit_tests` (doctest) lists those
+sources from `tests/engine/Source/UnitTests/CMakeLists.txt`.
+
+| Kind | Where | Notes |
+|------|-------|-------|
+| Pure unit | `src/<module>/tests/` | No `TestsShell`; exercise public module APIs only |
+| Shell-backed / document | same folders | Need `TestsShell` / Core+Context; treat as integration |
+| Harness, fixtures, visual, bench | `tests/` | Shared runner support |
+
+Prefer public seams over white-box `#include` of `.cpp` sources. The doctest
+`main` links `ui_tests_common` and must not compile harness `.cpp` files again.
+
+Each module owns its test source list in `src/<module>/tests/CMakeLists.txt`
+via `ui_add_module_tests()`; the shared `ui_unit_tests` executable under
+`tests/engine` only provides `main.cpp`, linking, and discovery.
+
+Harness headers (`TestsShell.h`, …) come from `ui_tests_common`’s INTERFACE
+include path — tests `#include "TestsShell.h"` (not a relative `../Common/`).
 
 ## Test data path
 

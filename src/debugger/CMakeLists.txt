@@ -70,3 +70,7 @@ install(TARGETS ui_debugger
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 install_target_pdb(ui_debugger)
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()
