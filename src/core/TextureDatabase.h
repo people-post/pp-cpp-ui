@@ -4,7 +4,7 @@
 #include <ui/Core/StableVector.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class RenderInterface;
 
@@ -71,4 +71,4 @@ public:
 	CallbackTextureDatabase callback_database;
 };
 
-} // namespace Rml
+} // namespace ui

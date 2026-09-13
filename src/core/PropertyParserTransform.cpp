@@ -4,7 +4,7 @@
 #include <ui/Core/TransformPrimitive.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 PropertyParserTransform::PropertyParserTransform() :
 	number(Unit::NUMBER), length(Unit::LENGTH, Unit::PX), length_pct(Unit::LENGTH_PERCENT, Unit::PX), angle(Unit::ANGLE, Unit::RAD)
@@ -260,4 +260,4 @@ bool PropertyParserTransform::Scan(int& out_bytes_read, const char* str, const c
 	return total_bytes_read > 0;
 }
 
-} // namespace Rml
+} // namespace ui

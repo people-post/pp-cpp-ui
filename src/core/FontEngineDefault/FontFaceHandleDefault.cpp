@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <numeric>
 
-namespace Rml {
+namespace ui {
 
 static constexpr char32_t KerningCache_AsciiSubsetBegin = 32;
 static constexpr char32_t KerningCache_AsciiSubsetLast = 126;
@@ -31,7 +31,7 @@ bool FontFaceHandleDefault::Initialize(FontFaceHandleFreetype face, int font_siz
 {
 	ft_face = face;
 
-	RMLUI_ASSERTMSG(layer_configurations.empty(), "Initialize must only be called once.");
+	UI_ASSERTMSG(layer_configurations.empty(), "Initialize must only be called once.");
 
 	if (!FreeType::InitialiseFaceHandle(ft_face, font_size, glyphs, metrics, load_default_glyphs))
 		return false;
@@ -58,7 +58,7 @@ const FontGlyphMap& FontFaceHandleDefault::GetGlyphs() const
 
 int FontFaceHandleDefault::GetStringWidth(StringView string, const TextShapingContext& text_shaping_context, Character prior_character)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	bool has_set_size = false;
 	bool is_kerning_enabled = IsKerningEnabled(text_shaping_context);
@@ -153,7 +153,7 @@ bool FontFaceHandleDefault::GenerateLayerTexture(Vector<byte>& texture_data, Vec
 {
 	if (handle_version != version)
 	{
-		RMLUI_ERRORMSG("While generating font layer texture: Handle version mismatch in texture vs font-face.");
+		UI_ERRORMSG("While generating font layer texture: Handle version mismatch in texture vs font-face.");
 		return false;
 	}
 
@@ -161,7 +161,7 @@ bool FontFaceHandleDefault::GenerateLayerTexture(Vector<byte>& texture_data, Vec
 
 	if (it == layers.end())
 	{
-		RMLUI_ERRORMSG("While generating font layer texture: Layer id not found.");
+		UI_ERRORMSG("While generating font layer texture: Layer id not found.");
 		return false;
 	}
 
@@ -171,8 +171,8 @@ bool FontFaceHandleDefault::GenerateLayerTexture(Vector<byte>& texture_data, Vec
 int FontFaceHandleDefault::GenerateString(RenderManager& render_manager, TexturedMeshList& mesh_list, StringView string, const Vector2f position,
 	const ColourbPremultiplied colour, const float opacity, const TextShapingContext& text_shaping_context, const int layer_configuration_index)
 {
-	RMLUI_ASSERT(layer_configuration_index >= 0);
-	RMLUI_ASSERT(layer_configuration_index < (int)layer_configurations.size());
+	UI_ASSERT(layer_configuration_index >= 0);
+	UI_ASSERT(layer_configuration_index < (int)layer_configurations.size());
 
 	int geometry_index = 0;
 	int line_width = 0;
@@ -204,7 +204,7 @@ int FontFaceHandleDefault::GenerateString(RenderManager& render_manager, Texture
 		if (num_textures == 0)
 			continue;
 
-		RMLUI_ASSERT(geometry_index + num_textures <= (int)mesh_list.size());
+		UI_ASSERT(geometry_index + num_textures <= (int)mesh_list.size());
 
 		line_width = 0;
 		Character prior_character = Character::Null;
@@ -356,7 +356,7 @@ const FontGlyph* FontFaceHandleDefault::GetOrAppendGlyph(Character& character, b
 			it_glyph = glyphs.find(character);
 			if (it_glyph == glyphs.end())
 			{
-				RMLUI_ERROR;
+				UI_ERROR;
 				return nullptr;
 			}
 
@@ -424,7 +424,7 @@ FontFaceLayer* FontFaceHandleDefault::GetOrCreateLayer(const SharedPtr<const Fon
 
 bool FontFaceHandleDefault::GenerateLayer(FontFaceLayer* layer)
 {
-	RMLUI_ASSERT(layer);
+	UI_ASSERT(layer);
 	const FontEffect* font_effect = layer->GetFontEffect();
 	bool result = false;
 
@@ -463,4 +463,4 @@ bool FontFaceHandleDefault::GenerateLayer(FontFaceLayer* layer)
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

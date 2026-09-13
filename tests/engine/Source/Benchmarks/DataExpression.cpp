@@ -3,7 +3,7 @@
 #include <doctest.h>
 #include <nanobench.h>
 
-using namespace Rml;
+using namespace ui;
 using namespace ankerl;
 
 static DataTypeRegister type_register;

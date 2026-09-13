@@ -5,7 +5,7 @@
 #include <ui/Core/Traits.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class DataModel;
@@ -97,4 +97,4 @@ private:
 	NameViewMap name_view_map;
 };
 
-} // namespace Rml
+} // namespace ui

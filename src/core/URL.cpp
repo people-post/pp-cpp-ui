@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 const char* DEFAULT_PROTOCOL = "file";
 
@@ -17,13 +17,13 @@ URL::URL()
 URL::URL(const String& _url)
 {
 	port = 0;
-	RMLUI_VERIFY(SetURL(_url));
+	UI_VERIFY(SetURL(_url));
 }
 
 URL::URL(const char* _url)
 {
 	port = 0;
-	RMLUI_VERIFY(SetURL(_url));
+	UI_VERIFY(SetURL(_url));
 }
 
 URL::~URL() {}
@@ -434,7 +434,7 @@ void URL::ConstructURL() const
 		}
 		url += "@";
 	}
-	RMLUI_ASSERTMSG(password.empty() || (!password.empty() && !login.empty()), "Can't have a password without a login!");
+	UI_ASSERTMSG(password.empty() || (!password.empty() && !login.empty()), "Can't have a password without a login!");
 
 	// Append the host.
 	url += host;
@@ -444,7 +444,7 @@ void URL::ConstructURL() const
 	{
 		if (port > 0)
 		{
-			RMLUI_ASSERTMSG(!host.empty(), "Can't have a port without a host!");
+			UI_ASSERTMSG(!host.empty(), "Can't have a port without a host!");
 			constexpr size_t port_buffer_size = 16;
 			char port_string[port_buffer_size];
 			snprintf(port_string, port_buffer_size, ":%d/", port);
@@ -616,4 +616,4 @@ bool URL::IsUnreservedChar(const char in)
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -4,7 +4,7 @@ import sys
 import argparse
 
 parser = argparse.ArgumentParser(description=\
-'''Convert the W3C CSS 2.1 test suite to RML documents for testing in RmlUi.
+'''Convert the W3C CSS 2.1 test suite to RML documents for testing in pp-cpp-ui.
 
 Instructions:
   1. Fetch the CSS tests archive from here: https://www.w3.org/Style/CSS/Test/CSS2.1/
@@ -12,7 +12,7 @@ Instructions:
   3. Call this script with the 'out_dir' argument pointing to a directory of your choosing.
 
 The resulting tests can be opened in the `Visual tests` application. Set the environment variable
-`RMLUI_VISUAL_TESTS_RML_DIRECTORIES` to the 'out_dir' used above. After opening the application, use
+`UI_VISUAL_TESTS_RML_DIRECTORIES` to the 'out_dir' used above. After opening the application, use
 the arrow keys Up/Down to change the test suite directory.
 
 This script can also be used with the CSS3 test suites, such as the one for flexbox:

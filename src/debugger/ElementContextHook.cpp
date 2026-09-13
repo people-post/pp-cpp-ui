@@ -1,7 +1,7 @@
 #include "ElementContextHook.h"
 #include "DebuggerPlugin.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 ElementContextHook::ElementContextHook(const String& tag) : ElementDebugDocument(tag)
@@ -28,4 +28,4 @@ void ElementContextHook::OnRender()
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

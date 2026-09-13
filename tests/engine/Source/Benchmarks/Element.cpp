@@ -7,7 +7,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 static const String document_rml = R"(
 <rml>
@@ -85,7 +85,7 @@ static String GenerateRml(const int num_rows, const char* row)
 {
 	static nanobench::Rng rng;
 
-	Rml::String rml;
+	ui::String rml;
 	rml.reserve(10000 * num_rows);
 
 	for (int i = 0; i < num_rows; i++)
@@ -94,7 +94,7 @@ static String GenerateRml(const int num_rows, const char* row)
 		int route = rng() % 50;
 		int max = (rng() % 40) + 10;
 		int value = rng() % max;
-		Rml::String rml_row = Rml::CreateString(row, index, route, max, value);
+		ui::String rml_row = ui::CreateString(row, index, route, max, value);
 		rml += rml_row;
 	}
 
@@ -120,7 +120,7 @@ TEST_CASE("element.creation_and_destruction")
 	context->Render();
 	TestsShell::RenderLoop();
 
-	String msg = Rml::CreateString("\nElement construction and destruction of %d total elements.\n", GetNumDescendentElements(el));
+	String msg = ui::CreateString("\nElement construction and destruction of %d total elements.\n", GetNumDescendentElements(el));
 	msg += TestsShell::GetRenderStats();
 	MESSAGE(msg);
 
@@ -183,7 +183,7 @@ TEST_CASE("element.long_texts")
 	context->Render();
 	TestsShell::RenderLoop();
 
-	String msg = Rml::CreateString("\nElement construction and destruction of %d total very long elements.\n", GetNumDescendentElements(el));
+	String msg = ui::CreateString("\nElement construction and destruction of %d total very long elements.\n", GetNumDescendentElements(el));
 	msg += TestsShell::GetRenderStats();
 	MESSAGE(msg);
 
@@ -280,7 +280,7 @@ TEST_CASE("element.asymptotic_complexity")
 			bench.complexityN(num_rows).run(bench_def.title, [&]() { bench_def.run(rml); });
 		}
 
-#if defined(RMLUI_BENCHMARKS_SHOW_COMPLEXITY) || 0
+#if defined(UI_BENCHMARKS_SHOW_COMPLEXITY) || 0
 		MESSAGE(bench.complexityBigO());
 #endif
 	}

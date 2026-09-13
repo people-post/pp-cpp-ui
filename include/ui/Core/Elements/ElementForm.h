@@ -3,15 +3,15 @@
 #include "../Element.h"
 #include "../Header.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A specialisation of the generic Element representing a form element.
  */
 
-class RMLUICORE_API ElementForm : public Element {
+class UI_CORE_API ElementForm : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementForm, Element)
+	UI_RTTI_DefineWithParent(ElementForm, Element)
 
 	/// Constructs a new ElementForm. This should not be called directly; use the Factory instead.
 	/// @param[in] tag The tag the element was declared as in RML.
@@ -24,4 +24,4 @@ public:
 	void Submit(const String& name = "", const String& submit_value = "");
 };
 
-} // namespace Rml
+} // namespace ui

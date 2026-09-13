@@ -5,7 +5,7 @@
 #include <ui/Core/Types.h>
 #include <ui/Core/Vector2.h>
 
-namespace Rml {
+namespace ui {
 
 class Context;
 class Element;
@@ -73,4 +73,4 @@ private:
 	bool IsInsideSelectionRoots(Element* element) const;
 };
 
-} // namespace Rml
+} // namespace ui

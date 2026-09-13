@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 
@@ -37,4 +37,4 @@ public:
 	static const char* ParseDataBrackets(bool& inside_brackets, bool& inside_string, char c, char previous);
 };
 
-} // namespace Rml
+} // namespace ui

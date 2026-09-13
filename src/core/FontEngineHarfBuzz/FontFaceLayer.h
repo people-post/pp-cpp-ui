@@ -5,27 +5,27 @@
 #include "TextureLayoutRectangle.h"
 #include <ui/Core.h>
 
-using Rml::byte;
-using Rml::CallbackTextureFunction;
-using Rml::CallbackTextureInterface;
-using Rml::CallbackTextureSource;
-using Rml::Character;
-using Rml::ColorFormat;
-using Rml::Colourb;
-using Rml::ColourbPremultiplied;
-using Rml::FontEffect;
-using Rml::FontGlyph;
-using Rml::Geometry;
-using Rml::Mesh;
-using Rml::RenderManager;
-using Rml::SharedPtr;
-using Rml::Texture;
-using Rml::TexturedMesh;
-using Rml::UniquePtr;
-using Rml::UnorderedMap;
-using Rml::Vector;
-using Rml::Vector2f;
-using Rml::Vector2i;
+using ui::byte;
+using ui::CallbackTextureFunction;
+using ui::CallbackTextureInterface;
+using ui::CallbackTextureSource;
+using ui::Character;
+using ui::ColorFormat;
+using ui::Colourb;
+using ui::ColourbPremultiplied;
+using ui::FontEffect;
+using ui::FontGlyph;
+using ui::Geometry;
+using ui::Mesh;
+using ui::RenderManager;
+using ui::SharedPtr;
+using ui::Texture;
+using ui::TexturedMesh;
+using ui::UniquePtr;
+using ui::UnorderedMap;
+using ui::Vector;
+using ui::Vector2f;
+using ui::Vector2i;
 
 class FontFaceHandleHarfBuzz;
 
@@ -75,7 +75,7 @@ public:
 
 		// Generate the geometry for the character.
 		Mesh& mesh = mesh_list[box.texture_index].mesh;
-		Rml::MeshUtilities::GenerateQuad(mesh, (position + box.origin).Round(), box.dimensions, colour, box.texcoords[0], box.texcoords[1]);
+		ui::MeshUtilities::GenerateQuad(mesh, (position + box.origin).Round(), box.dimensions, colour, box.texcoords[0], box.texcoords[1]);
 	}
 
 	/// Returns the effect used to generate the layer.

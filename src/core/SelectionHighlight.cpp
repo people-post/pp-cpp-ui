@@ -8,7 +8,7 @@
 #include <ui/Core/Property.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 namespace {
 
@@ -138,7 +138,7 @@ void BuildSelectionHandleGeometry(Vector2f head_center, float dp_ratio, ColourbP
 
 	for (int i = 0; i < segments; ++i)
 	{
-		const float angle = float(i) / float(segments) * Math::RMLUI_PI * 2.f;
+		const float angle = float(i) / float(segments) * Math::UI_PI * 2.f;
 		Vertex& vertex = mesh.vertices[base_index + 1 + i];
 		vertex.position = head_center + Vector2f(Math::Cos(angle) * head_radius, Math::Sin(angle) * head_radius);
 		vertex.colour = fill;
@@ -154,7 +154,7 @@ void BuildSelectionHandleGeometry(Vector2f head_center, float dp_ratio, ColourbP
 
 void RenderSelectionHandleDebugMarker(RenderManager& render_manager, Vector2f absolute_center, float dp_ratio)
 {
-#if defined(RMLUI_DEBUG_SELECTION_HANDLES)
+#if defined(UI_DEBUG_SELECTION_HANDLES)
 	const float r = 14.f * dp_ratio;
 	Mesh mesh;
 	const ColourbPremultiplied fill = Colourb(255, 0, 255, 255).ToPremultiplied();
@@ -257,4 +257,4 @@ bool BuildTextSelectionGeometry(ElementText* text_element, int local_start, int 
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 namespace Utilities {
 
@@ -14,4 +14,4 @@ namespace Utilities {
 	}
 
 } // namespace Utilities
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include <ui/Core/PropertyParser.h>
 #include "ControlledLifetimeResource.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A property parser that parses a floating-point number with an optional unit.
@@ -34,4 +34,4 @@ private:
 	Unit zero_unit;
 };
 
-} // namespace Rml
+} // namespace ui

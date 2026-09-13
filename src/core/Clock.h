@@ -2,16 +2,16 @@
 
 #include <ui/Core/Header.h>
 
-namespace Rml {
+namespace ui {
 
 /**
-    RmlUi's Interface to Time.
+    pp-cpp-ui's Interface to Time.
  */
 class Clock {
 public:
 	/// Get the elapsed time since application startup
 	/// @return Seconds elapsed since application startup.
-	RMLUICORE_API static double GetElapsedTime();
+	UI_CORE_API static double GetElapsedTime();
 };
 
-} // namespace Rml
+} // namespace ui

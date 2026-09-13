@@ -2,7 +2,7 @@
 #include <ui/Core/Elements/ElementFormControlInput.h>
 #include "WidgetSlider.h"
 
-namespace Rml {
+namespace ui {
 
 InputTypeRange::InputTypeRange(ElementFormControlInput* element) : InputType(element)
 {
@@ -69,4 +69,4 @@ bool InputTypeRange::GetIntrinsicDimensions(Vector2f& dimensions, float& /*ratio
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

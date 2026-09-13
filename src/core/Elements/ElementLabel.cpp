@@ -1,6 +1,6 @@
 #include "ElementLabel.h"
 
-namespace Rml {
+namespace ui {
 
 ElementLabel::ElementLabel(const String& tag) : Element(tag)
 {
@@ -93,4 +93,4 @@ Element* ElementLabel::GetTarget()
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

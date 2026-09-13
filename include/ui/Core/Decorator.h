@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class PropertyDictionary;
@@ -20,7 +20,7 @@ class DecoratorInstancerInterface;
 /**
     The abstract base class for any visual object that can be attached to any element.
  */
-class RMLUICORE_API Decorator {
+class UI_CORE_API Decorator {
 public:
 	Decorator();
 	virtual ~Decorator();
@@ -65,7 +65,7 @@ private:
 /**
     A decorator instancer, which can be inherited from to instance new decorators when encountered in the style sheet.
  */
-class RMLUICORE_API DecoratorInstancer : public EffectSpecification {
+class UI_CORE_API DecoratorInstancer : public EffectSpecification {
 public:
 	DecoratorInstancer();
 	virtual ~DecoratorInstancer();
@@ -79,7 +79,7 @@ public:
 		const DecoratorInstancerInterface& instancer_interface) = 0;
 };
 
-class RMLUICORE_API DecoratorInstancerInterface {
+class UI_CORE_API DecoratorInstancerInterface {
 public:
 	DecoratorInstancerInterface(RenderManager& render_manager, const StyleSheet& style_sheet, const PropertySource* property_source) :
 		render_manager(render_manager), style_sheet(style_sheet), property_source(property_source)
@@ -101,4 +101,4 @@ private:
 	const PropertySource* property_source;
 };
 
-} // namespace Rml
+} // namespace ui

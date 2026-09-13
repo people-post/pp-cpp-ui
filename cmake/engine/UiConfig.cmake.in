@@ -1,0 +1,36 @@
+set(UI_IS_CONFIG_FILE TRUE)
+set(UI_SVG_PLUGIN @UI_SVG_PLUGIN@)
+set(UI_LOTTIE_PLUGIN @UI_LOTTIE_PLUGIN@)
+set(UI_FONT_ENGINE "@UI_FONT_ENGINE@")
+set(UI_LUA_BINDINGS @UI_LUA_BINDINGS@)
+set(UI_LUA_BINDINGS_LIBRARY "@UI_LUA_BINDINGS_LIBRARY@")
+set(UI_TRACY_PROFILING "@UI_TRACY_PROFILING@")
+
+macro(report_dependency_not_found friendly_name package_name target_name)
+	if(ui_FIND_REQUIRED)
+		message(FATAL_ERROR
+				"${friendly_name} could not be found.\n"
+				"Please ensure that ${friendly_name} can be found by CMake, or linked to using \"${target_name}\" as its "
+				"target name. The location of the build directory of the dependency can be provided by setting the "
+				"\"${package_name}_ROOT\" CMake variable. If you are consuming pp-cpp-ui from another CMake project, you can "
+				"create an ALIAS target to offer an alternative name for a CMake target."
+			)
+	endif()
+	return()
+endmacro()
+macro(report_dependency_found_or_error friendly_name package_name target_name)
+	if(NOT TARGET ${target_name})
+		report_dependency_not_found(${friendly_name} ${package_name} ${target_name})
+	endif()
+	set(success_message "")
+	if(${ARGC} GREATER 3)
+		set(success_message " - ${ARGV3}")
+	endif()
+	message(STATUS "Found ${friendly_name} target ${target_name}${success_message}")
+endmacro()
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/Modules")
+
+include("${CMAKE_CURRENT_LIST_DIR}/Dependencies.cmake")
+
+include("${CMAKE_CURRENT_LIST_DIR}/uiTargets.cmake")

@@ -5,7 +5,7 @@
 #include <ui/Core/ID.h>
 #include "DecoratorUtilities.h"
 
-namespace Rml {
+namespace ui {
 
 class DecoratorText : public Decorator {
 public:
@@ -53,4 +53,4 @@ private:
 	PropertyIds ids;
 };
 
-} // namespace Rml
+} // namespace ui

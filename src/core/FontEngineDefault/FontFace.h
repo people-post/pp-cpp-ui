@@ -3,7 +3,7 @@
 #include <ui/Core/StyleTypes.h>
 #include "FontTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class FontFaceHandleDefault;
 
@@ -35,4 +35,4 @@ private:
 	FontFaceHandleFreetype face;
 };
 
-} // namespace Rml
+} // namespace ui

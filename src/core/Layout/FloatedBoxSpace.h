@@ -3,7 +3,7 @@
 #include <ui/Core/StyleTypes.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class BlockContainer;
@@ -94,4 +94,4 @@ private:
 	Vector2f extent_bottom_right_margin;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 
 #include "DecoratorTiled.h"
 
-namespace Rml {
+namespace ui {
 
 class DecoratorTiledHorizontal : public DecoratorTiled {
 public:
@@ -39,4 +39,4 @@ public:
 		const DecoratorInstancerInterface& instancer_interface) override;
 };
 
-} // namespace Rml
+} // namespace ui

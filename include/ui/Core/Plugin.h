@@ -3,17 +3,17 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class ElementDocument;
 class Context;
 
 /**
-    Generic Interface for plugins to RmlUi.
+    Generic Interface for plugins to pp-cpp-ui.
  */
 
-class RMLUICORE_API Plugin {
+class UI_CORE_API Plugin {
 public:
 	virtual ~Plugin();
 
@@ -27,10 +27,10 @@ public:
 	/// Called when the plugin is registered to determine which of the above event types the plugin is interested in.
 	virtual int GetEventClasses();
 
-	/// Called when RmlUi is initialised, or immediately when the plugin registers itself if RmlUi has already been
+	/// Called when pp-cpp-ui is initialised, or immediately when the plugin registers itself if pp-cpp-ui has already been
 	/// initialised.
 	virtual void OnInitialise();
-	/// Called when RmlUi shuts down.
+	/// Called when pp-cpp-ui shuts down.
 	virtual void OnShutdown();
 
 	/// Called when a new context is created.
@@ -53,4 +53,4 @@ public:
 	virtual void OnElementDestroy(Element* element);
 };
 
-} // namespace Rml
+} // namespace ui

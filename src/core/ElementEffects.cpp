@@ -8,7 +8,7 @@
 #include <ui/Core/Profiling.h>
 #include <ui/Core/StyleSheet.h>
 
-namespace Rml {
+namespace ui {
 
 ElementEffects::ElementEffects(Element* _element) : element(_element) {}
 
@@ -25,13 +25,13 @@ void ElementEffects::InstanceEffects()
 	effects_dirty = false;
 	effects_data_dirty = true;
 
-	RMLUI_ZoneScopedC(0xB22222);
+	UI_ZoneScopedC(0xB22222);
 	ReleaseEffects();
 
 	RenderManager* render_manager = element->GetRenderManager();
 	if (!render_manager)
 	{
-		RMLUI_ERRORMSG("Decorators are being instanced before a render manager is available. Is this element attached to the document?");
+		UI_ERRORMSG("Decorators are being instanced before a render manager is available. Is this element attached to the document?");
 		return;
 	}
 
@@ -66,7 +66,7 @@ void ElementEffects::InstanceEffects()
 			}
 
 			const DecoratorPtrList& decorator_list = style_sheet->InstanceDecorators(*render_manager, *decorators_ptr, source);
-			RMLUI_ASSERT(decorator_list.empty() || decorator_list.size() == decorators_ptr->list.size());
+			UI_ASSERT(decorator_list.empty() || decorator_list.size() == decorators_ptr->list.size());
 
 			DecoratorEntryList& decorators_target = (id == PropertyId::Decorator ? decorators : mask_images);
 			decorators_target.reserve(decorators_ptr->list.size());
@@ -83,7 +83,7 @@ void ElementEffects::InstanceEffects()
 					if (entry.paint_area == BoxArea::Auto)
 						entry.paint_area = (id == PropertyId::Decorator ? BoxArea::Padding : BoxArea::Border);
 
-					RMLUI_ASSERT(entry.paint_area >= BoxArea::Border && entry.paint_area <= BoxArea::Content);
+					UI_ASSERT(entry.paint_area >= BoxArea::Border && entry.paint_area <= BoxArea::Content);
 					decorators_target.push_back(std::move(entry));
 				}
 			}
@@ -211,7 +211,7 @@ void ElementEffects::RenderEffects(RenderStage render_stage)
 	Rectanglei initial_scissor_region = render_manager->GetScissorRegion();
 
 	auto ApplyClippingRegion = [this, &render_manager](PropertyId filter_id) {
-		RMLUI_ASSERT(filter_id == PropertyId::Filter || filter_id == PropertyId::BackdropFilter);
+		UI_ASSERT(filter_id == PropertyId::Filter || filter_id == PropertyId::BackdropFilter);
 
 		const bool force_clip_to_self_border_box = (filter_id == PropertyId::BackdropFilter);
 		ElementUtilities::SetClippingRegion(element, force_clip_to_self_border_box);
@@ -324,4 +324,4 @@ void ElementEffects::DirtyEffectsData()
 	effects_data_dirty = true;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -2,9 +2,9 @@
 #include <ui/Core/Core.h>
 #include <ui/Core/SystemInterface.h>
 
-namespace Rml {
+namespace ui {
 
-RMLUICORE_API double Clock::GetElapsedTime()
+UI_CORE_API double Clock::GetElapsedTime()
 {
 	SystemInterface* system_interface = GetSystemInterface();
 	if (system_interface != nullptr)
@@ -13,4 +13,4 @@ RMLUICORE_API double Clock::GetElapsedTime()
 		return 0;
 }
 
-} // namespace Rml
+} // namespace ui

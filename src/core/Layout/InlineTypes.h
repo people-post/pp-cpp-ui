@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 using LayoutOverflowHandle = int;
 using LayoutFragmentHandle = int;
@@ -36,4 +36,4 @@ struct PlacedFragment {
 	bool split_right;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include <ui/Core/Header.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 struct TransformPrimitive;
 namespace Transforms {
@@ -37,4 +37,4 @@ namespace TransformUtilities {
 	String ToString(const TransformPrimitive& primitive) noexcept;
 } // namespace TransformUtilities
 
-} // namespace Rml
+} // namespace ui

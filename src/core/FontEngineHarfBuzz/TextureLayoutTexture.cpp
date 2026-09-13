@@ -35,13 +35,13 @@ int TextureLayoutTexture::Generate(TextureLayout& layout, int maximum_dimensions
 		}
 	}
 
-	int texture_width = int(Rml::Math::SquareRoot((float)square_pixels));
+	int texture_width = int(ui::Math::SquareRoot((float)square_pixels));
 
-	dimensions.y = Rml::Math::ToPowerOfTwo(texture_width);
+	dimensions.y = ui::Math::ToPowerOfTwo(texture_width);
 	dimensions.x = dimensions.y >> 1;
 
-	dimensions.x = Rml::Math::Min(dimensions.x, maximum_dimensions);
-	dimensions.y = Rml::Math::Min(dimensions.y, maximum_dimensions);
+	dimensions.x = ui::Math::Min(dimensions.x, maximum_dimensions);
+	dimensions.y = ui::Math::Min(dimensions.y, maximum_dimensions);
 
 	// Now we're layout out the rectangles in the texture. If we don't fit all the rectangles on
 	// and have room to grow (ie, haven't hit the maximum texture size in both dimensions) then

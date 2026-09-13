@@ -20,7 +20,7 @@
 #include "PropertiesIterator.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 inline PseudoClassState operator|(PseudoClassState lhs, PseudoClassState rhs)
 {
@@ -86,7 +86,7 @@ void ElementStyle::TransitionPropertyChanges(Element* element, PropertyIdSet& pr
 	// Apply transition to relevant properties if a transition is defined on element.
 	// Properties that are part of a transition are removed from the properties list.
 
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 	if (!old_definition || !new_definition || properties.Empty())
 		return;
 
@@ -141,7 +141,7 @@ void ElementStyle::TransitionPropertyChanges(Element* element, PropertyIdSet& pr
 
 void ElementStyle::UpdateDefinition()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	SharedPtr<const ElementDefinition> new_definition;
 
@@ -374,7 +374,7 @@ float ElementStyle::ResolveNumericValue(NumericValue value, float base_value) co
 	default: break;
 	}
 
-	RMLUI_ERROR;
+	UI_ERROR;
 	return 0.f;
 }
 
@@ -491,7 +491,7 @@ PropertyIdSet ElementStyle::ComputeValues(Style::ComputedValues& values, const S
 	if (dirty_properties.Empty())
 		return PropertyIdSet();
 
-	RMLUI_ZoneScopedC(0xFF7F50);
+	UI_ZoneScopedC(0xFF7F50);
 
 	// Generally, this is how it works:
 	//   1. Assign default values (clears any removed properties)
@@ -854,10 +854,10 @@ PropertyIdSet ElementStyle::ComputeValues(Style::ComputedValues& values, const S
 			values.flex_basis(ComputeLengthPercentageAuto(p, font_size, document_font_size, dp_ratio, vp_dimensions));
 			break;
 
-		case PropertyId::RmlUi_Language:
+		case PropertyId::Ui_Language:
 			values.language(p->Get<String>());
 			break;
-		case PropertyId::RmlUi_Direction:
+		case PropertyId::Ui_Direction:
 			values.direction(p->Get<Direction>());
 			break;
 
@@ -896,7 +896,7 @@ PropertyIdSet ElementStyle::ComputeValues(Style::ComputedValues& values, const S
 	// The font-face handle is nulled when local font properties are set. In that case we need to retrieve a new handle.
 	if (dirty_font_face_handle)
 	{
-		RMLUI_ZoneScopedN("FontFaceHandle");
+		UI_ZoneScopedN("FontFaceHandle");
 		values.font_face_handle(
 			GetFontEngineInterface()->GetFontFaceHandle(values.font_family(), values.font_style(), values.font_weight(), (int)values.font_size()));
 	}
@@ -923,4 +923,4 @@ PropertyIdSet ElementStyle::ComputeValues(Style::ComputedValues& values, const S
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

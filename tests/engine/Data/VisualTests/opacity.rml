@@ -2,7 +2,7 @@
 <head>
 	<title>Opacity</title>
 	<link type="text/rcss" href="../style.rcss"/>
-	<link rel="Issue #270" href="https://github.com/mikke89/RmlUi/issues/270" />
+	<link rel="Issue #270" href="https://github.com/mikke89/pp-cpp-ui/issues/270" />
 	<meta name="Description" content="Opacity should also apply to font effects." />
 	<style>
 		h1 {

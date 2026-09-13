@@ -5,7 +5,7 @@
 #include <ui/Core/ElementDocument.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String document_layout_rml = R"(
 <rml>
@@ -78,7 +78,7 @@ TEST_CASE("Layout.Position.Relative")
 	REQUIRE(context);
 
 	// Test that percentage positioning in 'position: relative' elements is correctly resolved during the first layout run, and
-	// does not change during the next layout run. See issue: https://github.com/mikke89/RmlUi/issues/262
+	// does not change during the next layout run. See issue: https://github.com/mikke89/pp-cpp-ui/issues/262
 
 	for (auto&& rml_source : {document_layout_rml, document_layout_rml_nested})
 	{

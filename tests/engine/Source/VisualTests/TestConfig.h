@@ -2,6 +2,6 @@
 
 #include <ui/Core/Types.h>
 
-Rml::String GetCompareInputDirectory();
-Rml::String GetCaptureOutputDirectory();
-Rml::StringList GetTestInputDirectories();
+ui::String GetCompareInputDirectory();
+ui::String GetCaptureOutputDirectory();
+ui::StringList GetTestInputDirectories();

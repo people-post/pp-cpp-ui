@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 const int DEFAULT_BUFFER_SIZE = 256;
 const int BUFFER_INCREMENTS = 256;
@@ -177,7 +177,7 @@ void StreamMemory::SetSourceURL(const URL& url)
 
 bool StreamMemory::Reallocate(size_t size)
 {
-	RMLUI_ASSERT(owns_buffer);
+	UI_ASSERT(owns_buffer);
 	if (!owns_buffer)
 		return false;
 
@@ -193,4 +193,4 @@ bool StreamMemory::Reallocate(size_t size)
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

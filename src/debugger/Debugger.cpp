@@ -2,7 +2,7 @@
 #include <ui/Core/Core.h>
 #include "DebuggerPlugin.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 bool Initialise(Context* context)
@@ -68,4 +68,4 @@ bool IsVisible()
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

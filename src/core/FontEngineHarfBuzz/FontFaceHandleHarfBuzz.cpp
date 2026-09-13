@@ -62,13 +62,13 @@ bool FontFaceHandleHarfBuzz::Initialize(FontFaceHandleFreetype face, int font_si
 {
 	ft_face = face;
 
-	RMLUI_ASSERTMSG(layer_configurations.empty(), "Initialize must only be called once.");
+	UI_ASSERTMSG(layer_configurations.empty(), "Initialize must only be called once.");
 
 	if (!FreeType::InitialiseFaceHandle(ft_face, font_size, glyphs, metrics, load_default_glyphs))
 		return false;
 
 	hb_font = hb_ft_font_create_referenced((FT_Face)ft_face);
-	RMLUI_ASSERT(hb_font != nullptr);
+	UI_ASSERT(hb_font != nullptr);
 	hb_font_set_ptem(hb_font, (float)font_size);
 	hb_ft_font_set_funcs(hb_font);
 
@@ -106,7 +106,7 @@ int FontFaceHandleHarfBuzz::GetStringWidth(StringView string, const TextShapingC
 
 	// Apply text shaping.
 	hb_buffer_t* shaping_buffer = hb_buffer_create();
-	RMLUI_ASSERT(shaping_buffer != nullptr);
+	UI_ASSERT(shaping_buffer != nullptr);
 	ConfigureTextShapingBuffer(shaping_buffer, string, text_shaping_context, registered_languages, nullptr);
 	hb_buffer_add_utf8(shaping_buffer, string.begin(), (int)string.size(), 0, (int)string.size());
 
@@ -122,7 +122,7 @@ int FontFaceHandleHarfBuzz::GetStringWidth(StringView string, const TextShapingC
 
 	for (int g = 0; g < (int)glyph_count; ++g)
 	{
-		Character character = Rml::StringUtilities::ToCharacter(string.begin() + glyph_info[g].cluster, string.end());
+		Character character = ui::StringUtilities::ToCharacter(string.begin() + glyph_info[g].cluster, string.end());
 
 		// Don't render control characters.
 		if (IsControlCharacter(character))
@@ -180,7 +180,7 @@ int FontFaceHandleHarfBuzz::GetStringWidth(StringView string, const TextShapingC
 
 	hb_buffer_destroy(shaping_buffer);
 
-	return Rml::Math::Max(width, 0);
+	return ui::Math::Max(width, 0);
 }
 
 int FontFaceHandleHarfBuzz::GenerateLayerConfiguration(const FontEffectList& font_effects)
@@ -251,7 +251,7 @@ bool FontFaceHandleHarfBuzz::GenerateLayerTexture(Vector<byte>& texture_data, Ve
 {
 	if (handle_version != version)
 	{
-		RMLUI_ERRORMSG("While generating font layer texture: Handle version mismatch in texture vs font-face.");
+		UI_ERRORMSG("While generating font layer texture: Handle version mismatch in texture vs font-face.");
 		return false;
 	}
 
@@ -259,7 +259,7 @@ bool FontFaceHandleHarfBuzz::GenerateLayerTexture(Vector<byte>& texture_data, Ve
 
 	if (it == layers.end())
 	{
-		RMLUI_ERRORMSG("While generating font layer texture: Layer id not found.");
+		UI_ERRORMSG("While generating font layer texture: Layer id not found.");
 		return false;
 	}
 
@@ -274,8 +274,8 @@ int FontFaceHandleHarfBuzz::GenerateString(RenderManager& render_manager, Textur
 	int geometry_index = 0;
 	int line_width = 0;
 
-	RMLUI_ASSERT(layer_configuration_index >= 0);
-	RMLUI_ASSERT(layer_configuration_index < (int)layer_configurations.size());
+	UI_ASSERT(layer_configuration_index >= 0);
+	UI_ASSERT(layer_configuration_index < (int)layer_configurations.size());
 
 	UpdateLayersOnDirty();
 
@@ -289,7 +289,7 @@ int FontFaceHandleHarfBuzz::GenerateString(RenderManager& render_manager, Textur
 	mesh_list.resize(num_geometries);
 
 	hb_buffer_t* shaping_buffer = hb_buffer_create();
-	RMLUI_ASSERT(shaping_buffer != nullptr);
+	UI_ASSERT(shaping_buffer != nullptr);
 	Vector<hb_feature_t> shaping_features = GetTextShapingFeatures(text_shaping_context, metrics.size);
 	const hb_feature_t* shaping_features_pointer = !shaping_features.empty() ? shaping_features.data() : nullptr;
 
@@ -307,7 +307,7 @@ int FontFaceHandleHarfBuzz::GenerateString(RenderManager& render_manager, Textur
 		if (num_textures == 0)
 			continue;
 
-		RMLUI_ASSERT(geometry_index + num_textures <= (int)mesh_list.size());
+		UI_ASSERT(geometry_index + num_textures <= (int)mesh_list.size());
 
 		line_width = 0;
 
@@ -332,7 +332,7 @@ int FontFaceHandleHarfBuzz::GenerateString(RenderManager& render_manager, Textur
 
 		for (int g = 0; g < (int)glyph_count; ++g)
 		{
-			Character character = Rml::StringUtilities::ToCharacter(string.begin() + glyph_info[g].cluster, string.end());
+			Character character = ui::StringUtilities::ToCharacter(string.begin() + glyph_info[g].cluster, string.end());
 
 			// Don't render control characters.
 			if (IsControlCharacter(character))
@@ -406,7 +406,7 @@ int FontFaceHandleHarfBuzz::GenerateString(RenderManager& render_manager, Textur
 
 	hb_buffer_destroy(shaping_buffer);
 
-	return Rml::Math::Max(line_width, 0);
+	return ui::Math::Max(line_width, 0);
 }
 
 bool FontFaceHandleHarfBuzz::UpdateLayersOnDirty()
@@ -493,7 +493,7 @@ const FontGlyph* FontFaceHandleHarfBuzz::GetOrAppendGlyph(FontGlyphIndex glyph_i
 			glyph_location = glyphs.find(glyph_index);
 			if (glyph_location == glyphs.cend())
 			{
-				RMLUI_ERROR;
+				UI_ERROR;
 				return nullptr;
 			}
 
@@ -525,7 +525,7 @@ const FontGlyph* FontFaceHandleHarfBuzz::GetOrAppendFallbackGlyph(Character& cha
 		fallback_glyph_location = fallback_glyphs.find(character);
 		if (fallback_glyph_location == fallback_glyphs.cend())
 		{
-			RMLUI_ERROR;
+			UI_ERROR;
 			return nullptr;
 		}
 
@@ -543,7 +543,7 @@ bool FontFaceHandleHarfBuzz::AppendFallbackClusterGlyphs(StringView cluster, con
 {
 	const hb_feature_t* shaping_features_pointer = !text_shaping_features.empty() ? text_shaping_features.data() : nullptr;
 	hb_buffer_t* shaping_buffer = hb_buffer_create();
-	RMLUI_ASSERT(shaping_buffer != nullptr);
+	UI_ASSERT(shaping_buffer != nullptr);
 
 	TextFlowDirection text_direction = TextFlowDirection::LeftToRight;
 
@@ -577,13 +577,13 @@ bool FontFaceHandleHarfBuzz::AppendFallbackClusterGlyphs(StringView cluster, con
 		for (int g = 0; g < (int)glyph_count; ++g)
 		{
 			int glyph_info_index = g + glyph_info_index_offset;
-			RMLUI_ASSERT(glyph_info_index < (int)glyph_count);
+			UI_ASSERT(glyph_info_index < (int)glyph_count);
 
 			// Reverse the order of the glyphs in right-to-left text.
 			if (text_direction == TextFlowDirection::RightToLeft)
 				glyph_info_index_offset -= 2;
 
-			Character character = Rml::StringUtilities::ToCharacter(cluster.begin() + cluster_string_offset, cluster.end());
+			Character character = ui::StringUtilities::ToCharacter(cluster.begin() + cluster_string_offset, cluster.end());
 			const FontGlyph* glyph = fallback_face->GetOrAppendGlyph(glyph_info[glyph_info_index].codepoint, character, false);
 			if (glyph && glyph->bitmap_data && glyph->bitmap_dimensions.x > 0 && glyph->bitmap_dimensions.y > 0)
 			{
@@ -592,8 +592,8 @@ bool FontFaceHandleHarfBuzz::AppendFallbackClusterGlyphs(StringView cluster, con
 					has_supported_glyph = true;
 			}
 
-			cluster_string_offset += (int)Rml::StringUtilities::BytesUTF8(character);
-			RMLUI_ASSERT(cluster_string_offset <= (int)cluster.size());
+			cluster_string_offset += (int)ui::StringUtilities::BytesUTF8(character);
+			UI_ASSERT(cluster_string_offset <= (int)cluster.size());
 		}
 
 		if (cluster_glyphs.empty() || !has_supported_glyph)
@@ -636,7 +636,7 @@ const Vector<FontClusterGlyphData>* FontFaceHandleHarfBuzz::GetOrAppendFallbackC
 		fallback_cluster_glyphs_location = fallback_cluster_glyphs.find(cluster_string);
 		if (fallback_cluster_glyphs_location == fallback_cluster_glyphs.cend())
 		{
-			RMLUI_ERROR;
+			UI_ERROR;
 			return nullptr;
 		}
 
@@ -663,7 +663,7 @@ FontFaceLayer* FontFaceHandleHarfBuzz::GetOrCreateLayer(const SharedPtr<const Fo
 	layers.push_back(EffectLayerPair{font_effect_ptr, nullptr});
 	auto& layer = layers.back().layer;
 
-	layer = Rml::MakeUnique<FontFaceLayer>(font_effect);
+	layer = ui::MakeUnique<FontFaceLayer>(font_effect);
 	GenerateLayer(layer.get());
 
 	return layer.get();
@@ -671,7 +671,7 @@ FontFaceLayer* FontFaceHandleHarfBuzz::GetOrCreateLayer(const SharedPtr<const Fo
 
 bool FontFaceHandleHarfBuzz::GenerateLayer(FontFaceLayer* layer)
 {
-	RMLUI_ASSERT(layer);
+	UI_ASSERT(layer);
 	const FontEffect* font_effect = layer->GetFontEffect();
 	bool result = false;
 
@@ -724,8 +724,8 @@ void FontFaceHandleHarfBuzz::ConfigureTextShapingBuffer(hb_buffer_t* shaping_buf
 		const char* end = string.end();
 		while (cursor < end)
 		{
-			const Character character = Rml::StringUtilities::ToCharacter(cursor, end);
-			const int character_bytes = (int)Rml::StringUtilities::BytesUTF8(character);
+			const Character character = ui::StringUtilities::ToCharacter(cursor, end);
+			const int character_bytes = (int)ui::StringUtilities::BytesUTF8(character);
 			if (character_bytes <= 0)
 				break;
 			cursor += character_bytes;
@@ -762,7 +762,7 @@ void FontFaceHandleHarfBuzz::ConfigureTextShapingBuffer(hb_buffer_t* shaping_buf
 	hb_direction_t text_direction = HB_DIRECTION_LTR;
 	switch (text_shaping_context.text_direction)
 	{
-	case Rml::Style::Direction::Auto:
+	case ui::Style::Direction::Auto:
 		if (registered_language_location != registered_languages.cend())
 			// Automatically determine the text-flow direction from the registered language.
 			switch (registered_language_location->second.text_flow_direction)
@@ -780,11 +780,11 @@ void FontFaceHandleHarfBuzz::ConfigureTextShapingBuffer(hb_buffer_t* shaping_buf
 		}
 		break;
 
-	case Rml::Style::Direction::Ltr: text_direction = HB_DIRECTION_LTR; break;
-	case Rml::Style::Direction::Rtl: text_direction = HB_DIRECTION_RTL; break;
+	case ui::Style::Direction::Ltr: text_direction = HB_DIRECTION_LTR; break;
+	case ui::Style::Direction::Rtl: text_direction = HB_DIRECTION_RTL; break;
 	}
 
-	RMLUI_ASSERT(text_direction == HB_DIRECTION_LTR || text_direction == HB_DIRECTION_RTL);
+	UI_ASSERT(text_direction == HB_DIRECTION_LTR || text_direction == HB_DIRECTION_RTL);
 	hb_buffer_set_direction(shaping_buffer, text_direction);
 	if (determined_text_direction)
 		*determined_text_direction = text_direction == HB_DIRECTION_LTR ? TextFlowDirection::LeftToRight : TextFlowDirection::RightToLeft;
@@ -796,7 +796,7 @@ void FontFaceHandleHarfBuzz::ConfigureTextShapingBuffer(hb_buffer_t* shaping_buf
 	if (script == HB_SCRIPT_ARABIC)
 		buffer_flags |= HB_BUFFER_FLAG_PRODUCE_SAFE_TO_INSERT_TATWEEL;
 #endif
-#if defined(RMLUI_DEBUG) && HB_VERSION_ATLEAST(3, 4, 0)
+#if defined(UI_DEBUG) && HB_VERSION_ATLEAST(3, 4, 0)
 	buffer_flags |= HB_BUFFER_FLAG_VERIFY;
 #endif
 
@@ -809,14 +809,14 @@ StringView FontFaceHandleHarfBuzz::GetCurrentClusterString(const hb_glyph_info_t
 	unsigned int cluster_index = glyph_info[glyph_index].cluster;
 	cluster_codepoint_count = 1;
 	int cluster_offset = glyph_index + 1;
-	int cluster_string_size = (int)Rml::StringUtilities::BytesUTF8(first_character);
+	int cluster_string_size = (int)ui::StringUtilities::BytesUTF8(first_character);
 
 	// Continue counting characters that are part of the same cluster.
 	while (cluster_offset < (int)glyph_count && glyph_info[cluster_offset].cluster == cluster_index)
 	{
 		Character current_cluster_character =
-			Rml::StringUtilities::ToCharacter(string.begin() + glyph_info[glyph_index].cluster + cluster_string_size, string.end());
-		cluster_string_size += (int)Rml::StringUtilities::BytesUTF8(current_cluster_character);
+			ui::StringUtilities::ToCharacter(string.begin() + glyph_info[glyph_index].cluster + cluster_string_size, string.end());
+		cluster_string_size += (int)ui::StringUtilities::BytesUTF8(current_cluster_character);
 
 		++cluster_codepoint_count;
 		++cluster_offset;

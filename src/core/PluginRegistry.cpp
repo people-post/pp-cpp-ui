@@ -3,7 +3,7 @@
 #include "ControlledLifetimeResource.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 struct PluginVectors {
 	Vector<Plugin*> basic;
@@ -112,4 +112,4 @@ void PluginRegistry::NotifyElementDestroy(Element* element)
 		plugin->OnElementDestroy(element);
 }
 
-} // namespace Rml
+} // namespace ui

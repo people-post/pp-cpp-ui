@@ -3,7 +3,7 @@
 #include <ui/Core/Types.h>
 #include "FormattingContext.h"
 
-namespace Rml {
+namespace ui {
 
 class Box;
 class BlockContainer;
@@ -38,4 +38,4 @@ private:
 	static bool FormatBlockContainerChild(BlockContainer* parent_container, Element* element);
 };
 
-} // namespace Rml
+} // namespace ui

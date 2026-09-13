@@ -3,12 +3,12 @@
 #include <ui/Core/DecorationTypes.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 PropertyParserColorStopList::PropertyParserColorStopList(PropertyParser* parser_color) :
 	parser_color(parser_color), parser_length_percent_angle(Unit::LENGTH_PERCENT | Unit::ANGLE, Unit::PERCENT)
 {
-	RMLUI_ASSERT(parser_color);
+	UI_ASSERT(parser_color);
 }
 
 PropertyParserColorStopList::~PropertyParserColorStopList() {}
@@ -69,4 +69,4 @@ bool PropertyParserColorStopList::ParseValue(Property& property, const String& v
 
 	return true;
 }
-} // namespace Rml
+} // namespace ui

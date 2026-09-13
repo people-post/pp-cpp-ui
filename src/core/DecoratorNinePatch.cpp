@@ -5,7 +5,7 @@
 #include <ui/Core/Geometry.h>
 #include <ui/Core/PropertyDefinition.h>
 
-namespace Rml {
+namespace ui {
 
 DecoratorNinePatch::DecoratorNinePatch() {}
 
@@ -164,7 +164,7 @@ DecoratorNinePatchInstancer::DecoratorNinePatchInstancer()
 
 	RegisterShorthand("edge", "edge-top, edge-right, edge-bottom, edge-left", ShorthandType::Box);
 
-	RMLUI_ASSERT(sprite_outer_id != PropertyId::Invalid && sprite_inner_id != PropertyId::Invalid);
+	UI_ASSERT(sprite_outer_id != PropertyId::Invalid && sprite_inner_id != PropertyId::Invalid);
 
 	RegisterShorthand("decorator", "outer, inner, edge?", ShorthandType::RecursiveCommaSeparated);
 }
@@ -224,4 +224,4 @@ SharedPtr<Decorator> DecoratorNinePatchInstancer::InstanceDecorator(const String
 	return decorator;
 }
 
-} // namespace Rml
+} // namespace ui

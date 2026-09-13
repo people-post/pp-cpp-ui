@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class StyleSheetContainer;
 enum class StructuralSelectorType;
@@ -49,4 +49,4 @@ private:
 	SelectorMap selectors;
 };
 
-} // namespace Rml
+} // namespace ui

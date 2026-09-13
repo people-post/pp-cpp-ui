@@ -4,7 +4,7 @@
 #include <ui/Core/Types.h>
 #include "StyleSheetSelector.h"
 
-namespace Rml {
+namespace ui {
 
 struct StyleSheetIndex;
 class StyleSheetNode;
@@ -73,4 +73,4 @@ private:
 	StyleSheetNodeList children;
 };
 
-} // namespace Rml
+} // namespace ui

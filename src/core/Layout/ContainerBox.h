@@ -5,7 +5,7 @@
 #include <ui/Core/Types.h>
 #include "LayoutBox.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Abstraction for layout boxes that can act as a containing block.
@@ -136,4 +136,4 @@ private:
 	Box box;
 };
 
-} // namespace Rml
+} // namespace ui

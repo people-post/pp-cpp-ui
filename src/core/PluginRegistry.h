@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Context;
 class Element;
@@ -40,4 +40,4 @@ private:
 	PluginRegistry() = delete;
 };
 
-} // namespace Rml
+} // namespace ui

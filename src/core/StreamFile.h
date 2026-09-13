@@ -3,7 +3,7 @@
 #include <ui/Core/Stream.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class StreamFile final : public Stream {
 public:
@@ -47,4 +47,4 @@ private:
 	size_t length;
 };
 
-} // namespace Rml
+} // namespace ui

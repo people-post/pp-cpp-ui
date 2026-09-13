@@ -5,7 +5,7 @@
 #include <ui/Core/PropertyDictionary.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 bool FilterBasic::Initialise(const String& in_name, float in_value)
 {
@@ -40,7 +40,7 @@ SharedPtr<Filter> FilterBasicInstancer::InstanceFilter(const String& name, const
 	if (p_value->unit == Unit::PERCENT)
 		value *= 0.01f;
 	else if (p_value->unit == Unit::DEG)
-		value = Rml::Math::DegreesToRadians(value);
+		value = ui::Math::DegreesToRadians(value);
 
 	auto filter = MakeShared<FilterBasic>();
 	if (filter->Initialise(name, value))
@@ -49,4 +49,4 @@ SharedPtr<Filter> FilterBasicInstancer::InstanceFilter(const String& name, const
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -1,4 +1,4 @@
-# Add FreeType + HarfBuzz + LunaSVG (+ zlib/libpng when needed) for the RmlUi fork.
+# Add FreeType + HarfBuzz + LunaSVG (+ zlib/libpng when needed) for the pp-cpp-ui fork.
 
 function(pp_ui_add_vendored_deps)
   set(_tp "${PP_UI_THIRD_PARTY_DIR}")
@@ -305,12 +305,12 @@ function(pp_ui_add_sdl_deps)
     add_library(SDL3_image::SDL3_image ALIAS ${_pp_ui_sdl3_image})
   endif()
 
-  # RmlUi backend find modules expect these version-independent aliases.
+  # pp-cpp-ui backend find modules expect these version-independent aliases.
   if(NOT TARGET SDL::SDL)
     add_library(SDL_alias INTERFACE)
     add_library(SDL::SDL ALIAS SDL_alias)
     target_link_libraries(SDL_alias INTERFACE ${_pp_ui_sdl3})
-    target_compile_definitions(SDL_alias INTERFACE RMLUI_SDL_VERSION_MAJOR=3)
+    target_compile_definitions(SDL_alias INTERFACE UI_SDL_VERSION_MAJOR=3)
   endif()
   if(NOT TARGET SDL_image::SDL_image)
     add_library(SDL_image_alias INTERFACE)

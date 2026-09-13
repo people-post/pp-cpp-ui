@@ -10,7 +10,7 @@
 #include FT_MULTIPLE_MASTERS_H
 #include FT_TRUETYPE_TABLES_H
 
-namespace Rml {
+namespace ui {
 
 static FT_Library ft_library = nullptr;
 
@@ -28,7 +28,7 @@ static int ConvertFixed16_16ToInt(int32_t fx)
 
 bool FreeType::Initialise()
 {
-	RMLUI_ASSERT(!ft_library);
+	UI_ASSERT(!ft_library);
 
 	FT_Error result = FT_Init_FreeType(&ft_library);
 	if (result != 0)
@@ -52,7 +52,7 @@ void FreeType::Shutdown()
 
 bool FreeType::GetFaceVariations(Span<const byte> data, Vector<FaceVariation>& out_face_variations, int face_index)
 {
-	RMLUI_ASSERT(ft_library);
+	UI_ASSERT(ft_library);
 
 	FT_Face face = nullptr;
 	FT_Error error = FT_New_Memory_Face(ft_library, static_cast<const FT_Byte*>(data.data()), static_cast<FT_Long>(data.size()), face_index, &face);
@@ -107,7 +107,7 @@ bool FreeType::GetFaceVariations(Span<const byte> data, Vector<FaceVariation>& o
 
 FontFaceHandleFreetype FreeType::LoadFace(Span<const byte> data, const String& source, int face_index, int named_style_index)
 {
-	RMLUI_ASSERT(ft_library);
+	UI_ASSERT(ft_library);
 
 	FT_Face face = nullptr;
 	FT_Error error = FT_New_Memory_Face(ft_library, static_cast<const FT_Byte*>(data.data()), static_cast<FT_Long>(data.size()),
@@ -184,8 +184,8 @@ bool FreeType::AppendGlyph(FontFaceHandleFreetype face, int font_size, Character
 {
 	FT_Face ft_face = (FT_Face)face;
 
-	RMLUI_ASSERT(glyphs.find(character) == glyphs.end());
-	RMLUI_ASSERT(ft_face);
+	UI_ASSERT(glyphs.find(character) == glyphs.end());
+	UI_ASSERT(ft_face);
 
 	// Set face size again in case it was used at another size in another font face handle.
 	float bitmap_scaling_factor = 1.0f;
@@ -202,7 +202,7 @@ int FreeType::GetKerning(FontFaceHandleFreetype face, int font_size, Character l
 {
 	FT_Face ft_face = (FT_Face)face;
 
-	RMLUI_ASSERT(FT_HAS_KERNING(ft_face));
+	UI_ASSERT(FT_HAS_KERNING(ft_face));
 
 	// Set face size again in case it was used at another size in another font face handle.
 	// Font size value of zero assumes it is already set.
@@ -407,10 +407,10 @@ static bool BuildGlyph(FT_Face ft_face, const Character character, FontGlyphMap&
 					for (int k = 0; k < glyph.bitmap_dimensions.x * glyph.bitmap_dimensions.y * num_bytes_per_pixel; k += 4)
 					{
 						std::swap(destination_bitmap[k], destination_bitmap[k + 2]);
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 						const byte alpha = destination_bitmap[k + 3];
 						for (int c = 0; c < 3; c++)
-							RMLUI_ASSERTMSG(destination_bitmap[k + c] <= alpha,
+							UI_ASSERTMSG(destination_bitmap[k + c] <= alpha,
 								"Glyph data is assumed to be encoded in premultiplied alpha, but that is not the case.");
 #endif
 					}
@@ -447,7 +447,7 @@ static void GenerateMetrics(FT_Face ft_face, FontMetrics& metrics, float bitmap_
 
 static bool SetFontSize(FT_Face ft_face, int font_size, float& out_bitmap_scaling_factor)
 {
-	RMLUI_ASSERT(out_bitmap_scaling_factor == 1.f);
+	UI_ASSERT(out_bitmap_scaling_factor == 1.f);
 
 	FT_Error error = 0;
 
@@ -552,4 +552,4 @@ static void BitmapDownscale(byte* bitmap_new, const int new_width, const int new
 	}
 }
 
-} // namespace Rml
+} // namespace ui

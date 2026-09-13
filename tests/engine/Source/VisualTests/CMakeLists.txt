@@ -1,4 +1,4 @@
-set(TARGET_NAME "rmlui_visual_tests")
+set(TARGET_NAME "ui_visual_tests")
 
 add_executable(${TARGET_NAME} WIN32
 	XmlNodeHandlers.h
@@ -18,8 +18,8 @@ add_executable(${TARGET_NAME} WIN32
 set_common_target_options(${TARGET_NAME})
 
 target_link_libraries(${TARGET_NAME} PRIVATE
-	rmlui_tests_common
-	rmlui_core
-	rmlui_shell
+	ui_tests_common
+	ui_core
+	ui_shell
 	lodepng::lodepng
 )

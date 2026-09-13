@@ -3,7 +3,7 @@
 #include <ui/Core/PropertyParser.h>
 #include "ControlledLifetimeResource.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A property parser for the decorator property.
@@ -26,4 +26,4 @@ private:
 	static ControlledLifetimeResource<struct PropertyParserDecoratorData> parser_data;
 };
 
-} // namespace Rml
+} // namespace ui

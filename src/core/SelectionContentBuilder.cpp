@@ -2,7 +2,7 @@
 
 #include <ui/Core/ElementText.h>
 
-namespace Rml {
+namespace ui {
 
 void SelectionContentBuilder::BeginContainer(Element* new_container)
 {
@@ -38,4 +38,4 @@ void SelectionContentBuilder::AppendBlockSeparator()
 		flat_text += '\n';
 }
 
-} // namespace Rml
+} // namespace ui

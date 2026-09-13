@@ -3,7 +3,7 @@
 #include "FontFaceHandleDefault.h"
 #include "FontProvider.h"
 
-namespace Rml {
+namespace ui {
 
 void FontEngineInterfaceDefault::Initialize()
 {
@@ -71,4 +71,4 @@ void FontEngineInterfaceDefault::ReleaseFontResources()
 	FontProvider::ReleaseFontResources();
 }
 
-} // namespace Rml
+} // namespace ui

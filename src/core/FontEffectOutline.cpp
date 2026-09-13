@@ -1,7 +1,7 @@
 #include "FontEffectOutline.h"
 #include <ui/Core/PropertyDefinition.h>
 
-namespace Rml {
+namespace ui {
 
 FontEffectOutline::FontEffectOutline()
 {
@@ -93,4 +93,4 @@ SharedPtr<FontEffect> FontEffectOutlineInstancer::InstanceFontEffect(const Strin
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

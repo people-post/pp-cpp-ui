@@ -5,7 +5,7 @@
 #include "XMLParseTools.h"
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 Template::Template() {}
 
@@ -114,4 +114,4 @@ const DocumentHeader* Template::GetHeader()
 	return &header;
 }
 
-} // namespace Rml
+} // namespace ui

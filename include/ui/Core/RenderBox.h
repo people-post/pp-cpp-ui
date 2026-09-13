@@ -2,7 +2,7 @@
 
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 // Ordered by top, right, bottom, left.
 using EdgeSizes = Array<float, 4>;
@@ -56,4 +56,4 @@ inline bool operator!=(const RenderBox& a, const RenderBox& b)
 {
 	return !(a == b);
 }
-} // namespace Rml
+} // namespace ui

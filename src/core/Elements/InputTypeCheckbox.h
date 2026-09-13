@@ -2,7 +2,7 @@
 
 #include "InputType.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A checkbox input type handler.
@@ -35,4 +35,4 @@ public:
 	bool GetIntrinsicDimensions(Vector2f& dimensions, float& ratio) override;
 };
 
-} // namespace Rml
+} // namespace ui

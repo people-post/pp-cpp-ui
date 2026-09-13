@@ -1,4 +1,4 @@
-add_library(rmlui_tests_common STATIC
+add_library(ui_tests_common STATIC
 	Mocks.h
 	TestsInterface.cpp
 	TestsInterface.h
@@ -7,13 +7,13 @@ add_library(rmlui_tests_common STATIC
 	TypesToString.h
 )
 
-set_common_target_options(rmlui_tests_common)
+set_common_target_options(ui_tests_common)
 
-target_include_directories(rmlui_tests_common INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(ui_tests_common INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(rmlui_tests_common PUBLIC
-	rmlui_core
-	rmlui_shell
+target_link_libraries(ui_tests_common PUBLIC
+	ui_core
+	ui_shell
 	doctest::doctest
 	trompeloeil::trompeloeil
 )

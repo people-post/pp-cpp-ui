@@ -1,6 +1,6 @@
 # pp-cpp-ui
 
-Shared C++ UI stack for People Post apps: first-party UI engine (RmlUi-derived),
+Shared C++ UI stack for People Post apps: first-party UI engine (pp-cpp-ui-derived),
 FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 
 ## Layout
@@ -8,7 +8,7 @@ FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md).
 
 ```text
-include/ui/        Engine + backend public API (`RmlUi/` shims kept)
+include/ui/        Engine + backend public API (`pp-cpp-ui/` shims kept)
 src/core|svg|debugger|platform|render
 third_party/       freetype, harfbuzz, lunasvg, zlib, libpng, sdl3, sdl3_image
 tests/             Engine unit tests + support harness
@@ -18,9 +18,9 @@ tests/             Engine unit tests + support harness
 
 | Target | Alias | Role |
 |--------|-------|------|
-| `rmlui_core` | `RmlUi::Core` | UI engine core (+ SVG / HarfBuzz) |
-| `rmlui_debugger` | `RmlUi::Debugger` | Debugger |
-| `pp_ui_rml` | `pp::ui_rml` | INTERFACE → core + `include/` |
+| `ui_core` | `ui::Core` | UI engine core (+ SVG / HarfBuzz) |
+| `ui_debugger` | `ui::Debugger` | Debugger |
+| `pp_ui_core` | `pp::ui_core` | INTERFACE → core + `include/` |
 | `pp_ui_backend` | `pp::ui_backend` | STATIC SDL/GL3 platform + renderer |
 | `pp_ui` | `pp::ui` | INTERFACE umbrella (`rml` + `backend`) |
 
@@ -34,7 +34,7 @@ tiles, text loupe, touch-sim overlay, ShellHost/presenters, themes/views, fonts,
 
 ```bash
 cmake -S . -B build -DPP_UI_BUILD_TESTS=ON
-cmake --build build --target pp_ui_backend rmlui_unit_tests
+cmake --build build --target pp_ui_backend ui_unit_tests
 ctest --test-dir build --output-on-failure
 ```
 
@@ -56,7 +56,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(pp_cpp_ui)
 target_link_libraries(your_target PUBLIC pp_ui)
-# Paths: PP_LIB_RMLUI_ROOT / PP_LIB_RMLUI_INCLUDE
+# Paths: PP_LIB_UI_ROOT / PP_LIB_UI_INCLUDE
 # SDL: PP_UI_SDL3_TARGET / PP_UI_SDL3_IMAGE_TARGET
 ```
 
@@ -67,5 +67,5 @@ Release flow: land on `develop` → merge to `main` → tag `vX.Y.Z` on `main`.
 
 ## Provenance
 
-Engine code started as an RmlUi 6.2 hard fork; it is now owned first-party source.
+Engine code started as an pp-cpp-ui 6.2 hard fork; it is now owned first-party source.
 See [docs/PROVENANCE.md](docs/PROVENANCE.md).

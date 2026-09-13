@@ -1,4 +1,4 @@
-set(TARGET_NAME "rmlui_benchmarks")
+set(TARGET_NAME "ui_benchmarks")
 
 add_executable(${TARGET_NAME}
 	DataExpression.cpp
@@ -17,8 +17,8 @@ add_executable(${TARGET_NAME}
 set_common_target_options(${TARGET_NAME})
 
 target_link_libraries(${TARGET_NAME} PRIVATE
-	rmlui_tests_common
-	rmlui_core
+	ui_tests_common
+	ui_core
 	doctest::doctest
 	nanobench::nanobench
 )

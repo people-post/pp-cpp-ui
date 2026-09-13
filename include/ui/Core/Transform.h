@@ -4,7 +4,7 @@
 #include "TransformPrimitive.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Property;
 
@@ -15,10 +15,10 @@ class Property;
     of an element. Each transform instance is relative to the element's parent coordinate system.
     During the Context::Render call, the transforms of the current element and its ancestors will be
     used to find the final transformation matrix for the global coordinate system.
-    @see Rml::Variant
+    @see ui::Variant
  */
 
-class RMLUICORE_API Transform {
+class UI_CORE_API Transform {
 public:
 	using PrimitiveList = Vector<TransformPrimitive>;
 
@@ -50,4 +50,4 @@ private:
 	PrimitiveList primitives;
 };
 
-} // namespace Rml
+} // namespace ui

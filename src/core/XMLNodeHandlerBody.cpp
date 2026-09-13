@@ -4,7 +4,7 @@
 #include <ui/Core/XMLParser.h>
 #include "XMLParseTools.h"
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandlerBody::XMLNodeHandlerBody() {}
 
@@ -55,4 +55,4 @@ bool XMLNodeHandlerBody::ElementData(XMLParser* parser, const String& data, XMLD
 	return Factory::InstanceElementText(parser->GetParseFrame()->element, data);
 }
 
-} // namespace Rml
+} // namespace ui

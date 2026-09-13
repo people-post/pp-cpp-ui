@@ -4,7 +4,7 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Stream;
 class URL;
@@ -12,7 +12,7 @@ using XMLAttributes = Dictionary;
 
 enum class XMLDataType { Text, CDATA, InnerXML };
 
-class RMLUICORE_API BaseXMLParser {
+class UI_CORE_API BaseXMLParser {
 public:
 	BaseXMLParser();
 	virtual ~BaseXMLParser();
@@ -105,4 +105,4 @@ private:
 	SmallUnorderedSet<String> attributes_for_inner_xml_data;
 };
 
-} // namespace Rml
+} // namespace ui

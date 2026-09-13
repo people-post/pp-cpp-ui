@@ -4,7 +4,7 @@
 	<link type="text/rcss" href="../style.rcss"/>
 	<link rel="match" href="reference/flex_06-ref.rml"/>
 	<link rel="help" href="https://drafts.csswg.org/css-flexbox/" />
-	<link rel="#658" href="https://github.com/mikke89/RmlUi/issues/658" />
+	<link rel="#658" href="https://github.com/mikke89/pp-cpp-ui/issues/658" />
 	<meta name="Description" content="Flex container in column mode with an auto-sized header and footer. Their automatic minimum size should exactly fit their contents. The players list in the middle has auto overflow, and thus should not have automatic minimum sizing applied." />
 	<style>
 		body {

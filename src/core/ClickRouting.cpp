@@ -2,7 +2,7 @@
 
 #include <ui/Core/Element.h>
 
-namespace Rml {
+namespace ui {
 namespace ClickRouting {
 
 namespace {
@@ -87,4 +87,4 @@ Element* ResolveClickTarget(Element* press_hover, Element* release_hover, Vector
 }
 
 } // namespace ClickRouting
-} // namespace Rml
+} // namespace ui

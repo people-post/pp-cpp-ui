@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/Core/Types.h>
-namespace Rml {
+namespace ui {
 class RenderInterface;
 }
 class TestsRenderInterface;
@@ -10,7 +10,7 @@ class TestsSystemInterface;
 namespace TestsShell {
 
 // Will initialize the shell and create a context on first use.
-Rml::Context* GetContext(bool allow_debugger = true, Rml::RenderInterface* override_render_interface = nullptr);
+ui::Context* GetContext(bool allow_debugger = true, ui::RenderInterface* override_render_interface = nullptr);
 
 void BeginFrame();
 void PresentFrame();
@@ -22,12 +22,12 @@ void RenderLoop(bool block_until_escape = true);
 
 void ShutdownShell(bool reset_tests_render_interface = true);
 
-// Set the number of expected warnings and errors logged by RmlUi until the next call to this function
+// Set the number of expected warnings and errors logged by pp-cpp-ui until the next call to this function
 // or until 'ShutdownShell()'.
 void SetNumExpectedWarnings(int num_warnings);
 
 // Stats only available for the dummy renderer.
-Rml::String GetRenderStats();
+ui::String GetRenderStats();
 
 // Returns nullptr if the dummy renderer is not being used.
 TestsRenderInterface* GetTestsRenderInterface();

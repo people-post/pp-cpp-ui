@@ -4,7 +4,7 @@
 #include <string.h>
 #include <type_traits>
 
-namespace Rml {
+namespace ui {
 
 FontFaceLayer::FontFaceLayer(const SharedPtr<const FontEffect>& _effect) : colour(255, 255, 255)
 {
@@ -89,7 +89,7 @@ bool FontFaceLayer::Generate(const FontFaceHandleDefault* handle, const FontFace
 			box.origin = Vector2f(float(glyph_origin.x + glyph.bearing.x), float(glyph_origin.y - glyph.bearing.y));
 			box.dimensions = Vector2f(glyph_dimensions);
 
-			RMLUI_ASSERT(box.dimensions.x >= 0 && box.dimensions.y >= 0);
+			UI_ASSERT(box.dimensions.x >= 0 && box.dimensions.y >= 0);
 
 			character_boxes[character] = box;
 
@@ -111,7 +111,7 @@ bool FontFaceLayer::Generate(const FontFaceHandleDefault* handle, const FontFace
 			TextureLayoutRectangle& rectangle = texture_layout.GetRectangle(i);
 			const TextureLayoutTexture& texture = texture_layout.GetTexture(rectangle.GetTextureIndex());
 			Character character = (Character)rectangle.GetId();
-			RMLUI_ASSERT(character_boxes.find(character) != character_boxes.end());
+			UI_ASSERT(character_boxes.find(character) != character_boxes.end());
 			TextureBox& box = character_boxes[character];
 
 			// Set the character's texture index.
@@ -166,7 +166,7 @@ bool FontFaceLayer::GenerateTexture(Vector<byte>& texture_data, Vector2i& textur
 	{
 		TextureLayoutRectangle& rectangle = texture_layout.GetRectangle(i);
 		Character character = (Character)rectangle.GetId();
-		RMLUI_ASSERT(character_boxes.find(character) != character_boxes.end());
+		UI_ASSERT(character_boxes.find(character) != character_boxes.end());
 
 		TextureBox& box = character_boxes[character];
 
@@ -228,8 +228,8 @@ const FontEffect* FontFaceLayer::GetFontEffect() const
 
 Texture FontFaceLayer::GetTexture(RenderManager& render_manager, int index)
 {
-	RMLUI_ASSERT(index >= 0);
-	RMLUI_ASSERT(index < GetNumTextures());
+	UI_ASSERT(index >= 0);
+	UI_ASSERT(index < GetNumTextures());
 
 	return (*textures_ptr)[index].GetTexture(render_manager);
 }
@@ -244,4 +244,4 @@ ColourbPremultiplied FontFaceLayer::GetColour(float opacity) const
 	return colour.ToPremultiplied(opacity);
 }
 
-} // namespace Rml
+} // namespace ui

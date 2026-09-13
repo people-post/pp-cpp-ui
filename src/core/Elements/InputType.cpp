@@ -1,7 +1,7 @@
 #include "InputType.h"
 #include <ui/Core/Elements/ElementFormControlInput.h>
 
-namespace Rml {
+namespace ui {
 
 InputType::InputType(ElementFormControlInput* element) : element(element) {}
 
@@ -46,4 +46,4 @@ void InputType::GetSelection(int* /*selection_start*/, int* /*selection_end*/, S
 
 void InputType::SetCompositionRange(int /*range_start*/, int /*range_end*/) {}
 
-} // namespace Rml
+} // namespace ui

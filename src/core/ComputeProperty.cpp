@@ -4,7 +4,7 @@
 #include <ui/Core/StringUtilities.h>
 #include "ControlledLifetimeResource.h"
 
-namespace Rml {
+namespace ui {
 
 struct ComputedPropertyData {
 	const Style::ComputedValues computed{nullptr};
@@ -30,7 +30,7 @@ static constexpr float PixelsPerInch = 96.0f;
 
 static float ComputePPILength(NumericValue value, float dp_ratio)
 {
-	RMLUI_ASSERT(Any(value.unit & Unit::PPI_UNIT));
+	UI_ASSERT(Any(value.unit & Unit::PPI_UNIT));
 
 	// Values based on pixels-per-inch. Scaled by the dp-ratio as a placeholder solution until we make the pixel unit itself scalable.
 	const float inch = value.number * PixelsPerInch * dp_ratio;
@@ -45,7 +45,7 @@ static float ComputePPILength(NumericValue value, float dp_ratio)
 	default: break;
 	}
 
-	RMLUI_ERROR;
+	UI_ERROR;
 	return 0.f;
 }
 
@@ -65,7 +65,7 @@ float ComputeLength(NumericValue value, float font_size, float document_font_siz
 	default: break;
 	}
 
-	RMLUI_ERROR;
+	UI_ERROR;
 	return 0.0f;
 }
 
@@ -80,7 +80,7 @@ float ComputeAngle(NumericValue value)
 	default: break;
 	}
 
-	RMLUI_ERROR;
+	UI_ERROR;
 	return 0.0f;
 }
 
@@ -129,7 +129,7 @@ Style::Clip ComputeClip(const Property* property)
 		return Style::Clip(static_cast<Style::Clip::Type>(value));
 	else if (property->unit == Unit::NUMBER)
 		return Style::Clip(Style::Clip::Type::Number, static_cast<int8_t>(value));
-	RMLUI_ERRORMSG("Invalid clip type");
+	UI_ERRORMSG("Invalid clip type");
 	return Style::Clip();
 }
 
@@ -147,7 +147,7 @@ Style::LineHeight ComputeLineHeight(const Property* property, float font_size, f
 	{
 	case Unit::NUMBER: scale_factor = property->value.Get<float>(); break;
 	case Unit::PERCENT: scale_factor = property->value.Get<float>() * 0.01f; break;
-	default: RMLUI_ERRORMSG("Invalid unit for line-height");
+	default: UI_ERRORMSG("Invalid unit for line-height");
 	}
 
 	float value = font_size * scale_factor;
@@ -167,7 +167,7 @@ Style::VerticalAlign ComputeVerticalAlign(const Property* property, float line_h
 		return Style::VerticalAlign(property->Get<float>() * line_height * 0.01f);
 	}
 
-	RMLUI_ASSERT(property->unit == Unit::KEYWORD);
+	UI_ASSERT(property->unit == Unit::KEYWORD);
 	return Style::VerticalAlign((Style::VerticalAlign::Type)property->Get<int>());
 }
 
@@ -262,4 +262,4 @@ String GetFontFaceDescription(const String& font_family, Style::FontStyle style,
 	return CreateString("'%s' [%s]", font_family.c_str(), font_attributes.c_str());
 }
 
-} // namespace Rml
+} // namespace ui

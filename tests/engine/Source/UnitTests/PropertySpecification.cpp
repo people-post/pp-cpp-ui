@@ -9,7 +9,7 @@
 #include <doctest.h>
 #include <limits.h>
 
-namespace Rml {
+namespace ui {
 class TestPropertySpecification {
 public:
 	using SplitOption = PropertySpecification::SplitOption;
@@ -23,9 +23,9 @@ public:
 private:
 	const PropertySpecification& specification;
 };
-} // namespace Rml
+} // namespace ui
 
-using namespace Rml;
+using namespace ui;
 
 static String Stringify(const StringList& list)
 {
@@ -46,7 +46,7 @@ TEST_CASE("PropertySpecification.ParsePropertyValues")
 	TestsRenderInterface render_interface;
 	SetRenderInterface(&render_interface);
 	SetSystemInterface(&system_interface);
-	Rml::Initialise();
+	ui::Initialise();
 
 	using SplitOption = TestPropertySpecification::SplitOption;
 	const TestPropertySpecification& specification = TestPropertySpecification(StyleSheetSpecification::GetPropertySpecification());
@@ -190,7 +190,7 @@ TEST_CASE("PropertySpecification.ParsePropertyValues")
 	Parse(R"(' ' , ' ')", {R"(' ')", R"(' ')"}, SplitOption::Comma);
 	Parse(R"( ' ' none, yes)", {R"(' ' none)", R"(yes)"}, SplitOption::Comma);
 
-	Rml::Shutdown();
+	ui::Shutdown();
 }
 
 TEST_CASE("PropertySpecification.string")
@@ -199,7 +199,7 @@ TEST_CASE("PropertySpecification.string")
 	TestsRenderInterface render_interface;
 	SetRenderInterface(&render_interface);
 	SetSystemInterface(&system_interface);
-	Rml::Initialise();
+	ui::Initialise();
 
 	PropertySpecification specification(1, 0);
 	const PropertyId id = specification.RegisterProperty("name", "", false, false).AddParser("string").GetId();
@@ -246,7 +246,7 @@ TEST_CASE("PropertySpecification.string")
 	Parse(R"(image(a, "b"))", R"(image(a, "b"))");
 	Parse(R"V("image(a, \"b\")")V", R"V(image(a, "b"))V");
 
-	Rml::Shutdown();
+	ui::Shutdown();
 }
 
 TEST_CASE("PropertyParser.Keyword")
@@ -255,7 +255,7 @@ TEST_CASE("PropertyParser.Keyword")
 	TestsRenderInterface render_interface;
 	SetRenderInterface(&render_interface);
 	SetSystemInterface(&system_interface);
-	Rml::Initialise();
+	ui::Initialise();
 
 	// Test keyword parser. Ensure that the keyword values are correct.
 	PropertySpecification specification(20, 0);
@@ -305,7 +305,7 @@ TEST_CASE("PropertyParser.Keyword")
 	Parse(numbers, "2", 2);
 	Parse(numbers, "20", 20);
 
-	Rml::Shutdown();
+	ui::Shutdown();
 }
 
 TEST_CASE("PropertyParser.InvalidShorthands")
@@ -314,7 +314,7 @@ TEST_CASE("PropertyParser.InvalidShorthands")
 	TestsRenderInterface render_interface;
 	SetRenderInterface(&render_interface);
 	SetSystemInterface(&system_interface);
-	Rml::Initialise();
+	ui::Initialise();
 
 	ElementPtr element = Factory::InstanceElement(nullptr, "*", "div", {});
 
@@ -374,5 +374,5 @@ TEST_CASE("PropertyParser.InvalidShorthands")
 	}
 
 	element.reset();
-	Rml::Shutdown();
+	ui::Shutdown();
 }

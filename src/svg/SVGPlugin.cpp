@@ -8,7 +8,7 @@
 #include "SVGCache.h"
 #include "XMLNodeHandlerSVG.h"
 
-namespace Rml {
+namespace ui {
 namespace SVG {
 
 	class SVGPlugin : public Plugin {
@@ -48,4 +48,4 @@ namespace SVG {
 	}
 
 } // namespace SVG
-} // namespace Rml
+} // namespace ui

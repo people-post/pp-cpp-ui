@@ -4,12 +4,12 @@
 #include <ui/Core/EventListener.h>
 #include "ElementDebugDocument.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 class ElementDataModels : public ElementDebugDocument, public EventListener {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementDataModels, ElementDebugDocument)
+	UI_RTTI_DefineWithParent(ElementDataModels, ElementDebugDocument)
 
 	ElementDataModels(const String& tag);
 	~ElementDataModels();
@@ -34,4 +34,4 @@ private:
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

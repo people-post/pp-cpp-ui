@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Box;
 class ContainerBox;
@@ -34,4 +34,4 @@ protected:
 	~FormattingContext() = default;
 };
 
-} // namespace Rml
+} // namespace ui

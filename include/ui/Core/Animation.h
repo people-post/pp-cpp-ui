@@ -4,7 +4,7 @@
 #include "Tween.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /* Data parsed from the 'animation' property. */
 struct Animation {
@@ -62,4 +62,4 @@ inline bool operator!=(const TransitionList& a, const TransitionList& b)
 	return !(a == b);
 }
 
-} // namespace Rml
+} // namespace ui

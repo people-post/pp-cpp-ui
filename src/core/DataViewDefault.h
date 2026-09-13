@@ -5,7 +5,7 @@
 #include <ui/Core/Variant.h>
 #include "DataView.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class DataExpression;
@@ -160,4 +160,4 @@ private:
 	StringList variables;
 };
 
-} // namespace Rml
+} // namespace ui

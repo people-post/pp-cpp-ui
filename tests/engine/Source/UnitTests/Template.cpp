@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 TEST_CASE("template.body")
 {

@@ -10,7 +10,7 @@
 #include "BoxShadowCache.h"
 #include "GeometryBoxShadow.h"
 
-namespace Rml {
+namespace ui {
 
 ElementBackgroundBorder::ElementBackgroundBorder() {}
 
@@ -57,10 +57,10 @@ Geometry* ElementBackgroundBorder::GetClipGeometry(Element* element, BoxArea cli
 	BackgroundType type = {};
 	switch (clip_area)
 	{
-	case Rml::BoxArea::Border: type = BackgroundType::ClipBorder; break;
-	case Rml::BoxArea::Padding: type = BackgroundType::ClipPadding; break;
-	case Rml::BoxArea::Content: type = BackgroundType::ClipContent; break;
-	default: RMLUI_ERROR; return nullptr;
+	case ui::BoxArea::Border: type = BackgroundType::ClipBorder; break;
+	case ui::BoxArea::Padding: type = BackgroundType::ClipPadding; break;
+	case ui::BoxArea::Content: type = BackgroundType::ClipContent; break;
+	default: UI_ERROR; return nullptr;
 	}
 
 	RenderManager* render_manager = element->GetRenderManager();
@@ -100,7 +100,7 @@ void ElementBackgroundBorder::EraseBackground(BackgroundType type)
 
 void ElementBackgroundBorder::GenerateGeometry(Element* element)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	RenderManager* render_manager = element->GetRenderManager();
 	if (!render_manager)
 		return;
@@ -137,4 +137,4 @@ void ElementBackgroundBorder::GenerateGeometry(Element* element)
 	geometry = render_manager->MakeGeometry(std::move(mesh));
 }
 
-} // namespace Rml
+} // namespace ui

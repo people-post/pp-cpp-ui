@@ -3,15 +3,15 @@
 #include "../Element.h"
 #include "../Header.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A generic specialisation of the generic Element for all input controls.
  */
 
-class RMLUICORE_API ElementFormControl : public Element {
+class UI_CORE_API ElementFormControl : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementFormControl, Element)
+	UI_RTTI_DefineWithParent(ElementFormControl, Element)
 
 	/// Constructs a new ElementFormControl. This should not be called directly; use the Factory
 	/// instead.
@@ -54,4 +54,4 @@ protected:
 	void OnAttributeChange(const ElementAttributes& changed_attributes) override;
 };
 
-} // namespace Rml
+} // namespace ui

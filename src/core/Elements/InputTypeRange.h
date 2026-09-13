@@ -2,7 +2,7 @@
 
 #include "InputType.h"
 
-namespace Rml {
+namespace ui {
 
 class WidgetSlider;
 
@@ -42,4 +42,4 @@ private:
 	WidgetSlider* widget;
 };
 
-} // namespace Rml
+} // namespace ui

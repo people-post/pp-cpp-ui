@@ -4,7 +4,7 @@
 #include "Header.h"
 #include <stack>
 
-namespace Rml {
+namespace ui {
 
 class DocumentHeader;
 class Element;
@@ -12,10 +12,10 @@ class XMLNodeHandler;
 class URL;
 
 /**
-    RmlUi's XML parsing engine. The factory creates an instance of this class for each RML parse.
+    pp-cpp-ui's XML parsing engine. The factory creates an instance of this class for each RML parse.
  */
 
-class RMLUICORE_API XMLParser : public BaseXMLParser {
+class UI_CORE_API XMLParser : public BaseXMLParser {
 public:
 	XMLParser(Element* root);
 	~XMLParser();
@@ -86,4 +86,4 @@ private:
 	Stack<ParseFrame> stack;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -1,6 +1,6 @@
 #include <ui/Core/RenderInterface.h>
 
-namespace Rml {
+namespace ui {
 
 namespace CoreInternal {
 	bool HasRenderManager(RenderInterface* render_interface);
@@ -12,9 +12,9 @@ RenderInterface::~RenderInterface()
 {
 	// Note: We cannot automatically release render resources here, because that involves a virtual call to this interface during its destruction
 	// which is illegal.
-	RMLUI_ASSERTMSG(!CoreInternal::HasRenderManager(this),
-		"RenderInterface is being destroyed, but it is still actively referenced and used within the RmlUi library. This may lead to use-after-free "
-		"or nullptr dereference when releasing render resources. Ensure that the render interface is destroyed *after* the call to Rml::Shutdown.");
+	UI_ASSERTMSG(!CoreInternal::HasRenderManager(this),
+		"RenderInterface is being destroyed, but it is still actively referenced and used within the pp-cpp-ui library. This may lead to use-after-free "
+		"or nullptr dereference when releasing render resources. Ensure that the render interface is destroyed *after* the call to ui::Shutdown.");
 }
 
 void RenderInterface::EnableClipMask(bool /*enable*/) {}
@@ -62,4 +62,4 @@ void RenderInterface::RenderShader(CompiledShaderHandle /*shader*/, CompiledGeom
 
 void RenderInterface::ReleaseShader(CompiledShaderHandle /*shader*/) {}
 
-} // namespace Rml
+} // namespace ui

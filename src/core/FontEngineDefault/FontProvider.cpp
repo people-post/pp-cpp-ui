@@ -10,23 +10,23 @@
 #include "FreeTypeInterface.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 static FontProvider* g_font_provider = nullptr;
 
 FontProvider::FontProvider()
 {
-	RMLUI_ASSERT(!g_font_provider);
+	UI_ASSERT(!g_font_provider);
 }
 
 FontProvider::~FontProvider()
 {
-	RMLUI_ASSERT(g_font_provider == this);
+	UI_ASSERT(g_font_provider == this);
 }
 
 bool FontProvider::Initialise()
 {
-	RMLUI_ASSERT(!g_font_provider);
+	UI_ASSERT(!g_font_provider);
 	if (!FreeType::Initialise())
 		return false;
 	g_font_provider = new FontProvider;
@@ -35,7 +35,7 @@ bool FontProvider::Initialise()
 
 void FontProvider::Shutdown()
 {
-	RMLUI_ASSERT(g_font_provider);
+	UI_ASSERT(g_font_provider);
 	delete g_font_provider;
 	g_font_provider = nullptr;
 	FreeType::Shutdown();
@@ -43,13 +43,13 @@ void FontProvider::Shutdown()
 
 FontProvider& FontProvider::Get()
 {
-	RMLUI_ASSERT(g_font_provider);
+	UI_ASSERT(g_font_provider);
 	return *g_font_provider;
 }
 
 FontFaceHandleDefault* FontProvider::GetFontFaceHandle(const String& family, Style::FontStyle style, Style::FontWeight weight, int size)
 {
-	RMLUI_ASSERTMSG(family == StringUtilities::ToLower(family), "Font family name must be converted to lowercase before entering here.");
+	UI_ASSERTMSG(family == StringUtilities::ToLower(family), "Font family name must be converted to lowercase before entering here.");
 
 	FontFamilyMap& families = Get().font_families;
 
@@ -77,7 +77,7 @@ FontFaceHandleDefault* FontProvider::GetFallbackFontFace(int index, int font_siz
 
 void FontProvider::ReleaseFontResources()
 {
-	RMLUI_ASSERT(g_font_provider);
+	UI_ASSERT(g_font_provider);
 	for (auto& name_family : g_font_provider->font_families)
 		name_family.second->ReleaseFontResources();
 }
@@ -235,4 +235,4 @@ bool FontProvider::AddFace(FontFaceHandleFreetype face, const String& family, St
 	return static_cast<bool>(font_face_result);
 }
 
-} // namespace Rml
+} // namespace ui

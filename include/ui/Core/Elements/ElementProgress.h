@@ -6,7 +6,7 @@
 #include "../Spritesheet.h"
 #include "../Texture.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     The 'progress' element.
@@ -28,9 +28,9 @@ namespace Rml {
 
  */
 
-class RMLUICORE_API ElementProgress : public Element {
+class UI_CORE_API ElementProgress : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementProgress, Element)
+	UI_RTTI_DefineWithParent(ElementProgress, Element)
 
 	/// Constructs a new ElementProgress. This should not be called directly; use the Factory instead.
 	/// @param[in] tag The tag the element was declared as in RML.
@@ -89,4 +89,4 @@ private:
 	bool geometry_dirty;
 };
 
-} // namespace Rml
+} // namespace ui

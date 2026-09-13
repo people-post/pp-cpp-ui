@@ -1,4 +1,4 @@
-set(TARGET_NAME "rmlui_unit_tests")
+set(TARGET_NAME "ui_unit_tests")
 
 add_executable(${TARGET_NAME}
 	Animation.cpp
@@ -43,13 +43,13 @@ set_common_target_options(${TARGET_NAME})
 target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/core")
 
 target_link_libraries(${TARGET_NAME} PRIVATE
-	rmlui_tests_common
-	rmlui_core
+	ui_tests_common
+	ui_core
 	doctest::doctest
 	trompeloeil::trompeloeil
 )
 
 if(NOT EMSCRIPTEN)
 	doctest_discover_tests(${TARGET_NAME})
-	add_test(NAME rmlui_unit_tests COMMAND ${TARGET_NAME})
+	add_test(NAME ui_unit_tests COMMAND ${TARGET_NAME})
 endif()

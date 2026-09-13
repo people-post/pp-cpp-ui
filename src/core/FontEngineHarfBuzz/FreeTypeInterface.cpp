@@ -12,10 +12,10 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 static void BuildGlyphMap(FT_Face ft_face, int size, FontGlyphMap& glyphs, const float bitmap_scaling_factor, const bool load_default_glyphs);
 static void GenerateMetrics(FT_Face ft_face, FontMetrics& metrics, float bitmap_scaling_factor);
 static bool SetFontSize(FT_Face ft_face, int font_size, float& out_bitmap_scaling_factor);
-static void BitmapDownscale(Rml::byte* bitmap_new, const int new_width, const int new_height, const Rml::byte* bitmap_source, const int width,
-	const int height, const int pitch, const Rml::ColorFormat color_format);
+static void BitmapDownscale(ui::byte* bitmap_new, const int new_width, const int new_height, const ui::byte* bitmap_source, const int width,
+	const int height, const int pitch, const ui::ColorFormat color_format);
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 #define FT_ERROR_START_LIST     switch ( error_code ) {
 #define FT_ERRORDEF( e, v, s )    case v: return s;
 #define FT_ERROR_END_LIST       }
@@ -51,8 +51,8 @@ bool AppendGlyph(FontFaceHandleFreetype face, int font_size, FontGlyphIndex glyp
 {
 	FT_Face ft_face = (FT_Face)face;
 
-	RMLUI_ASSERT(glyphs.find(glyph_index) == glyphs.end());
-	RMLUI_ASSERT(ft_face);
+	UI_ASSERT(glyphs.find(glyph_index) == glyphs.end());
+	UI_ASSERT(ft_face);
 
 	// Set face size again in case it was used at another size in another font face handle.
 	float bitmap_scaling_factor = 1.0f;
@@ -79,12 +79,12 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 	FT_Error error = FT_Load_Glyph(ft_face, glyph_index, FT_LOAD_COLOR);
 	if (error != 0)
 	{
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 		auto error_message = GetFreeTypeErrorString(error);
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Unable to load glyph at index '%u' in font face '%s %s'; FreeType error 0x%x: %s.",
+		ui::Log::Message(ui::Log::LT_WARNING, "Unable to load glyph at index '%u' in font face '%s %s'; FreeType error 0x%x: %s.",
 			(unsigned int)glyph_index, ft_face->family_name, ft_face->style_name, error, error_message);
 #else
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Unable to load glyph at index '%u' in font face '%s %s'; FreeType error 0x%x.",
+		ui::Log::Message(ui::Log::LT_WARNING, "Unable to load glyph at index '%u' in font face '%s %s'; FreeType error 0x%x.",
 			(unsigned int)glyph_index, ft_face->family_name, ft_face->style_name, error);
 #endif
 		return false;
@@ -93,26 +93,26 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 	error = FT_Render_Glyph(ft_face->glyph, FT_RENDER_MODE_NORMAL);
 	if (error != 0)
 	{
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 		auto error_message = GetFreeTypeErrorString(error);
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Unable to render glyph at index '%u' in font face '%s %s'; FreeType error 0x%x: %s.",
+		ui::Log::Message(ui::Log::LT_WARNING, "Unable to render glyph at index '%u' in font face '%s %s'; FreeType error 0x%x: %s.",
 			(unsigned int)glyph_index, ft_face->family_name, ft_face->style_name, error, error_message);
 #else
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Unable to render glyph at index '%u' in font face '%s %s'; FreeType error 0x%x.",
+		ui::Log::Message(ui::Log::LT_WARNING, "Unable to render glyph at index '%u' in font face '%s %s'; FreeType error 0x%x.",
 			(unsigned int)glyph_index, ft_face->family_name, ft_face->style_name, error);
 #endif
 		return false;
 	}
 
-	auto result = glyphs.emplace(glyph_index, FontGlyphData{Rml::FontGlyph{}, character});
+	auto result = glyphs.emplace(glyph_index, FontGlyphData{ui::FontGlyph{}, character});
 	if (!result.second)
 	{
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Glyph index '%u' is already loaded in the font face '%s %s'.", (unsigned int)glyph_index,
+		ui::Log::Message(ui::Log::LT_WARNING, "Glyph index '%u' is already loaded in the font face '%s %s'.", (unsigned int)glyph_index,
 			ft_face->family_name, ft_face->style_name);
 		return false;
 	}
 
-	Rml::FontGlyph& glyph = result.first->second.bitmap;
+	ui::FontGlyph& glyph = result.first->second.bitmap;
 
 	FT_GlyphSlot ft_glyph = ft_face->glyph;
 
@@ -126,9 +126,9 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 	const bool scale_bitmap = (bitmap_scaling_factor < 1.f);
 	if (scale_bitmap)
 	{
-		glyph.bearing = Rml::Vector2i(Rml::Vector2f(glyph.bearing) * bitmap_scaling_factor);
+		glyph.bearing = ui::Vector2i(ui::Vector2f(glyph.bearing) * bitmap_scaling_factor);
 		glyph.advance = int(float(glyph.advance) * bitmap_scaling_factor);
-		glyph.bitmap_dimensions = Rml::Vector2i(Rml::Vector2f(glyph.bitmap_dimensions) * bitmap_scaling_factor);
+		glyph.bitmap_dimensions = ui::Vector2i(ui::Vector2f(glyph.bitmap_dimensions) * bitmap_scaling_factor);
 	}
 
 	// Copy the glyph's bitmap data from the FreeType glyph handle to our glyph handle.
@@ -138,23 +138,23 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 		if (ft_glyph->bitmap.pixel_mode != FT_PIXEL_MODE_MONO && ft_glyph->bitmap.pixel_mode != FT_PIXEL_MODE_GRAY &&
 			ft_glyph->bitmap.pixel_mode != FT_PIXEL_MODE_BGRA)
 		{
-			Rml::Log::Message(Rml::Log::LT_WARNING, "Unable to render glyph on the font face '%s %s': unsupported pixel mode (%d).",
+			ui::Log::Message(ui::Log::LT_WARNING, "Unable to render glyph on the font face '%s %s': unsupported pixel mode (%d).",
 				ft_glyph->face->family_name, ft_glyph->face->style_name, ft_glyph->bitmap.pixel_mode);
 		}
 		else if (ft_glyph->bitmap.pixel_mode == FT_PIXEL_MODE_MONO && scale_bitmap)
 		{
-			Rml::Log::Message(Rml::Log::LT_WARNING, "Unable to render glyph on the font face '%s %s': bitmap scaling unsupported in mono pixel mode.",
+			ui::Log::Message(ui::Log::LT_WARNING, "Unable to render glyph on the font face '%s %s': bitmap scaling unsupported in mono pixel mode.",
 				ft_glyph->face->family_name, ft_glyph->face->style_name);
 		}
 		else
 		{
 			const int num_bytes_per_pixel = (ft_glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA ? 4 : 1);
-			glyph.color_format = (ft_glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA ? Rml::ColorFormat::RGBA8 : Rml::ColorFormat::A8);
+			glyph.color_format = (ft_glyph->bitmap.pixel_mode == FT_PIXEL_MODE_BGRA ? ui::ColorFormat::RGBA8 : ui::ColorFormat::A8);
 
-			glyph.bitmap_owned_data.reset(new Rml::byte[glyph.bitmap_dimensions.x * glyph.bitmap_dimensions.y * num_bytes_per_pixel]);
+			glyph.bitmap_owned_data.reset(new ui::byte[glyph.bitmap_dimensions.x * glyph.bitmap_dimensions.y * num_bytes_per_pixel]);
 			glyph.bitmap_data = glyph.bitmap_owned_data.get();
-			Rml::byte* destination_bitmap = glyph.bitmap_owned_data.get();
-			const Rml::byte* source_bitmap = ft_glyph->bitmap.buffer;
+			ui::byte* destination_bitmap = glyph.bitmap_owned_data.get();
+			const ui::byte* source_bitmap = ft_glyph->bitmap.buffer;
 
 			// Copy the bitmap data into the newly-allocated space on our glyph.
 			switch (ft_glyph->bitmap.pixel_mode)
@@ -165,7 +165,7 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 				for (int i = 0; i < glyph.bitmap_dimensions.y; ++i)
 				{
 					int mask = 0x80;
-					const Rml::byte* source_byte = source_bitmap;
+					const ui::byte* source_byte = source_bitmap;
 					for (int j = 0; j < glyph.bitmap_dimensions.x; ++j)
 					{
 						if ((*source_byte & mask) == mask)
@@ -207,7 +207,7 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 					}
 				}
 
-				if (glyph.color_format == Rml::ColorFormat::RGBA8)
+				if (glyph.color_format == ui::ColorFormat::RGBA8)
 				{
 					// Swizzle channels (BGRA -> RGBA)
 					destination_bitmap = glyph.bitmap_owned_data.get();
@@ -215,10 +215,10 @@ static bool BuildGlyph(FT_Face ft_face, const FontGlyphIndex glyph_index, Charac
 					for (int k = 0; k < glyph.bitmap_dimensions.x * glyph.bitmap_dimensions.y * num_bytes_per_pixel; k += 4)
 					{
 						std::swap(destination_bitmap[k], destination_bitmap[k + 2]);
-#ifdef RMLUI_DEBUG
-						const Rml::byte alpha = destination_bitmap[k + 3];
+#ifdef UI_DEBUG
+						const ui::byte alpha = destination_bitmap[k + 3];
 						for (int c = 0; c < 3; c++)
-							RMLUI_ASSERTMSG(destination_bitmap[k + c] <= alpha,
+							UI_ASSERTMSG(destination_bitmap[k + c] <= alpha,
 								"Glyph data is assumed to be encoded in premultiplied alpha, but that is not the case.");
 #endif
 					}
@@ -245,21 +245,21 @@ static void BuildGlyphMap(FT_Face ft_face, int size, FontGlyphMap& glyphs, const
 		for (FT_ULong character_code = code_min; character_code <= code_max; ++character_code)
 		{
 			FT_UInt index = FT_Get_Char_Index(ft_face, character_code);
-			BuildGlyph(ft_face, index, static_cast<Rml::Character>(character_code), glyphs, bitmap_scaling_factor);
+			BuildGlyph(ft_face, index, static_cast<ui::Character>(character_code), glyphs, bitmap_scaling_factor);
 		}
 	}
 
 	// Add a replacement character for rendering unknown characters.
-	FontGlyphIndex replacement_glyph_index = FT_Get_Char_Index(ft_face, (FT_ULong)Rml::Character::Replacement);
+	FontGlyphIndex replacement_glyph_index = FT_Get_Char_Index(ft_face, (FT_ULong)ui::Character::Replacement);
 	auto it = glyphs.find(replacement_glyph_index);
 	if (it == glyphs.end())
 	{
-		Rml::FontGlyph glyph;
+		ui::FontGlyph glyph;
 		glyph.bitmap_dimensions = {size / 3, (size * 2) / 3};
 		glyph.advance = glyph.bitmap_dimensions.x + 2;
 		glyph.bearing = {1, glyph.bitmap_dimensions.y};
 
-		glyph.bitmap_owned_data.reset(new Rml::byte[glyph.bitmap_dimensions.x * glyph.bitmap_dimensions.y]);
+		glyph.bitmap_owned_data.reset(new ui::byte[glyph.bitmap_dimensions.x * glyph.bitmap_dimensions.y]);
 		glyph.bitmap_data = glyph.bitmap_owned_data.get();
 
 		for (int y = 0; y < glyph.bitmap_dimensions.y; y++)
@@ -274,7 +274,7 @@ static void BuildGlyphMap(FT_Face ft_face, int size, FontGlyphMap& glyphs, const
 		}
 
 		glyphs[replacement_glyph_index].bitmap = std::move(glyph);
-		glyphs[replacement_glyph_index].character = Rml::Character::Replacement;
+		glyphs[replacement_glyph_index].character = ui::Character::Replacement;
 	}
 }
 
@@ -286,7 +286,7 @@ static void GenerateMetrics(FT_Face ft_face, FontMetrics& metrics, float bitmap_
 
 	metrics.underline_position = FT_MulFix(-ft_face->underline_position, ft_face->size->metrics.y_scale) * bitmap_scaling_factor / float(1 << 6);
 	metrics.underline_thickness = FT_MulFix(ft_face->underline_thickness, ft_face->size->metrics.y_scale) * bitmap_scaling_factor / float(1 << 6);
-	metrics.underline_thickness = Rml::Math::Max(metrics.underline_thickness, 1.0f);
+	metrics.underline_thickness = ui::Math::Max(metrics.underline_thickness, 1.0f);
 
 	// Determine the x-height of this font face.
 	FT_UInt index = FT_Get_Char_Index(ft_face, 'x');
@@ -301,7 +301,7 @@ static void GenerateMetrics(FT_Face ft_face, FontMetrics& metrics, float bitmap_
 
 static bool SetFontSize(FT_Face ft_face, int font_size, float& out_bitmap_scaling_factor)
 {
-	RMLUI_ASSERT(out_bitmap_scaling_factor == 1.f);
+	UI_ASSERT(out_bitmap_scaling_factor == 1.f);
 
 	FT_Error error = 0;
 
@@ -343,7 +343,7 @@ static bool SetFontSize(FT_Face ft_face, int font_size, float& out_bitmap_scalin
 
 	if (error != 0)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Unable to set the character size '%d' on the font face '%s %s'.", font_size, ft_face->family_name,
+		ui::Log::Message(ui::Log::LT_ERROR, "Unable to set the character size '%d' on the font face '%s %s'.", font_size, ft_face->family_name,
 			ft_face->style_name);
 		return false;
 	}
@@ -351,12 +351,12 @@ static bool SetFontSize(FT_Face ft_face, int font_size, float& out_bitmap_scalin
 	return true;
 }
 
-static void BitmapDownscale(Rml::byte* bitmap_new, const int new_width, const int new_height, const Rml::byte* bitmap_source, const int width,
-	const int height, const int pitch, const Rml::ColorFormat color_format)
+static void BitmapDownscale(ui::byte* bitmap_new, const int new_width, const int new_height, const ui::byte* bitmap_source, const int width,
+	const int height, const int pitch, const ui::ColorFormat color_format)
 {
 	// Average filter for downscaling bitmap images, based on https://stackoverflow.com/a/9571580
 	constexpr int max_num_channels = 4;
-	const int num_channels = (color_format == Rml::ColorFormat::RGBA8 ? 4 : 1);
+	const int num_channels = (color_format == ui::ColorFormat::RGBA8 ? 4 : 1);
 
 	const float xscale = float(new_width) / width;
 	const float yscale = float(new_height) / height;
@@ -401,7 +401,7 @@ static void BitmapDownscale(Rml::byte* bitmap_new, const int new_width, const in
 			}
 
 			for (int i = 0; i < num_channels; i++)
-				bitmap_new[(f * new_width + g) * num_channels + i] = (Rml::byte)Rml::Math::Min(sum[i] * sumscale, 255.f);
+				bitmap_new[(f * new_width + g) * num_channels + i] = (ui::byte)ui::Math::Min(sum[i] * sumscale, 255.f);
 		}
 	}
 }

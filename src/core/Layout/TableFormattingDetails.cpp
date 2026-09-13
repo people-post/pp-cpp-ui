@@ -6,11 +6,11 @@
 #include <algorithm>
 #include <float.h>
 
-namespace Rml {
+namespace ui {
 
 bool TableGrid::Build(Element* element_table, TableWrapper& table_wrapper)
 {
-	RMLUI_ASSERT(rows.empty() && columns.empty() && cells.empty() && open_cells.empty());
+	UI_ASSERT(rows.empty() && columns.empty() && cells.empty() && open_cells.empty());
 	ElementList non_parented_cell_elements;
 
 	const int num_table_children = element_table->GetNumChildren();
@@ -174,7 +174,7 @@ void TableGrid::PushOrMergeColumnsFromFirstRow(Element* element_cell, int column
 		}
 		else
 		{
-			RMLUI_ASSERT(column_index == (int)columns.size());
+			UI_ASSERT(column_index == (int)columns.size());
 			columns.push_back({});
 			column = &columns.back();
 		}
@@ -193,7 +193,7 @@ void TableGrid::PushRow(Element* element_row, ElementList cell_elements, TableWr
 
 	if (element_row)
 	{
-		RMLUI_ASSERT(cell_elements.empty());
+		UI_ASSERT(cell_elements.empty());
 
 		const int num_row_children = element_row->GetNumChildren();
 		cell_elements.reserve(num_row_children);
@@ -306,7 +306,7 @@ void TracksSizing::GetEdgeSizes(float& margin_a, float& margin_b, float& padding
 
 void TracksSizing::ApplyGroupElement(const int index, const int span, const ComputedAxisSize& computed)
 {
-	RMLUI_ASSERT(span >= 1 && index + span - 1 < (int)metrics.size());
+	UI_ASSERT(span >= 1 && index + span - 1 < (int)metrics.size());
 
 	float margin_a, margin_b;
 	float padding_border_a, padding_border_b;
@@ -326,7 +326,7 @@ void TracksSizing::ApplyGroupElement(const int index, const int span, const Comp
 
 void TracksSizing::ApplyTrackElement(const int index, const int span, const ComputedAxisSize& computed)
 {
-	RMLUI_ASSERT(span >= 1 && index + span - 1 < (int)metrics.size());
+	UI_ASSERT(span >= 1 && index + span - 1 < (int)metrics.size());
 
 	float margin_a, margin_b;
 	float padding_border_a, padding_border_b;
@@ -362,7 +362,7 @@ void TracksSizing::ApplyCellElement(const int index, const int span, const Compu
 	//  Merge the metrics of the cell with the existing track: If the existing track
 	//  has auto min-/max-/size, we use the cell's min-/max-/size if it has any.
 
-	RMLUI_ASSERT(span >= 1 && index + span - 1 < (int)metrics.size());
+	UI_ASSERT(span >= 1 && index + span - 1 < (int)metrics.size());
 
 	float margin_a, margin_b;
 	float padding_border_a, padding_border_b;
@@ -405,7 +405,7 @@ void TracksSizing::ApplyCellElement(const int index, const int span, const Compu
 void TracksSizing::InitializeSize(TrackMetric& metric, float& margin_a, float& margin_b, float& padding_border_a, float& padding_border_b,
 	const ComputedAxisSize& computed, const int span, const Style::BoxSizing target_box) const
 {
-	RMLUI_ASSERT(span >= 1);
+	UI_ASSERT(span >= 1);
 
 	GetEdgeSizes(margin_a, margin_b, padding_border_a, padding_border_b, computed);
 
@@ -475,7 +475,7 @@ void TracksSizing::ResolveFlexibleSize()
 	for (const TrackMetric& metric : metrics)
 	{
 		// Any auto size must have been resolved to either fixed or flexible before running this algorithm.
-		RMLUI_ASSERT(metric.sizing_mode == TrackSizingMode::Fixed || metric.sizing_mode == TrackSizingMode::Flexible);
+		UI_ASSERT(metric.sizing_mode == TrackSizingMode::Fixed || metric.sizing_mode == TrackSizingMode::Flexible);
 
 		sum_fixed_spacing += metric.column_padding_border_a + metric.column_padding_border_b;
 		sum_fixed_spacing += metric.group_padding_border_a + metric.group_padding_border_a;
@@ -646,4 +646,4 @@ float BuildRowBoxes(TrackBoxList& row_boxes, const TrackMetricList& row_metrics,
 	return rows_height;
 }
 
-} // namespace Rml
+} // namespace ui

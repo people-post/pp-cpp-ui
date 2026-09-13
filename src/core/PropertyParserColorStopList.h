@@ -4,7 +4,7 @@
 #include <ui/Core/Types.h>
 #include "PropertyParserNumber.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A property parser that parses color stop lists, particularly for gradients.
@@ -22,4 +22,4 @@ private:
 	PropertyParserNumber parser_length_percent_angle;
 };
 
-} // namespace Rml
+} // namespace ui

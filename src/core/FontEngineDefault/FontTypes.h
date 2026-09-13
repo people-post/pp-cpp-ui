@@ -4,7 +4,7 @@
 #include <ui/Core/StyleTypes.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 using FontFaceHandleFreetype = uintptr_t;
 
@@ -21,4 +21,4 @@ inline bool operator<(const FaceVariation& a, const FaceVariation& b)
 	return a.weight < b.weight;
 }
 
-} // namespace Rml
+} // namespace ui

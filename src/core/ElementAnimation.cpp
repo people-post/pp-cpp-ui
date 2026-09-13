@@ -14,7 +14,7 @@
 #include "ElementStyle.h"
 #include "TransformUtilities.h"
 
-namespace Rml {
+namespace ui {
 
 static Property InterpolateProperties(const Property& p0, const Property& p1, float alpha, Element& element, const PropertyDefinition* definition);
 
@@ -123,7 +123,7 @@ static bool InterpolateEffectProperties(PropertyDictionary& properties, const Ef
 			auto it = properties1.find(id);
 			if (it == properties1.end())
 			{
-				RMLUI_ERRORMSG("Incompatible decorator properties.");
+				UI_ERRORMSG("Incompatible decorator properties.");
 				return false;
 			}
 			const Property& prop1 = it->second;
@@ -246,7 +246,7 @@ static Property InterpolateProperties(const Property& p0, const Property& p1, fl
 
 		if (prim0.size() != prim1.size())
 		{
-			RMLUI_ERRORMSG("Transform primitives not of same size during interpolation. Were the transforms properly prepared for interpolation?");
+			UI_ERRORMSG("Transform primitives not of same size during interpolation. Were the transforms properly prepared for interpolation?");
 			return Property{t0, Unit::TRANSFORM};
 		}
 
@@ -259,7 +259,7 @@ static Property InterpolateProperties(const Property& p0, const Property& p1, fl
 			TransformPrimitive p = prim0[i];
 			if (!TransformUtilities::InterpolateWith(p, prim1[i], alpha))
 			{
-				RMLUI_ERRORMSG("Transform primitives can not be interpolated. Were the transforms properly prepared for interpolation?");
+				UI_ERRORMSG("Transform primitives can not be interpolated. Were the transforms properly prepared for interpolation?");
 				return Property{t0, Unit::TRANSFORM};
 			}
 			t->AddPrimitive(p);
@@ -297,7 +297,7 @@ static Property InterpolateProperties(const Property& p0, const Property& p1, fl
 		auto& ptr1 = p1.value.GetReference<DecoratorsPtr>();
 		if (!ptr0 || !ptr1)
 		{
-			RMLUI_ERRORMSG("Invalid decorator pointer, were the decorator keys properly prepared?");
+			UI_ERRORMSG("Invalid decorator pointer, were the decorator keys properly prepared?");
 			return p_discrete;
 		}
 
@@ -336,7 +336,7 @@ static Property InterpolateProperties(const Property& p0, const Property& p1, fl
 		auto& ptr1 = p1.value.GetReference<FiltersPtr>();
 		if (!ptr0 || !ptr1)
 		{
-			RMLUI_ERRORMSG("Invalid filter pointer, were the filter keys properly prepared?");
+			UI_ERRORMSG("Invalid filter pointer, were the filter keys properly prepared?");
 			return p_discrete;
 		}
 
@@ -364,7 +364,7 @@ static Property InterpolateProperties(const Property& p0, const Property& p1, fl
 
 	if (p0.unit == Unit::COLORSTOPLIST && p1.unit == Unit::COLORSTOPLIST)
 	{
-		RMLUI_ASSERT(p0.value.GetType() == Variant::COLORSTOPLIST && p1.value.GetType() == Variant::COLORSTOPLIST);
+		UI_ASSERT(p0.value.GetType() == Variant::COLORSTOPLIST && p1.value.GetType() == Variant::COLORSTOPLIST);
 		const auto& c0 = p0.value.GetReference<ColorStopList>();
 		const auto& c1 = p1.value.GetReference<ColorStopList>();
 
@@ -528,7 +528,7 @@ static bool PrepareTransforms(Vector<AnimationKey>& keys, Element& element, int 
 	for (int i = start_index; i < (int)keys.size(); i++)
 	{
 		Property& property = keys[i].property;
-		RMLUI_ASSERT(property.value.GetType() == Variant::TRANSFORMPTR);
+		UI_ASSERT(property.value.GetType() == Variant::TRANSFORMPTR);
 
 		if (!property.value.GetReference<TransformPtr>())
 			property.value = MakeShared<Transform>();
@@ -608,7 +608,7 @@ static bool PrepareTransforms(Vector<AnimationKey>& keys, Element& element, int 
 static void PrepareDecorator(AnimationKey& key)
 {
 	Property& property = key.property;
-	RMLUI_ASSERT(property.value.GetType() == Variant::DECORATORSPTR);
+	UI_ASSERT(property.value.GetType() == Variant::DECORATORSPTR);
 
 	if (!property.value.GetReference<DecoratorsPtr>())
 		property.value = MakeShared<DecoratorDeclarationList>();
@@ -616,7 +616,7 @@ static void PrepareDecorator(AnimationKey& key)
 static void PrepareFilter(AnimationKey& key)
 {
 	Property& property = key.property;
-	RMLUI_ASSERT(property.value.GetType() == Variant::FILTERSPTR);
+	UI_ASSERT(property.value.GetType() == Variant::FILTERSPTR);
 
 	if (!property.value.GetReference<FiltersPtr>())
 		property.value = MakeShared<FilterDeclarationList>();
@@ -716,7 +716,7 @@ float ElementAnimation::GetInterpolationFactorAndKeys(int* out_key0, int* out_ke
 		key0 = (key1 == 0 ? 0 : key1 - 1);
 	}
 
-	RMLUI_ASSERT(key0 >= 0 && key0 < (int)keys.size() && key1 >= 0 && key1 < (int)keys.size());
+	UI_ASSERT(key0 >= 0 && key0 < (int)keys.size() && key1 >= 0 && key1 < (int)keys.size());
 
 	float alpha = 0.0f;
 
@@ -782,4 +782,4 @@ Property ElementAnimation::UpdateAndGetProperty(double world_time, Element& elem
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

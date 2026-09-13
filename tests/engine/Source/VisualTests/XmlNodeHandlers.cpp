@@ -3,7 +3,7 @@
 #include <ui/Core/XMLNodeHandler.h>
 #include <ui/Core/XMLParser.h>
 
-using namespace Rml;
+using namespace ui;
 
 XMLNodeHandlerMeta::XMLNodeHandlerMeta() {}
 XMLNodeHandlerMeta::~XMLNodeHandlerMeta() {}
@@ -38,13 +38,13 @@ bool XMLNodeHandlerMeta::ElementData(XMLParser* /*parser*/, const String& /*data
 XMLNodeHandlerLink::XMLNodeHandlerLink()
 {
 	node_handler_head = XMLParser::GetNodeHandler("head");
-	RMLUI_ASSERT(node_handler_head);
+	UI_ASSERT(node_handler_head);
 }
 XMLNodeHandlerLink::~XMLNodeHandlerLink() {}
 
 Element* XMLNodeHandlerLink::ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes)
 {
-	RMLUI_ASSERT(name == "link");
+	UI_ASSERT(name == "link");
 
 	const String type = StringUtilities::ToLower(Get<String>(attributes, "type", ""));
 	const String rel = Get<String>(attributes, "rel", "");

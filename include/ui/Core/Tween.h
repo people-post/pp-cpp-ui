@@ -3,9 +3,9 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
-class RMLUICORE_API Tween {
+class UI_CORE_API Tween {
 public:
 	enum Type { None, Back, Bounce, Circular, Cubic, Elastic, Exponential, Linear, Quadratic, Quartic, Quintic, Sine, Callback, Count };
 	enum Direction { In = 1, Out = 2, InOut = 3 };
@@ -37,4 +37,4 @@ private:
 	CallbackFnc callback = nullptr;
 };
 
-} // namespace Rml
+} // namespace ui

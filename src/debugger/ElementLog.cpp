@@ -6,7 +6,7 @@
 #include "LogSource.h"
 #include <limits.h>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 const int MAX_LOG_MESSAGES = 50;
@@ -87,7 +87,7 @@ bool ElementLog::Initialise()
 
 	// Create the log beacon.
 	beacon = GetContext()->CreateDocument("debug-document");
-	RMLUI_ASSERT(rmlui_dynamic_cast<ElementDebugDocument*>(beacon));
+	UI_ASSERT(ui_dynamic_cast<ElementDebugDocument*>(beacon));
 	if (!beacon)
 		return false;
 
@@ -287,4 +287,4 @@ int ElementLog::FindNextEarliestLogType(unsigned int log_pointers[Log::LT_MAX])
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

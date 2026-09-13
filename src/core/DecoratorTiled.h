@@ -4,7 +4,7 @@
 #include <ui/Core/Decorator.h>
 #include <ui/Core/Vertex.h>
 
-namespace Rml {
+namespace ui {
 
 class Texture;
 struct Mesh;
@@ -123,4 +123,4 @@ private:
 	Vector<TilePropertyIds> tile_property_ids;
 };
 
-} // namespace Rml
+} // namespace ui

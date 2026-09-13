@@ -5,7 +5,7 @@
 #include <ui/Core/PropertyDictionary.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 bool FilterDropShadow::Initialise(Colourb in_color, NumericValue in_offset_x, NumericValue in_offset_y, NumericValue in_sigma)
 {
@@ -69,4 +69,4 @@ SharedPtr<Filter> FilterDropShadowInstancer::InstanceFilter(const String& /*name
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

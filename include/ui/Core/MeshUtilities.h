@@ -4,7 +4,7 @@
 #include "RenderBox.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 struct Mesh;
 
@@ -12,7 +12,7 @@ struct Mesh;
     A class containing helper functions for generating meshes.
 
  */
-class RMLUICORE_API MeshUtilities {
+class UI_CORE_API MeshUtilities {
 public:
 	/// Generates a quad from a position, size and color.
 	/// @param[out] mesh A mesh to append the generated vertices and indices into.
@@ -57,4 +57,4 @@ private:
 	MeshUtilities() = delete;
 };
 
-} // namespace Rml
+} // namespace ui

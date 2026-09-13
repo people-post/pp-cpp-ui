@@ -4,7 +4,7 @@
 #include <ui/Core/Elements/ElementFormControl.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 WidgetTextInputSingleLine::WidgetTextInputSingleLine(ElementFormControl* parent) : WidgetTextInput(parent)
 {
@@ -22,4 +22,4 @@ void WidgetTextInputSingleLine::LineBreak()
 	DispatchChangeEvent(true);
 }
 
-} // namespace Rml
+} // namespace ui

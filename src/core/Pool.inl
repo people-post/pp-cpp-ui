@@ -1,4 +1,4 @@
-namespace Rml {
+namespace ui {
 
 template < typename PoolType >
 Pool< PoolType >::Pool(int _chunk_size, bool _grow)
@@ -19,7 +19,7 @@ Pool< PoolType >::Pool(int _chunk_size, bool _grow)
 template < typename PoolType >
 Pool< PoolType >::~Pool()
 {
-	RMLUI_ASSERT(num_allocated_objects == 0);
+	UI_ASSERT(num_allocated_objects == 0);
 
 	PoolChunk* chunk = pool;
 	while (chunk)
@@ -81,7 +81,7 @@ inline PoolType* Pool<PoolType>::AllocateAndConstruct(Args&&... args)
 	// We're about to allocate an object.
 	++num_allocated_objects;
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	if (num_allocated_objects > max_num_allocated_objects)
 		max_num_allocated_objects = num_allocated_objects;
 #endif
@@ -132,7 +132,7 @@ void Pool< PoolType >::DestroyAndDeallocate(Iterator& iterator)
 		previous_object->next = next_object;
 	else
 	{
-		RMLUI_ASSERT(first_allocated_node == object);
+		UI_ASSERT(first_allocated_node == object);
 		first_allocated_node = next_object;
 	}
 
@@ -229,4 +229,4 @@ void Pool< PoolType >::CreateChunk()
 	first_free_node = new_chunk->chunk;
 }
 
-} // namespace Rml
+} // namespace ui

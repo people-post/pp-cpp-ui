@@ -4,7 +4,7 @@
 #include <ui/Core/Types.h>
 #include "ControlledLifetimeResource.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A property parser that parses a colour value.
@@ -51,4 +51,4 @@ private:
 	static bool GetColourFunctionValues(StringList& values, const String& value, bool is_comma_separated);
 };
 
-} // namespace Rml
+} // namespace ui

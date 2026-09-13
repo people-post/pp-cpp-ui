@@ -2,7 +2,7 @@
 #include <ui/Core/Log.h>
 #include <ui/Core/RenderInterface.h>
 
-namespace Rml {
+namespace ui {
 
 CallbackTextureDatabase::CallbackTextureDatabase()
 {
@@ -15,13 +15,13 @@ CallbackTextureDatabase::~CallbackTextureDatabase()
 	if (!texture_list.empty())
 	{
 		Log::Message(Log::LT_ERROR, "TextureDatabase destroyed with outstanding callback textures. Will likely result in memory corruption.");
-		RMLUI_ERROR;
+		UI_ERROR;
 	}
 }
 
 StableVectorIndex CallbackTextureDatabase::CreateTexture(CallbackTextureFunction&& callback)
 {
-	RMLUI_ASSERT(callback);
+	UI_ASSERT(callback);
 	return texture_list.insert(CallbackTextureEntry{std::move(callback), TextureHandle(), Vector2i()});
 }
 
@@ -80,10 +80,10 @@ FileTextureDatabase::FileTextureDatabase() {}
 
 FileTextureDatabase::~FileTextureDatabase()
 {
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	for (const FileTextureEntry& texture : texture_list)
 	{
-		RMLUI_ASSERTMSG(!texture.texture_handle,
+		UI_ASSERTMSG(!texture.texture_handle,
 			"TextureDatabase destroyed without releasing all file textures first. Ensure that 'ReleaseAllTextures' is called before destruction.");
 	}
 #endif
@@ -110,7 +110,7 @@ FileTextureDatabase::FileTextureEntry FileTextureDatabase::LoadTextureEntry(Rend
 	if (!result.texture_handle)
 	{
 		result.load_texture_failed = true;
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Could not load texture: %s", source.c_str());
+		ui::Log::Message(ui::Log::LT_WARNING, "Could not load texture: %s", source.c_str());
 	}
 	return result;
 }
@@ -121,7 +121,7 @@ FileTextureDatabase::FileTextureEntry& FileTextureDatabase::EnsureLoaded(RenderI
 	if (!entry.texture_handle)
 	{
 		auto it = std::find_if(texture_map.begin(), texture_map.end(), [index](const auto& pair) { return pair.second == index; });
-		RMLUI_ASSERT(it != texture_map.end());
+		UI_ASSERT(it != texture_map.end());
 		const String& source = it->first;
 		if (!entry.load_texture_failed)
 			entry = LoadTextureEntry(render_interface, source);
@@ -131,13 +131,13 @@ FileTextureDatabase::FileTextureEntry& FileTextureDatabase::EnsureLoaded(RenderI
 
 TextureHandle FileTextureDatabase::GetHandle(RenderInterface* render_interface, TextureFileIndex index)
 {
-	RMLUI_ASSERT(size_t(index) < texture_list.size());
+	UI_ASSERT(size_t(index) < texture_list.size());
 	return EnsureLoaded(render_interface, index).texture_handle;
 }
 
 Vector2i FileTextureDatabase::GetDimensions(RenderInterface* render_interface, TextureFileIndex index)
 {
-	RMLUI_ASSERT(size_t(index) < texture_list.size());
+	UI_ASSERT(size_t(index) < texture_list.size());
 	return EnsureLoaded(render_interface, index).dimensions;
 }
 
@@ -177,4 +177,4 @@ void FileTextureDatabase::ReleaseAllTextures(RenderInterface* render_interface)
 	}
 }
 
-} // namespace Rml
+} // namespace ui

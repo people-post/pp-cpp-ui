@@ -19,7 +19,7 @@
 #include "TransformState.h"
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 Element* ElementUtilities::GetElementById(Element* root_element, const String& id)
 {
@@ -232,7 +232,7 @@ bool ElementUtilities::SetClippingRegion(Element* element, bool force_clip_self)
 
 bool ElementUtilities::GetBoundingBox(Rectanglef& out_rectangle, Element* element, BoxArea box_area)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	Vector2f shadow_extent_top_left, shadow_extent_bottom_right;
 	if (box_area == BoxArea::Auto)
@@ -243,7 +243,7 @@ bool ElementUtilities::GetBoundingBox(Rectanglef& out_rectangle, Element* elemen
 
 		if (const Property* p_box_shadow = element->GetLocalProperty(PropertyId::BoxShadow))
 		{
-			RMLUI_ASSERT(p_box_shadow->value.GetType() == Variant::BOXSHADOWLIST);
+			UI_ASSERT(p_box_shadow->value.GetType() == Variant::BOXSHADOWLIST);
 			const BoxShadowList& shadow_list = p_box_shadow->value.GetReference<BoxShadowList>();
 
 			for (const BoxShadow& shadow : shadow_list)
@@ -381,7 +381,7 @@ bool ElementUtilities::ApplyTransform(Element& element)
 
 bool ElementUtilities::ApplyDataViewsControllers(Element* element)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	// If we have an active data model, check the attributes for any data bindings
 	DataModel* data_model = element->GetDataModel();
@@ -487,4 +487,4 @@ bool ElementUtilities::ApplyDataViewsControllers(Element* element)
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

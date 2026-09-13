@@ -1,4 +1,4 @@
-RmlUi Debugger includes thirdparty font assets. They are listed below along
+pp-cpp-ui Debugger includes thirdparty font assets. They are listed below along
 with their full license.
 
 ---

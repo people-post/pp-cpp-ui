@@ -3,7 +3,7 @@
 #include "../Header.h"
 #include "ElementFormControl.h"
 
-namespace Rml {
+namespace ui {
 
 class WidgetDropDown;
 
@@ -11,9 +11,9 @@ class WidgetDropDown;
     A drop-down select form control.
  */
 
-class RMLUICORE_API ElementFormControlSelect : public ElementFormControl {
+class UI_CORE_API ElementFormControlSelect : public ElementFormControl {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementFormControlSelect, ElementFormControl)
+	UI_RTTI_DefineWithParent(ElementFormControlSelect, ElementFormControl)
 
 	/// Constructs a new ElementFormControlSelect. This should not be called directly; use the
 	/// Factory instead.
@@ -100,4 +100,4 @@ protected:
 	WidgetDropDown* widget;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -1,7 +1,7 @@
 #include <ui/Core/Filter.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 Filter::Filter() {}
 
@@ -13,4 +13,4 @@ FilterInstancer::FilterInstancer() {}
 
 FilterInstancer::~FilterInstancer() {}
 
-} // namespace Rml
+} // namespace ui

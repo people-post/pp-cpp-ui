@@ -1,7 +1,7 @@
 #include <ui/Core/Box.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 Box::Box() {}
 Box::Box(Vector2f content) : content(content) {}
@@ -10,7 +10,7 @@ Box::~Box() {}
 
 Vector2f Box::GetPosition(BoxArea area) const
 {
-	RMLUI_ASSERT(area != BoxArea::Auto);
+	UI_ASSERT(area != BoxArea::Auto);
 	Vector2f area_position(-GetEdge(BoxArea::Margin, BoxEdge::Left), -GetEdge(BoxArea::Margin, BoxEdge::Top));
 	for (int i = 0; i < (int)area; i++)
 	{
@@ -28,7 +28,7 @@ Vector2f Box::GetSize() const
 
 Vector2f Box::GetSize(BoxArea area) const
 {
-	RMLUI_ASSERT(area != BoxArea::Auto);
+	UI_ASSERT(area != BoxArea::Auto);
 	Vector2f area_size(content);
 	for (int i = (int)area; i <= (int)BoxArea::Padding; i++)
 	{
@@ -46,19 +46,19 @@ void Box::SetContent(Vector2f _content)
 
 void Box::SetEdge(BoxArea area, BoxEdge edge, float size)
 {
-	RMLUI_ASSERT(area != BoxArea::Auto);
+	UI_ASSERT(area != BoxArea::Auto);
 	area_edges[(int)area][(int)edge] = size;
 }
 
 float Box::GetEdge(BoxArea area, BoxEdge edge) const
 {
-	RMLUI_ASSERT(area != BoxArea::Auto);
+	UI_ASSERT(area != BoxArea::Auto);
 	return area_edges[(int)area][(int)edge];
 }
 
 float Box::GetCumulativeEdge(BoxArea area, BoxEdge edge) const
 {
-	RMLUI_ASSERT(area != BoxArea::Auto);
+	UI_ASSERT(area != BoxArea::Auto);
 	float size = 0;
 	int max_area = Math::Min((int)area, (int)BoxArea::Padding);
 	for (int i = 0; i <= max_area; i++)
@@ -70,7 +70,7 @@ float Box::GetCumulativeEdge(BoxArea area, BoxEdge edge) const
 float Box::GetSizeAcross(BoxDirection direction, BoxArea area_outer, BoxArea area_inner) const
 {
 	static_assert((int)BoxDirection::Horizontal == 1 && (int)BoxDirection::Vertical == 0, "");
-	RMLUI_ASSERT((int)area_outer <= (int)area_inner && (int)direction <= 1 && area_inner != BoxArea::Auto);
+	UI_ASSERT((int)area_outer <= (int)area_inner && (int)direction <= 1 && area_inner != BoxArea::Auto);
 
 	float size = 0.0f;
 
@@ -104,4 +104,4 @@ bool Box::operator!=(const Box& rhs) const
 	return !(*this == rhs);
 }
 
-} // namespace Rml
+} // namespace ui

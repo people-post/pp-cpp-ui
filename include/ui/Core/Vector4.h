@@ -4,7 +4,7 @@
 #include "Math.h"
 #include "Vector3.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Templated class for a generic four-component vector.
@@ -115,13 +115,13 @@ public:
 	Type z;
 	Type w;
 
-#if defined(RMLUI_VECTOR4_USER_EXTRA)
-	RMLUI_VECTOR4_USER_EXTRA
-#elif defined(RMLUI_VECTOR4_USER_INCLUDE)
-	#include RMLUI_VECTOR4_USER_INCLUDE
+#if defined(UI_VECTOR4_USER_EXTRA)
+	UI_VECTOR4_USER_EXTRA
+#elif defined(UI_VECTOR4_USER_INCLUDE)
+	#include UI_VECTOR4_USER_INCLUDE
 #endif
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Vector4.inl"

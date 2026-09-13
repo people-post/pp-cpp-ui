@@ -2,7 +2,7 @@
 #include <ui/Core/Texture.h>
 #include "RenderManagerAccess.h"
 
-namespace Rml {
+namespace ui {
 
 void CallbackTexture::Release()
 {
@@ -13,7 +13,7 @@ void CallbackTexture::Release()
 	}
 }
 
-Rml::CallbackTexture::operator Texture() const
+ui::CallbackTexture::operator Texture() const
 {
 	return Texture(render_manager, resource_handle);
 }
@@ -26,7 +26,7 @@ bool CallbackTextureInterface::GenerateTexture(Span<const byte> source, Vector2i
 {
 	if (texture_handle)
 	{
-		RMLUI_ERRORMSG("Texture already set");
+		UI_ERRORMSG("Texture already set");
 		return false;
 	}
 	texture_handle = render_interface.GenerateTexture(source, new_dimensions);
@@ -39,14 +39,14 @@ void CallbackTextureInterface::SaveLayerAsTexture() const
 {
 	if (texture_handle)
 	{
-		RMLUI_ERRORMSG("Texture already set");
+		UI_ERRORMSG("Texture already set");
 		return;
 	}
 
 	const Rectanglei region = render_manager.GetScissorRegion();
 	if (!region.Valid())
 	{
-		RMLUI_ERRORMSG("Save layer as texture requires a scissor region to be set first");
+		UI_ERRORMSG("Save layer as texture requires a scissor region to be set first");
 		return;
 	}
 
@@ -59,7 +59,7 @@ void CallbackTextureInterface::SetTextureHandle(TextureHandle handle, Vector2i n
 {
 	if (texture_handle)
 	{
-		RMLUI_ERRORMSG("Texture already set");
+		UI_ERRORMSG("Texture already set");
 		return;
 	}
 
@@ -93,4 +93,4 @@ Texture CallbackTextureSource::GetTexture(RenderManager& render_manager) const
 	return Texture(texture);
 }
 
-} // namespace Rml
+} // namespace ui

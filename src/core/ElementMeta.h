@@ -12,7 +12,7 @@
 #include "EventDispatcher.h"
 #include "Pool.h"
 
-namespace Rml {
+namespace ui {
 
 // Meta objects for element collected in a single struct to reduce memory allocations
 struct ElementMeta {
@@ -34,4 +34,4 @@ struct ElementMetaPool {
 	static void Shutdown();
 };
 
-} // namespace Rml
+} // namespace ui

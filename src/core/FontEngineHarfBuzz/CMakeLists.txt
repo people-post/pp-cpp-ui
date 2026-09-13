@@ -1,5 +1,5 @@
-# HarfBuzz-backed font engine (ported from upstream RmlUi Samples/basic/harfbuzz).
-target_sources(rmlui_core PRIVATE
+# HarfBuzz-backed font engine (ported from upstream pp-cpp-ui Samples/basic/harfbuzz).
+target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterfaceHarfBuzz.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterfaceHarfBuzz.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontFace.cpp"
@@ -26,9 +26,9 @@ target_sources(rmlui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/TextureLayoutTexture.h"
 )
 
-target_include_directories(rmlui_core PRIVATE
+target_include_directories(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}"
 	"${CMAKE_CURRENT_SOURCE_DIR}/.."
 )
 
-target_compile_definitions(rmlui_core PRIVATE RMLUI_FONT_ENGINE_HARFBUZZ)
+target_compile_definitions(ui_core PRIVATE UI_FONT_ENGINE_HARFBUZZ)

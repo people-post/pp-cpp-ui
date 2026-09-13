@@ -1,7 +1,7 @@
 #include <ui/Core/FontEngineInterface.h>
 #include <ui/Core/StringUtilities.h>
 
-namespace Rml {
+namespace ui {
 
 FontEngineInterface::FontEngineInterface() {}
 
@@ -59,4 +59,4 @@ int FontEngineInterface::GetVersion(FontFaceHandle /*handle*/)
 
 void FontEngineInterface::ReleaseFontResources() {}
 
-} // namespace Rml
+} // namespace ui

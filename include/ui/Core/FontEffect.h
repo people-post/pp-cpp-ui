@@ -2,9 +2,9 @@
 
 #include "FontGlyph.h"
 
-namespace Rml {
+namespace ui {
 
-class RMLUICORE_API FontEffect {
+class UI_CORE_API FontEffect {
 public:
 	// Behind or in front of the main text.
 	enum class Layer { Back, Front };
@@ -60,4 +60,4 @@ private:
 	size_t fingerprint;
 };
 
-} // namespace Rml
+} // namespace ui

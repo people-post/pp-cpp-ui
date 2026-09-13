@@ -4,7 +4,7 @@
 #include <ui/Core/ID.h>
 #include <ui/Core/NumericValue.h>
 
-namespace Rml {
+namespace ui {
 
 class FilterDropShadow : public Filter {
 public:
@@ -32,4 +32,4 @@ private:
 	PropertyIds ids;
 };
 
-} // namespace Rml
+} // namespace ui

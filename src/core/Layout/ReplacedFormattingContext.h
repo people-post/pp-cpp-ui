@@ -4,7 +4,7 @@
 #include "FormattingContext.h"
 #include "LayoutBox.h"
 
-namespace Rml {
+namespace ui {
 
 /*
     A formatting context that handles replaced elements.
@@ -32,4 +32,4 @@ private:
 	Box box;
 };
 
-} // namespace Rml
+} // namespace ui

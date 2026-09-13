@@ -1,7 +1,7 @@
 #include "LayoutBox.h"
 #include "LayoutPools.h"
 
-namespace Rml {
+namespace ui {
 
 const Box* LayoutBox::GetIfBox() const
 {
@@ -28,4 +28,4 @@ void LayoutBox::operator delete(void* chunk, size_t size)
 	LayoutPools::DeallocateLayoutChunk(chunk, size);
 }
 
-} // namespace Rml
+} // namespace ui

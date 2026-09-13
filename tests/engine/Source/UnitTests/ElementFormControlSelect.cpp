@@ -7,7 +7,7 @@
 #include <ui/Core/EventListener.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String basic_doc_rml = R"(
 <rml>
@@ -172,7 +172,7 @@ TEST_CASE("form.select.value")
 
 		REQUIRE(document->GetNumChildren() == 1);
 
-		ElementFormControlSelect* select_element = rmlui_dynamic_cast<ElementFormControlSelect*>(document->GetFirstChild());
+		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(document->GetFirstChild());
 		REQUIRE(select_element);
 
 		const String value = select_element->GetValue();
@@ -301,7 +301,7 @@ TEST_CASE("form.select.data_binding")
 		REQUIRE(wrapper_element);
 		REQUIRE(wrapper_element->GetNumChildren() == 1);
 
-		ElementFormControlSelect* select_element = rmlui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
+		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
 		REQUIRE(select_element);
 
 		const String value = select_element->GetValue();
@@ -357,7 +357,7 @@ TEST_CASE("form.select.data-for")
 		REQUIRE(wrapper_element);
 		REQUIRE(wrapper_element->GetNumChildren() == 1);
 
-		ElementFormControlSelect* select_element = rmlui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
+		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
 		REQUIRE(select_element);
 
 		{
@@ -499,17 +499,17 @@ TEST_CASE("form.select.event.change")
 
 	document->Show();
 
-	struct SelectionEventListener : public Rml::EventListener {
-		void ProcessEvent(Rml::Event& ev) override
+	struct SelectionEventListener : public ui::EventListener {
+		void ProcessEvent(ui::Event& ev) override
 		{
 			num_events_processed += 1;
-			value = ev.GetParameter<Rml::String>("value", "*empty*");
+			value = ev.GetParameter<ui::String>("value", "*empty*");
 		}
 		int num_events_processed = 0;
 		String value;
 	};
 	auto listener = MakeUnique<SelectionEventListener>();
-	document->GetElementById("sel")->AddEventListener(Rml::EventId::Change, listener.get());
+	document->GetElementById("sel")->AddEventListener(ui::EventId::Change, listener.get());
 
 	ClickAt(context, 100, 20); // Open select
 	ClickAt(context, 100, 40); // Click option 'Cube'
@@ -529,12 +529,12 @@ TEST_CASE("form.select.event.change")
 	context->ProcessMouseMove(100, 85, 0); // Hover option 'Cylinder'
 	context->Update();
 	context->Render();
-	context->ProcessKeyDown(Rml::Input::KI_DOWN, 0);
+	context->ProcessKeyDown(ui::Input::KI_DOWN, 0);
 	context->Update();
 	context->Render();
 	CHECK(listener->num_events_processed == 3);
 	CHECK(listener->value == "d");
-	context->ProcessKeyDown(Rml::Input::KI_DOWN, 0);
+	context->ProcessKeyDown(ui::Input::KI_DOWN, 0);
 	context->Update();
 	context->Render();
 	CHECK(listener->num_events_processed == 3);

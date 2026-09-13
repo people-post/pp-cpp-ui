@@ -1,6 +1,6 @@
 #include "PropertyParserKeyword.h"
 
-namespace Rml {
+namespace ui {
 
 PropertyParserKeyword::PropertyParserKeyword() {}
 
@@ -18,4 +18,4 @@ bool PropertyParserKeyword::ParseValue(Property& property, const String& value, 
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

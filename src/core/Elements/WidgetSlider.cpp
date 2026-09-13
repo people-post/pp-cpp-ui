@@ -8,7 +8,7 @@
 #include <ui/Core/Profiling.h>
 #include "../Clock.h"
 
-namespace Rml {
+namespace ui {
 
 static const float DEFAULT_REPEAT_DELAY = 0.5f;
 static const float DEFAULT_REPEAT_PERIOD = 0.1f;
@@ -209,7 +209,7 @@ void WidgetSlider::SetStep(float _step)
 
 void WidgetSlider::FormatElements()
 {
-	RMLUI_ZoneScopedNC("RangeOnResize", 0x228044);
+	UI_ZoneScopedNC("RangeOnResize", 0x228044);
 
 	Vector2f box = GetParent()->GetBox().GetSize();
 	WidgetSlider::FormatElements(box, GetOrientation() == VERTICAL ? box.y : box.x);
@@ -613,4 +613,4 @@ float WidgetSlider::SetValueInternal(float new_value, bool force_submit_change_e
 	return (value - min_value) / (max_value - min_value);
 }
 
-} // namespace Rml
+} // namespace ui

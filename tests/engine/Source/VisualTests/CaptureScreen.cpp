@@ -10,7 +10,7 @@
 #define LODEPNG_NO_COMPILE_CPP
 #include <lodepng.h>
 
-bool CaptureScreenshot(const Rml::String& filename, int clip_width)
+bool CaptureScreenshot(const ui::String& filename, int clip_width)
 {
 	using Image = RendererExtensions::Image;
 
@@ -18,7 +18,7 @@ bool CaptureScreenshot(const Rml::String& filename, int clip_width)
 
 	if (!image_orig.data)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Could not capture screenshot of window.");
+		ui::Log::Message(ui::Log::LT_ERROR, "Could not capture screenshot of window.");
 		return false;
 	}
 
@@ -30,7 +30,7 @@ bool CaptureScreenshot(const Rml::String& filename, int clip_width)
 	image.width = clip_width;
 	image.height = image_orig.height;
 	image.num_components = image_orig.num_components;
-	image.data = Rml::UniquePtr<Rml::byte[]>(new Rml::byte[image.width * image.height * image.num_components]);
+	image.data = ui::UniquePtr<ui::byte[]>(new ui::byte[image.width * image.height * image.num_components]);
 
 	const int c = image.num_components;
 	for (int y = 0; y < image.height; y++)
@@ -47,11 +47,11 @@ bool CaptureScreenshot(const Rml::String& filename, int clip_width)
 		}
 	}
 
-	const Rml::String output_path = GetCaptureOutputDirectory() + "/" + filename;
+	const ui::String output_path = GetCaptureOutputDirectory() + "/" + filename;
 	unsigned int lodepng_result = lodepng_encode24_file(output_path.c_str(), image.data.get(), image.width, image.height);
 	if (lodepng_result)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Could not write the captured screenshot to %s: %s", output_path.c_str(),
+		ui::Log::Message(ui::Log::LT_ERROR, "Could not write the captured screenshot to %s: %s", output_path.c_str(),
 			lodepng_error_text(lodepng_result));
 		return false;
 	}
@@ -64,12 +64,12 @@ struct DeferFree {
 	~DeferFree() { free(ptr); }
 };
 
-ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_interface, const Rml::String& filename, TextureGeometry* out_reference,
+ComparisonResult CompareScreenToPreviousCapture(ui::RenderInterface* render_interface, const ui::String& filename, TextureGeometry* out_reference,
 	TextureGeometry* out_highlight)
 {
 	using Image = RendererExtensions::Image;
 
-	const Rml::String input_path = GetCompareInputDirectory() + "/" + filename;
+	const ui::String input_path = GetCompareInputDirectory() + "/" + filename;
 
 	unsigned char* data_ref = nullptr;
 	unsigned int w_ref = 0, h_ref = 0;
@@ -82,10 +82,10 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 		ComparisonResult result;
 		result.success = false;
 		result.error_msg =
-			Rml::CreateString("Could not read the captured screenshot from %s: %s", input_path.c_str(), lodepng_error_text(lodepng_result));
+			ui::CreateString("Could not read the captured screenshot from %s: %s", input_path.c_str(), lodepng_error_text(lodepng_result));
 		return result;
 	}
-	RMLUI_ASSERT(w_ref > 0 && h_ref > 0 && data_ref);
+	UI_ASSERT(w_ref > 0 && h_ref > 0 && data_ref);
 
 	Image screen = RendererExtensions::CaptureScreen();
 	if (!screen.data)
@@ -95,7 +95,7 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 		result.error_msg = "Could not capture screenshot of window.";
 		return result;
 	}
-	RMLUI_ASSERT(screen.num_components == 3);
+	UI_ASSERT(screen.num_components == 3);
 
 	const size_t image_ref_diff_byte_size = w_ref * h_ref * 4;
 
@@ -103,7 +103,7 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 	diff.width = w_ref;
 	diff.height = h_ref;
 	diff.num_components = 4;
-	diff.data = Rml::UniquePtr<Rml::byte[]>(new Rml::byte[image_ref_diff_byte_size]);
+	diff.data = ui::UniquePtr<ui::byte[]>(new ui::byte[image_ref_diff_byte_size]);
 
 	// So we have both images now, compare them! Also create a diff image.
 	// In case they are not the same size, we require that the reference image size is smaller or equal to the screen
@@ -118,7 +118,7 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 		return result;
 	}
 
-	const Rml::Colourb highlight_color(255, 0, 255, 255);
+	const ui::Colourb highlight_color(255, 0, 255, 255);
 	size_t sum_diff = 0;
 	size_t max_pixel_diff = 0;
 	for (int y = 0; y < (int)h_ref; y++)
@@ -133,9 +133,9 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 			int pixel_diff = 0;
 			for (int z = 0; z < 3; z++)
 			{
-				const Rml::byte pix_ref = data_ref[i0_ref + z];
-				const Rml::byte pix_screen = screen.data[i0_screen + z];
-				pixel_diff += Rml::Math::Absolute((int)pix_ref - (int)pix_screen);
+				const ui::byte pix_ref = data_ref[i0_ref + z];
+				const ui::byte pix_screen = screen.data[i0_screen + z];
+				pixel_diff += ui::Math::Absolute((int)pix_ref - (int)pix_screen);
 			}
 
 			diff.data[i0_diff + 0] = (pixel_diff ? highlight_color[0] : screen.data[i0_screen + 0]);
@@ -143,7 +143,7 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 			diff.data[i0_diff + 2] = (pixel_diff ? highlight_color[2] : screen.data[i0_screen + 2]);
 			diff.data[i0_diff + 3] = highlight_color[3];
 			sum_diff += (size_t)pixel_diff;
-			max_pixel_diff = Rml::Math::Max(max_pixel_diff, (size_t)pixel_diff);
+			max_pixel_diff = ui::Math::Max(max_pixel_diff, (size_t)pixel_diff);
 		}
 	}
 
@@ -158,12 +158,12 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 	result.similarity_score = (sum_diff == 0 ? 1.0 : 1.0 - std::log(double(sum_diff)) / std::log(double(max_diff)));
 
 	// Optionally render the screen capture or diff to a texture.
-	auto GenerateGeometry = [&](TextureGeometry& geometry, Rml::Span<const Rml::byte> data, Rml::Vector2i dimensions) -> bool {
+	auto GenerateGeometry = [&](TextureGeometry& geometry, ui::Span<const ui::byte> data, ui::Vector2i dimensions) -> bool {
 		ReleaseTextureGeometry(render_interface, geometry);
-		const Rml::ColourbPremultiplied colour = {255, 255, 255, 255};
-		const Rml::Vector2f uv_top_left = {0, 0};
-		const Rml::Vector2f uv_bottom_right = {1, 1};
-		Rml::MeshUtilities::GenerateQuad(geometry.mesh, Rml::Vector2f(0, 0), Rml::Vector2f((float)w_ref, (float)h_ref), colour, uv_top_left,
+		const ui::ColourbPremultiplied colour = {255, 255, 255, 255};
+		const ui::Vector2f uv_top_left = {0, 0};
+		const ui::Vector2f uv_bottom_right = {1, 1};
+		ui::MeshUtilities::GenerateQuad(geometry.mesh, ui::Vector2f(0, 0), ui::Vector2f((float)w_ref, (float)h_ref), colour, uv_top_left,
 			uv_bottom_right);
 		geometry.texture_handle = render_interface->GenerateTexture(data, dimensions);
 		geometry.geometry_handle = render_interface->CompileGeometry(geometry.mesh.vertices, geometry.mesh.indices);
@@ -177,20 +177,20 @@ ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_int
 		result.success = GenerateGeometry(*out_highlight, {diff.data.get(), image_ref_diff_byte_size}, {diff.width, diff.height});
 
 	if (!result.success)
-		result.error_msg = Rml::CreateString("Could not generate texture from file %s", input_path.c_str());
+		result.error_msg = ui::CreateString("Could not generate texture from file %s", input_path.c_str());
 
 	return result;
 }
 
-void RenderTextureGeometry(Rml::RenderInterface* render_interface, TextureGeometry& geometry)
+void RenderTextureGeometry(ui::RenderInterface* render_interface, TextureGeometry& geometry)
 {
 	if (geometry.geometry_handle && geometry.texture_handle)
 	{
-		render_interface->RenderGeometry(geometry.geometry_handle, Rml::Vector2f(0, 0), geometry.texture_handle);
+		render_interface->RenderGeometry(geometry.geometry_handle, ui::Vector2f(0, 0), geometry.texture_handle);
 	}
 }
 
-void ReleaseTextureGeometry(Rml::RenderInterface* render_interface, TextureGeometry& geometry)
+void ReleaseTextureGeometry(ui::RenderInterface* render_interface, TextureGeometry& geometry)
 {
 	if (geometry.geometry_handle)
 	{
@@ -205,7 +205,7 @@ void ReleaseTextureGeometry(Rml::RenderInterface* render_interface, TextureGeome
 }
 
 // Suppress warnings emitted by lodepng
-#if defined RMLUI_PLATFORM_WIN32_NATIVE
+#if defined UI_PLATFORM_WIN32_NATIVE
 	#pragma warning(disable : 4334)
 	#pragma warning(disable : 4267)
 #endif

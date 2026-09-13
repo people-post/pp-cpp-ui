@@ -3,7 +3,7 @@
 #include <ui/Core/Event.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class ElementFormControlInput;
 
@@ -73,4 +73,4 @@ protected:
 	ElementFormControlInput* element;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -2,8 +2,8 @@
 
 #include <ui/Core.h>
 
-using Rml::byte;
-using Rml::Vector2i;
+using ui::byte;
+using ui::Vector2i;
 
 /**
     A texture layout rectangle is an area positioned with a texture layout.

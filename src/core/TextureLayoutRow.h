@@ -2,7 +2,7 @@
 
 #include "TextureLayoutRectangle.h"
 
-namespace Rml {
+namespace ui {
 
 class TextureLayout;
 
@@ -41,4 +41,4 @@ private:
 	RectangleList rectangles;
 };
 
-} // namespace Rml
+} // namespace ui

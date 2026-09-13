@@ -4,7 +4,7 @@
 #include <ui/Core/PropertyIdSet.h>
 #include <ui/Core/Traits.h>
 
-namespace Rml {
+namespace ui {
 
 class StyleSheetNode;
 class ElementDefinitionIterator;
@@ -32,4 +32,4 @@ private:
 	PropertyIdSet property_ids;
 };
 
-} // namespace Rml
+} // namespace ui

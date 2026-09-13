@@ -1,4 +1,4 @@
-namespace Rml {
+namespace ui {
 
 inline Variant::Type Variant::GetType() const
 {
@@ -89,4 +89,4 @@ void Variant::Set(const T value)
 	*(reinterpret_cast<int64_t*>(data)) = static_cast<int64_t>(value);
 }
 
-} // namespace Rml
+} // namespace ui

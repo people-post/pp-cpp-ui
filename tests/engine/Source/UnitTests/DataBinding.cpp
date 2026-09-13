@@ -6,7 +6,7 @@
 #include <cmath>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 namespace {
 
@@ -336,7 +336,7 @@ DataModelHandle model_handle;
 
 bool InitializeDataBindings(Context* context)
 {
-	Rml::DataModelConstructor constructor = context->CreateDataModel("basics");
+	ui::DataModelConstructor constructor = context->CreateDataModel("basics");
 	if (!constructor)
 		return false;
 
@@ -352,7 +352,7 @@ bool InitializeDataBindings(Context* context)
 	}
 
 	constructor.RegisterScalar<SimpleEnumCustom>(
-		[](const SimpleEnumCustom& value, Rml::Variant& variant) {
+		[](const SimpleEnumCustom& value, ui::Variant& variant) {
 			if (value == Simple_Zero_Custom)
 			{
 				variant = "Zero";
@@ -367,11 +367,11 @@ bool InitializeDataBindings(Context* context)
 			}
 			else
 			{
-				Rml::Log::Message(Rml::Log::LT_ERROR, "Invalid value for SimpleEnumCustom type.");
+				ui::Log::Message(ui::Log::LT_ERROR, "Invalid value for SimpleEnumCustom type.");
 			}
 		},
-		[](SimpleEnumCustom& value, const Rml::Variant& variant) {
-			Rml::String str = variant.Get<Rml::String>();
+		[](SimpleEnumCustom& value, const ui::Variant& variant) {
+			ui::String str = variant.Get<ui::String>();
 			if (str == "Zero")
 			{
 				value = Simple_Zero_Custom;
@@ -386,12 +386,12 @@ bool InitializeDataBindings(Context* context)
 			}
 			else
 			{
-				Rml::Log::Message(Rml::Log::LT_ERROR, "Can't convert '%s' to SimpleEnumCustom.", str.c_str());
+				ui::Log::Message(ui::Log::LT_ERROR, "Can't convert '%s' to SimpleEnumCustom.", str.c_str());
 			}
 		});
 
 	constructor.RegisterScalar<ScopedEnumCustom>(
-		[](const ScopedEnumCustom& value, Rml::Variant& variant) {
+		[](const ScopedEnumCustom& value, ui::Variant& variant) {
 			if (value == ScopedEnumCustom::Zero)
 			{
 				variant = "Zero";
@@ -406,11 +406,11 @@ bool InitializeDataBindings(Context* context)
 			}
 			else
 			{
-				Rml::Log::Message(Rml::Log::LT_ERROR, "Invalid value for ScopedEnumCustom type.");
+				ui::Log::Message(ui::Log::LT_ERROR, "Invalid value for ScopedEnumCustom type.");
 			}
 		},
-		[](ScopedEnumCustom& value, const Rml::Variant& variant) {
-			Rml::String str = variant.Get<Rml::String>();
+		[](ScopedEnumCustom& value, const ui::Variant& variant) {
+			ui::String str = variant.Get<ui::String>();
 			if (str == "Zero")
 			{
 				value = ScopedEnumCustom::Zero;
@@ -425,7 +425,7 @@ bool InitializeDataBindings(Context* context)
 			}
 			else
 			{
-				Rml::Log::Message(Rml::Log::LT_ERROR, "Can't convert '%s' to ScopedEnumCustom.", str.c_str());
+				ui::Log::Message(ui::Log::LT_ERROR, "Can't convert '%s' to ScopedEnumCustom.", str.c_str());
 			}
 		});
 
@@ -744,18 +744,18 @@ TEST_CASE("data_binding.data_model_on_body")
 
 	TestsShell::RenderLoop();
 
-	CHECK(document->GetElementById("simple")->GetInnerRML() == Rml::ToString(int(globals.simple)));
+	CHECK(document->GetElementById("simple")->GetInnerRML() == ui::ToString(int(globals.simple)));
 	CHECK(document->GetElementById("s2_val")->GetInnerRML() == globals.s2.val);
 
 	const Vector<int> array = Arrays{}.a;
-	CHECK(document->GetElementById("array_size")->GetInnerRML() == Rml::ToString(array.size()));
+	CHECK(document->GetElementById("array_size")->GetInnerRML() == ui::ToString(array.size()));
 	CHECK(document->GetElementById("array_empty")->GetAttribute<bool>("empty", true) == array.empty());
 
 	Element* element = document->GetElementById("array_empty")->GetNextSibling();
 	size_t i = 0;
 	for (; i < array.size() && element; ++i)
 	{
-		CHECK(element->GetInnerRML() == Rml::CreateString("%zu: %d", i, array[i]));
+		CHECK(element->GetInnerRML() == ui::CreateString("%zu: %d", i, array[i]));
 		element = element->GetNextSibling();
 	}
 	CHECK(i == array.size());

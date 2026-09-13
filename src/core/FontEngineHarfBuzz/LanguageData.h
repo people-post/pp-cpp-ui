@@ -8,8 +8,8 @@ enum class TextFlowDirection {
 };
 
 struct LanguageData {
-	Rml::String script_code;
+	ui::String script_code;
 	TextFlowDirection text_flow_direction;
 };
 
-using LanguageDataMap = Rml::UnorderedMap<Rml::String, LanguageData>;
+using LanguageDataMap = ui::UnorderedMap<ui::String, LanguageData>;

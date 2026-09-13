@@ -2,21 +2,21 @@
 
 #include <ui/Core/SystemInterface.h>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 class ElementLog;
 
 /**
-    The log interface the debugger installs into RmlUi. This is a pass-through interface, so it holds onto the
+    The log interface the debugger installs into pp-cpp-ui. This is a pass-through interface, so it holds onto the
     application's system interface and passes all the calls through.
  */
 
-class DebuggerSystemInterface : public Rml::SystemInterface {
+class DebuggerSystemInterface : public ui::SystemInterface {
 public:
 	/// Instances a new debugging log interface.
 	/// @param[in] log The logging element to send messages to.
-	DebuggerSystemInterface(Rml::SystemInterface* application_interface, ElementLog* log);
+	DebuggerSystemInterface(ui::SystemInterface* application_interface, ElementLog* log);
 	virtual ~DebuggerSystemInterface();
 
 	/// Get the number of seconds elapsed since the start of the application.
@@ -54,15 +54,15 @@ public:
 	void GetClipboardText(String& text) override;
 
 	/// Activate keyboard (for touchscreen devices).
-	void ActivateKeyboard(Rml::Vector2f caret_position, float line_height) override;
+	void ActivateKeyboard(ui::Vector2f caret_position, float line_height) override;
 
 	/// Deactivate keyboard (for touchscreen devices).
 	void DeactivateKeyboard() override;
 
 private:
-	Rml::SystemInterface* application_interface;
+	ui::SystemInterface* application_interface;
 	ElementLog* log;
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include <ui/Core/Elements/ElementFormControlInput.h>
 #include <ui/Core/Factory.h>
 
-namespace Rml {
+namespace ui {
 
 InputTypeSubmit::InputTypeSubmit(ElementFormControlInput* element) : InputType(element) {}
 
@@ -21,7 +21,7 @@ bool InputTypeSubmit::OnAttributeChange(const ElementAttributes& changed_attribu
 		auto value = element->GetAttribute<String>("value", "");
 		if (!value.empty() && !value_element)
 			value_element =
-				rmlui_static_cast<ElementText*>(element->AppendChild(Factory::InstanceElement(element, "#text", "", XMLAttributes()), true));
+				ui_static_cast<ElementText*>(element->AppendChild(Factory::InstanceElement(element, "#text", "", XMLAttributes()), true));
 
 		if (value_element)
 			value_element->SetText(value);
@@ -38,7 +38,7 @@ void InputTypeSubmit::ProcessDefaultAction(Event& event)
 		Element* parent = element->GetParentNode();
 		while (parent)
 		{
-			ElementForm* form = rmlui_dynamic_cast<ElementForm*>(parent);
+			ElementForm* form = ui_dynamic_cast<ElementForm*>(parent);
 			if (form != nullptr)
 			{
 				form->Submit(element->GetAttribute<String>("name", ""), element->GetAttribute<String>("value", ""));
@@ -57,4 +57,4 @@ bool InputTypeSubmit::GetIntrinsicDimensions(Vector2f& /*dimensions*/, float& /*
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -3,13 +3,13 @@
 #include "Header.h"
 #include "Stream.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Memory Byte Stream Class
  */
 
-class RMLUICORE_API StreamMemory final : public Stream {
+class UI_CORE_API StreamMemory final : public Stream {
 public:
 	/// Empty memory stream with default size buffer
 	StreamMemory();
@@ -80,4 +80,4 @@ private:
 	bool Reallocate(size_t size);
 };
 
-} // namespace Rml
+} // namespace ui

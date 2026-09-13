@@ -1,7 +1,7 @@
 #include <ui/Core/Geometry.h>
 #include "RenderManagerAccess.h"
 
-namespace Rml {
+namespace ui {
 
 Geometry::Geometry(RenderManager* render_manager, StableVectorIndex resource_handle) : UniqueRenderResource(render_manager, resource_handle) {}
 
@@ -32,8 +32,8 @@ Mesh Geometry::Release(ReleaseMode mode)
 
 const Mesh& Geometry::GetMesh() const
 {
-	RMLUI_ASSERT(resource_handle != StableVectorIndex::Invalid);
+	UI_ASSERT(resource_handle != StableVectorIndex::Invalid);
 	return RenderManagerAccess::GetMesh(render_manager, *this);
 }
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include <ui/Core/Elements/ElementFormControlInput.h>
 #include <ui/Core/Factory.h>
 
-namespace Rml {
+namespace ui {
 
 InputTypeButton::InputTypeButton(ElementFormControlInput* element) : InputType(element) {}
 
@@ -22,7 +22,7 @@ bool InputTypeButton::OnAttributeChange(const ElementAttributes& changed_attribu
 		auto value = element->GetAttribute<String>("value", "");
 		if (!value.empty() && !value_element)
 			value_element =
-				rmlui_static_cast<ElementText*>(element->AppendChild(Factory::InstanceElement(element, "#text", "", XMLAttributes()), true));
+				ui_static_cast<ElementText*>(element->AppendChild(Factory::InstanceElement(element, "#text", "", XMLAttributes()), true));
 
 		if (value_element)
 			value_element->SetText(value);
@@ -39,4 +39,4 @@ bool InputTypeButton::GetIntrinsicDimensions(Vector2f& /*dimensions*/, float& /*
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

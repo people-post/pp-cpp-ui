@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Rml {
+namespace ui {
 
 class TextInputContext;
 
@@ -12,10 +12,10 @@ class TextInputContext;
 
     The lifetime of a text input context is ended with the call of OnDestroy().
 
-    @see Rml::TextInputContext
-    @see Rml::SetTextInputHandler()
+    @see ui::TextInputContext
+    @see ui::SetTextInputHandler()
  */
-class RMLUICORE_API TextInputHandler : public NonCopyMoveable {
+class UI_CORE_API TextInputHandler : public NonCopyMoveable {
 public:
 	virtual ~TextInputHandler() {}
 
@@ -32,4 +32,4 @@ public:
 	virtual void OnDestroy(TextInputContext* /*input_context*/) {}
 };
 
-} // namespace Rml
+} // namespace ui

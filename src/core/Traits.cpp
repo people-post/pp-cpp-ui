@@ -1,6 +1,6 @@
 #include <ui/Core/Traits.h>
 
-namespace Rml {
+namespace ui {
 
 int FamilyBase::GetNewId()
 {
@@ -8,4 +8,4 @@ int FamilyBase::GetNewId()
 	return id++;
 }
 
-} // namespace Rml
+} // namespace ui

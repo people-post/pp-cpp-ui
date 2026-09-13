@@ -55,7 +55,7 @@
 #include "XMLParseTools.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 // Default instancers are constructed and destroyed on Initialise and Shutdown, respectively.
 struct DefaultInstancers {
@@ -329,7 +329,7 @@ ElementPtr Factory::InstanceElement(Element* parent, const String& instancer_nam
 
 bool Factory::InstanceElementText(Element* parent, const String& in_text)
 {
-	RMLUI_ASSERT(parent);
+	UI_ASSERT(parent);
 
 	String text;
 	if (SystemInterface* system_interface = GetSystemInterface())
@@ -367,7 +367,7 @@ bool Factory::InstanceElementText(Element* parent, const String& in_text)
 	// If the text contains RML elements then run it through the XML parser again.
 	if (parse_as_rml)
 	{
-		RMLUI_ZoneScopedNC("InstanceStream", 0xDC143C);
+		UI_ZoneScopedNC("InstanceStream", 0xDC143C);
 		auto stream = MakeUnique<StreamMemory>(text.size() + 32);
 		Context* context = parent->GetContext();
 		String tag = context ? context->GetDocumentsBaseTag() : "body";
@@ -382,7 +382,7 @@ bool Factory::InstanceElementText(Element* parent, const String& in_text)
 	}
 	else
 	{
-		RMLUI_ZoneScopedNC("InstanceText", 0x8FBC8F);
+		UI_ZoneScopedNC("InstanceText", 0x8FBC8F);
 
 		// Attempt to instance the element.
 		XMLAttributes attributes;
@@ -399,11 +399,11 @@ bool Factory::InstanceElementText(Element* parent, const String& in_text)
 		}
 
 		// Assign the element its text value.
-		ElementText* text_element = rmlui_dynamic_cast<ElementText*>(element.get());
+		ElementText* text_element = ui_dynamic_cast<ElementText*>(element.get());
 		if (!text_element)
 		{
 			Log::Message(Log::LT_ERROR, "Failed to instance text element '%s'. Found type '%s', was expecting a derivative of ElementText.",
-				text.c_str(), rmlui_type_name(*element));
+				text.c_str(), ui_type_name(*element));
 			return false;
 		}
 
@@ -428,7 +428,7 @@ bool Factory::InstanceElementStream(Element* parent, Stream* stream)
 
 ElementPtr Factory::InstanceDocumentStream(Context* context, Stream* stream, const String& document_base_tag)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	ElementPtr element = Factory::InstanceElement(nullptr, document_base_tag, document_base_tag, XMLAttributes());
 	if (!element)
@@ -437,11 +437,11 @@ ElementPtr Factory::InstanceDocumentStream(Context* context, Stream* stream, con
 		return nullptr;
 	}
 
-	ElementDocument* document = rmlui_dynamic_cast<ElementDocument*>(element.get());
+	ElementDocument* document = ui_dynamic_cast<ElementDocument*>(element.get());
 	if (!document)
 	{
 		Log::Message(Log::LT_ERROR, "Failed to instance document element. Found type '%s', was expecting derivative of ElementDocument.",
-			rmlui_type_name(*element));
+			ui_type_name(*element));
 		return nullptr;
 	}
 
@@ -455,7 +455,7 @@ ElementPtr Factory::InstanceDocumentStream(Context* context, Stream* stream, con
 
 void Factory::RegisterDecoratorInstancer(const String& name, DecoratorInstancer* instancer)
 {
-	RMLUI_ASSERT(instancer);
+	UI_ASSERT(instancer);
 	factory_data->decorator_instancers[StringUtilities::ToLower(name)] = instancer;
 }
 
@@ -470,7 +470,7 @@ DecoratorInstancer* Factory::GetDecoratorInstancer(const String& name)
 
 void Factory::RegisterFilterInstancer(const String& name, FilterInstancer* instancer)
 {
-	RMLUI_ASSERT(instancer);
+	UI_ASSERT(instancer);
 	factory_data->filter_instancers[StringUtilities::ToLower(name)] = instancer;
 }
 
@@ -485,7 +485,7 @@ FilterInstancer* Factory::GetFilterInstancer(const String& name)
 
 void Factory::RegisterFontEffectInstancer(const String& name, FontEffectInstancer* instancer)
 {
-	RMLUI_ASSERT(instancer);
+	UI_ASSERT(instancer);
 	factory_data->font_effect_instancers[StringUtilities::ToLower(name)] = instancer;
 }
 
@@ -579,7 +579,7 @@ void Factory::RegisterDataControllerInstancer(DataControllerInstancer* instancer
 
 DataViewPtr Factory::InstanceDataView(const String& type_name, Element* element)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 	const auto it = factory_data->data_view_instancers.find(type_name);
 	if (it != factory_data->data_view_instancers.end())
 		return it->second->InstanceView(element);
@@ -605,4 +605,4 @@ const SmallUnorderedSet<String>& Factory::GetStructuralDataViewAttributeNames()
 	return factory_data->structural_data_view_attribute_names;
 }
 
-} // namespace Rml
+} // namespace ui

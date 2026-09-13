@@ -3,14 +3,14 @@
 #include "../Core/Element.h"
 #include "../Core/Header.h"
 
-namespace Rml {
+namespace ui {
 namespace SVG {
 	struct SVGData;
 }
 
-class RMLUICORE_API ElementSVG : public Element {
+class UI_CORE_API ElementSVG : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementSVG, Element)
+	UI_RTTI_DefineWithParent(ElementSVG, Element)
 
 	explicit ElementSVG(const String& tag);
 	~ElementSVG() override;
@@ -53,4 +53,4 @@ private:
 
 	SharedPtr<SVG::SVGData> handle;
 };
-} // namespace Rml
+} // namespace ui

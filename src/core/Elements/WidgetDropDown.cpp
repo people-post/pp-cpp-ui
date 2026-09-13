@@ -12,7 +12,7 @@
 #include <ui/Core/Property.h>
 #include "../DataModel.h"
 
-namespace Rml {
+namespace ui {
 
 WidgetDropDown::WidgetDropDown(ElementFormControl* element)
 {
@@ -238,7 +238,7 @@ void WidgetDropDown::OnRender()
 
 void WidgetDropDown::OnLayout()
 {
-	RMLUI_ZoneScopedNC("DropDownLayout", 0x7FFF00);
+	UI_ZoneScopedNC("DropDownLayout", 0x7FFF00);
 
 	if (parent_element->IsDisabled())
 	{
@@ -644,4 +644,4 @@ bool WidgetDropDown::IsSelectBoxVisible()
 	return box_visible;
 }
 
-} // namespace Rml
+} // namespace ui

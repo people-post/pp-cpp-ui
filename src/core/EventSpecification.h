@@ -4,7 +4,7 @@
 #include <ui/Core/Header.h>
 #include <ui/Core/ID.h>
 
-namespace Rml {
+namespace ui {
 
 struct EventSpecification {
 	EventId id;
@@ -36,4 +36,4 @@ namespace EventSpecificationInterface {
 	EventId InsertOrReplaceCustom(const String& event_type, bool interruptible, bool bubbles, DefaultActionPhase default_action_phase);
 } // namespace EventSpecificationInterface
 
-} // namespace Rml
+} // namespace ui

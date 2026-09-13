@@ -34,7 +34,7 @@ int TextureLayoutRow::Generate(TextureLayout& layout, int max_width, int y)
 		TextureLayoutRectangle& rectangle = layout.GetRectangle(index);
 
 		// Increment the row height if necessary.
-		height = Rml::Math::Max(height, rectangle.GetDimensions().y);
+		height = ui::Math::Max(height, rectangle.GetDimensions().y);
 
 		// Add this glyph onto our list and mark it as placed.
 		rectangles.push_back(&rectangle);

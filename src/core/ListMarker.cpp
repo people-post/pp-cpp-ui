@@ -2,9 +2,9 @@
 
 #include <ui/Core/Element.h>
 
-// FORK_WORKAROUND — see ListMarker.h and docs/architecture/RMLUI_UPSTREAM.md.
+// FORK_WORKAROUND — see ListMarker.h and docs/architecture/UI_UPSTREAM.md.
 
-namespace Rml {
+namespace ui {
 
 String GetListItemMarker(Element* list_item_element)
 {
@@ -38,4 +38,4 @@ String GetListItemMarker(Element* list_item_element)
 	return {};
 }
 
-} // namespace Rml
+} // namespace ui

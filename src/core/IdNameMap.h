@@ -4,7 +4,7 @@
 #include <ui/Core/Types.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 template <typename ID>
 class IdNameMap {
@@ -28,7 +28,7 @@ public:
 			name_map.resize(1 + (size_t)id);
 		name_map[(size_t)id] = name;
 		bool inserted = reverse_map.emplace(name, id).second;
-		RMLUI_ASSERT(inserted);
+		UI_ASSERT(inserted);
 		(void)inserted;
 	}
 
@@ -55,7 +55,7 @@ public:
 	ID GetOrCreateId(const String& name)
 	{
 		// All predefined properties must be set before possibly adding custom properties here
-		RMLUI_ASSERT(name_map.size() == reverse_map.size());
+		UI_ASSERT(name_map.size() == reverse_map.size());
 
 		ID next_id = static_cast<ID>(name_map.size());
 
@@ -82,4 +82,4 @@ public:
 	ShorthandIdNameMap(size_t reserve_num_shorthands) : IdNameMap(reserve_num_shorthands) {}
 };
 
-} // namespace Rml
+} // namespace ui

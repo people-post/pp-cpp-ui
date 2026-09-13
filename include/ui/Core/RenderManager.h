@@ -6,7 +6,7 @@
 #include "StableVector.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Geometry;
 class CompiledFilter;
@@ -42,7 +42,7 @@ struct RenderState {
 
     All operations to be submitted to the render interface should go through this class.
  */
-class RMLUICORE_API RenderManager : NonCopyMoveable {
+class UI_CORE_API RenderManager : NonCopyMoveable {
 public:
 	RenderManager(RenderInterface* render_interface);
 	~RenderManager();
@@ -125,4 +125,4 @@ private:
 	friend class RenderManagerAccess;
 };
 
-} // namespace Rml
+} // namespace ui

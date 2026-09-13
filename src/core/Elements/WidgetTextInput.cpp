@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <limits.h>
 
-namespace Rml {
+namespace ui {
 
 static constexpr float CURSOR_BLINK_TIME = 0.7f;          // [s]
 static constexpr float OVERFLOW_TOLERANCE = 0.5f;         // [px]
@@ -118,7 +118,7 @@ void WidgetTextInputContext::SetText(StringView text, int start, int end)
 	start = StringUtilities::ConvertCharacterOffsetToByteOffset(value, start);
 	end = StringUtilities::ConvertCharacterOffsetToByteOffset(value, end);
 
-	RMLUI_ASSERTMSG(end >= start, "Invalid end character offset.");
+	UI_ASSERTMSG(end >= start, "Invalid end character offset.");
 	value.replace(start, end - start, text.begin(), text.size());
 
 	element->SetValue(value);
@@ -158,7 +158,7 @@ void WidgetTextInputContext::CommitComposition(StringView composition)
 		}
 	}
 
-	RMLUI_ASSERTMSG(end_byte >= start_byte, "Invalid end character offset.");
+	UI_ASSERTMSG(end_byte >= start_byte, "Invalid end character offset.");
 	value.replace(start_byte, end_byte - start_byte, composition.begin(), composition.size());
 
 	element->SetValue(value);
@@ -186,9 +186,9 @@ WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
 	parent->AddEventListener(EventId::Drag, this, true);
 
 	ElementPtr unique_text = Factory::InstanceElement(parent, "#text", "#text", XMLAttributes());
-	text_element = rmlui_dynamic_cast<ElementText*>(unique_text.get());
+	text_element = ui_dynamic_cast<ElementText*>(unique_text.get());
 	ElementPtr unique_selected_text = Factory::InstanceElement(parent, "#text", "#text", XMLAttributes());
-	selected_text_element = rmlui_dynamic_cast<ElementText*>(unique_selected_text.get());
+	selected_text_element = ui_dynamic_cast<ElementText*>(unique_selected_text.get());
 	if (text_element)
 	{
 		text_element->SuppressAutoLayout();
@@ -200,7 +200,7 @@ WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
 
 	// Create the dummy selection element.
 	ElementPtr unique_selection = Factory::InstanceElement(parent, "#selection", "selection", XMLAttributes());
-	if (ElementTextSelection* text_selection_element = rmlui_dynamic_cast<ElementTextSelection*>(unique_selection.get()))
+	if (ElementTextSelection* text_selection_element = ui_dynamic_cast<ElementTextSelection*>(unique_selection.get()))
 	{
 		selection_element = text_selection_element;
 		text_selection_element->SetClient(this);
@@ -479,7 +479,7 @@ void WidgetTextInput::RenderSelectionHandlesAbsolute()
 	render_manager.DisableClipMask();
 	render_manager.SetScissorRegion(Rectanglei::FromSize(render_manager.GetViewport()));
 
-#if defined(RMLUI_DEBUG_SELECTION_HANDLES)
+#if defined(UI_DEBUG_SELECTION_HANDLES)
 	const Vector2f start_pos = GetAbsolutePositionForByteIndex(selection_begin_index);
 	const Vector2f end_pos = GetAbsolutePositionForByteIndex(selection_begin_index + selection_length);
 	RenderSelectionHandleDebugMarker(render_manager, start_pos, dp_ratio);
@@ -1207,7 +1207,7 @@ void WidgetTextInput::GetRelativeCursorIndices(int& out_cursor_line_index, int& 
 
 void WidgetTextInput::SetCursorFromRelativeIndices(int cursor_line_index, int cursor_character_index)
 {
-	RMLUI_ASSERT(cursor_line_index < (int)lines.size())
+	UI_ASSERT(cursor_line_index < (int)lines.size())
 
 	absolute_cursor_index = cursor_character_index;
 
@@ -1680,7 +1680,7 @@ void WidgetTextInput::DeleteSelection()
 		String new_value = GetAttributeValue();
 		const int selection_begin_index_attribute = DisplayIndexToAttributeIndex(selection_begin_index, new_value);
 		const int selection_end_index_attribute = DisplayIndexToAttributeIndex(selection_begin_index + selection_length, new_value);
-		RMLUI_ASSERT(selection_end_index_attribute >= selection_begin_index_attribute);
+		UI_ASSERT(selection_end_index_attribute >= selection_begin_index_attribute);
 
 		const size_t selection_begin = std::min((size_t)selection_begin_index_attribute, (size_t)new_value.size());
 		const size_t attribute_selection_length = size_t(selection_end_index_attribute - selection_begin_index_attribute);
@@ -1889,4 +1889,4 @@ void WidgetTextInput::EndHandleDrag()
 	UpdateSelectionHandleGeometry();
 }
 
-} // namespace Rml
+} // namespace ui

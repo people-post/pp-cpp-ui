@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "Property.h"
 
-namespace Rml {
+namespace ui {
 
 using ParameterMap = UnorderedMap<String, int>;
 
@@ -11,7 +11,7 @@ using ParameterMap = UnorderedMap<String, int>;
     A property parser takes a property declaration in string form, validates it, and converts it to a Property.
  */
 
-class RMLUICORE_API PropertyParser {
+class UI_CORE_API PropertyParser {
 public:
 	virtual ~PropertyParser() {}
 
@@ -23,4 +23,4 @@ public:
 	virtual bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const = 0;
 };
 
-} // namespace Rml
+} // namespace ui

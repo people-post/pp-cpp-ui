@@ -1,7 +1,7 @@
 #include "TextureLayoutRow.h"
 #include "TextureLayout.h"
 
-namespace Rml {
+namespace ui {
 
 TextureLayoutRow::TextureLayoutRow()
 {
@@ -71,4 +71,4 @@ void TextureLayoutRow::Unplace()
 		rectangles[i]->Unplace();
 }
 
-} // namespace Rml
+} // namespace ui

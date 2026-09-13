@@ -2,7 +2,7 @@
 #include <ui/Core/Log.h>
 #include <ui/Core/StyleSheetSpecification.h>
 
-namespace Rml {
+namespace ui {
 
 PropertyDefinition::PropertyDefinition(PropertyId id, const String& _default_value, bool _inherited, bool _forces_layout) :
 	id(id), default_value(_default_value, Unit::UNKNOWN), relative_target(RelativeTarget::None)
@@ -165,4 +165,4 @@ PropertyDefinition& PropertyDefinition::SetRelativeTarget(RelativeTarget relativ
 	return *this;
 }
 
-} // namespace Rml
+} // namespace ui

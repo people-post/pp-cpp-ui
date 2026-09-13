@@ -2,7 +2,7 @@
 #include <ui/Core/Element.h>
 #include <ui/Core/TypeConverter.h>
 
-namespace Rml {
+namespace ui {
 namespace Transforms {
 
 	/// Returns the numeric value converted to 'base_unit'. Only accepts base units of 'Number' or 'Rad':
@@ -10,7 +10,7 @@ namespace Transforms {
 	///   'Rad' will convert {Rad, Deg, %} -> Rad.
 	static float ResolvePrimitiveAbsoluteValue(NumericValue value, Unit base_unit) noexcept
 	{
-		RMLUI_ASSERT(base_unit == Unit::RAD || base_unit == Unit::NUMBER);
+		UI_ASSERT(base_unit == Unit::RAD || base_unit == Unit::NUMBER);
 
 		if (base_unit == Unit::RAD)
 		{
@@ -18,7 +18,7 @@ namespace Transforms {
 			{
 			case Unit::RAD: return value.number;
 			case Unit::DEG: return Math::DegreesToRadians(value.number);
-			case Unit::PERCENT: return value.number * 0.01f * 2.0f * Math::RMLUI_PI;
+			case Unit::PERCENT: return value.number * 0.01f * 2.0f * Math::UI_PI;
 			default: Log::Message(Log::LT_WARNING, "Trying to pass a non-angle unit to a property expecting an angle.");
 			}
 		}
@@ -145,4 +145,4 @@ namespace Transforms {
 	Perspective::Perspective(const NumericValue* values) noexcept : UnresolvedPrimitive(values) {}
 
 } // namespace Transforms
-} // namespace Rml
+} // namespace ui

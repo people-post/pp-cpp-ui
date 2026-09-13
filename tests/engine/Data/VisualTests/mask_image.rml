@@ -49,20 +49,20 @@
 
 <body>
 <div>
-	I <img sprite="icon-lives"/> RmlUi
+	I <img sprite="icon-lives"/> pp-cpp-ui
 </div>
 <hr/>
 <div class="heart">
-	I <img sprite="icon-lives"/> RmlUi
+	I <img sprite="icon-lives"/> pp-cpp-ui
 </div>
 <div class="present">
-	I <img sprite="icon-lives"/> RmlUi
+	I <img sprite="icon-lives"/> pp-cpp-ui
 </div>
 <div class="radial-gradient">
-	I <img sprite="icon-lives"/> RmlUi
+	I <img sprite="icon-lives"/> pp-cpp-ui
 </div>
 <div class="horizontal-gradient">
-	I <img sprite="icon-lives"/> RmlUi
+	I <img sprite="icon-lives"/> pp-cpp-ui
 </div>
 </body>
 </rml>

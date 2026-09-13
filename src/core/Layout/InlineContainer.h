@@ -5,7 +5,7 @@
 #include "InlineBox.h"
 #include "LayoutBox.h"
 
-namespace Rml {
+namespace ui {
 
 class BlockContainer;
 class LineBox;
@@ -102,4 +102,4 @@ private:
 	LineBoxList line_boxes;
 };
 
-} // namespace Rml
+} // namespace ui

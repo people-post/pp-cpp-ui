@@ -3,23 +3,23 @@
 #include "LanguageData.h"
 #include <ui/Core/FontEngineInterface.h>
 
-using Rml::byte;
-using Rml::Character;
-using Rml::ColourbPremultiplied;
-using Rml::FontEffectList;
-using Rml::FontEffectsHandle;
-using Rml::FontFaceHandle;
-using Rml::FontMetrics;
-using Rml::RenderManager;
-using Rml::Span;
-using Rml::String;
-using Rml::StringView;
-using Rml::TextShapingContext;
-using Rml::TexturedMeshList;
-using Rml::Vector2f;
-namespace Style = Rml::Style;
+using ui::byte;
+using ui::Character;
+using ui::ColourbPremultiplied;
+using ui::FontEffectList;
+using ui::FontEffectsHandle;
+using ui::FontFaceHandle;
+using ui::FontMetrics;
+using ui::RenderManager;
+using ui::Span;
+using ui::String;
+using ui::StringView;
+using ui::TextShapingContext;
+using ui::TexturedMeshList;
+using ui::Vector2f;
+namespace Style = ui::Style;
 
-class FontEngineInterfaceHarfBuzz : public Rml::FontEngineInterface {
+class FontEngineInterfaceHarfBuzz : public ui::FontEngineInterface {
 public:
 	void Initialize() override;
 	void Shutdown() override;

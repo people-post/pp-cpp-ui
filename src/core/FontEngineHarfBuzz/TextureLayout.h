@@ -11,8 +11,8 @@
     Modified to support 64-bit IDs.
  */
 
-using Rml::Vector;
-using Rml::Vector2i;
+using ui::Vector;
+using ui::Vector2i;
 
 class TextureLayout {
 public:

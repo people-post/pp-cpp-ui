@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 bool operator==(EventListenerEntry a, EventListenerEntry b)
 {
@@ -101,7 +101,7 @@ struct CollectedListener {
 bool EventDispatcher::DispatchEvent(Element* target_element, const EventId id, const String& type, const Dictionary& parameters,
 	const bool interruptible, const bool bubbles, const DefaultActionPhase default_action_phase)
 {
-	RMLUI_ASSERTMSG(!((int)default_action_phase & (int)EventPhase::Capture),
+	UI_ASSERTMSG(!((int)default_action_phase & (int)EventPhase::Capture),
 		"We assume here that the default action phases cannot include capture phase.");
 
 	Vector<CollectedListener> listeners;
@@ -254,4 +254,4 @@ String EventDispatcher::ToString() const
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

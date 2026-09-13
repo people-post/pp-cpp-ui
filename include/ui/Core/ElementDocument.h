@@ -2,7 +2,7 @@
 
 #include "Element.h"
 
-namespace Rml {
+namespace ui {
 
 class Context;
 class Stream;
@@ -30,9 +30,9 @@ enum class FocusFlag {
     Represents a document in the dom tree.
  */
 
-class RMLUICORE_API ElementDocument : public Element {
+class UI_CORE_API ElementDocument : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementDocument, Element)
+	UI_RTTI_DefineWithParent(ElementDocument, Element)
 
 	ElementDocument(const String& tag);
 	virtual ~ElementDocument();
@@ -163,8 +163,8 @@ private:
 	bool layout_dirty;
 	bool position_dirty;
 
-	friend class Rml::Context;
-	friend class Rml::Factory;
+	friend class ui::Context;
+	friend class ui::Factory;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include "StyleSheetTypes.h"
 #include "Traits.h"
 
-namespace Rml {
+namespace ui {
 
 class Stream;
 class StyleSheet;
@@ -13,7 +13,7 @@ class StyleSheet;
     properties of the current context regarding the available media features.
  */
 
-class RMLUICORE_API StyleSheetContainer : public NonCopyMoveable {
+class UI_CORE_API StyleSheetContainer : public NonCopyMoveable {
 public:
 	StyleSheetContainer();
 	virtual ~StyleSheetContainer();
@@ -44,4 +44,4 @@ private:
 	Vector<int> active_media_block_indices;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -6,7 +6,7 @@
 
 #include <functional>
 
-namespace Rml {
+namespace ui {
 
 class RenderManager;
 
@@ -19,4 +19,4 @@ enum class TextLoupePhase { Capture, Draw };
 
 using TextLoupeRenderCallback = std::function<void(TextLoupePhase phase, const TextLoupeState& state, RenderManager& render_manager)>;
 
-} // namespace Rml
+} // namespace ui

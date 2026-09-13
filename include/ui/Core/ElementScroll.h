@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class WidgetScroll;
@@ -12,7 +12,7 @@ class WidgetScroll;
     Manages an element's scrollbars and scrolling state.
  */
 
-class RMLUICORE_API ElementScroll {
+class UI_CORE_API ElementScroll {
 public:
 	enum Orientation { VERTICAL = 0, HORIZONTAL = 1 };
 
@@ -73,4 +73,4 @@ private:
 	Element* corner;
 };
 
-} // namespace Rml
+} // namespace ui

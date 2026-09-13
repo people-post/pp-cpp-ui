@@ -5,16 +5,16 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /**
-    RmlUi's system interface provides an interface for time, translation, logging, and other system utilities.
+    pp-cpp-ui's system interface provides an interface for time, translation, logging, and other system utilities.
 
     The default logging implementation outputs to the Windows Debug Console on Windows, and Standard Error on other
     platforms.
  */
 
-class RMLUICORE_API SystemInterface : public NonCopyMoveable {
+class UI_CORE_API SystemInterface : public NonCopyMoveable {
 public:
 	SystemInterface();
 	virtual ~SystemInterface();
@@ -56,10 +56,10 @@ public:
 	/// Activate keyboard (for touchscreen devices).
 	/// @param[in] caret_position Position of the caret in absolute window coordinates.
 	/// @param[in] line_height Height of the current line being edited.
-	virtual void ActivateKeyboard(Rml::Vector2f caret_position, float line_height);
+	virtual void ActivateKeyboard(ui::Vector2f caret_position, float line_height);
 
 	/// Deactivate keyboard (for touchscreen devices).
 	virtual void DeactivateKeyboard();
 };
 
-} // namespace Rml
+} // namespace ui

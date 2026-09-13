@@ -9,7 +9,7 @@
 #include <ui/Core/StyleSheetTypes.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 TEST_CASE("Properties")
 {
@@ -21,9 +21,9 @@ TEST_CASE("Properties")
 	SetRenderInterface(&render_interface);
 	SetSystemInterface(&system_interface);
 
-	Rml::Initialise();
+	ui::Initialise();
 
-	Context* context = Rml::CreateContext("main", window_size);
+	Context* context = ui::CreateContext("main", window_size);
 	ElementDocument* document = context->CreateDocument();
 
 	SUBCASE("inset")
@@ -213,7 +213,7 @@ TEST_CASE("Properties")
 		}
 	}
 
-	Rml::Shutdown();
+	ui::Shutdown();
 }
 
 TEST_CASE("Property.ToString")
@@ -223,7 +223,7 @@ TEST_CASE("Property.ToString")
 	SetRenderInterface(&render_interface);
 	SetSystemInterface(&system_interface);
 
-	Rml::Initialise();
+	ui::Initialise();
 
 	CHECK(Property(5.2f, Unit::CM).ToString() == "5.2cm");
 	CHECK(Property(150, Unit::PERCENT).ToString() == "150%");
@@ -258,5 +258,5 @@ TEST_CASE("Property.ToString")
 	CHECK(ParsedValue("filter", "drop-shadow(#000 30px 20px 5px) opacity(0.2) sepia(0.2)") ==
 		"drop-shadow(#000 30px 20px 5px) opacity(0.2) sepia(0.2)");
 
-	Rml::Shutdown();
+	ui::Shutdown();
 }

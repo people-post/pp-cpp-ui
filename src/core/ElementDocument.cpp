@@ -19,7 +19,7 @@
 #include "XMLParseTools.h"
 #include <limits.h>
 
-namespace Rml {
+namespace ui {
 
 enum class NavigationSearchDirection { Up, Down, Left, Right };
 
@@ -98,7 +98,7 @@ namespace {
 		case NavigationSearchDirection::Left: return CalculateHeuristic(Horizontal, source, target);
 		}
 
-		RMLUI_ERROR;
+		UI_ERROR;
 		return Infinite;
 	}
 
@@ -162,7 +162,7 @@ ElementDocument::~ElementDocument() {}
 
 void ElementDocument::ProcessHeader(const DocumentHeader* document_header)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Store the source address that we came from
 	source_url = document_header->source;
@@ -188,7 +188,7 @@ void ElementDocument::ProcessHeader(const DocumentHeader* document_header)
 	// Set the title to the document title.
 	title = document_header->title;
 
-	// Built-in UA sheet (fork); author RCSS overrides. Gaps vs browsers: docs/architecture/RMLUI_UPSTREAM.md
+	// Built-in UA sheet (fork); author RCSS overrides. Gaps vs browsers: docs/architecture/UI_UPSTREAM.md
 	SharedPtr<StyleSheetContainer> new_style_sheet;
 	if (const StyleSheetContainer* user_agent_sheet = UserAgentStyleSheet::GetStyleSheetContainer())
 		new_style_sheet = user_agent_sheet->CombineStyleSheetContainer(StyleSheetContainer());
@@ -288,7 +288,7 @@ const StyleSheetContainer* ElementDocument::GetStyleSheetContainer() const
 
 void ElementDocument::SetStyleSheetContainer(SharedPtr<StyleSheetContainer> _style_sheet_container)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	if (style_sheet_container == _style_sheet_container)
 		return;
@@ -319,7 +319,7 @@ void ElementDocument::ReloadStyleSheet()
 		return;
 	}
 
-	SetStyleSheetContainer(rmlui_static_cast<ElementDocument*>(temp_doc.get())->style_sheet_container);
+	SetStyleSheetContainer(ui_static_cast<ElementDocument*>(temp_doc.get())->style_sheet_container);
 }
 
 void ElementDocument::DirtyMediaQueries()
@@ -457,7 +457,7 @@ ElementPtr ElementDocument::CreateTextNode(const String& text)
 	}
 
 	// Cast up
-	ElementText* element_text = rmlui_dynamic_cast<ElementText*>(element.get());
+	ElementText* element_text = ui_dynamic_cast<ElementText*>(element.get());
 	if (!element_text)
 	{
 		Log::Message(Log::LT_ERROR, "Failed to create text element, instancer didn't return a derivative of ElementText.");
@@ -494,8 +494,8 @@ void ElementDocument::UpdateLayout()
 	// Ideally, only called once per update loop.
 	if (layout_dirty)
 	{
-		RMLUI_ZoneScoped;
-		RMLUI_ZoneText(source_url.c_str(), source_url.size());
+		UI_ZoneScoped;
+		UI_ZoneText(source_url.c_str(), source_url.size());
 
 		Vector2f containing_block(0, 0);
 		if (GetParentNode() != nullptr)
@@ -513,7 +513,7 @@ void ElementDocument::UpdatePosition()
 {
 	if (position_dirty)
 	{
-		RMLUI_ZoneScoped;
+		UI_ZoneScoped;
 
 		position_dirty = false;
 
@@ -839,4 +839,4 @@ Element* ElementDocument::FindNextNavigationElement(Element* current_element, Na
 	return best_result.element;
 }
 
-} // namespace Rml
+} // namespace ui

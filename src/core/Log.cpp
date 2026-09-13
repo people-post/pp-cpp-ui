@@ -6,7 +6,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-namespace Rml {
+namespace ui {
 
 void Log::Message(Log::Type type, const char* fmt, ...)
 {
@@ -65,4 +65,4 @@ bool Assert(const char* msg, const char* file, int line)
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

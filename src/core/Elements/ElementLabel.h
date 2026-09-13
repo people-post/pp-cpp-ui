@@ -4,7 +4,7 @@
 #include <ui/Core/EventListener.h>
 #include <ui/Core/Header.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     A specialisation of the generic Core::Element representing a label element.
@@ -13,7 +13,7 @@ namespace Rml {
 
 class ElementLabel : public Element, public EventListener {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementLabel, Element)
+	UI_RTTI_DefineWithParent(ElementLabel, Element)
 
 	ElementLabel(const String& tag);
 	virtual ~ElementLabel();
@@ -29,4 +29,4 @@ private:
 	bool disable_click = false;
 };
 
-} // namespace Rml
+} // namespace ui

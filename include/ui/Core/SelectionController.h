@@ -5,12 +5,12 @@
 #include "Types.h"
 #include "Vector2.h"
 
-namespace Rml {
+namespace ui {
 
 class Context;
 class Element;
 
-class RMLUICORE_API SelectionController {
+class UI_CORE_API SelectionController {
 public:
 	bool CanSelectStaticText(Element* target) const;
 	bool BlocksTarget(Element* target) const;
@@ -22,4 +22,4 @@ public:
 	bool HasSelection() const;
 };
 
-} // namespace Rml
+} // namespace ui

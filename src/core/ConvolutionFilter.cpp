@@ -3,7 +3,7 @@
 #include <float.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 ConvolutionFilter::ConvolutionFilter() {}
 
@@ -18,7 +18,7 @@ bool ConvolutionFilter::Initialise(Vector2i _kernel_radii, FilterOperation _oper
 {
 	if (_kernel_radii.x < 0 || _kernel_radii.y < 0)
 	{
-		RMLUI_ERRORMSG("Invalid input parameters to convolution filter.");
+		UI_ERRORMSG("Invalid input parameters to convolution filter.");
 		return false;
 	}
 
@@ -32,7 +32,7 @@ bool ConvolutionFilter::Initialise(Vector2i _kernel_radii, FilterOperation _oper
 
 float* ConvolutionFilter::operator[](int kernel_y_index)
 {
-	RMLUI_ASSERT(kernel != nullptr && kernel_y_index >= 0 && kernel_y_index < kernel_size.y);
+	UI_ASSERT(kernel != nullptr && kernel_y_index >= 0 && kernel_y_index < kernel_size.y);
 
 	kernel_y_index = Math::Clamp(kernel_y_index, 0, kernel_size.y - 1);
 
@@ -43,7 +43,7 @@ void ConvolutionFilter::Run(byte* destination, const Vector2i destination_dimens
 	const ColorFormat destination_color_format, const byte* source, const Vector2i source_dimensions, const Vector2i source_offset,
 	const ColorFormat source_color_format) const
 {
-	RMLUI_ZoneScopedNC("ConvFilter::Run", 0xd6bf49);
+	UI_ZoneScopedNC("ConvFilter::Run", 0xd6bf49);
 
 	const int destination_bytes_per_pixel = (destination_color_format == ColorFormat::RGBA8 ? 4 : 1);
 	const int destination_alpha_offset = (destination_color_format == ColorFormat::RGBA8 ? 3 : 0);
@@ -87,4 +87,4 @@ void ConvolutionFilter::Run(byte* destination, const Vector2i destination_dimens
 	}
 }
 
-} // namespace Rml
+} // namespace ui

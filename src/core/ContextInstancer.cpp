@@ -1,7 +1,7 @@
 #include <ui/Core/ContextInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 ContextInstancer::~ContextInstancer() {}
 
-} // namespace Rml
+} // namespace ui

@@ -1,5 +1,5 @@
 # Enable some extra testing code in the core library.
-target_compile_definitions(rmlui_core PUBLIC RMLUI_TESTS_ENABLED)
+target_compile_definitions(ui_core PUBLIC UI_TESTS_ENABLED)
 
 include("${CMAKE_SOURCE_DIR}/cmake/engine/DependenciesForTests.cmake")
 

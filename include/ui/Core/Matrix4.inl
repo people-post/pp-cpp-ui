@@ -1,4 +1,4 @@
-namespace Rml {
+namespace ui {
 
 template <typename Component, class Storage>
 Matrix4<Component, Storage>::Matrix4(const typename Matrix4<Component, Storage>::VectorType& vec0,
@@ -626,4 +626,4 @@ struct Matrix4<Component, Storage>::MatrixMultiplier<_Component, ColumnMajorStor
 	static const MatrixAType Multiply(const MatrixAType& lhs, const MatrixBType& rhs) noexcept { return lhs * MatrixAType(rhs); }
 };
 
-} // namespace Rml
+} // namespace ui

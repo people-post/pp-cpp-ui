@@ -6,11 +6,11 @@
 
 #include <cstring>
 
-namespace Rml {
+namespace ui {
 
 namespace {
 
-// Based on the RmlUi-recommended HTML4 style sheet, extended with list elements.
+// Based on the pp-cpp-ui-recommended HTML4 style sheet, extended with list elements.
 // Intentionally minimal — not a full browser UA sheet. List bullets are NOT handled here;
 // see ListMarker.cpp (FORK_WORKAROUND: layout-time marker injection).
 constexpr const char* user_agent_rcss = R"rcss(
@@ -162,7 +162,7 @@ SharedPtr<StyleSheetContainer> user_agent_style_sheet;
 
 bool UserAgentStyleSheet::Initialise()
 {
-	RMLUI_ASSERT(!user_agent_style_sheet);
+	UI_ASSERT(!user_agent_style_sheet);
 
 	auto sheet = MakeShared<StyleSheetContainer>();
 	auto stream = MakeUnique<StreamMemory>((const byte*)user_agent_rcss, strlen(user_agent_rcss));
@@ -188,4 +188,4 @@ const StyleSheetContainer* UserAgentStyleSheet::GetStyleSheetContainer()
 	return user_agent_style_sheet.get();
 }
 
-} // namespace Rml
+} // namespace ui

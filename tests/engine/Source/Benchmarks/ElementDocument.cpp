@@ -9,7 +9,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 static const String document_rml = R"(
 <rml>

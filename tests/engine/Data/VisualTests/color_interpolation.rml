@@ -4,7 +4,7 @@
 	<link type="text/rcss" href="../style.rcss"/>
 	<meta name="Description" content="Color interpolation using animation, border-radius property, and gradient decorator." />
 	<meta name="Assert" content="There should be smooth transitions between the colors. The red squares can be hovered for animation transitions." />
-	<link rel="GitHub discussion #207" href="https://github.com/mikke89/RmlUi/discussions/207" />
+	<link rel="GitHub discussion #207" href="https://github.com/mikke89/pp-cpp-ui/discussions/207" />
 	<style>
 		body {
 			background: #ddd;

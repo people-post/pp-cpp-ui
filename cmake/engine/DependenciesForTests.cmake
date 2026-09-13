@@ -1,5 +1,5 @@
 #[[
-	Set up dependencies for the RmlUi tests. The dependencies are all built-in header-only libraries.
+	Set up dependencies for the pp-cpp-ui tests. The dependencies are all built-in header-only libraries.
 ]]
 function(add_builtin_header_only_tests_dependency NAME)
 	set(DEPENDENCY_PATH "${CMAKE_SOURCE_DIR}/tests/engine/Dependencies/${NAME}")
@@ -19,6 +19,6 @@ include("${CMAKE_SOURCE_DIR}/tests/engine/Dependencies/doctest/cmake/doctest.cma
 if(MSVC)
 	target_compile_definitions(doctest::doctest INTERFACE DOCTEST_CONFIG_USE_STD_HEADERS)
 endif()
-if(NOT RMLUI_RTTI_AND_EXCEPTIONS)
+if(NOT UI_RTTI_AND_EXCEPTIONS)
 	target_compile_definitions(doctest::doctest INTERFACE DOCTEST_CONFIG_NO_EXCEPTIONS_BUT_WITH_ALL_ASSERTS)
 endif()

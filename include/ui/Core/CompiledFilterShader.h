@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "UniqueRenderResource.h"
 
-namespace Rml {
+namespace ui {
 
 class RenderManager;
 
@@ -12,7 +12,7 @@ class RenderManager;
 
     Represents a unique render resource constructed through the render manager.
  */
-class RMLUICORE_API CompiledFilter final : public UniqueRenderResource<CompiledFilter, CompiledFilterHandle, CompiledFilterHandle(0)> {
+class UI_CORE_API CompiledFilter final : public UniqueRenderResource<CompiledFilter, CompiledFilterHandle, CompiledFilterHandle(0)> {
 public:
 	CompiledFilter() = default;
 
@@ -30,7 +30,7 @@ private:
 
     Represents a unique render resource constructed through the render manager.
  */
-class RMLUICORE_API CompiledShader final : public UniqueRenderResource<CompiledShader, CompiledShaderHandle, CompiledShaderHandle(0)> {
+class UI_CORE_API CompiledShader final : public UniqueRenderResource<CompiledShader, CompiledShaderHandle, CompiledShaderHandle(0)> {
 public:
 	CompiledShader() = default;
 
@@ -41,4 +41,4 @@ private:
 	friend class RenderManager;
 };
 
-} // namespace Rml
+} // namespace ui

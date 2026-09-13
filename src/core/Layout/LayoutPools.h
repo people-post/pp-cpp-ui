@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 namespace LayoutPools {
 
@@ -14,4 +14,4 @@ namespace LayoutPools {
 
 } // namespace LayoutPools
 
-} // namespace Rml
+} // namespace ui

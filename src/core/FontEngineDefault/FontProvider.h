@@ -4,14 +4,14 @@
 #include <ui/Core/Types.h>
 #include "FontTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class FontFace;
 class FontFamily;
 class FontFaceHandleDefault;
 
 /**
-    The font provider contains all font families currently in use by RmlUi.
+    The font provider contains all font families currently in use by pp-cpp-ui.
  */
 
 class FontProvider {
@@ -66,4 +66,4 @@ private:
 	static const String debugger_font_family_name;
 };
 
-} // namespace Rml
+} // namespace ui

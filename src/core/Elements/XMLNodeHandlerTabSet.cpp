@@ -4,7 +4,7 @@
 #include <ui/Core/Log.h>
 #include <ui/Core/XMLParser.h>
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandlerTabSet::XMLNodeHandlerTabSet() {}
 
@@ -12,7 +12,7 @@ XMLNodeHandlerTabSet::~XMLNodeHandlerTabSet() {}
 
 Element* XMLNodeHandlerTabSet::ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes)
 {
-	RMLUI_ASSERT(name == "tabset" || name == "tabs" || name == "tab" || name == "panels" || name == "panel");
+	UI_ASSERT(name == "tabset" || name == "tabs" || name == "tab" || name == "panels" || name == "panel");
 
 	if (name == "tabset")
 	{
@@ -21,7 +21,7 @@ Element* XMLNodeHandlerTabSet::ElementStart(XMLParser* parser, const String& nam
 
 		// Attempt to instance the tabset
 		ElementPtr element = Factory::InstanceElement(parser->GetParseFrame()->element, name, name, attributes);
-		ElementTabSet* tabset = rmlui_dynamic_cast<ElementTabSet*>(element.get());
+		ElementTabSet* tabset = ui_dynamic_cast<ElementTabSet*>(element.get());
 		if (!tabset)
 		{
 			Log::Message(Log::LT_ERROR, "Instancer failed to create element for tag %s.", name.c_str());
@@ -41,7 +41,7 @@ Element* XMLNodeHandlerTabSet::ElementStart(XMLParser* parser, const String& nam
 		ElementPtr tab_element = Factory::InstanceElement(parser->GetParseFrame()->element, "*", "tab", attributes);
 		Element* result = nullptr;
 
-		ElementTabSet* tabset = rmlui_dynamic_cast<ElementTabSet*>(parser->GetParseFrame()->element);
+		ElementTabSet* tabset = ui_dynamic_cast<ElementTabSet*>(parser->GetParseFrame()->element);
 		if (tabset)
 		{
 			result = tab_element.get();
@@ -58,7 +58,7 @@ Element* XMLNodeHandlerTabSet::ElementStart(XMLParser* parser, const String& nam
 		ElementPtr panel_element = Factory::InstanceElement(parser->GetParseFrame()->element, "*", "panel", attributes);
 		Element* result = nullptr;
 
-		ElementTabSet* tabset = rmlui_dynamic_cast<ElementTabSet*>(parser->GetParseFrame()->element);
+		ElementTabSet* tabset = ui_dynamic_cast<ElementTabSet*>(parser->GetParseFrame()->element);
 		if (tabset)
 		{
 			result = panel_element.get();
@@ -100,4 +100,4 @@ bool XMLNodeHandlerTabSet::ElementData(XMLParser* parser, const String& data, XM
 	return Factory::InstanceElementText(parser->GetParseFrame()->element, data);
 }
 
-} // namespace Rml
+} // namespace ui

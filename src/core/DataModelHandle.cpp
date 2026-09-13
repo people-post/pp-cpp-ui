@@ -1,7 +1,7 @@
 #include <ui/Core/DataModelHandle.h>
 #include "DataModel.h"
 
-namespace Rml {
+namespace ui {
 
 DataModelHandle::DataModelHandle(DataModel* model) : model(model) {}
 
@@ -29,7 +29,7 @@ DataModelConstructor::DataModelConstructor() : model(nullptr), type_register(nul
 
 DataModelConstructor::DataModelConstructor(DataModel* model) : model(model), type_register(model->GetDataTypeRegister())
 {
-	RMLUI_ASSERT(model);
+	UI_ASSERT(model);
 }
 
 DataModelHandle DataModelConstructor::GetModelHandle() const
@@ -54,8 +54,8 @@ bool DataModelConstructor::BindVariable(const String& name, DataVariable data_va
 
 const UnorderedMap<String, DataVariable>& Detail::DataModelConstructorAccessor::GetAllVariables(const DataModelConstructor& data_model_constructor)
 {
-	RMLUI_ASSERT(data_model_constructor.model);
+	UI_ASSERT(data_model_constructor.model);
 	return data_model_constructor.model->GetAllVariables();
 }
 
-} // namespace Rml
+} // namespace ui

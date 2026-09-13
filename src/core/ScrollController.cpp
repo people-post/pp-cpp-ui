@@ -5,7 +5,7 @@
 #include <ui/Core/Math.h>
 #include <ui/Core/SystemInterface.h>
 
-namespace Rml {
+namespace ui {
 
 static constexpr float AUTOSCROLL_SPEED_FACTOR = 0.09f;
 static constexpr float AUTOSCROLL_DEADZONE = 10.0f;            // [dp]
@@ -299,7 +299,7 @@ void ScrollController::RestoreOverscrollAfterLayout()
 
 void ScrollController::UpdateAutoscroll(float dt, Vector2i mouse_position, float dp_ratio)
 {
-	RMLUI_ASSERT(mode == Mode::Autoscroll && target);
+	UI_ASSERT(mode == Mode::Autoscroll && target);
 
 	const Vector2f scroll_delta = Vector2f(mouse_position - autoscroll_start_position);
 	const Vector2f scroll_velocity = CalculateAutoscrollVelocity(scroll_delta, dp_ratio);
@@ -319,7 +319,7 @@ void ScrollController::UpdateAutoscroll(float dt, Vector2i mouse_position, float
 
 void ScrollController::UpdateSmoothscroll(float dt, float dp_ratio)
 {
-	RMLUI_ASSERT(mode == Mode::Smoothscroll && target);
+	UI_ASSERT(mode == Mode::Smoothscroll && target);
 
 	const Vector2f target_delta = Vector2f(smoothscroll_target_distance - smoothscroll_scrolled_distance);
 	const Vector2f velocity = CalculateSmoothscrollVelocity(target_delta, smoothscroll_scrolled_distance, dp_ratio);
@@ -359,7 +359,7 @@ void ScrollController::UpdateSmoothscroll(float dt, float dp_ratio)
 
 void ScrollController::UpdateInertia(float dt)
 {
-	RMLUI_ASSERT(mode == Mode::Inertia && target);
+	UI_ASSERT(mode == Mode::Inertia && target);
 
 	if (inertia_scroll_velocity.x == 0.0f && inertia_scroll_velocity.y == 0.0f)
 	{
@@ -422,7 +422,7 @@ void ScrollController::UpdateInertia(float dt)
 
 void ScrollController::UpdateOverscroll(float dt)
 {
-	RMLUI_ASSERT(mode == Mode::Overscroll && target);
+	UI_ASSERT(mode == Mode::Overscroll && target);
 
 	const Vector2f range = GetScrollRange();
 	const Vector2f client = GetClientSize();
@@ -493,26 +493,26 @@ bool ScrollController::HasVisualOverscroll() const
 
 Vector2f ScrollController::GetScrollOffset() const
 {
-	RMLUI_ASSERT(target);
+	UI_ASSERT(target);
 	return {target->GetScrollLeft(), target->GetScrollTop()};
 }
 
 Vector2f ScrollController::GetScrollRange() const
 {
-	RMLUI_ASSERT(target);
+	UI_ASSERT(target);
 	return {Math::Max(0.f, target->GetScrollWidth() - target->GetClientWidth()),
 		Math::Max(0.f, target->GetScrollHeight() - target->GetClientHeight())};
 }
 
 Vector2f ScrollController::GetClientSize() const
 {
-	RMLUI_ASSERT(target);
+	UI_ASSERT(target);
 	return {target->GetClientWidth(), target->GetClientHeight()};
 }
 
 void ScrollController::SetScrollOffset(Vector2f offset, bool clamp)
 {
-	RMLUI_ASSERT(target);
+	UI_ASSERT(target);
 	const Vector2f range = GetScrollRange();
 	if (AxisScrollable(0, range.x))
 		target->SetScrollLeft(offset.x, clamp);
@@ -564,7 +564,7 @@ void ScrollController::ClearPendingOverscroll()
 
 bool ScrollController::AxisScrollable(int axis, float range_axis) const
 {
-	RMLUI_ASSERT(target);
+	UI_ASSERT(target);
 	auto& computed = target->GetComputedValues();
 	const Style::Overflow overflow = (axis == 0) ? computed.overflow_x() : computed.overflow_y();
 	if (overflow == Style::Overflow::Scroll)
@@ -595,7 +595,7 @@ bool ScrollController::EdgeOverscrollAllowed(int axis, float proposed, float ran
 
 void ScrollController::PerformScrollOnTarget(Vector2f delta_distance, bool allow_overscroll)
 {
-	RMLUI_ASSERT(target);
+	UI_ASSERT(target);
 
 	const Vector2f range = GetScrollRange();
 	const Vector2f client = GetClientSize();
@@ -719,7 +719,7 @@ void ScrollController::SetDefaultScrollBehavior(ScrollBehavior scroll_behavior, 
 
 String ScrollController::GetAutoscrollCursor(Vector2i mouse_position, float dp_ratio) const
 {
-	RMLUI_ASSERT(mode == Mode::Autoscroll);
+	UI_ASSERT(mode == Mode::Autoscroll);
 
 	const Vector2f scroll_delta = Vector2f(mouse_position - autoscroll_start_position);
 	const Vector2f scroll_velocity = CalculateAutoscrollVelocity(scroll_delta, dp_ratio);
@@ -756,4 +756,4 @@ float ScrollController::UpdateTime()
 	return Math::Min(dt, DELTA_TIME_MAX);
 }
 
-} // namespace Rml
+} // namespace ui

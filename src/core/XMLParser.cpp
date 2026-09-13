@@ -10,7 +10,7 @@
 #include "ControlledLifetimeResource.h"
 #include "DocumentHeader.h"
 
-namespace Rml {
+namespace ui {
 
 struct XmlParserData {
 	UnorderedMap<String, SharedPtr<XMLNodeHandler>> node_handlers;
@@ -126,13 +126,13 @@ const XMLParser::ParseFrame* XMLParser::GetParseFrame() const
 
 const URL& XMLParser::GetSourceURL() const
 {
-	RMLUI_ASSERT(GetSourceURLPtr());
+	UI_ASSERT(GetSourceURLPtr());
 	return *GetSourceURLPtr();
 }
 
 void XMLParser::HandleElementStart(const String& _name, const XMLAttributes& attributes)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	const String name = StringUtilities::ToLower(_name);
 
 	// Check for a specific handler that will override the child handler.
@@ -162,7 +162,7 @@ void XMLParser::HandleElementStart(const String& _name, const XMLAttributes& att
 
 void XMLParser::HandleElementEnd(const String& _name)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	String name = StringUtilities::ToLower(_name);
 
 	// Copy the top of the stack
@@ -188,9 +188,9 @@ void XMLParser::HandleElementEnd(const String& _name)
 
 void XMLParser::HandleData(const String& data, XMLDataType type)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	if (stack.top().node_handler)
 		stack.top().node_handler->ElementData(this, data, type);
 }
 
-} // namespace Rml
+} // namespace ui

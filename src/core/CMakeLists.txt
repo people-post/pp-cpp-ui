@@ -1,7 +1,7 @@
-# Declare RmlUi core library
+# Declare pp-cpp-ui core library
 # Not explicitly setting library type so that it can be chosen by consumer using BUILD_SHARED_LIBS. Header files are not
 # necessary, but are included to improve navigation and code completion on IDEs and language servers.
-add_library(rmlui_core
+add_library(ui_core
 	BaseXMLParser.cpp
 	Box.cpp
 	BoxShadowCache.h
@@ -241,261 +241,261 @@ add_library(rmlui_core
 # Add public headers as files in the project (it's not necessary but convenient for IDE integration)
 # Setting them as PRIVATE so that it's addition doesn't propagate, it won't affect availability since
 # the entire include directory has already been declared as public
-target_sources(rmlui_core PRIVATE
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Config/Config.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/BaseXMLParser.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Box.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/CallbackTexture.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Colour.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Colour.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/CompiledFilterShader.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ComputedValues.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Containers/itlib/flat_map.hpp"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Containers/itlib/flat_set.hpp"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Containers/robin_hood.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Context.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ContextInstancer.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ConvolutionFilter.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Core.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/DataModelHandle.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/DataStructHandle.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/DataTypeRegister.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/DataTypes.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/DataVariable.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Debug.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/DecorationTypes.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Decorator.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Dictionary.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/EffectSpecification.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Element.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Element.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ElementDocument.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ElementInstancer.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ElementScroll.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementForm.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementFormControl.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementFormControlInput.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementFormControlSelect.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementFormControlTextArea.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementProgress.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Elements/ElementTabSet.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ElementText.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ElementUtilities.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Event.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/EventInstancer.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/EventListener.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/EventListenerInstancer.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Factory.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/FileInterface.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Filter.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/FontEffect.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/FontEffectInstancer.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/FontEngineInterface.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/FontGlyph.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/FontMetrics.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Geometry.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Header.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ID.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Input.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Log.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Math.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Matrix4.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Matrix4.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Mesh.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/MeshUtilities.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/NumericValue.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ObserverPtr.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Platform.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Plugin.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Profiling.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/PropertiesIteratorView.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Property.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/PropertyDefinition.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/PropertyDictionary.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/PropertyIdSet.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/PropertyParser.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/PropertySpecification.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Rectangle.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/RenderBox.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/RenderInterface.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/RenderInterfaceCompatibility.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/RenderManager.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ScriptInterface.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/ScrollTypes.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/SelectionTypes.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TextLoupe.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Span.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Spritesheet.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StableVector.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Stream.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StreamMemory.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StringUtilities.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StyleSheet.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StyleSheetContainer.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StyleSheetSpecification.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StyleSheetTypes.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/StyleTypes.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/SystemInterface.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TextInputContext.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TextInputHandler.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TextShapingContext.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Texture.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Traits.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Transform.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TransformPrimitive.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Tween.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TypeConverter.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/TypeConverter.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Types.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/UniqueRenderResource.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Unit.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/URL.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Utilities.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Variant.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Variant.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vector2.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vector2.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vector3.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vector3.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vector4.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vector4.inl"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/Vertex.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/XMLNodeHandler.h"
-	"${PP_UI_INCLUDE_DIR}/RmlUi/Core/XMLParser.h"
+target_sources(ui_core PRIVATE
+	"${PP_UI_INCLUDE_DIR}/ui/Config/Config.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/BaseXMLParser.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Box.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/CallbackTexture.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Colour.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Colour.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/CompiledFilterShader.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ComputedValues.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Containers/itlib/flat_map.hpp"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Containers/itlib/flat_set.hpp"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Containers/robin_hood.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Context.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ContextInstancer.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ConvolutionFilter.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Core.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/DataModelHandle.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/DataStructHandle.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/DataTypeRegister.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/DataTypes.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/DataVariable.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Debug.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/DecorationTypes.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Decorator.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Dictionary.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/EffectSpecification.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Element.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Element.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ElementDocument.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ElementInstancer.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ElementScroll.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementForm.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementFormControl.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementFormControlInput.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementFormControlSelect.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementFormControlTextArea.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementProgress.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Elements/ElementTabSet.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ElementText.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ElementUtilities.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Event.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/EventInstancer.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/EventListener.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/EventListenerInstancer.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Factory.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/FileInterface.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Filter.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/FontEffect.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/FontEffectInstancer.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/FontEngineInterface.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/FontGlyph.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/FontMetrics.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Geometry.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Header.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ID.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Input.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Log.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Math.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Matrix4.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Matrix4.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Mesh.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/MeshUtilities.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/NumericValue.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ObserverPtr.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Platform.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Plugin.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Profiling.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/PropertiesIteratorView.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Property.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/PropertyDefinition.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/PropertyDictionary.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/PropertyIdSet.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/PropertyParser.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/PropertySpecification.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Rectangle.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/RenderBox.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/RenderInterface.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/RenderInterfaceCompatibility.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/RenderManager.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ScriptInterface.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/ScrollTypes.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/SelectionTypes.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TextLoupe.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Span.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Spritesheet.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StableVector.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Stream.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StreamMemory.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StringUtilities.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StyleSheet.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StyleSheetContainer.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StyleSheetSpecification.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StyleSheetTypes.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/StyleTypes.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/SystemInterface.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TextInputContext.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TextInputHandler.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TextShapingContext.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Texture.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Traits.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Transform.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TransformPrimitive.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Tween.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TypeConverter.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/TypeConverter.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Types.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/UniqueRenderResource.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Unit.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/URL.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Utilities.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Variant.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Variant.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vector2.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vector2.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vector3.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vector3.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vector4.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vector4.inl"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/Vertex.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/XMLNodeHandler.h"
+	"${PP_UI_INCLUDE_DIR}/ui/Core/XMLParser.h"
 )
 
-set_common_target_options(rmlui_core)
+set_common_target_options(ui_core)
 
-target_include_directories(rmlui_core PRIVATE "${PP_UI_INCLUDE_DIR}")
-target_include_directories(rmlui_core INTERFACE
+target_include_directories(ui_core PRIVATE "${PP_UI_INCLUDE_DIR}")
+target_include_directories(ui_core INTERFACE
 	"$<BUILD_INTERFACE:${PP_UI_INCLUDE_DIR}>"
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 )
 
-add_library(RmlUi::Core ALIAS rmlui_core)
+add_library(ui::core ALIAS ui_core)
 
-set_target_properties(rmlui_core PROPERTIES
+set_target_properties(ui_core PROPERTIES
 	# Add export name so that it can be exported with a namespaced name instead
 	# of using the name we actually used to declare the target
 	EXPORT_NAME "Core"
 
 	# Change output name of the final library file
-	OUTPUT_NAME "rmlui"
+	OUTPUT_NAME "ui"
 )
 
-set(RMLUI_VERSION_SHORT "6.2")
-target_compile_definitions(rmlui_core PRIVATE "RMLUI_VERSION=\"${RMLUI_VERSION_SHORT}\"")
+set(UI_VERSION_SHORT "6.2")
+target_compile_definitions(ui_core PRIVATE "UI_VERSION=\"${UI_VERSION_SHORT}\"")
 
-option(RMLUI_DEBUG_SELECTION_HANDLES "Draw magenta/yellow debug markers at selection handle anchors" OFF)
-if(RMLUI_DEBUG_SELECTION_HANDLES)
-	target_compile_definitions(rmlui_core PRIVATE RMLUI_DEBUG_SELECTION_HANDLES)
+option(UI_DEBUG_SELECTION_HANDLES "Draw magenta/yellow debug markers at selection handle anchors" OFF)
+if(UI_DEBUG_SELECTION_HANDLES)
+	target_compile_definitions(ui_core PRIVATE UI_DEBUG_SELECTION_HANDLES)
 endif()
 
 add_subdirectory("Elements")
 add_subdirectory("Layout")
 
 # Set up definitions to export functions and classes as appropriate
-get_target_property(rmlui_core_TYPE rmlui_core "TYPE")
-if(rmlui_core_TYPE STREQUAL "STATIC_LIBRARY")
-	# If RmlUi is being compiled as a static library, notify code to disable usage of __dllspec()
+get_target_property(ui_core_TYPE ui_core "TYPE")
+if(ui_core_TYPE STREQUAL "STATIC_LIBRARY")
+	# If pp-cpp-ui is being compiled as a static library, notify code to disable usage of __dllspec()
 	# Since public headers also detect it, it needs to be a public definition
-	target_compile_definitions(rmlui_core PUBLIC "RMLUI_STATIC_LIB")
-elseif(rmlui_core_TYPE STREQUAL "SHARED_LIBRARY")
-	# If RmlUi is being compiled as a shared library, notify code to export functions using __dllspec()
+	target_compile_definitions(ui_core PUBLIC "UI_STATIC_LIB")
+elseif(ui_core_TYPE STREQUAL "SHARED_LIBRARY")
+	# If pp-cpp-ui is being compiled as a shared library, notify code to export functions using __dllspec()
 	# For applications consuming the library, the headers will automatically use dllimport
 	# Platform and compiler handling is already done by code via pre-processor macros
-	target_compile_definitions(rmlui_core PRIVATE "RMLUI_CORE_EXPORTS")
+	target_compile_definitions(ui_core PRIVATE "UI_CORE_EXPORTS")
 endif()
-unset(rmlui_core_TYPE)
+unset(ui_core_TYPE)
 
-if(RMLUI_FONT_ENGINE STREQUAL "freetype")
+if(UI_FONT_ENGINE STREQUAL "freetype")
 	# Include the source files for the default font engine.
 	add_subdirectory("FontEngineDefault")
 
-	if(RMLUI_FONT_ENGINE_HARFBUZZ)
+	if(UI_FONT_ENGINE_HARFBUZZ)
 		add_subdirectory("FontEngineHarfBuzz")
-		target_link_libraries(rmlui_core PRIVATE harfbuzz::harfbuzz)
+		target_link_libraries(ui_core PRIVATE harfbuzz::harfbuzz)
 	endif()
 
-	# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+	# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 	# From CMake 3.13 the next line can be moved into `FontEngineDefault/CMakeLists.txt`, see CMP0079.
-	target_link_libraries(rmlui_core PRIVATE Freetype::Freetype)
+	target_link_libraries(ui_core PRIVATE Freetype::Freetype)
 endif()
 
-if(RMLUI_LOTTIE_PLUGIN)
-	# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+if(UI_LOTTIE_PLUGIN)
+	# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 	# From CMake 3.13 we could move this to `Lottie/CMakeLists.txt`, see CMP0079.
-	target_link_libraries(rmlui_core PRIVATE rlottie::rlottie)
+	target_link_libraries(ui_core PRIVATE rlottie::rlottie)
 endif()
 
-if(RMLUI_SVG_PLUGIN)
-	# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+if(UI_SVG_PLUGIN)
+	# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 	# From CMake 3.13 we could move this to `Lottie/CMakeLists.txt`, see CMP0079.
-	target_link_libraries(rmlui_core PRIVATE lunasvg::lunasvg)
+	target_link_libraries(ui_core PRIVATE lunasvg::lunasvg)
 endif()
 
-if(RMLUI_TRACY_PROFILING)
-	if(CMAKE_CONFIGURATION_TYPES AND RMLUI_TRACY_CONFIGURATION)
-		target_link_libraries(rmlui_core PUBLIC "$<$<CONFIG:Tracy>:Tracy::TracyClient>")
-		target_compile_definitions(rmlui_core PUBLIC "$<$<CONFIG:Tracy>:RMLUI_TRACY_PROFILING>")
-		if(RMLUI_TRACY_MEMORY_PROFILING)
-			target_compile_definitions(rmlui_core PRIVATE "$<$<CONFIG:Tracy>:RMLUI_TRACY_MEMORY_PROFILING>")
+if(UI_TRACY_PROFILING)
+	if(CMAKE_CONFIGURATION_TYPES AND UI_TRACY_CONFIGURATION)
+		target_link_libraries(ui_core PUBLIC "$<$<CONFIG:Tracy>:Tracy::TracyClient>")
+		target_compile_definitions(ui_core PUBLIC "$<$<CONFIG:Tracy>:UI_TRACY_PROFILING>")
+		if(UI_TRACY_MEMORY_PROFILING)
+			target_compile_definitions(ui_core PRIVATE "$<$<CONFIG:Tracy>:UI_TRACY_MEMORY_PROFILING>")
 		endif()
 		message(STATUS "Tracy profiling enabled in configuration `Tracy`.")
 	else()
-		target_link_libraries(rmlui_core PUBLIC Tracy::TracyClient)
-		target_compile_definitions(rmlui_core PUBLIC "RMLUI_TRACY_PROFILING")
-		if(RMLUI_TRACY_MEMORY_PROFILING)
-			target_compile_definitions(rmlui_core PRIVATE "RMLUI_TRACY_MEMORY_PROFILING")
+		target_link_libraries(ui_core PUBLIC Tracy::TracyClient)
+		target_compile_definitions(ui_core PUBLIC "UI_TRACY_PROFILING")
+		if(UI_TRACY_MEMORY_PROFILING)
+			target_compile_definitions(ui_core PRIVATE "UI_TRACY_MEMORY_PROFILING")
 		endif()
 		message(STATUS "Tracy profiling enabled.")
 	endif()
 endif()
 
-if(NOT RMLUI_THIRDPARTY_CONTAINERS)
-	target_compile_definitions(rmlui_core PUBLIC "RMLUI_NO_THIRDPARTY_CONTAINERS")
-	message(STATUS "Disabling third-party containers for RmlUi.")
+if(NOT UI_THIRDPARTY_CONTAINERS)
+	target_compile_definitions(ui_core PUBLIC "UI_NO_THIRDPARTY_CONTAINERS")
+	message(STATUS "Disabling third-party containers for pp-cpp-ui.")
 endif()
 
-if(RMLUI_CUSTOM_RTTI)
-	target_compile_definitions(rmlui_core PUBLIC "RMLUI_CUSTOM_RTTI")
-	message(STATUS "Enabling custom RTTI for RmlUi.")
+if(UI_CUSTOM_RTTI)
+	target_compile_definitions(ui_core PUBLIC "UI_CUSTOM_RTTI")
+	message(STATUS "Enabling custom RTTI for pp-cpp-ui.")
 endif()
 
-if(RMLUI_MATRIX_ROW_MAJOR)
-	target_compile_definitions(rmlui_core PUBLIC "RMLUI_MATRIX_ROW_MAJOR")
-	message(STATUS "Configuring RmlUi to use row-major matrix types.")
+if(UI_MATRIX_ROW_MAJOR)
+	target_compile_definitions(ui_core PUBLIC "UI_MATRIX_ROW_MAJOR")
+	message(STATUS "Configuring pp-cpp-ui to use row-major matrix types.")
 endif()
 
-# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 # From CMake 3.16 we can skip the version check.
-if(RMLUI_PRECOMPILED_HEADERS AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
-	target_precompile_headers(rmlui_core PRIVATE "${CMAKE_SOURCE_DIR}/src/core/precompiled.h")
-elseif(RMLUI_PRECOMPILED_HEADERS)
+if(UI_PRECOMPILED_HEADERS AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
+	target_precompile_headers(ui_core PRIVATE "${CMAKE_SOURCE_DIR}/src/core/precompiled.h")
+elseif(UI_PRECOMPILED_HEADERS)
 	message(STATUS "Could not enable precompiled headers, requires CMake version 3.16 or greater.")
 endif()
 
-if(RMLUI_CUSTOM_CONFIGURATION AND RMLUI_CUSTOM_CONFIGURATION_FILE)
-	target_compile_definitions(rmlui_core PUBLIC "RMLUI_CUSTOM_CONFIGURATION_FILE=\"${RMLUI_CUSTOM_CONFIGURATION_FILE}\"")
-	message(STATUS "Including ${RMLUI_CUSTOM_CONFIGURATION_FILE} instead of <RmlUi/Config/Config.h>")
+if(UI_CUSTOM_CONFIGURATION AND UI_CUSTOM_CONFIGURATION_FILE)
+	target_compile_definitions(ui_core PUBLIC "UI_CUSTOM_CONFIGURATION_FILE=\"${UI_CUSTOM_CONFIGURATION_FILE}\"")
+	message(STATUS "Including ${UI_CUSTOM_CONFIGURATION_FILE} instead of <ui/Config/Config.h>")
 endif()
-if(RMLUI_CUSTOM_CONFIGURATION AND RMLUI_CUSTOM_INCLUDE_DIRS)
-	target_include_directories(rmlui_core PUBLIC ${RMLUI_CUSTOM_INCLUDE_DIRS})
+if(UI_CUSTOM_CONFIGURATION AND UI_CUSTOM_INCLUDE_DIRS)
+	target_include_directories(ui_core PUBLIC ${UI_CUSTOM_INCLUDE_DIRS})
 endif()
-if(RMLUI_CUSTOM_CONFIGURATION AND RMLUI_CUSTOM_LINK_LIBRARIES)
-	target_link_libraries(rmlui_core PUBLIC ${RMLUI_CUSTOM_LINK_LIBRARIES})
+if(UI_CUSTOM_CONFIGURATION AND UI_CUSTOM_LINK_LIBRARIES)
+	target_link_libraries(ui_core PUBLIC ${UI_CUSTOM_LINK_LIBRARIES})
 endif()
 
-# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 # We use default paths provided from GNUInstallDirs. From CMake 3.14 these paths (CMAKE_INSTALL_...) will be used
 # automatically and can be removed from the following call. The same applies to many other calls to install(TARGETS...).
 # Note that GNUInstallDirs should still be included in the project root.
-install(TARGETS rmlui_core
+install(TARGETS ui_core
 	EXPORT RmlUiTargets
-	${RMLUI_RUNTIME_DEPENDENCY_SET_ARG}
+	${UI_RUNTIME_DEPENDENCY_SET_ARG}
 	RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 	ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
-install_target_pdb(rmlui_core)
+install_target_pdb(ui_core)

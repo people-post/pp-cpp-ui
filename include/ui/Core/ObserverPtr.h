@@ -4,15 +4,15 @@
 #include <type_traits>
 #include <utility>
 
-namespace Rml {
+namespace ui {
 
 namespace Detail {
-	struct RMLUICORE_API ObserverPtrBlock {
+	struct UI_CORE_API ObserverPtrBlock {
 		int num_observers;
 		void* pointed_to_object;
 	};
-	RMLUICORE_API ObserverPtrBlock* AllocateObserverPtrBlock();
-	RMLUICORE_API void DeallocateObserverPtrBlockIfEmpty(ObserverPtrBlock* block);
+	UI_CORE_API ObserverPtrBlock* AllocateObserverPtrBlock();
+	UI_CORE_API void DeallocateObserverPtrBlockIfEmpty(ObserverPtrBlock* block);
 	void InitializeObserverPtrPool();
 	void ShutdownObserverPtrPool();
 } // namespace Detail
@@ -39,7 +39,7 @@ class EnableObserverPtr;
  */
 
 template <typename T>
-class RMLUICORE_API ObserverPtr {
+class UI_CORE_API ObserverPtr {
 public:
 	ObserverPtr() noexcept : block(nullptr) {}
 	ObserverPtr(std::nullptr_t) noexcept : block(nullptr) {}
@@ -98,7 +98,7 @@ public:
 	}
 
 private:
-	friend class Rml::EnableObserverPtr<T>;
+	friend class ui::EnableObserverPtr<T>;
 
 	explicit ObserverPtr(Detail::ObserverPtrBlock* block) noexcept : block(block)
 	{
@@ -110,7 +110,7 @@ private:
 };
 
 template <typename T>
-class RMLUICORE_API EnableObserverPtr {
+class UI_CORE_API EnableObserverPtr {
 public:
 	ObserverPtr<T> GetObserverPtr()
 	{
@@ -164,4 +164,4 @@ private:
 	Detail::ObserverPtrBlock* block = nullptr;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -4,7 +4,7 @@
 #include <ui/Core/RenderManager.h>
 #include <ui/Core/Texture.h>
 
-namespace Rml {
+namespace ui {
 
 struct DecoratorTiledHorizontalData {
 	DecoratorTiledHorizontalData(int num_textures) : num_textures(num_textures) { geometry = new Geometry[num_textures]; }
@@ -142,4 +142,4 @@ SharedPtr<Decorator> DecoratorTiledHorizontalInstancer::InstanceDecorator(const 
 
 	return decorator;
 }
-} // namespace Rml
+} // namespace ui

@@ -5,7 +5,7 @@
 #include <ui/Core/StyleSheetSpecification.h>
 #include "PropertyShorthandDefinition.h"
 
-namespace Rml {
+namespace ui {
 
 enum class KeywordType { None, Tween, All, Alternate, Infinite, Paused };
 
@@ -349,4 +349,4 @@ bool PropertyParserAnimation::ParseTransition(Property& property, const StringLi
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

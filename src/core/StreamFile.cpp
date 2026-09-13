@@ -3,7 +3,7 @@
 #include <ui/Core/FileInterface.h>
 #include <ui/Core/StringUtilities.h>
 
-namespace Rml {
+namespace ui {
 
 StreamFile::StreamFile()
 {
@@ -73,13 +73,13 @@ size_t StreamFile::Read(void* buffer, size_t bytes) const
 
 size_t StreamFile::Write(const void* /*buffer*/, size_t /*bytes*/)
 {
-	RMLUI_ERROR;
+	UI_ERROR;
 	return 0;
 }
 
 size_t StreamFile::Truncate(size_t /*bytes*/)
 {
-	RMLUI_ERROR;
+	UI_ERROR;
 	return 0;
 }
 
@@ -97,4 +97,4 @@ void StreamFile::GetLength()
 	length = GetFileInterface()->Length(file_handle);
 }
 
-} // namespace Rml
+} // namespace ui

@@ -3,68 +3,68 @@
 #include <cmath>
 #include <cstdlib>
 
-namespace Rml {
+namespace ui {
 
 namespace Math {
 
 	static constexpr float FZERO = 0.0001f;
 
-	RMLUICORE_API bool IsCloseToZero(float value)
+	UI_CORE_API bool IsCloseToZero(float value)
 	{
 		return Absolute(value) < FZERO;
 	}
 
-	RMLUICORE_API float Absolute(float value)
+	UI_CORE_API float Absolute(float value)
 	{
 		return std::abs(value);
 	}
 
-	RMLUICORE_API int Absolute(int value)
+	UI_CORE_API int Absolute(int value)
 	{
 		return std::abs(value);
 	}
 
-	RMLUICORE_API Vector2f Absolute(Vector2f value)
+	UI_CORE_API Vector2f Absolute(Vector2f value)
 	{
 		return {std::abs(value.x), std::abs(value.y)};
 	}
 
-	RMLUICORE_API float Cos(float angle)
+	UI_CORE_API float Cos(float angle)
 	{
 		return std::cos(angle);
 	}
 
-	RMLUICORE_API float ACos(float value)
+	UI_CORE_API float ACos(float value)
 	{
 		return std::acos(value);
 	}
 
-	RMLUICORE_API float Sin(float angle)
+	UI_CORE_API float Sin(float angle)
 	{
 		return std::sin(angle);
 	}
 
-	RMLUICORE_API float ASin(float value)
+	UI_CORE_API float ASin(float value)
 	{
 		return std::asin(value);
 	}
 
-	RMLUICORE_API float Tan(float angle)
+	UI_CORE_API float Tan(float angle)
 	{
 		return std::tan(angle);
 	}
 
-	RMLUICORE_API float ATan2(float y, float x)
+	UI_CORE_API float ATan2(float y, float x)
 	{
 		return std::atan2(y, x);
 	}
 
-	RMLUICORE_API float Exp(float value)
+	UI_CORE_API float Exp(float value)
 	{
 		return std::exp(value);
 	}
 
-	RMLUICORE_API int Log2(int value)
+	UI_CORE_API int Log2(int value)
 	{
 		int result = 0;
 		while (value > 1)
@@ -75,50 +75,50 @@ namespace Math {
 		return result;
 	}
 
-	RMLUICORE_API float RadiansToDegrees(float angle)
+	UI_CORE_API float RadiansToDegrees(float angle)
 	{
-		return angle * (180.0f / RMLUI_PI);
+		return angle * (180.0f / UI_PI);
 	}
 
-	RMLUICORE_API float DegreesToRadians(float angle)
+	UI_CORE_API float DegreesToRadians(float angle)
 	{
-		return angle * (RMLUI_PI / 180.0f);
+		return angle * (UI_PI / 180.0f);
 	}
 
-	RMLUICORE_API float NormaliseAngle(float angle)
+	UI_CORE_API float NormaliseAngle(float angle)
 	{
-		float result = std::fmod(angle, RMLUI_PI * 2.0f);
+		float result = std::fmod(angle, UI_PI * 2.0f);
 		if (result < 0.f)
-			result += RMLUI_PI * 2.0f;
+			result += UI_PI * 2.0f;
 		return result;
 	}
 
-	RMLUICORE_API float SquareRoot(float value)
+	UI_CORE_API float SquareRoot(float value)
 	{
 		return std::sqrt(value);
 	}
 
-	RMLUICORE_API float Round(float value)
+	UI_CORE_API float Round(float value)
 	{
 		return std::floor(value + 0.5f);
 	}
 
-	RMLUICORE_API double Round(double value)
+	UI_CORE_API double Round(double value)
 	{
 		return std::floor(value + 0.5);
 	}
 
-	RMLUICORE_API float RoundUp(float value)
+	UI_CORE_API float RoundUp(float value)
 	{
 		return std::ceil(value);
 	}
 
-	RMLUICORE_API float RoundDown(float value)
+	UI_CORE_API float RoundDown(float value)
 	{
 		return std::floor(value);
 	}
 
-	RMLUICORE_API int RoundToInteger(float value)
+	UI_CORE_API int RoundToInteger(float value)
 	{
 		if (value > 0.0f)
 			return int(value + 0.5f);
@@ -126,55 +126,55 @@ namespace Math {
 		return int(value - 0.5f);
 	}
 
-	RMLUICORE_API int RoundUpToInteger(float value)
+	UI_CORE_API int RoundUpToInteger(float value)
 	{
 		return int(std::ceil(value));
 	}
 
-	RMLUICORE_API int RoundDownToInteger(float value)
+	UI_CORE_API int RoundDownToInteger(float value)
 	{
 		return int(std::floor(value));
 	}
 
-	RMLUICORE_API float DecomposeFractionalIntegral(float value, float* integral)
+	UI_CORE_API float DecomposeFractionalIntegral(float value, float* integral)
 	{
 		return std::modf(value, integral);
 	}
 
-	RMLUICORE_API void SnapToPixelGrid(float& offset, float& width)
+	UI_CORE_API void SnapToPixelGrid(float& offset, float& width)
 	{
 		const float right_edge = offset + width;
 		offset = Math::Round(offset);
 		width = Math::Round(right_edge) - offset;
 	}
 
-	RMLUICORE_API void SnapToPixelGrid(Vector2f& position, Vector2f& size)
+	UI_CORE_API void SnapToPixelGrid(Vector2f& position, Vector2f& size)
 	{
 		const Vector2f bottom_right = position + size;
 		position = position.Round();
 		size = bottom_right.Round() - position;
 	}
 
-	RMLUICORE_API void SnapToPixelGrid(Rectanglef& rectangle)
+	UI_CORE_API void SnapToPixelGrid(Rectanglef& rectangle)
 	{
 		rectangle = Rectanglef::FromCorners(rectangle.TopLeft().Round(), rectangle.BottomRight().Round());
 	}
 
-	RMLUICORE_API void ExpandToPixelGrid(Vector2f& position, Vector2f& size)
+	UI_CORE_API void ExpandToPixelGrid(Vector2f& position, Vector2f& size)
 	{
 		const Vector2f bottom_right = position + size;
 		position = Vector2f(std::floor(position.x), std::floor(position.y));
 		size = Vector2f(std::ceil(bottom_right.x), std::ceil(bottom_right.y)) - position;
 	}
 
-	RMLUICORE_API void ExpandToPixelGrid(Rectanglef& rectangle)
+	UI_CORE_API void ExpandToPixelGrid(Rectanglef& rectangle)
 	{
 		const Vector2f top_left = {std::floor(rectangle.Left()), std::floor(rectangle.Top())};
 		const Vector2f bottom_right = {std::ceil(rectangle.Right()), std::ceil(rectangle.Bottom())};
 		rectangle = Rectanglef::FromCorners(top_left, bottom_right);
 	}
 
-	RMLUICORE_API int ToPowerOfTwo(int number)
+	UI_CORE_API int ToPowerOfTwo(int number)
 	{
 		// Check if the number is already a power of two.
 		if ((number & (number - 1)) == 0)
@@ -195,7 +195,7 @@ namespace Math {
 		return 0;
 	}
 
-	RMLUICORE_API int HexToDecimal(char hex_digit)
+	UI_CORE_API int HexToDecimal(char hex_digit)
 	{
 		if (hex_digit >= '0' && hex_digit <= '9')
 			return hex_digit - '0';
@@ -207,17 +207,17 @@ namespace Math {
 		return -1;
 	}
 
-	RMLUICORE_API float RandomReal(float max_value)
+	UI_CORE_API float RandomReal(float max_value)
 	{
 		return (std::rand() / (float)RAND_MAX) * max_value;
 	}
 
-	RMLUICORE_API int RandomInteger(int max_value)
+	UI_CORE_API int RandomInteger(int max_value)
 	{
 		return (std::rand() % max_value);
 	}
 
-	RMLUICORE_API bool RandomBool()
+	UI_CORE_API bool RandomBool()
 	{
 		return RandomInteger(2) == 1;
 	}
@@ -266,4 +266,4 @@ namespace Math {
 	}
 
 } // namespace Math
-} // namespace Rml
+} // namespace ui

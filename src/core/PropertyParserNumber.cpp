@@ -1,7 +1,7 @@
 #include "PropertyParserNumber.h"
 #include <stdlib.h>
 
-namespace Rml {
+namespace ui {
 
 struct PropertyParserNumberData {
 	const UnorderedMap<String, Unit> unit_string_map = {
@@ -96,4 +96,4 @@ bool PropertyParserNumber::ParseValue(Property& property, const String& value, c
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

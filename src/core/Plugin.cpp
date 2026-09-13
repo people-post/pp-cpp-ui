@@ -1,6 +1,6 @@
 #include <ui/Core/Plugin.h>
 
-namespace Rml {
+namespace ui {
 
 Plugin::~Plugin() {}
 
@@ -27,4 +27,4 @@ void Plugin::OnElementCreate(Element* /*element*/) {}
 
 void Plugin::OnElementDestroy(Element* /*element*/) {}
 
-} // namespace Rml
+} // namespace ui

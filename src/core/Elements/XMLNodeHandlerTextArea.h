@@ -2,7 +2,7 @@
 
 #include <ui/Core/XMLNodeHandler.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     Node handler that processes the contents of the textarea tag.
@@ -21,4 +21,4 @@ public:
 	bool ElementData(XMLParser* parser, const String& data, XMLDataType type) override;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -6,7 +6,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 
@@ -23,7 +23,7 @@ class Element;
     in which it was instanced.
  */
 
-class RMLUICORE_API ElementInstancer : public NonCopyMoveable {
+class UI_CORE_API ElementInstancer : public NonCopyMoveable {
 public:
 	virtual ~ElementInstancer();
 
@@ -44,7 +44,7 @@ public:
     pool for allocations.
  */
 
-class RMLUICORE_API ElementInstancerElement : public ElementInstancer {
+class UI_CORE_API ElementInstancerElement : public ElementInstancer {
 public:
 	ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) override;
 	void ReleaseElement(Element* element) override;
@@ -57,7 +57,7 @@ public:
     pool for allocations.
  */
 
-class RMLUICORE_API ElementInstancerText : public ElementInstancer {
+class UI_CORE_API ElementInstancerText : public ElementInstancer {
 public:
 	ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) override;
 	void ReleaseElement(Element* element) override;
@@ -75,13 +75,13 @@ public:
 
 	ElementPtr InstanceElement(Element* /*parent*/, const String& tag, const XMLAttributes& /*attributes*/) override
 	{
-		RMLUI_ZoneScopedN("ElementGenericInstance");
+		UI_ZoneScopedN("ElementGenericInstance");
 		return ElementPtr(new T(tag));
 	}
 
 	void ReleaseElement(Element* element) override
 	{
-		RMLUI_ZoneScopedN("ElementGenericRelease");
+		UI_ZoneScopedN("ElementGenericRelease");
 		delete element;
 	}
 };
@@ -91,4 +91,4 @@ namespace Detail {
 	void ShutdownElementInstancerPools();
 } // namespace Detail
 
-} // namespace Rml
+} // namespace ui

@@ -1,9 +1,9 @@
 #pragma once
 
-namespace Rml {
+namespace ui {
 namespace SVG {
 
 	void Initialise();
 
 }
-} // namespace Rml
+} // namespace ui

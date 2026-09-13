@@ -6,31 +6,31 @@
 #include "LanguageData.h"
 #include <ui/Core.h>
 
-using Rml::byte;
-using Rml::Character;
-using Rml::Colourb;
-using Rml::FontEffect;
-using Rml::FontEffectList;
-using Rml::FontFaceHandleFreetype;
-using Rml::FontGlyph;
-using Rml::FontMetrics;
-using Rml::Pair;
-using Rml::Queue;
-using Rml::RenderManager;
-using Rml::SharedPtr;
-using Rml::SmallUnorderedMap;
-using Rml::Span;
-using Rml::String;
-using Rml::StringView;
-using Rml::TextShapingContext;
-using Rml::TexturedMeshList;
-using Rml::UniquePtr;
-using Rml::UnorderedMap;
-using Rml::Vector;
-using Rml::Vector2f;
-using Rml::Vector2i;
+using ui::byte;
+using ui::Character;
+using ui::Colourb;
+using ui::FontEffect;
+using ui::FontEffectList;
+using ui::FontFaceHandleFreetype;
+using ui::FontGlyph;
+using ui::FontMetrics;
+using ui::Pair;
+using ui::Queue;
+using ui::RenderManager;
+using ui::SharedPtr;
+using ui::SmallUnorderedMap;
+using ui::Span;
+using ui::String;
+using ui::StringView;
+using ui::TextShapingContext;
+using ui::TexturedMeshList;
+using ui::UniquePtr;
+using ui::UnorderedMap;
+using ui::Vector;
+using ui::Vector2f;
+using ui::Vector2i;
 
-class FontFaceHandleHarfBuzz : public Rml::NonCopyMoveable {
+class FontFaceHandleHarfBuzz : public ui::NonCopyMoveable {
 public:
 	FontFaceHandleHarfBuzz();
 	~FontFaceHandleHarfBuzz();

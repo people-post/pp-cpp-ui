@@ -4,7 +4,7 @@
 #include "Header.h"
 #include "ObserverPtr.h"
 
-namespace Rml {
+namespace ui {
 
 class Event;
 class Element;
@@ -13,7 +13,7 @@ class Element;
     Abstract interface class for handling events.
  */
 
-class RMLUICORE_API EventListener : public EnableObserverPtr<EventListener> {
+class UI_CORE_API EventListener : public EnableObserverPtr<EventListener> {
 public:
 	virtual ~EventListener() {}
 
@@ -27,4 +27,4 @@ public:
 	virtual void OnDetach(Element* /*element*/) {}
 };
 
-} // namespace Rml
+} // namespace ui

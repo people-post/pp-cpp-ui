@@ -2,7 +2,7 @@
 
 #include <ui/Core/PropertyParser.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     Parses the RCSS 'box-shadow' property.
@@ -24,4 +24,4 @@ private:
 	PropertyParser* parser_length;
 };
 
-} // namespace Rml
+} // namespace ui

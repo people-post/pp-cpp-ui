@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static void SimulateClick(Context* context, Vector2i position)
 {
@@ -26,7 +26,7 @@ TEST_CASE("debugger")
 
 	SUBCASE("no_shutdown")
 	{
-		Rml::Debugger::Initialise(context);
+		ui::Debugger::Initialise(context);
 
 		ElementDocument* document = context->LoadDocument("assets/demo.rml");
 		TestsShell::RenderLoop();
@@ -37,7 +37,7 @@ TEST_CASE("debugger")
 
 	SUBCASE("shutdown")
 	{
-		Rml::Debugger::Initialise(context);
+		ui::Debugger::Initialise(context);
 
 		ElementDocument* document = context->LoadDocument("assets/demo.rml");
 		TestsShell::RenderLoop();
@@ -45,7 +45,7 @@ TEST_CASE("debugger")
 		document->Close();
 		TestsShell::RenderLoop();
 
-		Rml::Debugger::Shutdown();
+		ui::Debugger::Shutdown();
 		TestsShell::RenderLoop();
 	}
 
@@ -54,10 +54,10 @@ TEST_CASE("debugger")
 		ElementDocument* document = context->LoadDocument("assets/demo.rml");
 		TestsShell::RenderLoop();
 
-		Rml::Debugger::Initialise(context);
+		ui::Debugger::Initialise(context);
 		TestsShell::RenderLoop();
 
-		Rml::Debugger::Shutdown();
+		ui::Debugger::Shutdown();
 		TestsShell::RenderLoop();
 
 		document->Close();
@@ -70,7 +70,7 @@ TEST_CASE("debugger")
 TEST_CASE("debugger.unload_documents")
 {
 	Context* context = TestsShell::GetContext(false);
-	Rml::Debugger::Initialise(context);
+	ui::Debugger::Initialise(context);
 
 	context->LoadDocument("assets/demo.rml");
 	TestsShell::RenderLoop();
@@ -95,7 +95,7 @@ TEST_CASE("debugger.unload_documents")
 TEST_CASE("debugger.focus")
 {
 	Context* context = TestsShell::GetContext(false);
-	Rml::Debugger::Initialise(context);
+	ui::Debugger::Initialise(context);
 
 	ElementDocument* document = context->LoadDocument("assets/demo.rml");
 
@@ -108,7 +108,7 @@ TEST_CASE("debugger.focus")
 		document->Show(ModalFlag::Modal);
 	}
 
-	Rml::Debugger::SetVisible(true);
+	ui::Debugger::SetVisible(true);
 
 	SimulateClick(context, {200, 20});
 
@@ -117,7 +117,7 @@ TEST_CASE("debugger.focus")
 	Element* info_element = context->GetRootElement()->GetElementById("rmlui-debug-info");
 	CHECK(info_element->IsVisible());
 
-	auto info_document = rmlui_dynamic_cast<Rml::Debugger::ElementInfo*>(info_element);
+	auto info_document = ui_dynamic_cast<ui::Debugger::ElementInfo*>(info_element);
 	REQUIRE(info_document);
 
 	SimulateClick(context, context->GetDimensions() / 2);

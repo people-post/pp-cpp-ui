@@ -9,12 +9,12 @@
 #include "FloatedBoxSpace.h"
 #include "LayoutDetails.h"
 
-namespace Rml {
+namespace ui {
 
 // Table elements should be handled within FormatElementTable, log a warning when it seems like we're encountering table parts in the wild.
 static void LogUnexpectedFlowElement(Element* element, Style::Display display)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 	String value = "*unknown";
 	StyleSheetSpecification::GetPropertySpecification().GetProperty(PropertyId::Display)->GetValue(value, Property(display));
 
@@ -22,7 +22,7 @@ static void LogUnexpectedFlowElement(Element* element, Style::Display display)
 		value.c_str(), element->GetAddress().c_str());
 }
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 static bool g_debug_dumping_layout_tree = false;
 struct DebugDumpLayoutTree {
 	Element* element;
@@ -86,12 +86,12 @@ static OuterDisplayType GetOuterDisplayType(Style::Display display)
 
 UniquePtr<LayoutBox> BlockFormattingContext::Format(ContainerBox* parent_container, Element* element, const Box* override_initial_box)
 {
-	RMLUI_ASSERT(parent_container && element);
+	UI_ASSERT(parent_container && element);
 
-#ifdef RMLUI_TRACY_PROFILING
-	RMLUI_ZoneScopedC(0xB22222);
+#ifdef UI_TRACY_PROFILING
+	UI_ZoneScopedC(0xB22222);
 	auto name = CreateString("%s %x", element->GetAddress(false, false).c_str(), element);
-	RMLUI_ZoneName(name.c_str(), name.size());
+	UI_ZoneName(name.c_str(), name.size());
 #endif
 
 	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
@@ -135,7 +135,7 @@ UniquePtr<LayoutBox> BlockFormattingContext::Format(ContainerBox* parent_contain
 
 bool BlockFormattingContext::FormatBlockBox(BlockContainer* parent_container, Element* element)
 {
-	RMLUI_ZoneScopedC(0x2F4F4F);
+	UI_ZoneScopedC(0x2F4F4F);
 	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
 
 	Box box;
@@ -163,7 +163,7 @@ bool BlockFormattingContext::FormatBlockBox(BlockContainer* parent_container, El
 
 bool BlockFormattingContext::FormatInlineBox(BlockContainer* parent_container, Element* element)
 {
-	RMLUI_ZoneScopedC(0x3F6F6F);
+	UI_ZoneScopedC(0x3F6F6F);
 	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
 
 	Box box;
@@ -184,10 +184,10 @@ bool BlockFormattingContext::FormatInlineBox(BlockContainer* parent_container, E
 
 bool BlockFormattingContext::FormatBlockContainerChild(BlockContainer* parent_container, Element* element)
 {
-#ifdef RMLUI_TRACY_PROFILING
-	RMLUI_ZoneScoped;
+#ifdef UI_TRACY_PROFILING
+	UI_ZoneScoped;
 	auto name = CreateString(">%s %x", element->GetAddress(false, false).c_str(), element);
-	RMLUI_ZoneName(name.c_str(), name.size());
+	UI_ZoneName(name.c_str(), name.size());
 #endif
 
 	// Check for special formatting tags.
@@ -239,7 +239,7 @@ bool BlockFormattingContext::FormatBlockContainerChild(BlockContainer* parent_co
 		// Nope, then this must be an inline-level box.
 		else
 		{
-			RMLUI_ASSERT(outer_display == OuterDisplayType::InlineLevel);
+			UI_ASSERT(outer_display == OuterDisplayType::InlineLevel);
 			auto inline_box_handle = parent_container->AddInlineElement(element, element->GetBox());
 			parent_container->CloseInlineElement(inline_box_handle);
 		}
@@ -253,11 +253,11 @@ bool BlockFormattingContext::FormatBlockContainerChild(BlockContainer* parent_co
 	case Style::Display::Block: return FormatBlockBox(parent_container, element);
 	case Style::Display::Inline: return FormatInlineBox(parent_container, element);
 	default:
-		RMLUI_ERROR; // Should have been handled above.
+		UI_ERROR; // Should have been handled above.
 		break;
 	}
 
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

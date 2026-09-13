@@ -16,14 +16,14 @@
 #include "MenuSource.h"
 #include <stack>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 DebuggerPlugin* DebuggerPlugin::instance = nullptr;
 
 DebuggerPlugin::DebuggerPlugin()
 {
-	RMLUI_ASSERT(instance == nullptr);
+	UI_ASSERT(instance == nullptr);
 	instance = this;
 	host_context = nullptr;
 	debug_context = nullptr;
@@ -82,8 +82,8 @@ bool DebuggerPlugin::SetContext(Context* context)
 		if (!element)
 			return false;
 
-		RMLUI_ASSERT(!hook_element);
-		hook_element = rmlui_dynamic_cast<ElementContextHook*>(element);
+		UI_ASSERT(!hook_element);
+		hook_element = ui_dynamic_cast<ElementContextHook*>(element);
 		if (!hook_element)
 		{
 			context->UnloadDocument(element);
@@ -290,7 +290,7 @@ bool DebuggerPlugin::LoadMenuElement()
 
 	menu_element->SetStyleSheetContainer(std::move(style_sheet));
 
-	menu_element->GetElementById("version-number")->SetInnerRML(Rml::GetVersion());
+	menu_element->GetElementById("version-number")->SetInnerRML(ui::GetVersion());
 
 	for (auto* id : {"event-log-button", "debug-info-button", "outlines-button", "data-models-button"})
 	{
@@ -305,7 +305,7 @@ bool DebuggerPlugin::LoadInfoElement()
 {
 	info_element_instancer = MakeUnique<ElementInstancerGeneric<ElementInfo>>();
 	Factory::RegisterElementInstancer("debug-info", info_element_instancer.get());
-	info_element = rmlui_dynamic_cast<ElementInfo*>(host_context->CreateDocument("debug-info"));
+	info_element = ui_dynamic_cast<ElementInfo*>(host_context->CreateDocument("debug-info"));
 	if (!info_element)
 		return false;
 
@@ -328,7 +328,7 @@ bool DebuggerPlugin::LoadLogElement()
 {
 	log_element_instancer = MakeUnique<ElementInstancerGeneric<ElementLog>>();
 	Factory::RegisterElementInstancer("debug-log", log_element_instancer.get());
-	log_element = rmlui_dynamic_cast<ElementLog*>(host_context->CreateDocument("debug-log"));
+	log_element = ui_dynamic_cast<ElementLog*>(host_context->CreateDocument("debug-log"));
 	if (!log_element)
 		return false;
 
@@ -345,9 +345,9 @@ bool DebuggerPlugin::LoadLogElement()
 	log_element->AddEventListener(EventId::Show, this);
 
 	// Make the system interface; this will trap the log messages for us.
-	application_interface = Rml::GetSystemInterface();
+	application_interface = ui::GetSystemInterface();
 	log_interface = MakeUnique<DebuggerSystemInterface>(application_interface, log_element);
-	Rml::SetSystemInterface(log_interface.get());
+	ui::SetSystemInterface(log_interface.get());
 
 	return true;
 }
@@ -356,7 +356,7 @@ bool DebuggerPlugin::LoadDataExplorerElement()
 {
 	data_explorer_element_instancer = MakeUnique<ElementInstancerGeneric<ElementDataModels>>();
 	Factory::RegisterElementInstancer("debug-data-models", data_explorer_element_instancer.get());
-	data_explorer_element = rmlui_dynamic_cast<ElementDataModels*>(host_context->CreateDocument("debug-data-models"));
+	data_explorer_element = ui_dynamic_cast<ElementDataModels*>(host_context->CreateDocument("debug-data-models"));
 	if (!data_explorer_element)
 		return false;
 
@@ -375,9 +375,9 @@ bool DebuggerPlugin::LoadDataExplorerElement()
 	return true;
 }
 
-void DebuggerPlugin::SetupInfoListeners(Rml::Context* new_context)
+void DebuggerPlugin::SetupInfoListeners(ui::Context* new_context)
 {
-	RMLUI_ASSERT(info_element);
+	UI_ASSERT(info_element);
 
 	if (debug_context)
 	{
@@ -418,7 +418,7 @@ void DebuggerPlugin::ReleaseElements()
 		{
 			host_context->UnloadDocument(log_element);
 			log_element = nullptr;
-			Rml::SetSystemInterface(application_interface);
+			ui::SetSystemInterface(application_interface);
 			application_interface = nullptr;
 			log_interface.reset();
 		}
@@ -448,4 +448,4 @@ void DebuggerPlugin::ReleaseElements()
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include <ui/Core/Debug.h>
 #include <ui/Core/Traits.h>
 
-namespace Rml {
+namespace ui {
 
 template <typename T>
 class ControlledLifetimeResource : NonCopyMoveable {
@@ -11,8 +11,8 @@ public:
 	ControlledLifetimeResource() = default;
 	~ControlledLifetimeResource() noexcept
 	{
-#if defined(RMLUI_PLATFORM_WIN32) && !defined(RMLUI_STATIC_LIB)
-		RMLUI_ASSERTMSG(!pointer || intentionally_leaked, "Resource was not properly shut down.");
+#if defined(UI_PLATFORM_WIN32) && !defined(UI_STATIC_LIB)
+		UI_ASSERTMSG(!pointer || intentionally_leaked, "Resource was not properly shut down.");
 #endif
 	}
 
@@ -20,7 +20,7 @@ public:
 
 	void Initialize()
 	{
-		RMLUI_ASSERTMSG(!pointer, "Resource already initialized.");
+		UI_ASSERTMSG(!pointer, "Resource already initialized.");
 		pointer = new T();
 	}
 
@@ -36,20 +36,20 @@ public:
 
 	void Shutdown()
 	{
-		RMLUI_ASSERTMSG(pointer, "Shutting down resource that was not initialized, or has been shut down already.");
-		RMLUI_ASSERTMSG(!intentionally_leaked, "Shutting down resource that was marked as leaked.");
+		UI_ASSERTMSG(pointer, "Shutting down resource that was not initialized, or has been shut down already.");
+		UI_ASSERTMSG(!intentionally_leaked, "Shutting down resource that was marked as leaked.");
 		delete pointer;
 		pointer = nullptr;
 	}
 
 	T* operator->()
 	{
-		RMLUI_ASSERTMSG(pointer, "Resource used before it was initialized, or after it was shut down.");
+		UI_ASSERTMSG(pointer, "Resource used before it was initialized, or after it was shut down.");
 		return pointer;
 	}
 
 private:
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	void SetIntentionallyLeaked(bool leaked) { intentionally_leaked = leaked; }
 	bool intentionally_leaked = false;
 #else
@@ -59,4 +59,4 @@ private:
 	T* pointer = nullptr;
 };
 
-} // namespace Rml
+} // namespace ui

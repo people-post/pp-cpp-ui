@@ -1,6 +1,6 @@
 #include <ui/Core/DataVariable.h>
 
-namespace Rml {
+namespace ui {
 
 bool DataVariable::Get(Variant& variant) const
 {
@@ -105,9 +105,9 @@ StringList StructDefinition::ReflectMemberNames()
 
 void StructDefinition::AddMember(const String& name, UniquePtr<VariableDefinition> member)
 {
-	RMLUI_ASSERT(member);
+	UI_ASSERT(member);
 	bool inserted = members.emplace(name, std::move(member)).second;
-	RMLUI_ASSERTMSG(inserted, "Member name already exists.");
+	UI_ASSERTMSG(inserted, "Member name already exists.");
 	(void)inserted;
 }
 
@@ -163,4 +163,4 @@ DataVariable BasePointerDefinition::Child(void* ptr, const DataAddressEntry& add
 	return underlying_definition->Child(DereferencePointer(ptr), address);
 }
 
-} // namespace Rml
+} // namespace ui

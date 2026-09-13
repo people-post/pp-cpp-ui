@@ -4,14 +4,14 @@
 #include "PropertySpecification.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class PropertyDefinition;
 
 /**
     Specifies properties and shorthands for effects (decorators and filters).
  */
-class RMLUICORE_API EffectSpecification {
+class UI_CORE_API EffectSpecification {
 public:
 	EffectSpecification();
 
@@ -40,4 +40,4 @@ private:
 	PropertySpecification properties;
 };
 
-} // namespace Rml
+} // namespace ui

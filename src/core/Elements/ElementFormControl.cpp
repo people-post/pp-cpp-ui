@@ -2,7 +2,7 @@
 #include <ui/Core/ComputedValues.h>
 #include "../SelectionContentBuilder.h"
 
-namespace Rml {
+namespace ui {
 
 ElementFormControl::ElementFormControl(const String& tag) : Element(tag)
 {
@@ -77,4 +77,4 @@ void ElementFormControl::BuildSelectionContent(SelectionContentBuilder& builder)
 	builder.AppendGap();
 }
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 
 #include <ui/Core/EventListener.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 enum class ScrollBehavior;
@@ -96,4 +96,4 @@ private:
 	float bar_length;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -4,7 +4,7 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class PropertyDictionary;
@@ -13,7 +13,7 @@ class CompiledFilter;
 /**
     The abstract base class for visual filters that are applied when rendering the element.
  */
-class RMLUICORE_API Filter {
+class UI_CORE_API Filter {
 public:
 	Filter();
 	virtual ~Filter();
@@ -34,7 +34,7 @@ public:
 /**
     A filter instancer, which can be inherited from to instance new filters when encountered in the style sheet.
  */
-class RMLUICORE_API FilterInstancer : public EffectSpecification {
+class UI_CORE_API FilterInstancer : public EffectSpecification {
 public:
 	FilterInstancer();
 	virtual ~FilterInstancer();
@@ -46,4 +46,4 @@ public:
 	virtual SharedPtr<Filter> InstanceFilter(const String& name, const PropertyDictionary& properties) = 0;
 };
 
-} // namespace Rml
+} // namespace ui

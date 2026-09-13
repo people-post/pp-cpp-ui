@@ -2,7 +2,7 @@
 
 #include <ui/Core/Decorator.h>
 
-namespace Rml {
+namespace ui {
 namespace SVG {
 
 	struct SVGData;
@@ -40,4 +40,4 @@ namespace SVG {
 	};
 
 } // namespace SVG
-} // namespace Rml
+} // namespace ui

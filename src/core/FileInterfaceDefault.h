@@ -2,12 +2,12 @@
 
 #include <ui/Core/FileInterface.h>
 
-#ifndef RMLUI_NO_FILE_INTERFACE_DEFAULT
+#ifndef UI_NO_FILE_INTERFACE_DEFAULT
 
-namespace Rml {
+namespace ui {
 
 /**
-    Implementation of the RmlUi file interface using the Standard C file functions.
+    Implementation of the pp-cpp-ui file interface using the Standard C file functions.
  */
 
 class FileInterfaceDefault : public FileInterface {
@@ -41,5 +41,5 @@ public:
 	size_t Tell(FileHandle file) override;
 };
 
-} // namespace Rml
-#endif /*RMLUI_NO_FILE_INTERFACE_DEFAULT*/
+} // namespace ui
+#endif /*UI_NO_FILE_INTERFACE_DEFAULT*/

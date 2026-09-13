@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <float.h>
 
-namespace Rml {
+namespace ui {
 
 GeometryBackgroundBorder::GeometryBackgroundBorder(Vector<Vertex>& vertices, Vector<int>& indices) : vertices(vertices), indices(indices) {}
 
@@ -85,7 +85,7 @@ void GeometryBackgroundBorder::DrawBackground(const BorderMetrics& metrics, Colo
 
 void GeometryBackgroundBorder::DrawBorder(const BorderMetrics& metrics, EdgeSizes edge_sizes, const ColourbPremultiplied border_colors[4])
 {
-	RMLUI_ASSERT(border_colors);
+	UI_ASSERT(border_colors);
 
 	const int offset_vertices = (int)vertices.size();
 
@@ -117,7 +117,7 @@ void GeometryBackgroundBorder::DrawBorder(const BorderMetrics& metrics, EdgeSize
 
 		if (draw_edge[edge1])
 		{
-			RMLUI_ASSERTMSG(draw_corner[corner] && draw_corner[(corner + 1) % 4],
+			UI_ASSERTMSG(draw_corner[corner] && draw_corner[(corner + 1) % 4],
 				"Border edges can only be drawn if both of its connected corners are drawn.");
 
 			FillEdge(edge1 == LEFT ? offset_vertices : (int)vertices.size());
@@ -134,8 +134,8 @@ void GeometryBackgroundBorder::DrawBackgroundCorner(Corner corner, Vector2f pos_
 	}
 	else if (r.x > 0 && r.y > 0)
 	{
-		const float a0 = float((int)corner + 2) * 0.5f * Math::RMLUI_PI;
-		const float a1 = float((int)corner + 3) * 0.5f * Math::RMLUI_PI;
+		const float a0 = float((int)corner + 2) * 0.5f * Math::UI_PI;
+		const float a1 = float((int)corner + 3) * 0.5f * Math::UI_PI;
 		const int num_points = GetNumPoints(R);
 		DrawArc(pos_circle_center, r, a0, a1, color, color, num_points);
 	}
@@ -154,7 +154,7 @@ void GeometryBackgroundBorder::DrawPoint(Vector2f pos, ColourbPremultiplied colo
 void GeometryBackgroundBorder::DrawArc(Vector2f pos_center, Vector2f r, float a0, float a1, ColourbPremultiplied color0, ColourbPremultiplied color1,
 	int num_points)
 {
-	RMLUI_ASSERT(num_points >= 2 && r.x > 0 && r.y > 0);
+	UI_ASSERT(num_points >= 2 && r.x > 0 && r.y > 0);
 
 	const int offset_vertices = (int)vertices.size();
 
@@ -193,8 +193,8 @@ void GeometryBackgroundBorder::FillBackground(int index_start)
 void GeometryBackgroundBorder::DrawBorderCorner(Corner corner, Vector2f pos_outer, Vector2f pos_inner, Vector2f pos_circle_center, float R,
 	Vector2f r, ColourbPremultiplied color0, ColourbPremultiplied color1)
 {
-	const float a0 = float((int)corner + 2) * 0.5f * Math::RMLUI_PI;
-	const float a1 = float((int)corner + 3) * 0.5f * Math::RMLUI_PI;
+	const float a0 = float((int)corner + 2) * 0.5f * Math::UI_PI;
+	const float a1 = float((int)corner + 3) * 0.5f * Math::UI_PI;
 
 	if (R == 0)
 	{
@@ -229,7 +229,7 @@ void GeometryBackgroundBorder::DrawPointPoint(Vector2f pos_outer, Vector2f pos_i
 void GeometryBackgroundBorder::DrawArcArc(Vector2f pos_center, float R, Vector2f r, float a0, float a1, ColourbPremultiplied color0,
 	ColourbPremultiplied color1, int num_points)
 {
-	RMLUI_ASSERT(num_points >= 2 && R > 0 && r.x > 0 && r.y > 0);
+	UI_ASSERT(num_points >= 2 && R > 0 && r.x > 0 && r.y > 0);
 
 	const int num_triangles = 2 * (num_points - 1);
 
@@ -268,7 +268,7 @@ void GeometryBackgroundBorder::DrawArcArc(Vector2f pos_center, float R, Vector2f
 void GeometryBackgroundBorder::DrawArcPoint(Vector2f pos_center, Vector2f pos_inner, float R, float a0, float a1, ColourbPremultiplied color0,
 	ColourbPremultiplied color1, int num_points)
 {
-	RMLUI_ASSERT(R > 0 && num_points >= 2);
+	UI_ASSERT(R > 0 && num_points >= 2);
 
 	const int offset_vertices = (int)vertices.size();
 	vertices.reserve(offset_vertices + num_points + 2);
@@ -278,7 +278,7 @@ void GeometryBackgroundBorder::DrawArcPoint(Vector2f pos_center, Vector2f pos_in
 	DrawArc(pos_center, Vector2f(R), a0, a1, color0, color1, num_points);
 	DrawPoint(pos_inner, color1);
 
-	RMLUI_ASSERT((int)vertices.size() - offset_vertices == num_points + 2);
+	UI_ASSERT((int)vertices.size() - offset_vertices == num_points + 2);
 
 	// Swap the last two vertices such that the outer edge vertex is last, see the comment for the border drawing functions. Their colors should
 	// already be the same.
@@ -309,7 +309,7 @@ void GeometryBackgroundBorder::FillEdge(int index_next_corner)
 {
 	const int offset_indices = (int)indices.size();
 	const int num_vertices = (int)vertices.size();
-	RMLUI_ASSERT(num_vertices >= 2);
+	UI_ASSERT(num_vertices >= 2);
 
 	indices.resize(offset_indices + 6);
 
@@ -327,4 +327,4 @@ int GeometryBackgroundBorder::GetNumPoints(float R) const
 	return Math::Clamp(3 + Math::RoundToInteger(R / 6.f), 2, 100);
 }
 
-} // namespace Rml
+} // namespace ui

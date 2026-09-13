@@ -3,13 +3,13 @@
 #include "Header.h"
 #include "Property.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A dictionary to property names to values.
  */
 
-class RMLUICORE_API PropertyDictionary {
+class UI_CORE_API PropertyDictionary {
 public:
 	PropertyDictionary();
 
@@ -53,4 +53,4 @@ private:
 	PropertyMap properties;
 };
 
-} // namespace Rml
+} // namespace ui

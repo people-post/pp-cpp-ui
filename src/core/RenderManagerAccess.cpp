@@ -2,7 +2,7 @@
 #include <ui/Core/Texture.h>
 #include "TextureDatabase.h"
 
-namespace Rml {
+namespace ui {
 
 Vector2i RenderManagerAccess::GetDimensions(RenderManager* render_manager, TextureFileIndex texture)
 {
@@ -45,4 +45,4 @@ void RenderManagerAccess::ReleaseAllCompiledGeometry(RenderManager* render_manag
 	render_manager->ReleaseAllCompiledGeometry();
 }
 
-} // namespace Rml
+} // namespace ui

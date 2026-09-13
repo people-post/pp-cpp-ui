@@ -2,7 +2,7 @@
 #include <ui/Core/StyleSheetSpecification.h>
 #include "PropertiesIterator.h"
 
-namespace Rml {
+namespace ui {
 
 PropertiesIteratorView::PropertiesIteratorView(UniquePtr<PropertiesIterator> ptr) : ptr(std::move(ptr)) {}
 
@@ -42,4 +42,4 @@ bool PropertiesIteratorView::AtEnd() const
 	return ptr->AtEnd();
 }
 
-} // namespace Rml
+} // namespace ui

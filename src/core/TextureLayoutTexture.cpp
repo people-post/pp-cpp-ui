@@ -2,7 +2,7 @@
 #include "TextureDatabase.h"
 #include "TextureLayout.h"
 
-namespace Rml {
+namespace ui {
 
 TextureLayoutTexture::TextureLayoutTexture() : dimensions(0, 0) {}
 
@@ -120,4 +120,4 @@ Vector<byte> TextureLayoutTexture::AllocateTexture()
 	return texture_data;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -8,12 +8,12 @@
 #include <ui/Core/Element.h>
 #include <ui/Debugger.h>
 #include <PlatformExtensions.h>
-#include <RmlUi_Backend.h>
+#include <Ui_Backend.h>
 #include <Shell.h>
 #include <stdio.h>
 
-#if defined RMLUI_PLATFORM_WIN32
-	#include <RmlUi_Include_Windows.h>
+#if defined UI_PLATFORM_WIN32
+	#include <windows.h>
 int APIENTRY WinMain(HINSTANCE /*instance_handle*/, HINSTANCE /*previous_instance_handle*/, char* win_command_line, int /*command_show*/)
 #else
 int main(int argc, char** argv)
@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 {
 	const char* command_line = nullptr;
 
-#ifdef RMLUI_PLATFORM_WIN32
+#ifdef UI_PLATFORM_WIN32
 	command_line = win_command_line;
 #else
 	if (argc > 1)
@@ -61,42 +61,42 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	// Install the custom interfaces constructed by the backend before initializing RmlUi.
-	Rml::SetSystemInterface(Backend::GetSystemInterface());
-	Rml::SetRenderInterface(Backend::GetRenderInterface());
+	// Install the custom interfaces constructed by the backend before initializing pp-cpp-ui.
+	ui::SetSystemInterface(Backend::GetSystemInterface());
+	ui::SetRenderInterface(Backend::GetRenderInterface());
 
-	// RmlUi initialisation.
-	Rml::Initialise();
+	// pp-cpp-ui initialisation.
+	ui::Initialise();
 
-	// Create the main RmlUi context.
-	Rml::Context* context = Rml::CreateContext("main", Rml::Vector2i(window_width, window_height));
+	// Create the main pp-cpp-ui context.
+	ui::Context* context = ui::CreateContext("main", ui::Vector2i(window_width, window_height));
 	if (!context)
 	{
-		Rml::Shutdown();
+		ui::Shutdown();
 		Shell::Shutdown();
 		return -1;
 	}
 
-	Rml::Debugger::Initialise(context);
+	ui::Debugger::Initialise(context);
 	Shell::LoadFonts();
-	context->SetDefaultScrollBehavior(Rml::ScrollBehavior::Instant, 1.f);
+	context->SetDefaultScrollBehavior(ui::ScrollBehavior::Instant, 1.f);
 
 	{
-		const Rml::StringList directories = GetTestInputDirectories();
+		const ui::StringList directories = GetTestInputDirectories();
 
 		TestSuiteList test_suites;
 
-		for (const Rml::String& directory : directories)
+		for (const ui::String& directory : directories)
 		{
-			const Rml::StringList files = PlatformExtensions::ListFiles(directory, "rml");
+			const ui::StringList files = PlatformExtensions::ListFiles(directory, "rml");
 
 			if (files.empty())
-				Rml::Log::Message(Rml::Log::LT_WARNING, "Could not find any *.rml files in directory '%s'. Ignoring.", directory.c_str());
+				ui::Log::Message(ui::Log::LT_WARNING, "Could not find any *.rml files in directory '%s'. Ignoring.", directory.c_str());
 			else
 				test_suites.emplace_back(directory, std::move(files));
 		}
 
-		RMLUI_ASSERTMSG(!test_suites.empty(), "RML test files directory not found or empty.");
+		UI_ASSERTMSG(!test_suites.empty(), "RML test files directory not found or empty.");
 
 		TestViewer viewer(context);
 
@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	Rml::Shutdown();
+	ui::Shutdown();
 	Shell::Shutdown();
 	Backend::Shutdown();
 

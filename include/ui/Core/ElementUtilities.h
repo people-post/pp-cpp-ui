@@ -4,7 +4,7 @@
 #include "RenderManager.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Box;
 class Context;
@@ -16,7 +16,7 @@ namespace Style {
     Utility functions for dealing with elements.
  */
 
-class RMLUICORE_API ElementUtilities {
+class UI_CORE_API ElementUtilities {
 public:
 	enum PositionAnchor {
 		TOP = 1 << 0,
@@ -109,4 +109,4 @@ public:
 	static bool ApplyDataViewsControllers(Element* element);
 };
 
-} // namespace Rml
+} // namespace ui

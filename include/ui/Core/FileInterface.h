@@ -4,17 +4,17 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     The abstract base class for application-specific file I/O.
 
-    By default, RmlUi will use a file interface implementing the standard C file functions. If this is not sufficient,
+    By default, pp-cpp-ui will use a file interface implementing the standard C file functions. If this is not sufficient,
     or your application wants more control over file I/O, this class should be derived, instanced, and installed
-    through Rml::SetFileInterface() before you initialise RmlUi.
+    through ui::SetFileInterface() before you initialise pp-cpp-ui.
  */
 
-class RMLUICORE_API FileInterface : public NonCopyMoveable {
+class UI_CORE_API FileInterface : public NonCopyMoveable {
 public:
 	FileInterface();
 	virtual ~FileInterface();
@@ -58,4 +58,4 @@ public:
 	virtual bool LoadFile(const String& path, String& out_data);
 };
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 
 #include "Unit.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A numeric value is a number combined with a unit.
@@ -22,4 +22,4 @@ inline bool operator!=(const NumericValue& a, const NumericValue& b)
 	return !(a == b);
 }
 
-} // namespace Rml
+} // namespace ui

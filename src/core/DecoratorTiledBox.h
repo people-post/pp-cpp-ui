@@ -2,7 +2,7 @@
 
 #include "DecoratorTiled.h"
 
-namespace Rml {
+namespace ui {
 
 class DecoratorTiledBox : public DecoratorTiled {
 public:
@@ -50,4 +50,4 @@ public:
 		const DecoratorInstancerInterface& instancer_interface) override;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -6,9 +6,9 @@
 #include <ui/Core/EventListener.h>
 #include <ui/Core/Types.h>
 
-class TestNavigator : public Rml::EventListener {
+class TestNavigator : public ui::EventListener {
 public:
-	TestNavigator(Rml::RenderInterface* render_interface, Rml::Context* context, TestViewer* viewer, TestSuiteList test_suites, int start_suite,
+	TestNavigator(ui::RenderInterface* render_interface, ui::Context* context, TestViewer* viewer, TestSuiteList test_suites, int start_suite,
 		int start_case);
 	~TestNavigator();
 
@@ -17,7 +17,7 @@ public:
 	void Render();
 
 protected:
-	void ProcessEvent(Rml::Event& event) override;
+	void ProcessEvent(ui::Event& event) override;
 
 private:
 	enum class IterationState { None, Capture, Comparison };
@@ -40,14 +40,14 @@ private:
 
 	void ShowReference(ReferenceState new_reference_state);
 
-	Rml::String GetImageFilenameFromCurrentTest();
+	ui::String GetImageFilenameFromCurrentTest();
 
-	Rml::RenderInterface* render_interface;
-	Rml::Context* context;
+	ui::RenderInterface* render_interface;
+	ui::Context* context;
 	TestViewer* viewer;
 	TestSuiteList test_suites;
 
-	Rml::String test_filter;
+	ui::String test_filter;
 
 	int suite_index = 0;
 	int goto_index = -1;
@@ -64,5 +64,5 @@ private:
 	int iteration_initial_index = -1;
 	int iteration_wait_frames = -1;
 
-	Rml::Vector<ComparisonResult> comparison_results;
+	ui::Vector<ComparisonResult> comparison_results;
 };

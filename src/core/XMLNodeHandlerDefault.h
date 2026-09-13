@@ -3,7 +3,7 @@
 #include <ui/Core/Types.h>
 #include <ui/Core/XMLNodeHandler.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     Element Node handler that creates elements
@@ -22,4 +22,4 @@ public:
 	bool ElementData(XMLParser* parser, const String& data, XMLDataType type) override;
 };
 
-} // namespace Rml
+} // namespace ui

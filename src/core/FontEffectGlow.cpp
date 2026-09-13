@@ -2,7 +2,7 @@
 #include <ui/Core/PropertyDefinition.h>
 #include "Memory.h"
 
-namespace Rml {
+namespace ui {
 
 FontEffectGlow::FontEffectGlow()
 {
@@ -51,7 +51,7 @@ bool FontEffectGlow::Initialise(int _width_outline, int _width_blur, Vector2i _o
 	// Gaussian blur filter
 	const float std_dev = (width_blur == 0 ? 1.f : .4f * float(width_blur));
 	const float two_variance = 2.f * std_dev * std_dev;
-	const float gain = 1.f / Math::SquareRoot(Math::RMLUI_PI * two_variance);
+	const float gain = 1.f / Math::SquareRoot(Math::UI_PI * two_variance);
 
 	float sum_weight = 0.f;
 
@@ -151,4 +151,4 @@ SharedPtr<FontEffect> FontEffectGlowInstancer::InstanceFontEffect(const String& 
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

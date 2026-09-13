@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class StyleSheetNode;
@@ -126,4 +126,4 @@ bool operator==(const CompoundSelector& a, const CompoundSelector& b);
 /// @param scope[in] The element considered as the reference point/scope (for :scope).
 bool IsSelectorApplicable(const Element* element, const StructuralSelector& selector, const Element* scope);
 
-} // namespace Rml
+} // namespace ui

@@ -5,7 +5,7 @@
 #include <ui/Core/Event.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const char* document_handle_rml = R"(
 <rml>

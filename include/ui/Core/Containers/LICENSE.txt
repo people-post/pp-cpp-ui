@@ -1,4 +1,4 @@
-RmlUi Core contains thirdparty libraries. They are listed below along with
+pp-cpp-ui Core contains thirdparty libraries. They are listed below along with
 their full licenses - all MIT licensed.
 
 ---

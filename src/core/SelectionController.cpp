@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 namespace {
 
@@ -33,7 +33,7 @@ void CollectRootsInOrder(Element* element, Vector<ElementSelectableText*>& order
 	if (!element)
 		return;
 
-	if (auto* selectable = rmlui_dynamic_cast<ElementSelectableText*>(element))
+	if (auto* selectable = ui_dynamic_cast<ElementSelectableText*>(element))
 	{
 		if (selectable->IsSelectionRoot())
 			ordered.push_back(selectable);
@@ -125,7 +125,7 @@ ElementSelectableText* SelectionController::FindSelectableContainer(Element* tar
 {
 	for (Element* element = target; element; element = element->GetParentNode())
 	{
-		if (auto* selectable = rmlui_dynamic_cast<ElementSelectableText*>(element))
+		if (auto* selectable = ui_dynamic_cast<ElementSelectableText*>(element))
 			return selectable;
 	}
 	return nullptr;
@@ -148,7 +148,7 @@ bool SelectionController::IsInsideSelectionRoots(Element* element) const
 {
 	for (Element* current = element; current; current = current->GetParentNode())
 	{
-		if (auto* selectable = rmlui_dynamic_cast<ElementSelectableText*>(current))
+		if (auto* selectable = ui_dynamic_cast<ElementSelectableText*>(current))
 		{
 			if (selectable->IsSelectionRoot())
 				return true;
@@ -525,7 +525,7 @@ void SelectionController::RenderSelectionHandles()
 	const int start = Math::Min(anchor_index, focus_index);
 	const int end = Math::Max(anchor_index, focus_index);
 
-#if defined(RMLUI_DEBUG_SELECTION_HANDLES)
+#if defined(UI_DEBUG_SELECTION_HANDLES)
 	RenderSelectionHandleDebugMarker(render_manager, GetGlobalIndexPosition(start), dp_ratio);
 	RenderSelectionHandleDebugMarker(render_manager, GetGlobalIndexPosition(end), dp_ratio);
 #endif
@@ -542,4 +542,4 @@ void SelectionController::RenderSelectionHandles()
 	render_manager.SetState(saved_state);
 }
 
-} // namespace Rml
+} // namespace ui

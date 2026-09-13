@@ -5,13 +5,13 @@
 #include <ui/Core/SystemInterface.h>
 #include <Shell.h>
 
-class TestsSystemInterface : public Rml::SystemInterface {
+class TestsSystemInterface : public ui::SystemInterface {
 public:
 	~TestsSystemInterface();
 
 	double GetElapsedTime() override;
 
-	bool LogMessage(Rml::Log::Type type, const Rml::String& message) override;
+	bool LogMessage(ui::Log::Type type, const ui::String& message) override;
 
 	// Checks and clears previously logged messages, then sets the number of expected
 	// warnings and errors until the next call.
@@ -28,10 +28,10 @@ private:
 	int num_logged_warnings = 0;
 	int num_expected_warnings = 0;
 
-	Rml::StringList warnings;
+	ui::StringList warnings;
 };
 
-class TestsRenderInterface : public Rml::RenderInterface {
+class TestsRenderInterface : public ui::RenderInterface {
 public:
 	struct Counters {
 		size_t compile_geometry;
@@ -52,35 +52,35 @@ public:
 		size_t release_shader;
 	};
 
-	Rml::CompiledGeometryHandle CompileGeometry(Rml::Span<const Rml::Vertex> vertices, Rml::Span<const int> indices) override;
-	void RenderGeometry(Rml::CompiledGeometryHandle handle, Rml::Vector2f translation, Rml::TextureHandle texture) override;
-	void ReleaseGeometry(Rml::CompiledGeometryHandle handle) override;
+	ui::CompiledGeometryHandle CompileGeometry(ui::Span<const ui::Vertex> vertices, ui::Span<const int> indices) override;
+	void RenderGeometry(ui::CompiledGeometryHandle handle, ui::Vector2f translation, ui::TextureHandle texture) override;
+	void ReleaseGeometry(ui::CompiledGeometryHandle handle) override;
 
-	Rml::TextureHandle LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source) override;
-	Rml::TextureHandle GenerateTexture(Rml::Span<const Rml::byte> source_data, Rml::Vector2i source_dimensions) override;
-	void ReleaseTexture(Rml::TextureHandle texture_handle) override;
+	ui::TextureHandle LoadTexture(ui::Vector2i& texture_dimensions, const ui::String& source) override;
+	ui::TextureHandle GenerateTexture(ui::Span<const ui::byte> source_data, ui::Vector2i source_dimensions) override;
+	void ReleaseTexture(ui::TextureHandle texture_handle) override;
 
 	void EnableScissorRegion(bool enable) override;
-	void SetScissorRegion(Rml::Rectanglei region) override;
+	void SetScissorRegion(ui::Rectanglei region) override;
 
 	void EnableClipMask(bool enable) override;
-	void RenderToClipMask(Rml::ClipMaskOperation mask_operation, Rml::CompiledGeometryHandle geometry, Rml::Vector2f translation) override;
+	void RenderToClipMask(ui::ClipMaskOperation mask_operation, ui::CompiledGeometryHandle geometry, ui::Vector2f translation) override;
 
-	void SetTransform(const Rml::Matrix4f* transform) override;
+	void SetTransform(const ui::Matrix4f* transform) override;
 
-	Rml::CompiledFilterHandle CompileFilter(const Rml::String& name, const Rml::Dictionary& parameters) override;
-	void ReleaseFilter(Rml::CompiledFilterHandle filter) override;
+	ui::CompiledFilterHandle CompileFilter(const ui::String& name, const ui::Dictionary& parameters) override;
+	void ReleaseFilter(ui::CompiledFilterHandle filter) override;
 
-	Rml::CompiledShaderHandle CompileShader(const Rml::String& name, const Rml::Dictionary& parameters) override;
-	void RenderShader(Rml::CompiledShaderHandle shader, Rml::CompiledGeometryHandle geometry, Rml::Vector2f translation,
-		Rml::TextureHandle texture) override;
-	void ReleaseShader(Rml::CompiledShaderHandle shader) override;
+	ui::CompiledShaderHandle CompileShader(const ui::String& name, const ui::Dictionary& parameters) override;
+	void RenderShader(ui::CompiledShaderHandle shader, ui::CompiledGeometryHandle geometry, ui::Vector2f translation,
+		ui::TextureHandle texture) override;
+	void ReleaseShader(ui::CompiledShaderHandle shader) override;
 
 	const Counters& GetCounters() const { return counters; }
 	void ResetCounters();
 	const Counters& GetCountersFromPreviousReset() const { return counters_from_previous_reset; }
 
-	void ExpectCompileGeometry(Rml::Vector<Rml::Mesh> meshes);
+	void ExpectCompileGeometry(ui::Vector<ui::Mesh> meshes);
 
 	void Reset();
 
@@ -89,6 +89,6 @@ private:
 
 	Counters counters = {};
 	Counters counters_from_previous_reset = {};
-	Rml::Vector<Rml::Mesh> meshes;
+	ui::Vector<ui::Mesh> meshes;
 	bool meshes_set = false;
 };

@@ -3,7 +3,7 @@
 #include <ui/Core/NumericValue.h>
 #include <ui/Core/StyleTypes.h>
 
-namespace Rml {
+namespace ui {
 
 class Property;
 
@@ -43,4 +43,4 @@ const Style::ComputedValues& DefaultComputedValues();
 void InitializeComputeProperty();
 void ShutdownComputeProperty();
 
-} // namespace Rml
+} // namespace ui

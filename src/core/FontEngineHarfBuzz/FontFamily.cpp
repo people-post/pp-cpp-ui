@@ -23,7 +23,7 @@ FontFaceHandleHarfBuzz* FontFamily::GetFaceHandle(Style::FontStyle style, Style:
 
 		if (face->GetStyle() == style)
 		{
-			const int dist = Rml::Math::Absolute((int)face->GetWeight() - (int)weight);
+			const int dist = ui::Math::Absolute((int)face->GetWeight() - (int)weight);
 			if (dist == 0)
 			{
 				// Direct match for weight, break the loop early.
@@ -47,7 +47,7 @@ FontFaceHandleHarfBuzz* FontFamily::GetFaceHandle(Style::FontStyle style, Style:
 
 FontFace* FontFamily::AddFace(FontFaceHandleFreetype ft_face, Style::FontStyle style, Style::FontWeight weight, UniquePtr<byte[]> face_memory)
 {
-	auto face = Rml::MakeUnique<FontFace>(ft_face, style, weight);
+	auto face = ui::MakeUnique<FontFace>(ft_face, style, weight);
 	FontFace* result = face.get();
 
 	font_faces.push_back(FontFaceEntry{std::move(face), std::move(face_memory)});

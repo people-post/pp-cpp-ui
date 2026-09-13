@@ -2,7 +2,7 @@
 
 #include "FontTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class FontFace;
 class FontFaceHandleDefault;
@@ -43,4 +43,4 @@ protected:
 	FontFaceList font_faces;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include "NumericValue.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 struct ColorStop {
 	ColourbPremultiplied color;
@@ -35,4 +35,4 @@ inline bool operator!=(const BoxShadow& a, const BoxShadow& b)
 	return !(a == b);
 }
 
-} // namespace Rml
+} // namespace ui

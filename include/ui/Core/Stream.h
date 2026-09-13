@@ -5,7 +5,7 @@
 #include "Types.h"
 #include "URL.h"
 
-namespace Rml {
+namespace ui {
 
 class StreamListener;
 
@@ -13,7 +13,7 @@ class StreamListener;
     Abstract class for a media-independent byte stream.
  */
 
-class RMLUICORE_API Stream : public NonCopyMoveable {
+class UI_CORE_API Stream : public NonCopyMoveable {
 public:
 	// Stream modes.
 	enum StreamMode {
@@ -97,4 +97,4 @@ private:
 	int stream_mode;
 };
 
-} // namespace Rml
+} // namespace ui

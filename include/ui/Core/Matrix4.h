@@ -4,7 +4,7 @@
 #include "Math.h"
 #include "Vector4.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Templated class that acts as base strategy for vectors access patterns of matrices.
@@ -170,7 +170,7 @@ public:
 
 	typedef typename StorageType::TransposeType TransposeStorageType;
 	typedef Matrix4<ComponentType, TransposeStorageType> TransposeType;
-	friend class Rml::Matrix4<ComponentType, TransposeStorageType>;
+	friend class ui::Matrix4<ComponentType, TransposeStorageType>;
 
 private:
 	// The components of the matrix.
@@ -455,13 +455,13 @@ public:
 	static ThisType Compose(const Vector3<Component>& translation, const Vector3<Component>& scale, const Vector3<Component>& skew,
 		const Vector4<Component>& perspective, const Vector4<Component>& quaternion) noexcept;
 
-#if defined(RMLUI_MATRIX4_USER_EXTRA)
-	RMLUI_MATRIX4_USER_EXTRA
-#elif defined(RMLUI_MATRIX4_USER_INCLUDE)
-	#include RMLUI_MATRIX4_USER_INCLUDE
+#if defined(UI_MATRIX4_USER_EXTRA)
+	UI_MATRIX4_USER_EXTRA
+#elif defined(UI_MATRIX4_USER_INCLUDE)
+	#include UI_MATRIX4_USER_INCLUDE
 #endif
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Matrix4.inl"

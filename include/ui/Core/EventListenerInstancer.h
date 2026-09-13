@@ -5,7 +5,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class EventListener;
 
@@ -14,7 +14,7 @@ class EventListener;
     systems.
  */
 
-class RMLUICORE_API EventListenerInstancer {
+class UI_CORE_API EventListenerInstancer {
 public:
 	virtual ~EventListenerInstancer();
 
@@ -28,4 +28,4 @@ public:
 	virtual EventListener* InstanceEventListener(const String& value, Element* element) = 0;
 };
 
-} // namespace Rml
+} // namespace ui

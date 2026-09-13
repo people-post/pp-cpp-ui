@@ -2,7 +2,7 @@
 #include <ui/Core/PropertyIdSet.h>
 #include "StyleSheetNode.h"
 
-namespace Rml {
+namespace ui {
 
 ElementDefinition::ElementDefinition(const Vector<const StyleSheetNode*>& style_sheet_nodes)
 {
@@ -24,4 +24,4 @@ const PropertyIdSet& ElementDefinition::GetPropertyIds() const
 	return property_ids;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -4,11 +4,11 @@
 #include "Property.h"
 #include "PropertyParser.h"
 
-namespace Rml {
+namespace ui {
 
 enum class RelativeTarget { None, ContainingBlockWidth, ContainingBlockHeight, FontSize, ParentFontSize, LineHeight };
 
-class RMLUICORE_API PropertyDefinition final : public NonCopyMoveable {
+class UI_CORE_API PropertyDefinition final : public NonCopyMoveable {
 public:
 	PropertyDefinition(PropertyId id, const String& default_value, bool inherited, bool forces_layout);
 	~PropertyDefinition();
@@ -65,4 +65,4 @@ private:
 	RelativeTarget relative_target;
 };
 
-} // namespace Rml
+} // namespace ui

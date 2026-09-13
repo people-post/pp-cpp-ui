@@ -4,7 +4,7 @@
 #include <ui/Core/ScrollTypes.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     Implements scrolling behavior that occurs over time.
@@ -110,4 +110,4 @@ private:
 	bool overscroll_max_y = true;
 };
 
-} // namespace Rml
+} // namespace ui

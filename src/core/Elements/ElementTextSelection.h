@@ -2,7 +2,7 @@
 
 #include <ui/Core/Element.h>
 
-namespace Rml {
+namespace ui {
 
 class SelectionStyleClient {
 public:
@@ -16,7 +16,7 @@ public:
 
 class ElementTextSelection : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementTextSelection, Element)
+	UI_RTTI_DefineWithParent(ElementTextSelection, Element)
 
 	ElementTextSelection(const String& tag);
 	virtual ~ElementTextSelection();
@@ -30,4 +30,4 @@ private:
 	SelectionStyleClient* client;
 };
 
-} // namespace Rml
+} // namespace ui

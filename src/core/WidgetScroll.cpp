@@ -10,7 +10,7 @@
 #include "Layout/LayoutDetails.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 static constexpr float DEFAULT_REPEAT_DELAY = 0.5f;
 static constexpr float DEFAULT_REPEAT_PERIOD = 0.1f;
@@ -67,14 +67,14 @@ bool WidgetScroll::Initialise(Orientation _orientation)
 	// Check that we haven't already been successfully initialised.
 	if (orientation != UNKNOWN)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return false;
 	}
 
 	// Check that a valid orientation has been passed in.
 	if (_orientation != HORIZONTAL && _orientation != VERTICAL)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return false;
 	}
 
@@ -498,7 +498,7 @@ void WidgetScroll::Scroll(float distance, ScrollBehavior behavior)
 	Element* element_scroll = parent->GetParentNode();
 	if (!element_scroll)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return;
 	}
 
@@ -511,4 +511,4 @@ void WidgetScroll::Scroll(float distance, ScrollBehavior behavior)
 	element_scroll->ScrollTo(scroll_offset, behavior);
 }
 
-} // namespace Rml
+} // namespace ui

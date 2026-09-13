@@ -7,7 +7,7 @@
 #include <ui/Core/SelectionTypes.h>
 #include "ElementTextSelection.h"
 
-namespace Rml {
+namespace ui {
 
 class ElementText;
 class SelectionContentBuilder;
@@ -15,7 +15,7 @@ class SelectionContentBuilder;
 /// Static text container with drag-selection and Ctrl+C copy. Created for elements with selectable="text".
 class ElementSelectableText : public Element, public EventListener, public SelectionStyleClient {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementSelectableText, Element)
+	UI_RTTI_DefineWithParent(ElementSelectableText, Element)
 
 	explicit ElementSelectableText(const String& tag);
 	~ElementSelectableText() override;
@@ -73,4 +73,4 @@ private:
 	Geometry handle_end_geometry;
 };
 
-} // namespace Rml
+} // namespace ui

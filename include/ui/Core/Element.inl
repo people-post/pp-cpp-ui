@@ -1,4 +1,4 @@
-namespace Rml {
+namespace ui {
 
 template <typename T>
 T Element::GetProperty(const String& name)
@@ -28,4 +28,4 @@ T Element::GetAttribute(const String& name, const T& default_value) const
 	return Get(attributes, name, default_value);
 }
 
-} // namespace Rml
+} // namespace ui

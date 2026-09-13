@@ -2,7 +2,7 @@
 
 #include "InputType.h"
 
-namespace Rml {
+namespace ui {
 
 class WidgetTextInput;
 
@@ -64,4 +64,4 @@ private:
 	UniquePtr<WidgetTextInput> widget;
 };
 
-} // namespace Rml
+} // namespace ui

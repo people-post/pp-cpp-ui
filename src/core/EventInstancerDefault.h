@@ -3,7 +3,7 @@
 #include <ui/Core/EventInstancer.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     Default instancer for instancing events.
@@ -30,4 +30,4 @@ public:
 	void Release() override;
 };
 
-} // namespace Rml
+} // namespace ui

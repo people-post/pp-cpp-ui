@@ -1,7 +1,7 @@
 #include <ui/Core/Spritesheet.h>
 #include <ui/Core/Log.h>
 
-namespace Rml {
+namespace ui {
 
 Spritesheet::Spritesheet(const String& name, const String& source, const String& document_path, int definition_line_number, float display_scale) :
 	name(name), definition_line_number(definition_line_number), display_scale(display_scale), texture_source(source, document_path)
@@ -75,4 +75,4 @@ size_t SpritesheetList::NumSprites() const
 	return sprite_map.size();
 }
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include "StyleTypes.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /*
     Data extracted from the properties of an element to help provide context for text shaping and spacing.
@@ -15,4 +15,4 @@ struct TextShapingContext {
 	float letter_spacing = 0.0f; // Measured in pixels.
 };
 
-} // namespace Rml
+} // namespace ui

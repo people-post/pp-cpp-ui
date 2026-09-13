@@ -7,7 +7,7 @@
 #include <ui/Core/Factory.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String document_decorator_rml = R"(
 <rml>
@@ -38,19 +38,19 @@ static const String document_decorator_rml = R"(
 </rml>
 )";
 
-class DemoEventListenerInstancer : public Rml::EventListenerInstancer {
+class DemoEventListenerInstancer : public ui::EventListenerInstancer {
 public:
-	Rml::EventListener* InstanceEventListener(const Rml::String& value, Rml::Element* element) override;
+	ui::EventListener* InstanceEventListener(const ui::String& value, ui::Element* element) override;
 	bool has_exited = false;
 };
 
-class DemoEventListener : public Rml::EventListener {
+class DemoEventListener : public ui::EventListener {
 public:
-	DemoEventListener(const Rml::String& value, Rml::Element* element, DemoEventListenerInstancer* instancer) :
+	DemoEventListener(const ui::String& value, ui::Element* element, DemoEventListenerInstancer* instancer) :
 		value(value), element(element), instancer(instancer)
 	{}
 
-	void ProcessEvent(Rml::Event& /*event*/) override
+	void ProcessEvent(ui::Event& /*event*/) override
 	{
 		if (value == "exit")
 		{
@@ -73,15 +73,15 @@ public:
 		}
 	}
 
-	void OnDetach(Rml::Element* /*element*/) override { delete this; }
+	void OnDetach(ui::Element* /*element*/) override { delete this; }
 
 private:
-	Rml::String value;
-	Rml::Element* element;
+	ui::String value;
+	ui::Element* element;
 	DemoEventListenerInstancer* instancer;
 };
 
-Rml::EventListener* DemoEventListenerInstancer::InstanceEventListener(const Rml::String& value, Rml::Element* element)
+ui::EventListener* DemoEventListenerInstancer::InstanceEventListener(const ui::String& value, ui::Element* element)
 {
 	return new DemoEventListener(value, element, this);
 }
@@ -92,7 +92,7 @@ TEST_CASE("event_listener.replace_current_element")
 	REQUIRE(context);
 
 	DemoEventListenerInstancer event_listener_instancer;
-	Rml::Factory::RegisterEventListenerInstancer(&event_listener_instancer);
+	ui::Factory::RegisterEventListenerInstancer(&event_listener_instancer);
 
 	ElementDocument* document = context->LoadDocumentFromMemory(document_decorator_rml, "assets/");
 	REQUIRE(document);
@@ -131,6 +131,6 @@ TEST_CASE("event_listener.replace_current_element")
 	CHECK(event_listener_instancer.has_exited == !exit_cancelled);
 
 	document->Close();
-	Rml::Factory::RegisterEventListenerInstancer(nullptr);
+	ui::Factory::RegisterEventListenerInstancer(nullptr);
 	TestsShell::ShutdownShell();
 }

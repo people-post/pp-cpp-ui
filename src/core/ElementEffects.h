@@ -3,7 +3,7 @@
 #include <ui/Core/CompiledFilterShader.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Decorator;
 class Element;
@@ -62,4 +62,4 @@ private:
 	bool effects_data_dirty = false;
 };
 
-} // namespace Rml
+} // namespace ui

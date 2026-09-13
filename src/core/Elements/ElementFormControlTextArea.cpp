@@ -6,7 +6,7 @@
 #include <ui/Core/StyleSheetSpecification.h>
 #include "WidgetTextInputMultiLine.h"
 
-namespace Rml {
+namespace ui {
 
 ElementFormControlTextArea::ElementFormControlTextArea(const String& tag) : ElementFormControl(tag)
 {
@@ -177,4 +177,4 @@ void ElementFormControlTextArea::SetWordWrapProperties()
 	SetProperty(PropertyId::WhiteSpace, Property(word_wrap ? Style::WhiteSpace::Prewrap : Style::WhiteSpace::Pre));
 }
 
-} // namespace Rml
+} // namespace ui

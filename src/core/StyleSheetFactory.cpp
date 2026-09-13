@@ -6,7 +6,7 @@
 #include "StyleSheetParser.h"
 #include "StyleSheetSelector.h"
 
-namespace Rml {
+namespace ui {
 
 static UniquePtr<StyleSheetFactory> instance;
 
@@ -32,7 +32,7 @@ StyleSheetFactory::~StyleSheetFactory() {}
 
 bool StyleSheetFactory::Initialise()
 {
-	RMLUI_ASSERT(instance == nullptr);
+	UI_ASSERT(instance == nullptr);
 	instance = UniquePtr<StyleSheetFactory>(new StyleSheetFactory);
 	return true;
 }
@@ -197,4 +197,4 @@ UniquePtr<const StyleSheetContainer> StyleSheetFactory::LoadStyleSheetContainer(
 	return new_style_sheet;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -3,17 +3,17 @@
 #include "../Header.h"
 #include "ElementFormControl.h"
 
-namespace Rml {
+namespace ui {
 
 class WidgetTextInputMultiLine;
 
 /**
-    Default RmlUi implementation of a text area.
+    Default pp-cpp-ui implementation of a text area.
  */
 
-class RMLUICORE_API ElementFormControlTextArea : public ElementFormControl {
+class UI_CORE_API ElementFormControlTextArea : public ElementFormControl {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementFormControlTextArea, ElementFormControl)
+	UI_RTTI_DefineWithParent(ElementFormControlTextArea, ElementFormControl)
 
 	/// Constructs a new ElementFormControlTextArea. This should not be called directly; use the
 	/// Factory instead.
@@ -109,4 +109,4 @@ private:
 	UniquePtr<WidgetTextInputMultiLine> widget;
 };
 
-} // namespace Rml
+} // namespace ui

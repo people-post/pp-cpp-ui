@@ -3,12 +3,12 @@
 #include "FontEngineDefault/FontTypes.h"
 #include <ui/Core.h>
 
-using Rml::byte;
-using Rml::FontFaceHandleFreetype;
-using Rml::String;
-using Rml::UniquePtr;
-using Rml::Vector;
-namespace Style = Rml::Style;
+using ui::byte;
+using ui::FontFaceHandleFreetype;
+using ui::String;
+using ui::UniquePtr;
+using ui::Vector;
+namespace Style = ui::Style;
 
 class FontFace;
 class FontFaceHandleHarfBuzz;

@@ -4,7 +4,7 @@
 #include <ui/Core/Log.h>
 #include <ui/Core/XMLParser.h>
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandlerSelect::XMLNodeHandlerSelect() {}
 
@@ -12,7 +12,7 @@ XMLNodeHandlerSelect::~XMLNodeHandlerSelect() {}
 
 Element* XMLNodeHandlerSelect::ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes)
 {
-	RMLUI_ASSERT(name == "select" || name == "option");
+	UI_ASSERT(name == "select" || name == "option");
 
 	if (name == "select")
 	{
@@ -21,7 +21,7 @@ Element* XMLNodeHandlerSelect::ElementStart(XMLParser* parser, const String& nam
 
 		// Attempt to instance the tabset
 		ElementPtr element = Factory::InstanceElement(parser->GetParseFrame()->element, name, name, attributes);
-		ElementFormControlSelect* select_element = rmlui_dynamic_cast<ElementFormControlSelect*>(element.get());
+		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(element.get());
 		if (!select_element)
 		{
 			Log::Message(Log::LT_ERROR, "Instancer failed to create element for tag %s.", name.c_str());
@@ -41,7 +41,7 @@ Element* XMLNodeHandlerSelect::ElementStart(XMLParser* parser, const String& nam
 		ElementPtr option_element = Factory::InstanceElement(parser->GetParseFrame()->element, name, name, attributes);
 		Element* result = nullptr;
 
-		ElementFormControlSelect* select_element = rmlui_dynamic_cast<ElementFormControlSelect*>(parser->GetParseFrame()->element);
+		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(parser->GetParseFrame()->element);
 		if (select_element)
 		{
 			result = option_element.get();
@@ -54,4 +54,4 @@ Element* XMLNodeHandlerSelect::ElementStart(XMLParser* parser, const String& nam
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -5,7 +5,7 @@
 #include <ui/Core/PropertySpecification.h>
 #include <ui/Core/StyleSheetTypes.h>
 
-namespace Rml {
+namespace ui {
 
 struct PropertyParserDecoratorData {
 	const SmallUnorderedMap<String, BoxArea> area_keywords = {
@@ -48,7 +48,7 @@ bool PropertyParserDecorator::ParseValue(Property& property, const String& decor
 		return true;
 	}
 
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Make sure we don't split inside the parenthesis since they may appear in decorator shorthands.
 	StringList decorator_string_list;
@@ -143,4 +143,4 @@ String PropertyParserDecorator::ConvertAreaToString(BoxArea area)
 	return String();
 }
 
-} // namespace Rml
+} // namespace ui

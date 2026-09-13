@@ -4,7 +4,7 @@
 #include <ui/Core/Geometry.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 struct BoxShadowRenderable;
 
@@ -38,4 +38,4 @@ private:
 	StableMap<BackgroundType, Background> backgrounds;
 };
 
-} // namespace Rml
+} // namespace ui

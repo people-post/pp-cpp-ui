@@ -4,7 +4,7 @@
 #include <ui/Core/RenderManager.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class CompiledFilter;
 class CompiledShader;
@@ -38,11 +38,11 @@ private:
 	friend class Geometry;
 	friend class Texture;
 
-	friend StringList Rml::GetTextureSourceList();
-	friend bool Rml::ReleaseTexture(const String&, RenderInterface*);
-	friend void Rml::ReleaseTextures(RenderInterface*);
-	friend void Rml::ReleaseCompiledGeometry(RenderInterface*);
-	friend void Rml::ReleaseRenderManagers();
+	friend StringList ui::GetTextureSourceList();
+	friend bool ui::ReleaseTexture(const String&, RenderInterface*);
+	friend void ui::ReleaseTextures(RenderInterface*);
+	friend void ui::ReleaseCompiledGeometry(RenderInterface*);
+	friend void ui::ReleaseRenderManagers();
 };
 
-} // namespace Rml
+} // namespace ui

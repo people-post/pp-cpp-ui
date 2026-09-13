@@ -2,7 +2,7 @@
 
 #include "WidgetTextInputSingleLine.h"
 
-namespace Rml {
+namespace ui {
 
 class WidgetTextInputSingleLinePassword : public WidgetTextInputSingleLine {
 public:
@@ -16,4 +16,4 @@ protected:
 	int AttributeIndexToDisplayIndex(int attribute_index, const String& attribute_value) override;
 };
 
-} // namespace Rml
+} // namespace ui

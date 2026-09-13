@@ -6,14 +6,14 @@ using FontGlyphIndex = uint32_t;
 
 struct FontGlyphData
 {
-	Rml::FontGlyph bitmap;
-	Rml::Character character;
+	ui::FontGlyph bitmap;
+	ui::Character character;
 };
 
 struct FontGlyphReference
 {
-	const Rml::FontGlyph* bitmap;
-	Rml::Character character;
+	const ui::FontGlyph* bitmap;
+	ui::Character character;
 };
 
 struct FontClusterGlyphData
@@ -22,10 +22,10 @@ struct FontClusterGlyphData
 	FontGlyphData glyph_data;
 };
 
-using FontGlyphMap = Rml::UnorderedMap<FontGlyphIndex, FontGlyphData>;
-using FallbackFontGlyphMap = Rml::UnorderedMap<Rml::Character, Rml::FontGlyph>;
-using FallbackFontClusterGlyphsMap = Rml::UnorderedMap<Rml::String, Rml::Vector<FontClusterGlyphData>>;
-using FallbackFontClusterGlyphLookupMap = Rml::UnorderedMap<uint64_t, const Rml::FontGlyph*>;
+using FontGlyphMap = ui::UnorderedMap<FontGlyphIndex, FontGlyphData>;
+using FallbackFontGlyphMap = ui::UnorderedMap<ui::Character, ui::FontGlyph>;
+using FallbackFontClusterGlyphsMap = ui::UnorderedMap<ui::String, ui::Vector<FontClusterGlyphData>>;
+using FallbackFontClusterGlyphLookupMap = ui::UnorderedMap<uint64_t, const ui::FontGlyph*>;
 
 struct FontGlyphMaps {
 	const FontGlyphMap* glyphs;
@@ -33,8 +33,8 @@ struct FontGlyphMaps {
 	const FallbackFontClusterGlyphLookupMap* fallback_cluster_glyphs;
 };
 
-inline uint64_t GetFallbackFontClusterGlyphLookupID(FontGlyphIndex glyph_index, Rml::Character character)
+inline uint64_t GetFallbackFontClusterGlyphLookupID(FontGlyphIndex glyph_index, ui::Character character)
 {
 	// Combine 32-bit glyph index and 32-bit character into a single 64-bit integer.
-	return (static_cast<uint64_t>(glyph_index) << (sizeof(Rml::Character) * 8)) | static_cast<uint64_t>(character);
+	return (static_cast<uint64_t>(glyph_index) << (sizeof(ui::Character) * 8)) | static_cast<uint64_t>(character);
 }

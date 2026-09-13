@@ -1,13 +1,13 @@
-namespace Rml {
+namespace ui {
 
 template <typename SourceType, typename DestType>
 bool TypeConverter<SourceType, DestType>::Convert(const SourceType& /*src*/, DestType& /*dest*/)
 {
-	RMLUI_ERRORMSG("No converter specified.");
+	UI_ERRORMSG("No converter specified.");
 	return false;
 }
 
-#if defined(RMLUI_PLATFORM_WIN32) && defined(__MINGW32__)
+#if defined(UI_PLATFORM_WIN32) && defined(__MINGW32__)
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wformat"
 	#pragma GCC diagnostic push
@@ -434,9 +434,9 @@ public:
 #undef STRING_VECTOR_CONVERTER
 #undef VECTOR_STRING_CONVERTER
 
-#if defined(RMLUI_PLATFORM_WIN32) && defined(__MINGW32__)
+#if defined(UI_PLATFORM_WIN32) && defined(__MINGW32__)
 	#pragma GCC diagnostic pop
 	#pragma GCC diagnostic pop
 #endif
 
-} // namespace Rml
+} // namespace ui

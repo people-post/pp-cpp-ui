@@ -7,7 +7,7 @@
 #include <doctest.h>
 #include <float.h>
 
-using namespace Rml;
+using namespace ui;
 
 static String GenerateRowsRml(int num_rows, String row_rml)
 {

@@ -2,7 +2,7 @@
 #include <ui/Core/Variant.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 TEST_CASE("Variant.ScopedEnum")
 {

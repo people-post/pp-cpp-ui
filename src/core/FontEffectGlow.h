@@ -4,7 +4,7 @@
 #include <ui/Core/FontEffect.h>
 #include <ui/Core/FontEffectInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     A font effect for rendering glow around text.
@@ -47,4 +47,4 @@ private:
 	PropertyId id_width_outline, id_width_blur, id_offset_x, id_offset_y, id_color;
 };
 
-} // namespace Rml
+} // namespace ui

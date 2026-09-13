@@ -5,7 +5,7 @@
 #include "ID.h"
 #include "ScriptInterface.h"
 
-namespace Rml {
+namespace ui {
 
 class Factory;
 class Element;
@@ -20,7 +20,7 @@ enum class DefaultActionPhase { None, Target = (int)EventPhase::Target, TargetAn
     http://www.w3.org/TR/DOM-Level-3-Events/events.html.
  */
 
-class RMLUICORE_API Event : public ScriptInterface {
+class UI_CORE_API Event : public ScriptInterface {
 public:
 	/// Constructor
 	Event();
@@ -115,7 +115,7 @@ private:
 
 	EventInstancer* instancer = nullptr;
 
-	friend class Rml::Factory;
+	friend class ui::Factory;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -16,7 +16,7 @@
 #include "InfoSource.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 ElementInfo::ElementInfo(const String& tag) : ElementDebugDocument(tag)
@@ -439,7 +439,7 @@ void ElementInfo::UpdateSourceElement()
 			}
 
 			// Text is not an attribute but useful nonetheless
-			if (auto text_element = rmlui_dynamic_cast<ElementText*>(source_element))
+			if (auto text_element = ui_dynamic_cast<ElementText*>(source_element))
 			{
 				const String& text_content = text_element->GetText();
 				attributes += CreateString("Text: <em>%s</em><br />", text_content.c_str());
@@ -585,7 +585,7 @@ void ElementInfo::UpdateSourceElement()
 					continue;
 
 				String child_name = child->GetAddress(false, false);
-				auto document = rmlui_dynamic_cast<ElementDocument*>(child);
+				auto document = ui_dynamic_cast<ElementDocument*>(child);
 				if (document && !document->GetTitle().empty())
 					child_name += " (" + document->GetTitle() + ')';
 
@@ -720,4 +720,4 @@ bool ElementInfo::IsDebuggerElement(Element* element)
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

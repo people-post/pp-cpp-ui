@@ -5,7 +5,7 @@
 #include "Types.h"
 #include "Utilities.h"
 
-namespace Rml {
+namespace ui {
 
 class Decorator;
 class DecoratorInstancer;
@@ -79,17 +79,17 @@ struct StyleSheetIndex {
 	NodeIndex ids, classes, tags;
 	NodeList other;
 };
-} // namespace Rml
+} // namespace ui
 
 namespace std {
 // Hash specialization for the node list, so it can be used as key in UnorderedMap.
 template <>
-struct hash<::Rml::StyleSheetIndex::NodeList> {
-	size_t operator()(const ::Rml::StyleSheetIndex::NodeList& nodes) const noexcept
+struct hash<::ui::StyleSheetIndex::NodeList> {
+	size_t operator()(const ::ui::StyleSheetIndex::NodeList& nodes) const noexcept
 	{
 		size_t seed = 0;
-		for (const ::Rml::StyleSheetNode* node : nodes)
-			::Rml::Utilities::HashCombine(seed, node);
+		for (const ::ui::StyleSheetNode* node : nodes)
+			::ui::Utilities::HashCombine(seed, node);
 		return seed;
 	}
 };

@@ -4,7 +4,7 @@
 #include "FormattingContext.h"
 #include "TableFormattingDetails.h"
 
-namespace Rml {
+namespace ui {
 
 class Box;
 class TableGrid;
@@ -62,4 +62,4 @@ private:
 	Vector2f table_initial_content_size;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -4,7 +4,7 @@
 #include <ui/Core/EventListener.h>
 #include "ElementDebugDocument.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 typedef Pair<String, const Property*> NamedProperty;
@@ -12,7 +12,7 @@ typedef Vector<NamedProperty> NamedPropertyList;
 
 class ElementInfo : public ElementDebugDocument, public EventListener {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementInfo, ElementDebugDocument)
+	UI_RTTI_DefineWithParent(ElementInfo, ElementDebugDocument)
 
 	ElementInfo(const String& tag);
 	~ElementInfo();
@@ -67,4 +67,4 @@ private:
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

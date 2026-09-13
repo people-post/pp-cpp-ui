@@ -2,7 +2,7 @@
 #include <ui/Core/StringUtilities.h>
 #include <ui/Core/Variant.h>
 
-namespace Rml {
+namespace ui {
 
 DataTypeRegister::DataTypeRegister()
 {
@@ -78,12 +78,12 @@ DataTypeRegister::~DataTypeRegister() {}
 
 void TransformFuncRegister::Register(const String& name, DataTransformFunc transform_func)
 {
-	RMLUI_ASSERT(transform_func);
+	UI_ASSERT(transform_func);
 	bool inserted = transform_functions.emplace(name, std::move(transform_func)).second;
 	if (!inserted)
 	{
 		Log::Message(Log::LT_ERROR, "Transform function '%s' already exists.", name.c_str());
-		RMLUI_ERROR;
+		UI_ERROR;
 	}
 }
 
@@ -94,10 +94,10 @@ bool TransformFuncRegister::Call(const String& name, const VariantList& argument
 		return false;
 
 	const DataTransformFunc& transform_func = it->second;
-	RMLUI_ASSERT(transform_func);
+	UI_ASSERT(transform_func);
 
 	out_result = transform_func(arguments);
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

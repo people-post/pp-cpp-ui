@@ -2,7 +2,7 @@
 <head>
 	<title>Layout update and scrollbar resets</title>
 	<link type="text/rcss" href="../style.rcss"/>
-	<link rel="Issue #452" href="https://github.com/mikke89/RmlUi/issues/452" />
+	<link rel="Issue #452" href="https://github.com/mikke89/pp-cpp-ui/issues/452" />
 	<meta name="Description" content="Layout updates should not reset scrollbar positions in unrelated elements. The issue only seems to occur with scroll containers inside of flex boxes. Additionally the error is different depending on if the list is in a tabset or not." />
 	<meta name="Issue A" content="Left side is tabset: hovering the button jumps the scrollbar to the top." />
 	<meta name="Issue B" content="Right side is flex only: hovering the button resets the scrollbar from the very bottom back up the amount of padding on the container." />

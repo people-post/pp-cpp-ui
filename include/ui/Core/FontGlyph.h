@@ -2,13 +2,13 @@
 
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Metrics and bitmap data for a single glyph within a font face.
  */
 
-class RMLUICORE_API FontGlyph {
+class UI_CORE_API FontGlyph {
 public:
 	/// The distance from the cursor (positioned vertically on the baseline) to the top-left corner of this glyph's bitmap.
 	Vector2i bearing;
@@ -39,4 +39,4 @@ public:
 
 using FontGlyphMap = UnorderedMap<Character, FontGlyph>;
 
-} // namespace Rml
+} // namespace ui

@@ -8,7 +8,7 @@
 #include <ui/Core/RenderManager.h>
 #include <ui/Core/TextShapingContext.h>
 
-namespace Rml {
+namespace ui {
 
 DecoratorText::DecoratorText() {}
 
@@ -138,4 +138,4 @@ SharedPtr<Decorator> DecoratorTextInstancer::InstanceDecorator(const String& /*n
 	return decorator;
 }
 
-} // namespace Rml
+} // namespace ui

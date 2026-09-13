@@ -1,7 +1,7 @@
 #include "DecoratorUtilities.h"
 #include <ui/Core/Property.h>
 
-namespace Rml {
+namespace ui {
 
 Vector2Numeric ComputePosition(Array<const Property*, 2> p_position)
 {
@@ -28,4 +28,4 @@ Vector2Numeric ComputePosition(Array<const Property*, 2> p_position)
 	return position;
 }
 
-} // namespace Rml
+} // namespace ui

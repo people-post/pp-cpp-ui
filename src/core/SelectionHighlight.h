@@ -6,7 +6,7 @@
 #include <ui/Core/Mesh.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class ElementText;
@@ -34,10 +34,10 @@ void AppendSelectionQuad(Mesh& mesh, Vector2f position, Vector2f size, ColourbPr
 /// Build lollipop handle geometry (circle head + stem) centered on @p head_center (document coordinates).
 void BuildSelectionHandleGeometry(Vector2f head_center, float dp_ratio, ColourbPremultiplied fill, Mesh& mesh);
 
-/// Debug: draw a high-contrast marker at a handle anchor (requires RMLUI_DEBUG_SELECTION_HANDLES).
+/// Debug: draw a high-contrast marker at a handle anchor (requires UI_DEBUG_SELECTION_HANDLES).
 void RenderSelectionHandleDebugMarker(RenderManager& render_manager, Vector2f absolute_center, float dp_ratio);
 
 /// Render @p geometry in document space (mesh vertices already absolute; @p translation is typically zero).
 void RenderSelectionHandleGeometry(const Geometry& geometry, Vector2f translation);
 
-} // namespace Rml
+} // namespace ui

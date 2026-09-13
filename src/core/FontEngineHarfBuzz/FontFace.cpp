@@ -11,7 +11,7 @@ FontFace::FontFace(FontFaceHandleFreetype _face, Style::FontStyle _style, Style:
 FontFace::~FontFace()
 {
 	if (face)
-		Rml::FreeType::ReleaseFace(face);
+		ui::FreeType::ReleaseFace(face);
 }
 
 Style::FontStyle FontFace::GetStyle() const
@@ -33,12 +33,12 @@ FontFaceHandleHarfBuzz* FontFace::GetHandle(int size, bool load_default_glyphs)
 	// See if this face has been released.
 	if (!face)
 	{
-		Rml::Log::Message(Rml::Log::LT_WARNING, "Font face has been released, unable to generate new handle.");
+		ui::Log::Message(ui::Log::LT_WARNING, "Font face has been released, unable to generate new handle.");
 		return nullptr;
 	}
 
 	// Construct and initialise the new handle.
-	auto handle = Rml::MakeUnique<FontFaceHandleHarfBuzz>();
+	auto handle = ui::MakeUnique<FontFaceHandleHarfBuzz>();
 	if (!handle->Initialize(face, size, load_default_glyphs))
 	{
 		handles[size] = nullptr;

@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Context;
 
@@ -29,4 +29,4 @@ private:
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

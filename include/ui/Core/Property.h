@@ -6,11 +6,11 @@
 #include "Variant.h"
 #include <type_traits>
 
-namespace Rml {
+namespace ui {
 
 class PropertyDefinition;
 
-struct RMLUICORE_API PropertySource {
+struct UI_CORE_API PropertySource {
 	PropertySource(String path, int line_number, String rule_name) : path(std::move(path)), line_number(line_number), rule_name(std::move(rule_name))
 	{}
 	String path;
@@ -18,7 +18,7 @@ struct RMLUICORE_API PropertySource {
 	String rule_name;
 };
 
-class RMLUICORE_API Property {
+class UI_CORE_API Property {
 public:
 	Property();
 	template <typename PropertyType>
@@ -57,4 +57,4 @@ public:
 	SharedPtr<const PropertySource> source;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -10,7 +10,7 @@
 #include "LayoutEngine.h"
 #include <float.h>
 
-namespace Rml {
+namespace ui {
 
 // Convert width or height of a border box to the width or height of its corresponding content box.
 static inline float BorderSizeToContentSize(float border_size, float border_padding_edges_size)
@@ -144,7 +144,7 @@ void LayoutDetails::GetDefiniteMinMaxHeight(float& min_height, float& max_height
 
 ContainingBlock LayoutDetails::GetContainingBlock(ContainerBox* parent_container, const Style::Position position)
 {
-	RMLUI_ASSERT(parent_container);
+	UI_ASSERT(parent_container);
 	using Style::Position;
 
 	ContainerBox* container = parent_container;
@@ -165,7 +165,7 @@ ContainingBlock LayoutDetails::GetContainingBlock(ContainerBox* parent_container
 	const Box* box = container->GetIfBox();
 	if (!box)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return {container, {}};
 	}
 
@@ -214,7 +214,7 @@ void LayoutDetails::BuildBoxSizeAndMargins(Box& box, Vector2f min_size, Vector2f
 
 float LayoutDetails::GetShrinkToFitWidth(Element* element, Vector2f containing_block)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	// @performance Can we lay out the elements directly using a fit-content size mode, instead of fetching the
 	// shrink-to-fit width first? Use a non-definite placeholder for the box content width, and available width as a
@@ -289,7 +289,7 @@ String LayoutDetails::GetDebugElementName(Element* element)
 		return "nullptr";
 	if (!element->GetId().empty())
 		return '#' + element->GetId();
-	if (auto element_text = rmlui_dynamic_cast<ElementText*>(element))
+	if (auto element_text = ui_dynamic_cast<ElementText*>(element))
 		return '\"' + StringUtilities::StripWhitespace(element_text->GetText()).substr(0, 20) + '\"';
 	return element->GetAddress(false, false);
 }
@@ -385,7 +385,7 @@ Vector2f LayoutDetails::CalculateSizeForReplacedElement(const Vector2f specified
 void LayoutDetails::BuildBoxWidth(Box& box, const ComputedValues& computed, float min_width, float max_width, Vector2f containing_block,
 	Element* element, bool replaced_element, float override_shrink_to_fit_width)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	Vector2f content_area = box.GetSize();
 
@@ -483,7 +483,7 @@ void LayoutDetails::BuildBoxWidth(Box& box, const ComputedValues& computed, floa
 
 void LayoutDetails::BuildBoxHeight(Box& box, const ComputedValues& computed, float min_height, float max_height, float containing_block_height)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	Vector2f content_area = box.GetSize();
 
@@ -566,4 +566,4 @@ void LayoutDetails::BuildBoxHeight(Box& box, const ComputedValues& computed, flo
 	box.SetContent(content_area);
 }
 
-} // namespace Rml
+} // namespace ui

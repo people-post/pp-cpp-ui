@@ -7,7 +7,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 template <typename Object>
 class StructHandle {
@@ -125,7 +125,7 @@ bool StructHandle<Object>::CreateMemberObjectDefinition(const String& name, Memb
 	VariableDefinition* underlying_definition = type_register->GetDefinition<MemberType>();
 	if (!underlying_definition)
 		return false;
-	struct_definition->AddMember(name, Rml::MakeUnique<MemberObjectDefinition<Object, MemberType>>(underlying_definition, member_ptr));
+	struct_definition->AddMember(name, ui::MakeUnique<MemberObjectDefinition<Object, MemberType>>(underlying_definition, member_ptr));
 	return true;
 }
 
@@ -140,7 +140,7 @@ bool StructHandle<Object>::CreateMemberGetFuncDefinition(const String& name, Mem
 		return false;
 
 	struct_definition->AddMember(name,
-		Rml::MakeUnique<MemberGetFuncDefinition<Object, MemberType, BasicReturnType>>(underlying_definition, member_get_func_ptr));
+		ui::MakeUnique<MemberGetFuncDefinition<Object, MemberType, BasicReturnType>>(underlying_definition, member_get_func_ptr));
 	return true;
 }
 
@@ -155,11 +155,11 @@ bool StructHandle<Object>::CreateMemberScalarGetSetFuncDefinition(const String& 
 
 	if (!IsVoidMemberFunc<MemberGetType>::value)
 	{
-		RMLUI_ASSERTMSG(member_get_func_ptr, "Expected member getter function, but none provided.");
+		UI_ASSERTMSG(member_get_func_ptr, "Expected member getter function, but none provided.");
 	}
 	if (!IsVoidMemberFunc<MemberSetType>::value)
 	{
-		RMLUI_ASSERTMSG(member_get_func_ptr, "Expected member setter function, but none provided.");
+		UI_ASSERTMSG(member_get_func_ptr, "Expected member setter function, but none provided.");
 	}
 
 	VariableDefinition* underlying_definition = type_register->GetDefinition<UnderlyingType>();
@@ -168,16 +168,16 @@ bool StructHandle<Object>::CreateMemberScalarGetSetFuncDefinition(const String& 
 
 	if (underlying_definition->Type() != DataVariableType::Scalar)
 	{
-		RMLUI_LOG_TYPE_ERROR(UnderlyingType,
+		UI_LOG_TYPE_ERROR(UnderlyingType,
 			"Only scalar data variables are allowed here. Data member functions require scalar types when returning by value, or using getter/setter "
 			"function pairs.");
 		return false;
 	}
 
 	struct_definition->AddMember(name,
-		Rml::MakeUnique<MemberScalarGetSetFuncDefinition<Object, MemberGetType, MemberSetType, UnderlyingType>>(underlying_definition,
+		ui::MakeUnique<MemberScalarGetSetFuncDefinition<Object, MemberGetType, MemberSetType, UnderlyingType>>(underlying_definition,
 			member_get_func_ptr, member_set_func_ptr));
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

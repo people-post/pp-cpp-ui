@@ -3,7 +3,7 @@
 #include "Debug.h"
 #include "Vector2.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Templated class for a generic axis-aligned rectangle.
@@ -49,7 +49,7 @@ public:
 
 	Rectangle Intersect(Rectangle other) const
 	{
-		RMLUI_ASSERT(Valid() && other.Valid());
+		UI_ASSERT(Valid() && other.Valid());
 		Rectangle result{Math::Max(p0, other.p0), Math::Min(p1, other.p1)};
 		result.p1 = Math::Max(result.p0, result.p1);
 		return result;
@@ -82,4 +82,4 @@ private:
 	Rectangle(Vector2Type p0, Vector2Type p1) : p0(p0), p1(p1) {}
 };
 
-} // namespace Rml
+} // namespace ui

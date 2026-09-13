@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-namespace Rml {
+namespace ui {
 
 // Commonly used basic types
 using byte = unsigned char;
@@ -16,7 +16,7 @@ using ScriptObject = void*;
 enum class Character : char32_t { Null, Replacement = 0xfffd }; // Unicode code point
 enum class BoxArea { Margin, Border, Padding, Content, Auto };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Colour.h"
 #include "Matrix4.h"
@@ -27,7 +27,7 @@ enum class BoxArea { Margin, Border, Padding, Content, Auto };
 #include "Vector3.h"
 #include "Vector4.h"
 
-namespace Rml {
+namespace ui {
 
 // Color and linear algebra
 enum class ColorFormat { RGBA8, A8 };
@@ -44,7 +44,7 @@ using Rectanglei = Rectangle<int>;
 using Rectanglef = Rectangle<float>;
 using ColumnMajorMatrix4f = Matrix4<float, ColumnMajorStorage<float>>;
 using RowMajorMatrix4f = Matrix4<float, RowMajorStorage<float>>;
-using Matrix4f = RMLUI_MATRIX4_TYPE;
+using Matrix4f = UI_MATRIX4_TYPE;
 
 // Common classes
 class Element;
@@ -133,32 +133,32 @@ using DataViewPtr = UniqueReleaserPtr<DataView>;
 class DataController;
 using DataControllerPtr = UniqueReleaserPtr<DataController>;
 
-} // namespace Rml
+} // namespace ui
 
 namespace std {
 // Hash specialization for enum class types (required on some older compilers)
 template <>
-struct hash<::Rml::PropertyId> {
-	using utype = ::std::underlying_type_t<::Rml::PropertyId>;
-	size_t operator()(const ::Rml::PropertyId& t) const noexcept
+struct hash<::ui::PropertyId> {
+	using utype = ::std::underlying_type_t<::ui::PropertyId>;
+	size_t operator()(const ::ui::PropertyId& t) const noexcept
 	{
 		::std::hash<utype> h;
 		return h(static_cast<utype>(t));
 	}
 };
 template <>
-struct hash<::Rml::Character> {
-	using utype = ::std::underlying_type_t<::Rml::Character>;
-	size_t operator()(const ::Rml::Character& t) const noexcept
+struct hash<::ui::Character> {
+	using utype = ::std::underlying_type_t<::ui::Character>;
+	size_t operator()(const ::ui::Character& t) const noexcept
 	{
 		::std::hash<utype> h;
 		return h(static_cast<utype>(t));
 	}
 };
 template <>
-struct hash<::Rml::FamilyId> {
-	using utype = ::std::underlying_type_t<::Rml::FamilyId>;
-	size_t operator()(const ::Rml::FamilyId& t) const noexcept
+struct hash<::ui::FamilyId> {
+	using utype = ::std::underlying_type_t<::ui::FamilyId>;
+	size_t operator()(const ::ui::FamilyId& t) const noexcept
 	{
 		::std::hash<utype> h;
 		return h(static_cast<utype>(t));

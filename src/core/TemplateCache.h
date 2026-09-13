@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Template;
 
@@ -33,4 +33,4 @@ private:
 	Templates template_ids;
 };
 
-} // namespace Rml
+} // namespace ui

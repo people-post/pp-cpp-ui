@@ -1,5 +1,5 @@
 #[[
-	Utility functions used for packaging RmlUi.
+	Utility functions used for packaging pp-cpp-ui.
 ]]
 
 #[[
@@ -10,10 +10,10 @@ function(install_licenses)
 	configure_file("${PROJECT_SOURCE_DIR}/LICENSE.txt"
 		"${bin_licenses_dir}/LICENSE.txt" COPYONLY
 	)
-	configure_file("${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/LICENSE.txt"
+	configure_file("${PROJECT_SOURCE_DIR}/include/ui/Core/Containers/LICENSE.txt"
 		"${bin_licenses_dir}/LICENSE.Core.ThirdParty.txt" COPYONLY
 	)
-	configure_file("${PROJECT_SOURCE_DIR}/Source/Debugger/LICENSE.txt"
+	configure_file("${PROJECT_SOURCE_DIR}/src/debugger/LICENSE.txt"
 		"${bin_licenses_dir}/LICENSE.Debugger.ThirdParty.txt" COPYONLY
 	)
 
@@ -37,15 +37,15 @@ endfunction()
 	Install a text file with build info.
 ]]
 function(install_build_info)
-	if(NOT RMLUI_ARCHITECTURE OR NOT RMLUI_COMMIT_DATE OR NOT RMLUI_RUN_ID OR NOT RMLUI_SHA)
+	if(NOT UI_ARCHITECTURE OR NOT UI_COMMIT_DATE OR NOT UI_RUN_ID OR NOT UI_SHA)
 		message(FATAL_ERROR "Cannot install build info: Missing variables")
 	endif()
-	generate_rmlui_version_string()
+	generate_ui_version_string()
 	file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/Build.txt"
-		"RmlUi ${RMLUI_VERSION_SHORT} binaries for ${RMLUI_ARCHITECTURE}.\n\n"
-		"https://github.com/mikke89/RmlUi\n\n"
-		"Built using ${CMAKE_GENERATOR} (${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}) on ${RMLUI_COMMIT_DATE} (run ${RMLUI_RUN_ID}).\n"
-		"Commit id: ${RMLUI_SHA}"
+		"pp-cpp-ui ${UI_VERSION_SHORT} binaries for ${UI_ARCHITECTURE}.\n\n"
+		"https://github.com/mikke89/pp-cpp-ui\n\n"
+		"Built using ${CMAKE_GENERATOR} (${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}) on ${UI_COMMIT_DATE} (run ${UI_RUN_ID}).\n"
+		"Commit id: ${UI_SHA}"
 	)
 	install(FILES "${CMAKE_CURRENT_BINARY_DIR}/Build.txt"
 		DESTINATION "${CMAKE_INSTALL_DATADIR}"
@@ -68,14 +68,14 @@ function(install_vcpkg_dependencies)
 	)
 	message(STATUS "Installing vcpkg dependencies from: ${vcpkg_triplet_dir}")
 	install(DIRECTORY "${vcpkg_triplet_dir}/"
-		DESTINATION "${RMLUI_INSTALL_DEPENDENCIES_DIR}"
+		DESTINATION "${UI_INSTALL_DEPENDENCIES_DIR}"
 		CONFIGURATIONS "Release"
 		${common_patterns}
 		PATTERN "debug" EXCLUDE
 		PATTERN "*debug.cmake" EXCLUDE
 	)
 	install(DIRECTORY "${vcpkg_triplet_dir}/"
-		DESTINATION "${RMLUI_INSTALL_DEPENDENCIES_DIR}"
+		DESTINATION "${UI_INSTALL_DEPENDENCIES_DIR}"
 		CONFIGURATIONS "Debug"
 		${common_patterns}
 		PATTERN "${VCPKG_TARGET_TRIPLET}/bin" EXCLUDE

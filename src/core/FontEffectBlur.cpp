@@ -2,7 +2,7 @@
 #include <ui/Core/PropertyDefinition.h>
 #include "Memory.h"
 
-namespace Rml {
+namespace ui {
 
 FontEffectBlur::FontEffectBlur()
 {
@@ -26,7 +26,7 @@ bool FontEffectBlur::Initialise(int _width)
 
 	const float std_dev = .4f * float(width);
 	const float two_variance = 2.f * std_dev * std_dev;
-	const float gain = 1.f / Math::SquareRoot(Math::RMLUI_PI * two_variance);
+	const float gain = 1.f / Math::SquareRoot(Math::UI_PI * two_variance);
 
 	float sum_weight = 0.f;
 
@@ -110,4 +110,4 @@ SharedPtr<FontEffect> FontEffectBlurInstancer::InstanceFontEffect(const String& 
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

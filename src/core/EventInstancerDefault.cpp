@@ -1,7 +1,7 @@
 #include "EventInstancerDefault.h"
 #include <ui/Core/Event.h>
 
-namespace Rml {
+namespace ui {
 
 EventInstancerDefault::EventInstancerDefault() {}
 
@@ -22,4 +22,4 @@ void EventInstancerDefault::Release()
 	delete this;
 }
 
-} // namespace Rml
+} // namespace ui

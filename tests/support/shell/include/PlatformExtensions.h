@@ -4,9 +4,9 @@
 
 namespace PlatformExtensions {
 
-Rml::String FindSamplesRoot();
+ui::String FindSamplesRoot();
 
-Rml::StringList ListDirectories(const Rml::String& in_directory);
-Rml::StringList ListFiles(const Rml::String& in_directory, const Rml::String& extension = Rml::String());
+ui::StringList ListDirectories(const ui::String& in_directory);
+ui::StringList ListFiles(const ui::String& in_directory, const ui::String& extension = ui::String());
 
 } // namespace PlatformExtensions

@@ -3,7 +3,7 @@
 #include "Debug.h"
 #include "Math.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Templated class for a generic three-component vector.
@@ -110,13 +110,13 @@ public:
 	Type y;
 	Type z;
 
-#if defined(RMLUI_VECTOR3_USER_EXTRA)
-	RMLUI_VECTOR3_USER_EXTRA
-#elif defined(RMLUI_VECTOR3_USER_INCLUDE)
-	#include RMLUI_VECTOR3_USER_INCLUDE
+#if defined(UI_VECTOR3_USER_EXTRA)
+	UI_VECTOR3_USER_EXTRA
+#elif defined(UI_VECTOR3_USER_INCLUDE)
+	#include UI_VECTOR3_USER_INCLUDE
 #endif
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Vector3.inl"

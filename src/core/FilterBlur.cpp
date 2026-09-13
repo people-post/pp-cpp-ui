@@ -5,7 +5,7 @@
 #include <ui/Core/PropertyDictionary.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 bool FilterBlur::Initialise(NumericValue in_sigma)
 {
@@ -45,4 +45,4 @@ SharedPtr<Filter> FilterBlurInstancer::InstanceFilter(const String& /*name*/, co
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

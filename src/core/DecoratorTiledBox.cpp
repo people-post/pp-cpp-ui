@@ -3,7 +3,7 @@
 #include <ui/Core/Geometry.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 struct DecoratorTiledBoxData {
 	DecoratorTiledBoxData(int num_textures) : num_textures(num_textures) { geometry = new Geometry[num_textures]; }
@@ -73,7 +73,7 @@ DecoratorDataHandle DecoratorTiledBox::GenerateElementData(Element* element, Box
 	// Initialise the tiles for this element.
 	for (int i = 0; i < 9; i++)
 	{
-		RMLUI_ASSERT(tiles[i].texture_index >= 0);
+		UI_ASSERT(tiles[i].texture_index >= 0);
 		tiles[i].CalculateDimensions(GetTexture(tiles[i].texture_index));
 	}
 
@@ -266,4 +266,4 @@ SharedPtr<Decorator> DecoratorTiledBoxInstancer::InstanceDecorator(const String&
 	return decorator;
 }
 
-} // namespace Rml
+} // namespace ui

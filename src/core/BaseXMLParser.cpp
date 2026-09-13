@@ -4,7 +4,7 @@
 #include "XMLParseTools.h"
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 BaseXMLParser::BaseXMLParser() {}
 
@@ -89,7 +89,7 @@ bool BaseXMLParser::AtEnd() const
 
 char BaseXMLParser::Look() const
 {
-	RMLUI_ASSERT(!AtEnd());
+	UI_ASSERT(!AtEnd());
 	return xml_source[xml_index];
 }
 
@@ -123,7 +123,7 @@ void BaseXMLParser::ReadHeader()
 
 void BaseXMLParser::ReadBody()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	open_tag_depth = 0;
 	line_number_open_tag = 0;
@@ -272,7 +272,7 @@ bool BaseXMLParser::ReadCloseTag(const size_t xml_index_tag)
 	{
 		// Closing the tag that initiated the inner xml data parsing. Set all its contents as Data to be
 		// submitted next, and disable the mode to resume normal parsing behavior.
-		RMLUI_ASSERT(inner_xml_data_index_begin <= xml_index_tag);
+		UI_ASSERT(inner_xml_data_index_begin <= xml_index_tag);
 		inner_xml_data = false;
 		data = xml_source.substr(inner_xml_data_index_begin, xml_index_tag - inner_xml_data_index_begin);
 		HandleDataInternal(data, XMLDataType::InnerXML);
@@ -511,4 +511,4 @@ bool BaseXMLParser::PeekString(const char* string, bool consume)
 	return success;
 }
 
-} // namespace Rml
+} // namespace ui

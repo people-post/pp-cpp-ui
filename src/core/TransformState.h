@@ -3,7 +3,7 @@
 #include <ui/Core/Header.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class TransformState {
 public:
@@ -35,4 +35,4 @@ private:
 	mutable Matrix4f inverse_transform;
 };
 
-} // namespace Rml
+} // namespace ui

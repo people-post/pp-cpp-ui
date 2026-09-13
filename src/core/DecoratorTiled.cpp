@@ -8,7 +8,7 @@
 #include <ui/Core/Spritesheet.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 DecoratorTiled::DecoratorTiled() {}
 
@@ -256,7 +256,7 @@ void DecoratorTiledInstancer::RegisterTileProperty(const String& name, bool regi
 bool DecoratorTiledInstancer::GetTileProperties(DecoratorTiled::Tile* tiles, Texture* textures, size_t num_tiles_and_textures,
 	const PropertyDictionary& properties, const DecoratorInstancerInterface& instancer_interface) const
 {
-	RMLUI_ASSERT(num_tiles_and_textures == tile_property_ids.size());
+	UI_ASSERT(num_tiles_and_textures == tile_property_ids.size());
 
 	String previous_texture_name;
 	Texture previous_texture;
@@ -314,7 +314,7 @@ bool DecoratorTiledInstancer::GetTileProperties(DecoratorTiled::Tile* tiles, Tex
 
 		if (ids.fit != PropertyId::Invalid)
 		{
-			RMLUI_ASSERT(ids.align_x != PropertyId::Invalid && ids.align_y != PropertyId::Invalid);
+			UI_ASSERT(ids.align_x != PropertyId::Invalid && ids.align_y != PropertyId::Invalid);
 			const Property& fit_property = *properties.GetProperty(ids.fit);
 			tile.fit_mode = (DecoratorTiled::TileFitMode)fit_property.value.Get<int>();
 
@@ -370,4 +370,4 @@ bool DecoratorTiledInstancer::GetTileProperties(DecoratorTiled::Tile* tiles, Tex
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

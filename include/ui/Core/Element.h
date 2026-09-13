@@ -15,7 +15,7 @@
 #include "Tween.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Context;
 class DataModel;
@@ -46,11 +46,11 @@ struct StackingContextChild;
     A generic element in the DOM tree.
  */
 
-class RMLUICORE_API Element : public ScriptInterface, public EnableObserverPtr<Element> {
+class UI_CORE_API Element : public ScriptInterface, public EnableObserverPtr<Element> {
 public:
-	RMLUI_RTTI_DefineWithParent(Element, ScriptInterface)
+	UI_RTTI_DefineWithParent(Element, ScriptInterface)
 
-	/// Constructs a new RmlUi element. This should not be called directly; use the Factory instead.
+	/// Constructs a new pp-cpp-ui element. This should not be called directly; use the Factory instead.
 	/// @param[in] tag The tag the element was declared as in RML.
 	Element(const String& tag);
 	virtual ~Element();
@@ -807,16 +807,16 @@ private:
 
 	ElementMeta* meta;
 
-	friend class Rml::Context;
-	friend class Rml::ElementStyle;
-	friend class Rml::ContainerBox;
-	friend class Rml::InlineLevelBox;
-	friend class Rml::ReplacedBox;
-	friend class Rml::LayoutEngine;
-	friend class Rml::ElementScroll;
-	friend RMLUICORE_API void Rml::ReleaseFontResources();
+	friend class ui::Context;
+	friend class ui::ElementStyle;
+	friend class ui::ContainerBox;
+	friend class ui::InlineLevelBox;
+	friend class ui::ReplacedBox;
+	friend class ui::LayoutEngine;
+	friend class ui::ElementScroll;
+	friend UI_CORE_API void ui::ReleaseFontResources();
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Element.inl"

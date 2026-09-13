@@ -8,12 +8,12 @@
 #include "ReplacedFormattingContext.h"
 #include "TableFormattingContext.h"
 
-namespace Rml {
+namespace ui {
 
 UniquePtr<LayoutBox> FormattingContext::FormatIndependent(ContainerBox* parent_container, Element* element, const Box* override_initial_box,
 	FormattingContextType backup_context)
 {
-	RMLUI_ZoneScopedC(0xAFAFAF);
+	UI_ZoneScopedC(0xAFAFAF);
 	using namespace Style;
 
 	if (element->IsReplaced())
@@ -49,4 +49,4 @@ UniquePtr<LayoutBox> FormattingContext::FormatIndependent(ContainerBox* parent_c
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

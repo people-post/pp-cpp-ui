@@ -1,15 +1,15 @@
 #include "LogDefault.h"
 #include <ui/Core/StringUtilities.h>
 
-#ifdef RMLUI_PLATFORM_WIN32_NATIVE
+#ifdef UI_PLATFORM_WIN32_NATIVE
 	#include <windows.h>
 #else
 	#include <stdio.h>
 #endif
 
-namespace Rml {
+namespace ui {
 
-#if defined RMLUI_PLATFORM_WIN32_NATIVE
+#if defined UI_PLATFORM_WIN32_NATIVE
 bool LogDefault::LogMessage(Log::Type type, const String& message)
 {
 	#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
@@ -31,7 +31,7 @@ bool LogDefault::LogMessage(Log::Type type, const String& message)
 #else
 bool LogDefault::LogMessage(Log::Type /*type*/, const String& message)
 {
-	#ifdef RMLUI_PLATFORM_EMSCRIPTEN
+	#ifdef UI_PLATFORM_EMSCRIPTEN
 	puts(message.c_str());
 	#else
 	fprintf(stderr, "%s\n", message.c_str());
@@ -40,4 +40,4 @@ bool LogDefault::LogMessage(Log::Type /*type*/, const String& message)
 }
 #endif
 
-} // namespace Rml
+} // namespace ui

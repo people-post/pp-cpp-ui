@@ -51,7 +51,7 @@ jobs:
 
       - name: Build backend + unit tests
         shell: bash
-        run: cmake --build build --config Release -j 2 --target pp_ui_backend rmlui_unit_tests
+        run: cmake --build build --config Release -j 2 --target pp_ui_backend ui_unit_tests
 
       - name: Run unit tests
         shell: bash

@@ -4,7 +4,7 @@
 #include <ui/SVG/ElementSVG.h>
 #include "../core/XMLNodeHandlerDefault.h"
 
-namespace Rml {
+namespace ui {
 namespace SVG {
 	/**
 	    Element Node handler that processes the SVG tag
@@ -16,4 +16,4 @@ namespace SVG {
 	};
 
 } // namespace SVG
-} // namespace Rml
+} // namespace ui

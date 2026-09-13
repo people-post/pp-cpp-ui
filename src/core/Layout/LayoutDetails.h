@@ -3,7 +3,7 @@
 #include <ui/Core/StyleTypes.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Box;
 class BlockContainer;
@@ -123,4 +123,4 @@ private:
 	static void BuildBoxHeight(Box& box, const ComputedValues& computed, float min_height, float max_height, float containing_block_height);
 };
 
-} // namespace Rml
+} // namespace ui

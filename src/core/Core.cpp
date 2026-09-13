@@ -26,17 +26,17 @@
 #include "StyleSheetParser.h"
 #include "TemplateCache.h"
 
-#ifdef RMLUI_FONT_ENGINE_FREETYPE
+#ifdef UI_FONT_ENGINE_FREETYPE
 	#include "FontEngineDefault/FontEngineInterfaceDefault.h"
 #endif
 
-#ifdef RMLUI_SVG_PLUGIN
+#ifdef UI_SVG_PLUGIN
 	#include "../svg/SVGPlugin.h"
 #endif
 
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 static RenderInterface* render_interface = nullptr;
 static SystemInterface* system_interface = nullptr;
@@ -72,13 +72,13 @@ static void ReleaseMemoryPools()
 	Detail::ShutdownElementInstancerPools();
 }
 
-#ifndef RMLUI_VERSION
-	#define RMLUI_VERSION "custom"
+#ifndef UI_VERSION
+	#define UI_VERSION "custom"
 #endif
 
 bool Initialise()
 {
-	RMLUI_ASSERTMSG(!initialised, "Rml::Initialise() called, but RmlUi is already initialised!");
+	UI_ASSERTMSG(!initialised, "ui::Initialise() called, but pp-cpp-ui is already initialised!");
 
 	InitializeMemoryPools();
 	InitializeComputeProperty();
@@ -94,7 +94,7 @@ bool Initialise()
 
 	if (!file_interface)
 	{
-#ifndef RMLUI_NO_FILE_INTERFACE_DEFAULT
+#ifndef UI_NO_FILE_INTERFACE_DEFAULT
 		core_data->default_file_interface = MakeUnique<FileInterfaceDefault>();
 		file_interface = core_data->default_file_interface.get();
 #else
@@ -105,7 +105,7 @@ bool Initialise()
 
 	if (!font_interface)
 	{
-#ifdef RMLUI_FONT_ENGINE_FREETYPE
+#ifdef UI_FONT_ENGINE_FREETYPE
 		core_data->default_font_interface = MakeUnique<FontEngineInterfaceDefault>();
 		font_interface = core_data->default_font_interface.get();
 #else
@@ -141,10 +141,10 @@ bool Initialise()
 	Factory::Initialise();
 
 	// Initialise plugins integrated with Core.
-#ifdef RMLUI_LOTTIE_PLUGIN
+#ifdef UI_LOTTIE_PLUGIN
 	Lottie::Initialise();
 #endif
-#ifdef RMLUI_SVG_PLUGIN
+#ifdef UI_SVG_PLUGIN
 	SVG::Initialise();
 #endif
 	BoxShadowCache::Initialize();
@@ -159,7 +159,7 @@ bool Initialise()
 
 void Shutdown()
 {
-	RMLUI_ASSERTMSG(initialised, "Rml::Shutdown() called, but RmlUi is not initialised!");
+	UI_ASSERTMSG(initialised, "ui::Shutdown() called, but pp-cpp-ui is not initialised!");
 
 	// Clear out all contexts, which should also clean up all attached elements.
 	core_data->contexts.clear();
@@ -200,7 +200,7 @@ void Shutdown()
 
 String GetVersion()
 {
-	return RMLUI_VERSION;
+	return UI_VERSION;
 }
 
 void SetSystemInterface(SystemInterface* _system_interface)
@@ -458,4 +458,4 @@ namespace CoreInternal {
 
 } // namespace CoreInternal
 
-} // namespace Rml
+} // namespace ui

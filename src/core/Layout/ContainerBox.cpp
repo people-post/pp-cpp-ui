@@ -9,11 +9,11 @@
 #include <algorithm>
 #include <cmath>
 
-namespace Rml {
+namespace ui {
 
 void ContainerBox::ResetScrollbars(const Box& box)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 	if (overflow_x == Style::Overflow::Scroll)
 		element->GetElementScroll()->EnableScrollbar(ElementScroll::HORIZONTAL, box.GetSizeAcross(BoxDirection::Horizontal, BoxArea::Padding));
 	else
@@ -128,7 +128,7 @@ bool ContainerBox::CatchOverflow(const Vector2f content_overflow_size, const Box
 	if (available_space.y < 0.f)
 		available_space.y = HUGE_VALF;
 
-	RMLUI_ASSERT(available_space.x >= 0.f && available_space.y >= 0.f);
+	UI_ASSERT(available_space.x >= 0.f && available_space.y >= 0.f);
 
 	// Allow overflow onto the padding area.
 	available_space += padding_bottom_right;
@@ -231,7 +231,7 @@ String RootBox::DebugDumpTree(int depth) const
 
 FlexContainer::FlexContainer(Element* element, ContainerBox* parent_container) : ContainerBox(Type::FlexContainer, element, parent_container)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 }
 
 bool FlexContainer::Close(const Vector2f content_overflow_size, const Box& box, float element_baseline)
@@ -263,7 +263,7 @@ String FlexContainer::DebugDumpTree(int depth) const
 
 TableWrapper::TableWrapper(Element* element, ContainerBox* parent_container) : ContainerBox(Type::TableWrapper, element, parent_container)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 }
 
 void TableWrapper::Close(const Vector2f content_overflow_size, const Box& box, float element_baseline)
@@ -271,7 +271,7 @@ void TableWrapper::Close(const Vector2f content_overflow_size, const Box& box, f
 	bool result = SubmitBox(content_overflow_size, box, -1.f);
 
 	// Since the table wrapper cannot generate scrollbars, this should always pass.
-	RMLUI_ASSERT(result);
+	UI_ASSERT(result);
 	(void)result;
 
 	ClosePositionedElements();
@@ -295,4 +295,4 @@ String TableWrapper::DebugDumpTree(int depth) const
 	return String(depth * 2, ' ') + "TableWrapper" + " | " + LayoutDetails::GetDebugElementName(element);
 }
 
-} // namespace Rml
+} // namespace ui

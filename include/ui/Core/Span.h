@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <type_traits>
 
-namespace Rml {
+namespace ui {
 
 /**
     Basic implementation of a span, which refers to a contiguous sequence of objects.
@@ -15,14 +15,14 @@ template <typename T>
 class Span {
 public:
 	Span() = default;
-	Span(T* data, size_t size) : m_data(data), m_size(size) { RMLUI_ASSERT(data != nullptr || size == 0); }
+	Span(T* data, size_t size) : m_data(data), m_size(size) { UI_ASSERT(data != nullptr || size == 0); }
 
 	Span(const Vector<typename std::remove_const_t<T>>& container) : Span(container.data(), container.size()) {}
 	Span(Vector<T>& container) : Span(container.data(), container.size()) {}
 
 	T& operator[](size_t index) const
 	{
-		RMLUI_ASSERT(index < m_size);
+		UI_ASSERT(index < m_size);
 		return m_data[index];
 	}
 
@@ -38,4 +38,4 @@ private:
 	size_t m_size = 0;
 };
 
-} // namespace Rml
+} // namespace ui

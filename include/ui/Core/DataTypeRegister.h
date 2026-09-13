@@ -6,7 +6,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 template <typename T>
 struct is_builtin_data_scalar {
@@ -14,7 +14,7 @@ struct is_builtin_data_scalar {
 		std::is_arithmetic<T>::value || std::is_enum<T>::value || std::is_same<typename std::remove_const<T>::type, String>::value;
 };
 
-class RMLUICORE_API TransformFuncRegister {
+class UI_CORE_API TransformFuncRegister {
 public:
 	void Register(const String& name, DataTransformFunc transform_func);
 	bool Call(const String& name, const VariantList& arguments, Variant& out_result) const;
@@ -23,7 +23,7 @@ private:
 	UnorderedMap<String, DataTransformFunc> transform_functions;
 };
 
-class RMLUICORE_API DataTypeRegister final : NonCopyMoveable {
+class UI_CORE_API DataTypeRegister final : NonCopyMoveable {
 public:
 	DataTypeRegister();
 	~DataTypeRegister();
@@ -43,7 +43,7 @@ public:
 	inline TransformFuncRegister* GetTransformFuncRegister() { return &transform_register; }
 
 private:
-	// Get definition for scalar types that can be assigned to and from Rml::Variant.
+	// Get definition for scalar types that can be assigned to and from ui::Variant.
 	// We automatically register these when needed, so users don't have to register trivial types manually.
 	template <typename T, typename std::enable_if_t<!PointerTraits<T>::is_pointer::value && is_builtin_data_scalar<T>::value, int> = 0>
 	VariableDefinition* GetDefinitionDetail()
@@ -56,7 +56,7 @@ private:
 		UniquePtr<VariableDefinition>& definition = result.first->second;
 
 		if (inserted)
-			definition = Rml::MakeUnique<ScalarDefinition<T>>();
+			definition = ui::MakeUnique<ScalarDefinition<T>>();
 
 		return definition.get();
 	}
@@ -70,7 +70,7 @@ private:
 		auto it = type_register.find(id);
 		if (it == type_register.end())
 		{
-			RMLUI_LOG_TYPE_ERROR(T,
+			UI_LOG_TYPE_ERROR(T,
 				"Desired data type T not registered with the type register, please use the 'Register...()' functions before binding values, adding "
 				"members, or registering arrays of non-scalar types.");
 			return nullptr;
@@ -95,7 +95,7 @@ private:
 		VariableDefinition* underlying_definition = GetDefinitionDetail<UnderlyingType>();
 		if (!underlying_definition)
 		{
-			RMLUI_LOG_TYPE_ERROR(T, "Underlying type of pointer not registered.");
+			UI_LOG_TYPE_ERROR(T, "Underlying type of pointer not registered.");
 			return nullptr;
 		}
 
@@ -107,7 +107,7 @@ private:
 		UniquePtr<VariableDefinition>& definition = result.first->second;
 
 		if (inserted)
-			definition = Rml::MakeUnique<PointerDefinition<T>>(underlying_definition);
+			definition = ui::MakeUnique<PointerDefinition<T>>(underlying_definition);
 
 		return definition.get();
 	}
@@ -116,4 +116,4 @@ private:
 	TransformFuncRegister transform_register;
 };
 
-} // namespace Rml
+} // namespace ui

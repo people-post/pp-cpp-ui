@@ -6,7 +6,7 @@
 #include <ui/Core/PropertyDefinition.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 Pool<ShaderElementData>& GetShaderElementDataPool()
 {
@@ -88,4 +88,4 @@ SharedPtr<Decorator> DecoratorShaderInstancer::InstanceDecorator(const String& /
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

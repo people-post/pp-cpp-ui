@@ -4,7 +4,7 @@
 #include "Types.h"
 #include "Vector2.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 
@@ -30,4 +30,4 @@ struct SelectionEndpoint {
 	bool IsValid() const { return owner != nullptr && index >= 0; }
 };
 
-} // namespace Rml
+} // namespace ui

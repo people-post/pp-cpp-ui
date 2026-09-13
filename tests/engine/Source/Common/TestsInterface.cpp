@@ -14,17 +14,17 @@ double TestsSystemInterface::GetElapsedTime()
 	if (manual_time)
 		return elapsed_time;
 
-	return Rml::SystemInterface::GetElapsedTime();
+	return ui::SystemInterface::GetElapsedTime();
 }
 
-bool TestsSystemInterface::LogMessage(Rml::Log::Type type, const Rml::String& message)
+bool TestsSystemInterface::LogMessage(ui::Log::Type type, const ui::String& message)
 {
-	static const char* message_type_str[Rml::Log::Type::LT_MAX] = {"Always", "Error", "Assert", "Warning", "Info", "Debug"};
-	const bool result = Rml::SystemInterface::LogMessage(type, message);
+	static const char* message_type_str[ui::Log::Type::LT_MAX] = {"Always", "Error", "Assert", "Warning", "Info", "Debug"};
+	const bool result = ui::SystemInterface::LogMessage(type, message);
 
-	if (type <= Rml::Log::Type::LT_WARNING)
+	if (type <= ui::Log::Type::LT_WARNING)
 	{
-		const Rml::String warning = "RmlUi " + Rml::String(message_type_str[type]) + ": " + message;
+		const ui::String warning = "pp-cpp-ui " + ui::String(message_type_str[type]) + ": " + message;
 
 		if (num_expected_warnings > 0)
 		{
@@ -47,8 +47,8 @@ void TestsSystemInterface::SetNumExpectedWarnings(int in_num_expected_warnings)
 		// Check and clear previous warnings
 		if (num_logged_warnings != num_expected_warnings)
 		{
-			Rml::String str = "Got unexpected number of warnings: \n";
-			Rml::StringUtilities::JoinString(str, warnings, '\n');
+			ui::String str = "Got unexpected number of warnings: \n";
+			ui::StringUtilities::JoinString(str, warnings, '\n');
 			if (warnings.empty())
 				str += "(no warnings logged)";
 			CHECK_MESSAGE(num_logged_warnings == num_expected_warnings, str);
@@ -75,7 +75,7 @@ void TestsSystemInterface::Reset()
 	SetNumExpectedWarnings(0);
 }
 
-Rml::CompiledGeometryHandle TestsRenderInterface::CompileGeometry(Rml::Span<const Rml::Vertex> vertices, Rml::Span<const int> indices)
+ui::CompiledGeometryHandle TestsRenderInterface::CompileGeometry(ui::Span<const ui::Vertex> vertices, ui::Span<const int> indices)
 {
 	counters.compile_geometry += 1;
 
@@ -85,7 +85,7 @@ Rml::CompiledGeometryHandle TestsRenderInterface::CompileGeometry(Rml::Span<cons
 		INFO("Got indices:\n", indices);
 		REQUIRE_MESSAGE(!meshes.empty(), "No CompileGeometry expected, but one was passed to us");
 
-		Rml::Mesh mesh = std::move(meshes.front());
+		ui::Mesh mesh = std::move(meshes.front());
 		meshes.erase(meshes.begin());
 		INFO("Expected mesh:\n", mesh);
 
@@ -105,15 +105,15 @@ Rml::CompiledGeometryHandle TestsRenderInterface::CompileGeometry(Rml::Span<cons
 		}
 	}
 
-	return Rml::CompiledGeometryHandle(counters.compile_geometry);
+	return ui::CompiledGeometryHandle(counters.compile_geometry);
 }
 
-void TestsRenderInterface::RenderGeometry(Rml::CompiledGeometryHandle /*geometry*/, Rml::Vector2f /*translation*/, Rml::TextureHandle /*texture*/)
+void TestsRenderInterface::RenderGeometry(ui::CompiledGeometryHandle /*geometry*/, ui::Vector2f /*translation*/, ui::TextureHandle /*texture*/)
 {
 	counters.render_geometry += 1;
 }
 
-void TestsRenderInterface::ReleaseGeometry(Rml::CompiledGeometryHandle /*geometry*/)
+void TestsRenderInterface::ReleaseGeometry(ui::CompiledGeometryHandle /*geometry*/)
 {
 	counters.release_geometry += 1;
 }
@@ -123,7 +123,7 @@ void TestsRenderInterface::EnableScissorRegion(bool /*enable*/)
 	counters.enable_scissor += 1;
 }
 
-void TestsRenderInterface::SetScissorRegion(Rml::Rectanglei /*region*/)
+void TestsRenderInterface::SetScissorRegion(ui::Rectanglei /*region*/)
 {
 	counters.set_scissor += 1;
 }
@@ -133,16 +133,16 @@ void TestsRenderInterface::EnableClipMask(bool /*enable*/)
 	counters.enable_clip_mask += 1;
 }
 
-void TestsRenderInterface::RenderToClipMask(Rml::ClipMaskOperation /*mask_operation*/, Rml::CompiledGeometryHandle /*geometry*/,
-	Rml::Vector2f /*translation*/)
+void TestsRenderInterface::RenderToClipMask(ui::ClipMaskOperation /*mask_operation*/, ui::CompiledGeometryHandle /*geometry*/,
+	ui::Vector2f /*translation*/)
 {
 	counters.render_to_clip_mask += 1;
 }
 
-Rml::TextureHandle TestsRenderInterface::LoadTexture(Rml::Vector2i& texture_dimensions, const Rml::String& source)
+ui::TextureHandle TestsRenderInterface::LoadTexture(ui::Vector2i& texture_dimensions, const ui::String& source)
 {
 	counters.load_texture += 1;
-	if (source.find("invalid") != Rml::String::npos)
+	if (source.find("invalid") != ui::String::npos)
 		return 0;
 
 	texture_dimensions.x = 512;
@@ -150,46 +150,46 @@ Rml::TextureHandle TestsRenderInterface::LoadTexture(Rml::Vector2i& texture_dime
 	return 1;
 }
 
-Rml::TextureHandle TestsRenderInterface::GenerateTexture(Rml::Span<const Rml::byte> /*source*/, Rml::Vector2i /*source_dimensions*/)
+ui::TextureHandle TestsRenderInterface::GenerateTexture(ui::Span<const ui::byte> /*source*/, ui::Vector2i /*source_dimensions*/)
 {
 	counters.generate_texture += 1;
 	return 1;
 }
 
-void TestsRenderInterface::ReleaseTexture(Rml::TextureHandle /*texture_handle*/)
+void TestsRenderInterface::ReleaseTexture(ui::TextureHandle /*texture_handle*/)
 {
 	counters.release_texture += 1;
 }
 
-void TestsRenderInterface::SetTransform(const Rml::Matrix4f* /*transform*/)
+void TestsRenderInterface::SetTransform(const ui::Matrix4f* /*transform*/)
 {
 	counters.set_transform += 1;
 }
 
-Rml::CompiledFilterHandle TestsRenderInterface::CompileFilter(const Rml::String& /*name*/, const Rml::Dictionary& /*parameters*/)
+ui::CompiledFilterHandle TestsRenderInterface::CompileFilter(const ui::String& /*name*/, const ui::Dictionary& /*parameters*/)
 {
 	counters.compile_filter += 1;
 	return 1;
 }
 
-void TestsRenderInterface::ReleaseFilter(Rml::CompiledFilterHandle /*filter*/)
+void TestsRenderInterface::ReleaseFilter(ui::CompiledFilterHandle /*filter*/)
 {
 	counters.release_filter += 1;
 }
 
-Rml::CompiledShaderHandle TestsRenderInterface::CompileShader(const Rml::String& /*name*/, const Rml::Dictionary& /*parameters*/)
+ui::CompiledShaderHandle TestsRenderInterface::CompileShader(const ui::String& /*name*/, const ui::Dictionary& /*parameters*/)
 {
 	counters.compile_shader += 1;
 	return 1;
 }
 
-void TestsRenderInterface::RenderShader(Rml::CompiledShaderHandle /*shader*/, Rml::CompiledGeometryHandle /*geometry*/, Rml::Vector2f /*translation*/,
-	Rml::TextureHandle /*texture*/)
+void TestsRenderInterface::RenderShader(ui::CompiledShaderHandle /*shader*/, ui::CompiledGeometryHandle /*geometry*/, ui::Vector2f /*translation*/,
+	ui::TextureHandle /*texture*/)
 {
 	counters.render_shader += 1;
 }
 
-void TestsRenderInterface::ReleaseShader(Rml::CompiledShaderHandle /*shader*/)
+void TestsRenderInterface::ReleaseShader(ui::CompiledShaderHandle /*shader*/)
 {
 	counters.release_shader += 1;
 }
@@ -198,7 +198,7 @@ void TestsRenderInterface::ResetCounters()
 	counters_from_previous_reset = std::exchange(counters, Counters());
 }
 
-void TestsRenderInterface::ExpectCompileGeometry(Rml::Vector<Rml::Mesh> in_meshes)
+void TestsRenderInterface::ExpectCompileGeometry(ui::Vector<ui::Mesh> in_meshes)
 {
 	VerifyMeshes();
 	meshes = std::move(in_meshes);

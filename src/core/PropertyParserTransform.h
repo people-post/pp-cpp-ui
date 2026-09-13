@@ -3,7 +3,7 @@
 #include <ui/Core/PropertyParser.h>
 #include "PropertyParserNumber.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A property parser that parses a RCSS transform property specification.
@@ -34,4 +34,4 @@ private:
 	PropertyParserNumber number, length, length_pct, angle;
 };
 
-} // namespace Rml
+} // namespace ui

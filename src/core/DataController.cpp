@@ -2,7 +2,7 @@
 #include <ui/Core/Element.h>
 #include "EventSpecification.h"
 
-namespace Rml {
+namespace ui {
 
 DataController::DataController(Element* element) : attached_element(element->GetObserverPtr()) {}
 
@@ -23,10 +23,10 @@ DataControllers::~DataControllers() {}
 
 void DataControllers::Add(DataControllerPtr controller)
 {
-	RMLUI_ASSERT(controller);
+	UI_ASSERT(controller);
 
 	Element* element = controller->GetElement();
-	RMLUI_ASSERTMSG(element, "Invalid controller, make sure it is valid before adding");
+	UI_ASSERTMSG(element, "Invalid controller, make sure it is valid before adding");
 	if (!element)
 		return;
 
@@ -38,4 +38,4 @@ void DataControllers::OnElementRemove(Element* element)
 	controllers.erase(element);
 }
 
-} // namespace Rml
+} // namespace ui

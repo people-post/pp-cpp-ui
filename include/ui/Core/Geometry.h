@@ -6,7 +6,7 @@
 #include "Texture.h"
 #include "UniqueRenderResource.h"
 
-namespace Rml {
+namespace ui {
 
 class RenderManager;
 
@@ -15,7 +15,7 @@ class RenderManager;
 
     A unique resource constructed through the render manager.
  */
-class RMLUICORE_API Geometry final : public UniqueRenderResource<Geometry, StableVectorIndex, StableVectorIndex::Invalid> {
+class UI_CORE_API Geometry final : public UniqueRenderResource<Geometry, StableVectorIndex, StableVectorIndex::Invalid> {
 public:
 	enum class ReleaseMode { ReturnMesh, ClearMesh };
 
@@ -32,4 +32,4 @@ private:
 	friend class RenderManager;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -3,21 +3,21 @@
 #include "FontEngineDefault/FontTypes.h"
 #include <ui/Core.h>
 
-using Rml::byte;
-using Rml::FontFaceHandleFreetype;
-using Rml::Span;
-using Rml::String;
-using Rml::UniquePtr;
-using Rml::UnorderedMap;
-using Rml::Vector;
-namespace Style = Rml::Style;
+using ui::byte;
+using ui::FontFaceHandleFreetype;
+using ui::Span;
+using ui::String;
+using ui::UniquePtr;
+using ui::UnorderedMap;
+using ui::Vector;
+namespace Style = ui::Style;
 
 class FontFace;
 class FontFamily;
 class FontFaceHandleHarfBuzz;
 
 /**
-    The font provider contains all font families currently in use by RmlUi.
+    The font provider contains all font families currently in use by pp-cpp-ui.
     Modified to support HarfBuzz text shaping.
  */
 

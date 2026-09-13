@@ -4,7 +4,7 @@
 #include <ui/Core/SystemInterface.h>
 #include "XMLParseTools.h"
 
-namespace Rml {
+namespace ui {
 
 void DocumentHeader::MergeHeader(const DocumentHeader& header)
 {
@@ -26,7 +26,7 @@ void DocumentHeader::MergePaths(StringList& target, const StringList& source, co
 	for (size_t i = 0; i < source.size(); i++)
 	{
 		String joined_path;
-		::Rml::GetSystemInterface()->JoinPath(joined_path, StringUtilities::Replace(source_path, '|', ':'),
+		::ui::GetSystemInterface()->JoinPath(joined_path, StringUtilities::Replace(source_path, '|', ':'),
 			StringUtilities::Replace(source[i], '|', ':'));
 
 		target.push_back(StringUtilities::Replace(joined_path, ':', '|'));
@@ -38,4 +38,4 @@ void DocumentHeader::MergeResources(ResourceList& target, const ResourceList& so
 	target.insert(target.end(), source.begin(), source.end());
 }
 
-} // namespace Rml
+} // namespace ui

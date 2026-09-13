@@ -10,18 +10,18 @@
 #include <float.h>
 #include <numeric>
 
-namespace Rml {
+namespace ui {
 
 UniquePtr<LayoutBox> FlexFormattingContext::Format(ContainerBox* parent_container, Element* element, const Box* override_initial_box)
 {
-	RMLUI_ZoneScopedC(0xAFAF4F);
+	UI_ZoneScopedC(0xAFAF4F);
 	auto flex_container_box = MakeUnique<FlexContainer>(element, parent_container);
 
 	ElementScroll* element_scroll = element->GetElementScroll();
 	const ComputedValues& computed = element->GetComputedValues();
 
 	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
-	RMLUI_ASSERT(containing_block.x >= 0.f);
+	UI_ASSERT(containing_block.x >= 0.f);
 
 	// Build the initial box as specified by the flex's style, as if it was a normal block element.
 	Box& box = flex_container_box->GetBox();
@@ -327,7 +327,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 		else
 		{
 			const Vector2f initial_box_size = item.box.GetSize();
-			RMLUI_ASSERT(initial_box_size.y < 0.f);
+			UI_ASSERT(initial_box_size.y < 0.f);
 
 			Box format_box = item.box;
 			if (initial_box_size.x < 0.f && flex_available_content_size.x >= 0.f)
@@ -703,14 +703,14 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 	// Determine cross size of each line.
 	if (cross_available_size >= 0.f && flex_single_line)
 	{
-		RMLUI_ASSERT(container.lines.size() == 1);
+		UI_ASSERT(container.lines.size() == 1);
 		container.lines[0].cross_size = cross_available_size;
 	}
 	else
 	{
 		for (FlexLine& line : container.lines)
 		{
-			RMLUI_ASSERT(std::none_of(line.items.begin(), line.items.end(), [&](const auto& item) { return CanSkipHypotheticalCrossSize(item); }));
+			UI_ASSERT(std::none_of(line.items.begin(), line.items.end(), [&](const auto& item) { return CanSkipHypotheticalCrossSize(item); }));
 
 			const float largest_hypothetical_cross_size =
 				std::max_element(line.items.begin(), line.items.end(), [](const FlexItem& a, const FlexItem& b) {
@@ -760,7 +760,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 			}
 			else
 			{
-				RMLUI_ASSERT(!CanSkipHypotheticalCrossSize(item));
+				UI_ASSERT(!CanSkipHypotheticalCrossSize(item));
 				item.used_cross_size = item.hypothetical_cross_size;
 			}
 		}
@@ -795,7 +795,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 				{
 				case AlignSelf::Auto:
 					// Never encountered here: should already have been replaced by container's align-items property.
-					RMLUI_ERROR;
+					UI_ERROR;
 					break;
 				case AlignSelf::FlexStart:
 					// Do nothing, cross offset set above with this behavior.
@@ -971,4 +971,4 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 	flex_resulting_content_size = MainCrossToVec2(used_main_size, used_cross_size);
 }
 
-} // namespace Rml
+} // namespace ui

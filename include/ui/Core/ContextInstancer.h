@@ -4,7 +4,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class TextInputHandler;
 class RenderManager;
@@ -15,7 +15,7 @@ class Event;
     Abstract instancer interface for instancing contexts.
  */
 
-class RMLUICORE_API ContextInstancer : public Releasable {
+class UI_CORE_API ContextInstancer : public Releasable {
 public:
 	virtual ~ContextInstancer();
 
@@ -31,4 +31,4 @@ public:
 	virtual void ReleaseContext(Context* context) = 0;
 };
 
-} // namespace Rml
+} // namespace ui

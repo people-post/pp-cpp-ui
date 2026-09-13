@@ -7,7 +7,7 @@
 #include "BoxShadowHash.h"
 #include "GeometryBoxShadow.h"
 
-namespace Rml {
+namespace ui {
 
 struct BoxShadowCacheData {
 	StableUnorderedMap<BoxShadowGeometryInfo, WeakPtr<BoxShadowRenderable>> handles;
@@ -36,17 +36,17 @@ void BoxShadowCache::Shutdown()
 
 static SharedPtr<BoxShadowRenderable> GetOrCreateBoxShadow(RenderManager& render_manager, const BoxShadowGeometryInfo& info)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	auto it_handle = shadow_cache_data->handles.find(info);
 	if (it_handle != shadow_cache_data->handles.end())
 	{
 		SharedPtr<BoxShadowRenderable> result = it_handle->second.lock();
-		RMLUI_ASSERTMSG(result, "Failed to lock handle in Box Shadow cache");
+		UI_ASSERTMSG(result, "Failed to lock handle in Box Shadow cache");
 		return result;
 	}
 
 	const auto iterator_inserted = shadow_cache_data->handles.emplace(info, WeakPtr<BoxShadowRenderable>());
-	RMLUI_ASSERTMSG(iterator_inserted.second, "Could not insert entry into the Box Shadow cache handle map, duplicate key.");
+	UI_ASSERTMSG(iterator_inserted.second, "Could not insert entry into the Box Shadow cache handle map, duplicate key.");
 	const BoxShadowGeometryInfo& inserted_key = iterator_inserted.first->first;
 	WeakPtr<BoxShadowRenderable>& inserted_weak_data_pointer = iterator_inserted.first->second;
 
@@ -71,7 +71,7 @@ static void ReleaseHandle(BoxShadowRenderable* handle)
 	const BoxShadowGeometryInfo& key = handle->cache_key;
 
 	auto it_handle = handles.find(key);
-	RMLUI_ASSERT(it_handle != handles.cend());
+	UI_ASSERT(it_handle != handles.cend());
 
 	handles.erase(it_handle);
 }
@@ -94,4 +94,4 @@ SharedPtr<BoxShadowRenderable> BoxShadowCache::GetHandle(Element* element, const
 	return GetOrCreateBoxShadow(*render_manager, geom_info);
 }
 
-} // namespace Rml
+} // namespace ui

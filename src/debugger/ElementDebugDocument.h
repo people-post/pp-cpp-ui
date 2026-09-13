@@ -2,15 +2,15 @@
 
 #include <ui/Core/ElementDocument.h>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 class ElementDebugDocument : public ElementDocument {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementDebugDocument, ElementDocument)
+	UI_RTTI_DefineWithParent(ElementDebugDocument, ElementDocument)
 
 	ElementDebugDocument(const String& tag);
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

@@ -3,16 +3,16 @@
 #include <ui/Core/Element.h>
 #include <ui/Core/Header.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     A derivation of an element for use as a mouse drag handle. It responds to drag events, and can be configured to move
     or resize specified target elements.
  */
 
-class RMLUICORE_API ElementHandle : public Element {
+class UI_CORE_API ElementHandle : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementHandle, Element)
+	UI_RTTI_DefineWithParent(ElementHandle, Element)
 
 	ElementHandle(const String& tag);
 	virtual ~ElementHandle();
@@ -48,4 +48,4 @@ protected:
 	SizeData size_data;
 };
 
-} // namespace Rml
+} // namespace ui

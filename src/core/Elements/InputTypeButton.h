@@ -5,7 +5,7 @@
 #include <ui/Core/EventListener.h>
 #include "InputType.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A button input type handler. The only functionality a button provides over a normal element is the ability
@@ -38,4 +38,4 @@ private:
 	ElementText* value_element = nullptr;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -4,7 +4,7 @@
 #include <ui/Core/Property.h>
 #include <ui/Core/Tween.h>
 
-namespace Rml {
+namespace ui {
 
 struct AnimationKey {
 	AnimationKey(float time, const Property& property, Tween tween) : time(time), property(property), tween(tween) {}
@@ -59,4 +59,4 @@ public:
 	ElementAnimationOrigin GetOrigin() const { return origin; }
 };
 
-} // namespace Rml
+} // namespace ui

@@ -5,9 +5,9 @@
 <link rel="source" href="https://www.w3.org/Style/CSS/Test/CSS1/current/test5526c.htm" />
 <link rel="help" href="http://www.w3.org/TR/REC-CSS1#clear" />
 <link rel="reference" href="https://www.w3.org/Style/CSS/Test/CSS1/current/sec5526c.gif" />
-<meta name="description" content="This is the ACID1 test. Some minor modifications have been applied such as matching fonts and borders to the RmlUi syntax." />
+<meta name="description" content="This is the ACID1 test. Some minor modifications have been applied such as matching fonts and borders to the pp-cpp-ui syntax." />
 <style type="text/css">
-/* RmlUi does not accept styling of the html/rml element, they have been moved into body. */
+/* pp-cpp-ui does not accept styling of the html/rml element, they have been moved into body. */
 body {
 	font-size: 10dp;
 	line-height: 1;

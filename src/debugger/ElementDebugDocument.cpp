@@ -1,6 +1,6 @@
 #include "ElementDebugDocument.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 ElementDebugDocument::ElementDebugDocument(const String& tag) : ElementDocument(tag)
@@ -9,4 +9,4 @@ ElementDebugDocument::ElementDebugDocument(const String& tag) : ElementDocument(
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

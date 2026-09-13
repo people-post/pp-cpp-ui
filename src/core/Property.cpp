@@ -1,7 +1,7 @@
 #include <ui/Core/Property.h>
 #include <ui/Core/PropertyDefinition.h>
 
-namespace Rml {
+namespace ui {
 
 Property::Property() : unit(Unit::UNKNOWN), specificity(-1)
 {
@@ -12,7 +12,7 @@ Property::Property() : unit(Unit::UNKNOWN), specificity(-1)
 String Property::ToString() const
 {
 	if (!definition)
-		return value.Get<String>() + Rml::ToString(unit);
+		return value.Get<String>() + ui::ToString(unit);
 
 	String string;
 	definition->GetValue(string, *this);
@@ -30,4 +30,4 @@ NumericValue Property::GetNumericValue() const
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

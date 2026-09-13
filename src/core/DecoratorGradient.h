@@ -6,7 +6,7 @@
 #include <ui/Core/ID.h>
 #include "DecoratorUtilities.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Straight gradient.
@@ -199,4 +199,4 @@ private:
 	GradientPropertyIds ids;
 };
 
-} // namespace Rml
+} // namespace ui

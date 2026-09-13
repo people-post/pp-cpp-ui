@@ -3,7 +3,7 @@
 #include <ui/Core/Types.h>
 #include <ui/Core/Vertex.h>
 
-namespace Rml {
+namespace ui {
 
 class Box;
 
@@ -106,4 +106,4 @@ private:
 	Vector<int>& indices;
 };
 
-} // namespace Rml
+} // namespace ui

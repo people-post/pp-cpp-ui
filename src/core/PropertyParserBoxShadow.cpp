@@ -2,12 +2,12 @@
 #include <ui/Core/DecorationTypes.h>
 #include <ui/Core/StringUtilities.h>
 
-namespace Rml {
+namespace ui {
 
 PropertyParserBoxShadow::PropertyParserBoxShadow(PropertyParser* parser_color, PropertyParser* parser_length) :
 	parser_color(parser_color), parser_length(parser_length)
 {
-	RMLUI_ASSERT(parser_color && parser_length);
+	UI_ASSERT(parser_color && parser_length);
 }
 
 bool PropertyParserBoxShadow::ParseValue(Property& property, const String& value, const ParameterMap& /*parameters*/) const
@@ -87,4 +87,4 @@ bool PropertyParserBoxShadow::ParseValue(Property& property, const String& value
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

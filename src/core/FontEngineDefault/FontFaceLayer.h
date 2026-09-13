@@ -6,7 +6,7 @@
 #include <ui/Core/MeshUtilities.h>
 #include "../TextureLayout.h"
 
-namespace Rml {
+namespace ui {
 
 class FontEffect;
 class FontFaceHandleDefault;
@@ -94,4 +94,4 @@ private:
 	Colourb colour;
 };
 
-} // namespace Rml
+} // namespace ui

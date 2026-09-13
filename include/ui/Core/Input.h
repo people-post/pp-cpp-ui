@@ -1,9 +1,9 @@
 #pragma once
 
-namespace Rml {
+namespace ui {
 
 /*
-    Enumerants for sending input events into RmlUi.
+    Enumerants for sending input events into pp-cpp-ui.
  */
 
 namespace Input {
@@ -241,4 +241,4 @@ namespace Input {
 	};
 } // namespace Input
 
-} // namespace Rml
+} // namespace ui

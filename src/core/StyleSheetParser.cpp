@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 class AbstractPropertyParser : NonCopyMoveable {
 protected:
@@ -174,7 +174,7 @@ public:
 
 	bool Parse(const String& name, const String& value) override
 	{
-		RMLUI_ASSERT(properties);
+		UI_ASSERT(properties);
 		return specification.ParsePropertyDeclaration(*properties, name, value);
 	}
 };
@@ -492,7 +492,7 @@ bool StyleSheetParser::ParseMediaFeatureMap(const String& rules, PropertyDiction
 
 bool StyleSheetParser::Parse(MediaBlockList& style_sheets, Stream* _stream, int begin_line_number)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	int rule_count = 0;
 	line_number = begin_line_number;
@@ -708,7 +708,7 @@ bool StyleSheetParser::Parse(MediaBlockList& style_sheets, Stream* _stream, int 
 			}
 			break;
 			default:
-				RMLUI_ERROR;
+				UI_ERROR;
 				state = State::Invalid;
 				break;
 			}
@@ -734,7 +734,7 @@ bool StyleSheetParser::Parse(MediaBlockList& style_sheets, Stream* _stream, int 
 
 void StyleSheetParser::ParseProperties(PropertyDictionary& parsed_properties, const String& properties)
 {
-	RMLUI_ASSERT(!stream);
+	UI_ASSERT(!stream);
 	StreamMemory stream_owner((const byte*)properties.c_str(), properties.size());
 	stream = &stream_owner;
 	PropertySpecificationParser parser(parsed_properties, StyleSheetSpecification::GetPropertySpecification());
@@ -766,7 +766,7 @@ StyleSheetNodeListRaw StyleSheetParser::ConstructNodes(StyleSheetNode& root_node
 
 void StyleSheetParser::ReadProperties(AbstractPropertyParser& property_parser)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	String name;
 	String value;
@@ -1126,4 +1126,4 @@ bool StyleSheetParser::FillBuffer()
 	return read;
 }
 
-} // namespace Rml
+} // namespace ui

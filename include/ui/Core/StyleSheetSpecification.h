@@ -4,12 +4,12 @@
 #include "PropertySpecification.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class PropertyParser;
 struct DefaultStyleSheetParsers;
 
-class RMLUICORE_API StyleSheetSpecification {
+class UI_CORE_API StyleSheetSpecification {
 public:
 	/// Starts up the specification structure and registers default properties and type parsers.
 	static void Initialise();
@@ -20,7 +20,7 @@ public:
 	/// @param[in] parser_name The name to register the new parser under.
 	/// @param[in] parser A non-owning pointer to the parser to register.
 	/// @return True if the parser was registered successfully, false otherwise.
-	/// @lifetime The parser must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The parser must be kept alive until after the call to ui::Shutdown.
 	static bool RegisterParser(const String& parser_name, PropertyParser* parser);
 	/// Returns the parser registered with a specific name.
 	/// @param[in] parser_name The name of the desired parser.
@@ -85,9 +85,9 @@ private:
 		bool forces_layout = false);
 	ShorthandId RegisterShorthand(ShorthandId id, const String& shorthand_name, const String& property_names, ShorthandType type);
 
-	// Registers RmlUi's default parsers.
+	// Registers pp-cpp-ui's default parsers.
 	void RegisterDefaultParsers();
-	// Registers RmlUi's default style properties.
+	// Registers pp-cpp-ui's default style properties.
 	void RegisterDefaultProperties();
 
 	// Parsers used by all property definitions.
@@ -100,4 +100,4 @@ private:
 	UniquePtr<DefaultStyleSheetParsers> default_parsers;
 };
 
-} // namespace Rml
+} // namespace ui

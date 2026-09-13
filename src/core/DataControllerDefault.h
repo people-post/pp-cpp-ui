@@ -6,7 +6,7 @@
 #include <ui/Core/Types.h>
 #include "DataController.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class DataModel;
@@ -49,4 +49,4 @@ private:
 	DataExpressionPtr expression;
 };
 
-} // namespace Rml
+} // namespace ui

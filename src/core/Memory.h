@@ -3,7 +3,7 @@
 #include <ui/Core/Traits.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 namespace Detail {
 
@@ -104,4 +104,4 @@ private:
 	T* p;
 };
 
-} // namespace Rml
+} // namespace ui

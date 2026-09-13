@@ -3,8 +3,8 @@
 #include "TextureLayoutRow.h"
 #include <ui/Core.h>
 
-using Rml::byte;
-using Rml::Vector;
+using ui::byte;
+using ui::Vector;
 
 class TextureLayout;
 

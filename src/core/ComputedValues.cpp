@@ -2,7 +2,7 @@
 #include <ui/Core/Element.h>
 #include "ComputeProperty.h"
 
-namespace Rml {
+namespace ui {
 
 const AnimationList* Style::ComputedValues::animation() const
 {
@@ -69,4 +69,4 @@ float ResolveValueOr(Style::LengthPercentage length, float base_value, float def
 	return default_value;
 }
 
-} // namespace Rml
+} // namespace ui

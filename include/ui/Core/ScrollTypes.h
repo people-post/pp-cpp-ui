@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Rml {
+namespace ui {
 
 enum class ScrollBehavior {
 	Auto,    // Scroll using the context's configured setting.
@@ -34,4 +34,4 @@ struct ScrollIntoViewOptions {
 	ScrollParentage parentage;
 };
 
-} // namespace Rml
+} // namespace ui

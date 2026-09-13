@@ -10,7 +10,7 @@
 #include <ui/Core/URL.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 ElementProgress::ElementProgress(const String& tag) :
 	Element(tag), direction(DefaultDirection), start_edge(DefaultStartEdge), fill(nullptr), rect_set(false)
@@ -22,7 +22,7 @@ ElementProgress::ElementProgress(const String& tag) :
 
 	// Add the fill element as a non-DOM element.
 	ElementPtr fill_element = Factory::InstanceElement(this, "*", "fill", XMLAttributes());
-	RMLUI_ASSERT(fill_element);
+	UI_ASSERT(fill_element);
 	fill = AppendChild(std::move(fill_element), false);
 }
 
@@ -245,7 +245,7 @@ void ElementProgress::GenerateGeometry()
 		vertices.resize(num_vertices);
 		indices.resize(3 * num_triangles);
 
-		RMLUI_ASSERT(int(start_edge) >= int(StartEdge::Top) && int(start_edge) <= int(StartEdge::Left));
+		UI_ASSERT(int(start_edge) >= int(StartEdge::Top) && int(start_edge) <= int(StartEdge::Left));
 
 		// The octant our "circle" expands from.
 		const int start_octant = 2 * int(start_edge);
@@ -266,8 +266,8 @@ void ElementProgress::GenerateGeometry()
 		if (normalized_value < 1.f)
 		{
 			using namespace Math;
-			const float angle_offset = float(start_octant) / 8.f * 2.f * RMLUI_PI;
-			const float angle = angle_offset + (cw ? 1.f : -1.f) * normalized_value * 2.f * RMLUI_PI;
+			const float angle_offset = float(start_octant) / 8.f * 2.f * UI_PI;
+			const float angle = angle_offset + (cw ? 1.f : -1.f) * normalized_value * 2.f * UI_PI;
 			Vector2f pos(Sin(angle), -Cos(angle));
 			// Project it from the circle towards the surrounding unit square.
 			pos = pos / Max(Absolute(pos.x), Absolute(pos.y));
@@ -359,4 +359,4 @@ bool ElementProgress::LoadTexture()
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

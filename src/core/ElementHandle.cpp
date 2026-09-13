@@ -9,7 +9,7 @@
 #include <ui/Core/PropertyDictionary.h>
 #include <ui/Core/PropertySpecification.h>
 
-namespace Rml {
+namespace ui {
 
 class ElementHandleTargetData {
 public:
@@ -343,4 +343,4 @@ void ElementHandle::ProcessDefaultAction(Event& event)
 	}
 }
 
-} // namespace Rml
+} // namespace ui

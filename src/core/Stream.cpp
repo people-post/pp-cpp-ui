@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 const size_t READ_BLOCK_SIZE = 1024;
 
@@ -86,7 +86,7 @@ size_t Stream::Write(const String& string)
 
 size_t Stream::PushFront(const void* /*buffer*/, size_t /*bytes*/)
 {
-	RMLUI_ERRORMSG("No generic way to PushFront to a stream.");
+	UI_ERRORMSG("No generic way to PushFront to a stream.");
 	return false;
 }
 
@@ -101,7 +101,7 @@ size_t Stream::PushBack(const void* buffer, size_t bytes)
 
 size_t Stream::PopFront(size_t /*bytes*/)
 {
-	RMLUI_ERRORMSG("No generic way to PopFront from a stream.");
+	UI_ERRORMSG("No generic way to PopFront from a stream.");
 	return 0;
 }
 
@@ -116,4 +116,4 @@ void Stream::SetStreamDetails(const URL& _url, int _stream_mode)
 	stream_mode = _stream_mode;
 }
 
-} // namespace Rml
+} // namespace ui

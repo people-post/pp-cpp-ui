@@ -5,7 +5,7 @@
 #include "StyleSheetTypes.h"
 #include "Traits.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class ElementDefinition;
@@ -25,7 +25,7 @@ using DecoratorPtrList = Vector<SharedPtr<const Decorator>>;
     a new, merged stylesheet.
  */
 
-class RMLUICORE_API StyleSheet final : public NonCopyMoveable {
+class UI_CORE_API StyleSheet final : public NonCopyMoveable {
 public:
 	~StyleSheet();
 
@@ -90,8 +90,8 @@ private:
 	using DecoratorCache = UnorderedMap<String, Vector<SharedPtr<const Decorator>>>;
 	mutable DecoratorCache decorator_cache;
 
-	friend Rml::StyleSheetParser;
-	friend Rml::StyleSheetContainer;
+	friend ui::StyleSheetParser;
+	friend ui::StyleSheetContainer;
 };
 
-} // namespace Rml
+} // namespace ui

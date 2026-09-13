@@ -1,7 +1,7 @@
 #include <ui/Core/XMLNodeHandler.h>
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandler::~XMLNodeHandler() {}
 
-} // namespace Rml
+} // namespace ui

@@ -1,7 +1,7 @@
 #include <ui/Core/RenderInterfaceCompatibility.h>
 #include <ui/Core/Math.h>
 
-namespace Rml {
+namespace ui {
 
 static void UnPremultiplyAlpha(const byte* source, byte* destination)
 {
@@ -72,7 +72,7 @@ CompiledGeometryHandle RenderInterfaceAdapter::CompileGeometry(Span<const Vertex
 	Vector<int> indices_copy(indices.begin(), indices.end());
 
 	AdaptedGeometry* data = new AdaptedGeometry{std::move(vertices_unpremultiplied), std::move(indices_copy), {}};
-	return reinterpret_cast<Rml::CompiledGeometryHandle>(data);
+	return reinterpret_cast<ui::CompiledGeometryHandle>(data);
 }
 
 void RenderInterfaceAdapter::RenderGeometry(CompiledGeometryHandle handle, Vector2f translation, TextureHandle texture)
@@ -159,7 +159,7 @@ TextureHandle RenderInterfaceAdapter::LoadTexture(Vector2i& texture_dimensions, 
 
 TextureHandle RenderInterfaceAdapter::GenerateTexture(Span<const byte> source_data, Vector2i source_dimensions)
 {
-	// Previously, textures were given in unpremultiplied alpha format. Since RmlUi 6, they are given in premultiplied
+	// Previously, textures were given in unpremultiplied alpha format. Since pp-cpp-ui 6, they are given in premultiplied
 	// alpha. For compatibility, convert the texture to unpremultiplied alpha which is expected by legacy render
 	// interfaces.
 	const int num_bytes = source_dimensions.x * source_dimensions.y * 4;
@@ -186,4 +186,4 @@ void RenderInterfaceAdapter::SetTransform(const Matrix4f* transform)
 	legacy.SetTransform(transform);
 }
 
-} // namespace Rml
+} // namespace ui

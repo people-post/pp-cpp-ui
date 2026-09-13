@@ -6,7 +6,7 @@
 #include <doctest.h>
 #include <nanobench.h>
 
-using namespace Rml;
+using namespace ui;
 using namespace ankerl;
 
 static const String document_rml = R"(
@@ -90,7 +90,7 @@ static UniquePtr<Arrays> arrays;
 
 static DataModelHandle InitializeDataBindings(Context* context)
 {
-	Rml::DataModelConstructor constructor = context->CreateDataModel("basics");
+	ui::DataModelConstructor constructor = context->CreateDataModel("basics");
 	if (!constructor)
 		return DataModelHandle();
 
@@ -179,7 +179,7 @@ TEST_CASE("data_binding")
 		bench.relative(true);
 
 		bench.run("Reference (Integer)", [&] {
-			element_i->SetInnerRML(Rml::ToString(rng.bounded(1000)));
+			element_i->SetInnerRML(ui::ToString(rng.bounded(1000)));
 			context->Update();
 		});
 
@@ -199,7 +199,7 @@ TEST_CASE("data_binding")
 
 		bench.run("Reference (Arrays)", [&] {
 			element_array->SetInnerRML(
-				Rml::CreateString("<span>%d </span><span>%d </span><span>%d </span>", rng.bounded(5000), rng.bounded(5000), rng.bounded(5000)));
+				ui::CreateString("<span>%d </span><span>%d </span><span>%d </span>", rng.bounded(5000), rng.bounded(5000), rng.bounded(5000)));
 			context->Update();
 		});
 

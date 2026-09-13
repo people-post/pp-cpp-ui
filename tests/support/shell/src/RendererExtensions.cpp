@@ -2,27 +2,27 @@
 #include <ui/Core/Log.h>
 #include <ui/Core/Platform.h>
 
-#if defined RMLUI_RENDERER_GL2
+#if defined UI_RENDERER_GL2
 
-	#if defined RMLUI_PLATFORM_WIN32
-		#include <RmlUi_Include_Windows.h>
+	#if defined UI_PLATFORM_WIN32
+		#include <windows.h>
 		#include <gl/Gl.h>
-	#elif defined RMLUI_PLATFORM_MACOSX
+	#elif defined UI_PLATFORM_MACOSX
 		#include <AGL/agl.h>
 		#include <OpenGL/gl.h>
 		#include <OpenGL/glext.h>
-	#elif defined RMLUI_PLATFORM_UNIX
-		#include <RmlUi_Include_Xlib.h>
+	#elif defined UI_PLATFORM_UNIX
+		#include <X11/Xlib.h>
 		#include <GL/gl.h>
 		#include <GL/glext.h>
 		#include <GL/glx.h>
 	#endif
 
-#elif defined RMLUI_RENDERER_GL3 && !defined RMLUI_PLATFORM_EMSCRIPTEN
+#elif defined UI_RENDERER_GL3 && !defined UI_PLATFORM_EMSCRIPTEN
 
-	#include <RmlUi_Include_GL3.h>
+	#include <Ui_Include_GL3.h>
 
-#elif defined RMLUI_RENDERER_GL3 && defined RMLUI_PLATFORM_EMSCRIPTEN
+#elif defined UI_RENDERER_GL3 && defined UI_PLATFORM_EMSCRIPTEN
 
 	#include <GLES3/gl3.h>
 
@@ -30,7 +30,7 @@
 
 RendererExtensions::Image RendererExtensions::CaptureScreen()
 {
-#if defined RMLUI_RENDERER_GL2 || defined RMLUI_RENDERER_GL3
+#if defined UI_RENDERER_GL2 || defined UI_RENDERER_GL3
 
 	int viewport[4] = {}; // x, y, width, height
 	glGetIntegerv(GL_VIEWPORT, viewport);
@@ -44,7 +44,7 @@ RendererExtensions::Image RendererExtensions::CaptureScreen()
 		return Image();
 
 	const int byte_size = image.width * image.height * image.num_components;
-	image.data = Rml::UniquePtr<Rml::byte[]>(new Rml::byte[byte_size]);
+	image.data = ui::UniquePtr<ui::byte[]>(new ui::byte[byte_size]);
 
 	glReadPixels(0, 0, image.width, image.height, GL_RGB, GL_UNSIGNED_BYTE, image.data.get());
 
@@ -53,7 +53,7 @@ RendererExtensions::Image RendererExtensions::CaptureScreen()
 	while ((err = glGetError()) != GL_NO_ERROR)
 	{
 		result = false;
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Could not capture screenshot, got GL error: 0x%x", err);
+		ui::Log::Message(ui::Log::LT_ERROR, "Could not capture screenshot, got GL error: 0x%x", err);
 	}
 
 	if (!result)

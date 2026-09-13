@@ -5,14 +5,14 @@
 #include <ui/Core/Types.h>
 #include "ElementDebugDocument.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 class DebuggerSystemInterface;
 
-class ElementLog : public ElementDebugDocument, public Rml::EventListener {
+class ElementLog : public ElementDebugDocument, public ui::EventListener {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementLog, ElementDebugDocument)
+	UI_RTTI_DefineWithParent(ElementLog, ElementDebugDocument)
 
 	ElementLog(const String& tag);
 	~ElementLog();
@@ -55,4 +55,4 @@ private:
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

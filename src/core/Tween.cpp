@@ -2,7 +2,7 @@
 #include <ui/Core/Math.h>
 #include <utility>
 
-namespace Rml {
+namespace ui {
 
 namespace TweenFunctions {
 
@@ -48,7 +48,7 @@ namespace TweenFunctions {
 			return t;
 		if (t == 1)
 			return t;
-		return -Math::Exp(7.24f * (t - 1.f)) * Math::Sin((t - 1.1f) * 2.f * Math::RMLUI_PI / 0.4f);
+		return -Math::Exp(7.24f * (t - 1.f)) * Math::Sin((t - 1.1f) * 2.f * Math::UI_PI / 0.4f);
 	}
 
 	static float exponential(float t)
@@ -82,7 +82,7 @@ namespace TweenFunctions {
 
 	static float sine(float t)
 	{
-		return 1.f - Math::Cos(t * Math::RMLUI_PI * 0.5f);
+		return 1.f - Math::Cos(t * Math::UI_PI * 0.5f);
 	}
 
 } // namespace TweenFunctions
@@ -209,4 +209,4 @@ float Tween::in_out(float t) const
 		return 0.5f + out(2.0f * t - 1.0f) * 0.5f;
 }
 
-} // namespace Rml
+} // namespace ui

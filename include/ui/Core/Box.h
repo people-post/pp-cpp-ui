@@ -2,7 +2,7 @@
 
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 enum class BoxEdge { Top, Right, Bottom, Left };
 enum class BoxDirection { Vertical, Horizontal };
@@ -12,7 +12,7 @@ enum class BoxDirection { Vertical, Horizontal };
     http://www.w3.org/TR/REC-CSS2/box.html#box-dimensions for a diagram.
  */
 
-class RMLUICORE_API Box {
+class UI_CORE_API Box {
 public:
 	static constexpr int num_areas = 3; // ignores content box
 	static constexpr int num_edges = 4;
@@ -80,4 +80,4 @@ private:
 	float area_edges[num_areas][num_edges] = {};
 };
 
-} // namespace Rml
+} // namespace ui

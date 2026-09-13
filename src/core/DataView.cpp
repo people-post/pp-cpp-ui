@@ -2,7 +2,7 @@
 #include <ui/Core/Element.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 DataView::~DataView() {}
 
@@ -23,7 +23,7 @@ bool DataView::IsValid() const
 
 DataView::DataView(Element* element, int bias) : attached_element(element->GetObserverPtr()), sort_order(bias + 1000)
 {
-	RMLUI_ASSERT(bias >= -1000 && bias <= 999);
+	UI_ASSERT(bias >= -1000 && bias <= 999);
 
 	if (element)
 	{
@@ -109,7 +109,7 @@ bool DataViews::Update(DataModel& model, const DirtyVariables& dirty_variables)
 
 		for (DataView* view : dirty_views)
 		{
-			RMLUI_ASSERT(view);
+			UI_ASSERT(view);
 			if (!view)
 				continue;
 
@@ -139,4 +139,4 @@ bool DataViews::Update(DataModel& model, const DirtyVariables& dirty_variables)
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

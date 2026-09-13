@@ -4,7 +4,7 @@
 #include <ui/Core/ID.h>
 #include <ui/Core/NumericValue.h>
 
-namespace Rml {
+namespace ui {
 
 class FilterBlur : public Filter {
 public:
@@ -31,4 +31,4 @@ private:
 	PropertyIds ids;
 };
 
-} // namespace Rml
+} // namespace ui

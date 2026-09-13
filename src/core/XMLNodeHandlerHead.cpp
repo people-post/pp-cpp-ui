@@ -9,12 +9,12 @@
 #include "DocumentHeader.h"
 #include "TemplateCache.h"
 
-namespace Rml {
+namespace ui {
 
 static String Absolutepath(const String& source, const String& base)
 {
 	String joined_path;
-	::Rml::GetSystemInterface()->JoinPath(joined_path, StringUtilities::Replace(base, '|', ':'), StringUtilities::Replace(source, '|', ':'));
+	::ui::GetSystemInterface()->JoinPath(joined_path, StringUtilities::Replace(base, '|', ':'), StringUtilities::Replace(source, '|', ':'));
 	return StringUtilities::Replace(joined_path, ':', '|');
 }
 
@@ -138,4 +138,4 @@ bool XMLNodeHandlerHead::ElementData(XMLParser* parser, const String& data, XMLD
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

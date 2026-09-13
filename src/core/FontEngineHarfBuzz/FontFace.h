@@ -4,10 +4,10 @@
 #include "FontFaceHandleHarfBuzz.h"
 #include <ui/Core.h>
 
-using Rml::FontFaceHandleFreetype;
-using Rml::UniquePtr;
-using Rml::UnorderedMap;
-namespace Style = Rml::Style;
+using ui::FontFaceHandleFreetype;
+using ui::UniquePtr;
+using ui::UnorderedMap;
+namespace Style = ui::Style;
 
 /**
     Modified to support HarfBuzz text shaping.

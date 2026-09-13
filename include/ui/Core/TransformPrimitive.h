@@ -5,12 +5,12 @@
 #include "Types.h"
 #include "Unit.h"
 
-namespace Rml {
+namespace ui {
 namespace Transforms {
 
 	// A resolved primitive has values that are always independent of an element's properties or layout.
 	template <size_t N>
-	struct RMLUICORE_API ResolvedPrimitive {
+	struct UI_CORE_API ResolvedPrimitive {
 		Array<float, N> values;
 
 	protected:
@@ -23,7 +23,7 @@ namespace Transforms {
 
 	// An unresolved primitive may have values that depend on the final layout of a given element, such as its width.
 	template <size_t N>
-	struct RMLUICORE_API UnresolvedPrimitive {
+	struct UI_CORE_API UnresolvedPrimitive {
 		Array<NumericValue, N> values;
 
 	protected:
@@ -31,113 +31,113 @@ namespace Transforms {
 		UnresolvedPrimitive(Array<NumericValue, N> values) noexcept;
 	};
 
-	struct RMLUICORE_API Matrix2D : public ResolvedPrimitive<6> {
+	struct UI_CORE_API Matrix2D : public ResolvedPrimitive<6> {
 		Matrix2D(const NumericValue* values) noexcept;
 	};
 
-	struct RMLUICORE_API Matrix3D : public ResolvedPrimitive<16> {
+	struct UI_CORE_API Matrix3D : public ResolvedPrimitive<16> {
 		Matrix3D(const NumericValue* values) noexcept;
 		Matrix3D(const Matrix4f& matrix) noexcept;
 	};
 
-	struct RMLUICORE_API TranslateX : public UnresolvedPrimitive<1> {
+	struct UI_CORE_API TranslateX : public UnresolvedPrimitive<1> {
 		TranslateX(const NumericValue* values) noexcept;
 		TranslateX(float x, Unit unit = Unit::PX) noexcept;
 	};
 
-	struct RMLUICORE_API TranslateY : public UnresolvedPrimitive<1> {
+	struct UI_CORE_API TranslateY : public UnresolvedPrimitive<1> {
 		TranslateY(const NumericValue* values) noexcept;
 		TranslateY(float y, Unit unit = Unit::PX) noexcept;
 	};
 
-	struct RMLUICORE_API TranslateZ : public UnresolvedPrimitive<1> {
+	struct UI_CORE_API TranslateZ : public UnresolvedPrimitive<1> {
 		TranslateZ(const NumericValue* values) noexcept;
 		TranslateZ(float z, Unit unit = Unit::PX) noexcept;
 	};
 
-	struct RMLUICORE_API Translate2D : public UnresolvedPrimitive<2> {
+	struct UI_CORE_API Translate2D : public UnresolvedPrimitive<2> {
 		Translate2D(const NumericValue* values) noexcept;
 		Translate2D(float x, float y, Unit units = Unit::PX) noexcept;
 	};
 
-	struct RMLUICORE_API Translate3D : public UnresolvedPrimitive<3> {
+	struct UI_CORE_API Translate3D : public UnresolvedPrimitive<3> {
 		Translate3D(const NumericValue* values) noexcept;
 		Translate3D(NumericValue x, NumericValue y, NumericValue z) noexcept;
 		Translate3D(float x, float y, float z, Unit units = Unit::PX) noexcept;
 	};
 
-	struct RMLUICORE_API ScaleX : public ResolvedPrimitive<1> {
+	struct UI_CORE_API ScaleX : public ResolvedPrimitive<1> {
 		ScaleX(const NumericValue* values) noexcept;
 		ScaleX(float value) noexcept;
 	};
 
-	struct RMLUICORE_API ScaleY : public ResolvedPrimitive<1> {
+	struct UI_CORE_API ScaleY : public ResolvedPrimitive<1> {
 		ScaleY(const NumericValue* values) noexcept;
 		ScaleY(float value) noexcept;
 	};
 
-	struct RMLUICORE_API ScaleZ : public ResolvedPrimitive<1> {
+	struct UI_CORE_API ScaleZ : public ResolvedPrimitive<1> {
 		ScaleZ(const NumericValue* values) noexcept;
 		ScaleZ(float value) noexcept;
 	};
 
-	struct RMLUICORE_API Scale2D : public ResolvedPrimitive<2> {
+	struct UI_CORE_API Scale2D : public ResolvedPrimitive<2> {
 		Scale2D(const NumericValue* values) noexcept;
 		Scale2D(float xy) noexcept;
 		Scale2D(float x, float y) noexcept;
 	};
 
-	struct RMLUICORE_API Scale3D : public ResolvedPrimitive<3> {
+	struct UI_CORE_API Scale3D : public ResolvedPrimitive<3> {
 		Scale3D(const NumericValue* values) noexcept;
 		Scale3D(float xyz) noexcept;
 		Scale3D(float x, float y, float z) noexcept;
 	};
 
-	struct RMLUICORE_API RotateX : public ResolvedPrimitive<1> {
+	struct UI_CORE_API RotateX : public ResolvedPrimitive<1> {
 		RotateX(const NumericValue* values) noexcept;
 		RotateX(float angle, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API RotateY : public ResolvedPrimitive<1> {
+	struct UI_CORE_API RotateY : public ResolvedPrimitive<1> {
 		RotateY(const NumericValue* values) noexcept;
 		RotateY(float angle, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API RotateZ : public ResolvedPrimitive<1> {
+	struct UI_CORE_API RotateZ : public ResolvedPrimitive<1> {
 		RotateZ(const NumericValue* values) noexcept;
 		RotateZ(float angle, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API Rotate2D : public ResolvedPrimitive<1> {
+	struct UI_CORE_API Rotate2D : public ResolvedPrimitive<1> {
 		Rotate2D(const NumericValue* values) noexcept;
 		Rotate2D(float angle, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API Rotate3D : public ResolvedPrimitive<4> {
+	struct UI_CORE_API Rotate3D : public ResolvedPrimitive<4> {
 		Rotate3D(const NumericValue* values) noexcept;
 		Rotate3D(float x, float y, float z, float angle, Unit angle_unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API SkewX : public ResolvedPrimitive<1> {
+	struct UI_CORE_API SkewX : public ResolvedPrimitive<1> {
 		SkewX(const NumericValue* values) noexcept;
 		SkewX(float angle, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API SkewY : public ResolvedPrimitive<1> {
+	struct UI_CORE_API SkewY : public ResolvedPrimitive<1> {
 		SkewY(const NumericValue* values) noexcept;
 		SkewY(float angle, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API Skew2D : public ResolvedPrimitive<2> {
+	struct UI_CORE_API Skew2D : public ResolvedPrimitive<2> {
 		Skew2D(const NumericValue* values) noexcept;
 		Skew2D(float x, float y, Unit unit = Unit::DEG) noexcept;
 	};
 
-	struct RMLUICORE_API Perspective : public UnresolvedPrimitive<1> {
+	struct UI_CORE_API Perspective : public UnresolvedPrimitive<1> {
 		Perspective(const NumericValue* values) noexcept;
 	};
 
-	struct RMLUICORE_API DecomposedMatrix4 {
+	struct UI_CORE_API DecomposedMatrix4 {
 		Vector4f perspective;
 		Vector4f quaternion;
 		Vector3f translation;
@@ -149,11 +149,11 @@ namespace Transforms {
 
 /**
     The TransformPrimitive struct is the base struct of geometric transforms such as rotations, scalings and translations.
-    Instances of this struct are added to Rml::Transform during parsing of the 'transform' property.
-    @see Rml::Transform
-    @see Rml::PropertyParserTransform
+    Instances of this struct are added to ui::Transform during parsing of the 'transform' property.
+    @see ui::Transform
+    @see ui::PropertyParserTransform
  */
-struct RMLUICORE_API TransformPrimitive {
+struct UI_CORE_API TransformPrimitive {
 	enum Type {
 		MATRIX2D,
 		MATRIX3D,
@@ -230,4 +230,4 @@ struct RMLUICORE_API TransformPrimitive {
 	};
 };
 
-} // namespace Rml
+} // namespace ui

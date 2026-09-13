@@ -3,13 +3,13 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     The element that makes up all geometry sent to the renderer.
  */
 
-struct RMLUICORE_API Vertex {
+struct UI_CORE_API Vertex {
 	/// Two-dimensional position of the vertex (usually in pixels).
 	Vector2f position;
 	/// RGBA-ordered 8-bit/channel colour with premultiplied alpha.
@@ -24,4 +24,4 @@ struct RMLUICORE_API Vertex {
 	friend bool operator!=(const Vertex& lhs, const Vertex& rhs) { return !(lhs == rhs); }
 };
 
-} // namespace Rml
+} // namespace ui

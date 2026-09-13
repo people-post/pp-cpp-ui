@@ -2,14 +2,14 @@
 
 #include <ui/Core/FontEngineInterface.h>
 
-namespace Rml {
+namespace ui {
 
-class RMLUICORE_API FontEngineInterfaceDefault : public FontEngineInterface {
+class UI_CORE_API FontEngineInterfaceDefault : public FontEngineInterface {
 public:
-	/// Called when RmlUi is being initialized.
+	/// Called when pp-cpp-ui is being initialized.
 	void Initialize() override;
 
-	/// Called when RmlUi is being shut down.
+	/// Called when pp-cpp-ui is being shut down.
 	void Shutdown() override;
 
 	/// Adds a new font face to the database. The face's family, style and weight will be determined from the face itself.
@@ -45,4 +45,4 @@ public:
 	void ReleaseFontResources() override;
 };
 
-} // namespace Rml
+} // namespace ui

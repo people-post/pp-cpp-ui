@@ -1,6 +1,6 @@
 #include <type_traits>
 
-namespace Rml {
+namespace ui {
 
 template <typename Type>
 Vector4<Type>::Vector4() : x{}, y{}, z{}, w{}
@@ -182,4 +182,4 @@ inline Vector4<Type> operator*(Type lhs, Vector4<Type> rhs)
 	return rhs * lhs;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -1,19 +1,19 @@
 #include <ui/Core/PropertyDictionary.h>
 #include <ui/Core/ID.h>
 
-namespace Rml {
+namespace ui {
 
 PropertyDictionary::PropertyDictionary() {}
 
 void PropertyDictionary::SetProperty(PropertyId id, const Property& property)
 {
-	RMLUI_ASSERT(id != PropertyId::Invalid);
+	UI_ASSERT(id != PropertyId::Invalid);
 	properties[id] = property;
 }
 
 void PropertyDictionary::RemoveProperty(PropertyId id)
 {
-	RMLUI_ASSERT(id != PropertyId::Invalid);
+	UI_ASSERT(id != PropertyId::Invalid);
 	properties.erase(id);
 }
 
@@ -72,4 +72,4 @@ void PropertyDictionary::SetProperty(PropertyId id, const Property& property, in
 	new_property.specificity = specificity;
 }
 
-} // namespace Rml
+} // namespace ui

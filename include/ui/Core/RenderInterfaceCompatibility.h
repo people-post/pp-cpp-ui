@@ -2,28 +2,28 @@
 
 #include "RenderInterface.h"
 
-namespace Rml {
+namespace ui {
 
 class RenderInterfaceAdapter;
 
 /**
-    Provides a backward-compatible adapter for render interfaces written for RmlUi 5 and lower. The compatibility adapter
+    Provides a backward-compatible adapter for render interfaces written for pp-cpp-ui 5 and lower. The compatibility adapter
     should be used as follows.
 
-    1. In your legacy RenderInterface implementation, derive from Rml::RenderInterfaceCompatibility instead of
-       Rml::RenderInterface.
+    1. In your legacy RenderInterface implementation, derive from ui::RenderInterfaceCompatibility instead of
+       ui::RenderInterface.
 
            #include <ui/Core/RenderInterfaceCompatibility.h>
-           class MyRenderInterface : public Rml::RenderInterfaceCompatibility { ... };
+           class MyRenderInterface : public ui::RenderInterfaceCompatibility { ... };
 
-    2. Use the adapted interface when setting the RmlUi render interface.
+    2. Use the adapted interface when setting the pp-cpp-ui render interface.
 
-           Rml::SetRenderInterface(my_render_interface.GetAdaptedInterface());
+           ui::SetRenderInterface(my_render_interface.GetAdaptedInterface());
 
     New rendering features are not supported when using the compatibility adapter.
 */
 
-class RMLUICORE_API RenderInterfaceCompatibility : public NonCopyMoveable {
+class UI_CORE_API RenderInterfaceCompatibility : public NonCopyMoveable {
 public:
 	RenderInterfaceCompatibility();
 	virtual ~RenderInterfaceCompatibility();
@@ -54,7 +54,7 @@ private:
     The render interface adapter takes calls from the render interface, makes any necessary conversions, and passes the
     calls on to the legacy render interface.
 */
-class RMLUICORE_API RenderInterfaceAdapter : public RenderInterface {
+class UI_CORE_API RenderInterfaceAdapter : public RenderInterface {
 public:
 	CompiledGeometryHandle CompileGeometry(Span<const Vertex> vertices, Span<const int> indices) override;
 	void RenderGeometry(CompiledGeometryHandle handle, Vector2f translation, TextureHandle texture) override;
@@ -85,7 +85,7 @@ private:
 
 	RenderInterfaceCompatibility& legacy;
 
-	friend Rml::RenderInterfaceCompatibility::RenderInterfaceCompatibility();
+	friend ui::RenderInterfaceCompatibility::RenderInterfaceCompatibility();
 };
 
-} // namespace Rml
+} // namespace ui

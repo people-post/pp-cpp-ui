@@ -1,7 +1,7 @@
 #include <ui/Core/EffectSpecification.h>
 #include <ui/Core/PropertyDefinition.h>
 
-namespace Rml {
+namespace ui {
 
 EffectSpecification::EffectSpecification() : properties(10, 10) {}
 
@@ -22,4 +22,4 @@ ShorthandId EffectSpecification::RegisterShorthand(const String& shorthand_name,
 	return properties.RegisterShorthand(shorthand_name, property_names, type);
 }
 
-} // namespace Rml
+} // namespace ui

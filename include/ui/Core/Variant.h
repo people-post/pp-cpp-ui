@@ -5,7 +5,7 @@
 #include "TypeConverter.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Variant is a container that can store a selection of basic types. The variant will store the
@@ -14,7 +14,7 @@ namespace Rml {
     Get is templated to convert from the stored form to the requested form by using a TypeConverter.
  */
 
-class RMLUICORE_API Variant {
+class UI_CORE_API Variant {
 public:
 	/// Type of data stored in the variant. We use size_t as base to avoid 'padding due to alignment specifier' warning.
 	enum Type : size_t {
@@ -143,6 +143,6 @@ private:
 	alignas(TransitionList) char data[LOCAL_DATA_SIZE];
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Variant.inl"

@@ -6,11 +6,11 @@
 #include <ui/Core/SystemInterface.h>
 #include "TextureDatabase.h"
 
-namespace Rml {
+namespace ui {
 
 RenderManager::RenderManager(RenderInterface* render_interface) : render_interface(render_interface), texture_database(MakeUnique<TextureDatabase>())
 {
-	RMLUI_ASSERT(render_interface);
+	UI_ASSERT(render_interface);
 
 	constexpr size_t reserve_geometry = 256;
 	geometry_list.reserve(reserve_geometry);
@@ -33,7 +33,7 @@ RenderManager::~RenderManager()
 	{
 		if (element.count != 0)
 		{
-			Log::Message(Log::LT_ERROR, "Leaking %s detected (%d). Ensure that all RmlUi resources have been released by the end of Rml::Shutdown.",
+			Log::Message(Log::LT_ERROR, "Leaking %s detected (%d). Ensure that all pp-cpp-ui resources have been released by the end of ui::Shutdown.",
 				element.name, element.count);
 		}
 	}
@@ -43,12 +43,12 @@ RenderManager::~RenderManager()
 
 void RenderManager::PrepareRender(Vector2i dimensions)
 {
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	const RenderState default_state;
-	RMLUI_ASSERT(state.clip_mask_list == default_state.clip_mask_list);
-	RMLUI_ASSERT(state.scissor_region == default_state.scissor_region);
-	RMLUI_ASSERT(state.transform == default_state.transform);
-	RMLUI_ASSERTMSG(render_stack.empty(), "Unbalanced render stack detected, ensure every PushLayer call has a corresponding call to PopLayer.");
+	UI_ASSERT(state.clip_mask_list == default_state.clip_mask_list);
+	UI_ASSERT(state.scissor_region == default_state.scissor_region);
+	UI_ASSERT(state.transform == default_state.transform);
+	UI_ASSERTMSG(render_stack.empty(), "Unbalanced render stack detected, ensure every PushLayer call has a corresponding call to PopLayer.");
 #endif
 
 	SetViewport(dimensions);
@@ -125,7 +125,7 @@ void RenderManager::DisableClipMask()
 
 void RenderManager::SetClipMask(ClipMaskOperation operation, Geometry* geometry, Vector2f translation)
 {
-	RMLUI_ASSERT(geometry && geometry->render_manager == this);
+	UI_ASSERT(geometry && geometry->render_manager == this);
 	state.clip_mask_list = {ClipMaskGeometry{operation, geometry, translation, nullptr}};
 	ApplyClipMask(state.clip_mask_list);
 }
@@ -162,7 +162,7 @@ void RenderManager::ApplyClipMask(const ClipMaskGeometryList& clip_elements)
 
 		for (const ClipMaskGeometry& element_clip : clip_elements)
 		{
-			RMLUI_ASSERT(element_clip.geometry->render_manager == this);
+			UI_ASSERT(element_clip.geometry->render_manager == this);
 			SetTransform(element_clip.transform);
 			if (CompiledGeometryHandle handle = GetCompiledGeometryHandle(element_clip.geometry->resource_handle))
 				render_interface->RenderToClipMask(element_clip.operation, handle, element_clip.absolute_offset);
@@ -200,7 +200,7 @@ CompiledGeometryHandle RenderManager::GetCompiledGeometryHandle(StableVectorInde
 	GeometryData& geometry = geometry_list[index];
 	if (!geometry.handle && !geometry.mesh.indices.empty())
 	{
-		RMLUI_ZoneScopedNC("CompileGeometry", 0x1E60D2);
+		UI_ZoneScopedNC("CompileGeometry", 0x1E60D2);
 		geometry.handle = render_interface->CompileGeometry(geometry.mesh.vertices, geometry.mesh.indices);
 
 		if (!geometry.handle)
@@ -211,12 +211,12 @@ CompiledGeometryHandle RenderManager::GetCompiledGeometryHandle(StableVectorInde
 
 void RenderManager::Render(const Geometry& geometry, Vector2f translation, Texture texture, const CompiledShader& shader)
 {
-	RMLUI_ASSERT(geometry);
-	RMLUI_ASSERTMSG(translation == translation.Round(), "RenderManager::Render expects translation to be rounded");
+	UI_ASSERT(geometry);
+	UI_ASSERTMSG(translation == translation.Round(), "RenderManager::Render expects translation to be rounded");
 
 	if (geometry.render_manager != this || (shader && shader.render_manager != this) || (texture && texture.render_manager != this))
 	{
-		RMLUI_ERRORMSG("Trying to render geometry with resources constructed in different render managers.");
+		UI_ERRORMSG("Trying to render geometry with resources constructed in different render managers.");
 		return;
 	}
 
@@ -228,7 +228,7 @@ void RenderManager::Render(const Geometry& geometry, Vector2f translation, Textu
 		else if (texture.callback_index != StableVectorIndex::Invalid)
 			texture_handle = texture_database->callback_database.GetHandle(this, render_interface, texture.callback_index);
 
-		RMLUI_ZoneScopedNC("RenderGeometry", 0x3E60B2);
+		UI_ZoneScopedNC("RenderGeometry", 0x3E60B2);
 		if (shader)
 			render_interface->RenderShader(shader.resource_handle, geometry_handle, translation, texture_handle);
 		else
@@ -243,7 +243,7 @@ void RenderManager::GetTextureSourceList(StringList& source_list) const
 
 const Mesh& RenderManager::GetMesh(const Geometry& geometry) const
 {
-	RMLUI_ASSERT(geometry.render_manager == this && geometry.resource_handle != geometry.InvalidHandle());
+	UI_ASSERT(geometry.render_manager == this && geometry.resource_handle != geometry.InvalidHandle());
 	return geometry_list[geometry.resource_handle].mesh;
 }
 
@@ -300,14 +300,14 @@ LayerHandle RenderManager::PushLayer()
 
 void RenderManager::CompositeLayers(LayerHandle source, LayerHandle destination, BlendMode blend_mode, Span<const CompiledFilterHandle> filters)
 {
-	RMLUI_ASSERT(source == 0 || std::find(render_stack.begin(), render_stack.end(), source) != render_stack.end());
-	RMLUI_ASSERT(destination == 0 || std::find(render_stack.begin(), render_stack.end(), destination) != render_stack.end());
+	UI_ASSERT(source == 0 || std::find(render_stack.begin(), render_stack.end(), source) != render_stack.end());
+	UI_ASSERT(destination == 0 || std::find(render_stack.begin(), render_stack.end(), destination) != render_stack.end());
 	render_interface->CompositeLayers(source, destination, blend_mode, filters);
 }
 
 void RenderManager::PopLayer()
 {
-	RMLUI_ASSERT(!render_stack.empty());
+	UI_ASSERT(!render_stack.empty());
 	render_interface->PopLayer();
 	render_stack.pop_back();
 }
@@ -319,7 +319,7 @@ LayerHandle RenderManager::GetTopLayer() const
 
 LayerHandle RenderManager::GetNextLayer() const
 {
-	RMLUI_ASSERT(!render_stack.empty());
+	UI_ASSERT(!render_stack.empty());
 	return render_stack.size() < 2 ? LayerHandle{} : render_stack[render_stack.size() - 2];
 }
 
@@ -335,15 +335,15 @@ CompiledFilter RenderManager::SaveLayerAsMaskImage()
 
 void RenderManager::ReleaseResource(const CallbackTexture& texture)
 {
-	RMLUI_ASSERT(texture.render_manager == this && texture.resource_handle != texture.InvalidHandle());
+	UI_ASSERT(texture.render_manager == this && texture.resource_handle != texture.InvalidHandle());
 
 	texture_database->callback_database.ReleaseTexture(render_interface, texture.resource_handle);
 }
 
 Mesh RenderManager::ReleaseResource(const Geometry& geometry)
 {
-	RMLUI_ASSERT(geometry.render_manager == this && geometry.resource_handle != geometry.InvalidHandle());
-	RMLUI_ZoneScopedNC("ReleaseGeometry", 0x1E60D2);
+	UI_ASSERT(geometry.render_manager == this && geometry.resource_handle != geometry.InvalidHandle());
+	UI_ZoneScopedNC("ReleaseGeometry", 0x1E60D2);
 
 	GeometryData data = geometry_list.erase(geometry.resource_handle);
 	if (data.handle)
@@ -353,7 +353,7 @@ Mesh RenderManager::ReleaseResource(const Geometry& geometry)
 
 void RenderManager::ReleaseResource(const CompiledFilter& filter)
 {
-	RMLUI_ASSERT(filter.render_manager == this && filter.resource_handle != filter.InvalidHandle());
+	UI_ASSERT(filter.render_manager == this && filter.resource_handle != filter.InvalidHandle());
 
 	render_interface->ReleaseFilter(filter.resource_handle);
 	compiled_filter_count -= 1;
@@ -361,10 +361,10 @@ void RenderManager::ReleaseResource(const CompiledFilter& filter)
 
 void RenderManager::ReleaseResource(const CompiledShader& shader)
 {
-	RMLUI_ASSERT(shader.render_manager == this && shader.resource_handle != shader.InvalidHandle());
+	UI_ASSERT(shader.render_manager == this && shader.resource_handle != shader.InvalidHandle());
 
 	render_interface->ReleaseShader(shader.resource_handle);
 	compiled_shader_count -= 1;
 }
 
-} // namespace Rml
+} // namespace ui

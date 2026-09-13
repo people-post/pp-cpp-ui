@@ -7,11 +7,11 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class DataModel;
 
-class RMLUICORE_API DataModelHandle {
+class UI_CORE_API DataModelHandle {
 public:
 	DataModelHandle(DataModel* model = nullptr);
 
@@ -27,7 +27,7 @@ private:
 	DataModel* model;
 };
 
-class RMLUICORE_API DataModelConstructor {
+class UI_CORE_API DataModelConstructor {
 public:
 	template <typename T>
 	using DataEventMemberFunc = void (T::*)(DataModelHandle, Event&, const VariantList&);
@@ -43,7 +43,7 @@ public:
 	template <typename T>
 	bool Bind(const String& name, T* ptr)
 	{
-		RMLUI_ASSERTMSG(ptr, "Invalid pointer to data variable");
+		UI_ASSERTMSG(ptr, "Invalid pointer to data variable");
 		return BindVariable(name, DataVariable(type_register->GetDefinition<T>(), static_cast<void*>(ptr)));
 	}
 
@@ -122,12 +122,12 @@ inline bool DataModelConstructor::RegisterScalar(DataTypeGetFunc<T> get_func, Da
 		"Cannot register scalar data type function. Arithmetic types and String are handled internally and does not need to be registered.");
 	const FamilyId id = Family<T>::Id();
 
-	auto scalar_func_definition = Rml::MakeUnique<ScalarFuncDefinition<T>>(get_func, set_func);
+	auto scalar_func_definition = ui::MakeUnique<ScalarFuncDefinition<T>>(get_func, set_func);
 
 	const bool inserted = type_register->RegisterDefinition(id, std::move(scalar_func_definition));
 	if (!inserted)
 	{
-		RMLUI_LOG_TYPE_ERROR(T, "Scalar function type already registered.");
+		UI_LOG_TYPE_ERROR(T, "Scalar function type already registered.");
 		return false;
 	}
 
@@ -142,7 +142,7 @@ inline bool DataModelConstructor::RegisterCustomDataVariableDefinition(UniquePtr
 	const bool inserted = type_register->RegisterDefinition(id, std::move(definition));
 	if (!inserted)
 	{
-		RMLUI_LOG_TYPE_ERROR(T, "Custom data type already registered.");
+		UI_LOG_TYPE_ERROR(T, "Custom data type already registered.");
 		return false;
 	}
 
@@ -155,13 +155,13 @@ inline StructHandle<T> DataModelConstructor::RegisterStruct()
 	static_assert(std::is_class<T>::value, "Type must be a struct or class type.");
 	const FamilyId id = Family<T>::Id();
 
-	auto struct_definition = Rml::MakeUnique<StructDefinition>();
+	auto struct_definition = ui::MakeUnique<StructDefinition>();
 	StructDefinition* struct_variable_raw = struct_definition.get();
 
 	const bool inserted = type_register->RegisterDefinition(id, std::move(struct_definition));
 	if (!inserted)
 	{
-		RMLUI_LOG_TYPE_ERROR(T, "Struct type already declared");
+		UI_LOG_TYPE_ERROR(T, "Struct type already declared");
 		return StructHandle<T>(nullptr, nullptr);
 	}
 
@@ -173,17 +173,17 @@ inline bool DataModelConstructor::RegisterArray()
 {
 	using value_type = typename Container::value_type;
 	VariableDefinition* value_variable = type_register->GetDefinition<value_type>();
-	RMLUI_LOG_TYPE_ERROR_ASSERT(value_type, value_variable, "Underlying value type of array has not been registered.");
+	UI_LOG_TYPE_ERROR_ASSERT(value_type, value_variable, "Underlying value type of array has not been registered.");
 	if (!value_variable)
 		return false;
 
 	const FamilyId container_id = Family<Container>::Id();
-	auto array_definition = Rml::MakeUnique<ArrayDefinition<Container>>(value_variable);
+	auto array_definition = ui::MakeUnique<ArrayDefinition<Container>>(value_variable);
 
 	const bool inserted = type_register->RegisterDefinition(container_id, std::move(array_definition));
 	if (!inserted)
 	{
-		RMLUI_LOG_TYPE_ERROR(Container, "Array type already declared.");
+		UI_LOG_TYPE_ERROR(Container, "Array type already declared.");
 		return false;
 	}
 
@@ -193,7 +193,7 @@ inline bool DataModelConstructor::RegisterArray()
 namespace Detail {
 	class DataModelConstructorAccessor {
 	public:
-		RMLUICORE_API static const UnorderedMap<String, DataVariable>& GetAllVariables(const DataModelConstructor& data_model_constructor);
+		UI_CORE_API static const UnorderedMap<String, DataVariable>& GetAllVariables(const DataModelConstructor& data_model_constructor);
 	};
 } // namespace Detail
-} // namespace Rml
+} // namespace ui

@@ -8,7 +8,7 @@
 #include "Layout/LayoutDetails.h"
 #include "WidgetScroll.h"
 
-namespace Rml {
+namespace ui {
 
 ElementScroll::ElementScroll(Element* _element)
 {
@@ -238,4 +238,4 @@ ElementScroll::Scrollbar::Scrollbar() {}
 
 ElementScroll::Scrollbar::~Scrollbar() {}
 
-} // namespace Rml
+} // namespace ui

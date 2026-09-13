@@ -5,12 +5,12 @@
 #include <ui/Core/PropertyDefinition.h>
 #include "SVGCache.h"
 
-namespace Rml {
+namespace ui {
 namespace SVG {
 
 	DecoratorSVG::DecoratorSVG(const String& source, const bool crop_to_content) : source_path(source), crop_to_content(crop_to_content)
 	{
-		RMLUI_ASSERT(!source_path.empty());
+		UI_ASSERT(!source_path.empty());
 	}
 
 	DecoratorSVG::~DecoratorSVG() {}
@@ -38,7 +38,7 @@ namespace SVG {
 	void DecoratorSVG::RenderElement(Element* element, DecoratorDataHandle element_data) const
 	{
 		Data* data = reinterpret_cast<Data*>(element_data);
-		RMLUI_ASSERT(data && data->handle);
+		UI_ASSERT(data && data->handle);
 		data->handle->geometry.Render(element->GetAbsoluteOffset(data->paint_area), data->handle->texture);
 	}
 
@@ -64,4 +64,4 @@ namespace SVG {
 	}
 
 } // namespace SVG
-} // namespace Rml
+} // namespace ui

@@ -1,4 +1,4 @@
-namespace Rml {
+namespace ui {
 
 template <typename ColourType, int AlphaDefault, bool PremultipliedAlpha>
 Colour<ColourType, AlphaDefault, PremultipliedAlpha>::Colour(ColourType rgb, ColourType alpha) : red(rgb), green(rgb), blue(rgb), alpha(alpha)
@@ -68,4 +68,4 @@ void Colour<ColourType, AlphaDefault, PremultipliedAlpha>::operator/=(float rhs)
 	*this *= (1.0f / rhs);
 }
 
-} // namespace Rml
+} // namespace ui

@@ -7,7 +7,7 @@
 #include <doctest.h>
 #include <float.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String document_decorator_rml = R"(
 <rml>
@@ -256,7 +256,7 @@ TEST_CASE("animation.decorator")
 			const double t_final = 0.1;
 
 			system_interface->SetManualTime(0.0);
-			String document_rml = Rml::CreateString(document_decorator_rml.c_str(), test.from_rule.c_str(), test.to_rule.c_str(),
+			String document_rml = ui::CreateString(document_decorator_rml.c_str(), test.from_rule.c_str(), test.to_rule.c_str(),
 				property_str.c_str(), test.from.c_str(), property_str.c_str(), test.to.c_str());
 
 			ElementDocument* document = context->LoadDocumentFromMemory(document_rml, "assets/");
@@ -384,7 +384,7 @@ TEST_CASE("animation.filter")
 			const double t_final = 0.1;
 
 			system_interface->SetManualTime(0.0);
-			String document_rml = Rml::CreateString(document_filter_rml.c_str(), property_str, test.from.c_str(), property_str, test.to.c_str());
+			String document_rml = ui::CreateString(document_filter_rml.c_str(), property_str, test.from.c_str(), property_str, test.to.c_str());
 
 			ElementDocument* document = context->LoadDocumentFromMemory(document_rml, "assets/");
 			Element* element = document->GetChild(0);

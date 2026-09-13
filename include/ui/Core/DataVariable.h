@@ -7,7 +7,7 @@
 #include "Variant.h"
 #include <iterator>
 
-namespace Rml {
+namespace ui {
 
 enum class DataVariableType { Scalar, Array, Struct };
 
@@ -17,7 +17,7 @@ enum class DataVariableType { Scalar, Array, Struct };
  *   Together they can be used to get and set variables between the user side and data model side.
  */
 
-class RMLUICORE_API DataVariable {
+class UI_CORE_API DataVariable {
 public:
 	DataVariable() {}
 	DataVariable(VariableDefinition* definition, void* ptr) : definition(definition), ptr(ptr) {}
@@ -43,7 +43,7 @@ private:
  *   Generally, Scalar types can set and get values, while Array and Struct types can retrieve children based on data addresses.
  */
 
-class RMLUICORE_API VariableDefinition : public NonCopyMoveable {
+class UI_CORE_API VariableDefinition : public NonCopyMoveable {
 public:
 	virtual ~VariableDefinition() = default;
 	DataVariableType Type() const { return type; }
@@ -64,7 +64,7 @@ private:
 };
 
 // Literal data variable constructor
-RMLUICORE_API DataVariable MakeLiteralIntVariable(int value);
+UI_CORE_API DataVariable MakeLiteralIntVariable(int value);
 
 template <typename T>
 class ScalarDefinition final : public VariableDefinition {
@@ -79,7 +79,7 @@ public:
 	bool Set(void* ptr, const Variant& variant) override { return variant.GetInto<T>(*static_cast<T*>(ptr)); }
 };
 
-class RMLUICORE_API FuncDefinition final : public VariableDefinition {
+class UI_CORE_API FuncDefinition final : public VariableDefinition {
 public:
 	FuncDefinition(DataGetFunc get, DataSetFunc set);
 
@@ -116,7 +116,7 @@ private:
 	DataTypeSetFunc<T> set;
 };
 
-class RMLUICORE_API StructDefinition final : public VariableDefinition {
+class UI_CORE_API StructDefinition final : public VariableDefinition {
 public:
 	StructDefinition();
 
@@ -166,7 +166,7 @@ private:
 	VariableDefinition* underlying_definition;
 };
 
-class RMLUICORE_API BasePointerDefinition : public VariableDefinition {
+class UI_CORE_API BasePointerDefinition : public VariableDefinition {
 public:
 	BasePointerDefinition(VariableDefinition* underlying_definition);
 
@@ -247,7 +247,7 @@ private:
 	template <typename T = MemberGetType, typename std::enable_if_t<!IsVoidMemberFunc<T>::value, int> = 0>
 	bool GetDetail(void* ptr, Variant& variant)
 	{
-		RMLUI_ASSERT(member_get_func_ptr);
+		UI_ASSERT(member_get_func_ptr);
 
 		auto&& value = (static_cast<Object*>(ptr)->*member_get_func_ptr)();
 		bool result = underlying_definition->Get(static_cast<void*>(&value), variant);
@@ -263,7 +263,7 @@ private:
 	template <typename T = MemberSetType, typename std::enable_if_t<!IsVoidMemberFunc<T>::value, int> = 0>
 	bool SetDetail(void* ptr, const Variant& variant)
 	{
-		RMLUI_ASSERT(member_set_func_ptr);
+		UI_ASSERT(member_set_func_ptr);
 
 		UnderlyingType result;
 		if (!underlying_definition->Set(static_cast<void*>(&result), variant))
@@ -282,7 +282,7 @@ private:
 namespace Detail {
 	class DataVariableAccessor {
 	public:
-		RMLUICORE_API_INLINE static VariableDefinition* GetDefinition(const DataVariable& variable) { return variable.definition; }
+		UI_CORE_API_INLINE static VariableDefinition* GetDefinition(const DataVariable& variable) { return variable.definition; }
 	};
 } // namespace Detail
-} // namespace Rml
+} // namespace ui

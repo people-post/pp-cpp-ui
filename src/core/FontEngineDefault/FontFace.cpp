@@ -3,7 +3,7 @@
 #include "FontFaceHandleDefault.h"
 #include "FreeTypeInterface.h"
 
-namespace Rml {
+namespace ui {
 
 FontFace::FontFace(FontFaceHandleFreetype _face, Style::FontStyle _style, Style::FontWeight _weight)
 {
@@ -62,4 +62,4 @@ void FontFace::ReleaseFontResources()
 	HandleMap().swap(handles);
 }
 
-} // namespace Rml
+} // namespace ui

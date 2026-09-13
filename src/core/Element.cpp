@@ -40,7 +40,7 @@
 #include <cmath>
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 // Determines how many levels up in the hierarchy the OnChildAdd and OnChildRemove are called (starting at the child itself)
 static constexpr int ChildNotifyLevels = 2;
@@ -72,7 +72,7 @@ Element::Element(const String& tag) :
 	dirty_child_definitions(false), dirty_animation(false), dirty_transition(false), dirty_transform(false), dirty_perspective(false), tag(tag),
 	relative_offset_base(0, 0), relative_offset_position(0, 0), absolute_offset(0, 0), scroll_offset(0, 0)
 {
-	RMLUI_ASSERT(tag == StringUtilities::ToLower(tag));
+	UI_ASSERT(tag == StringUtilities::ToLower(tag));
 	parent = nullptr;
 	focus = nullptr;
 	instancer = nullptr;
@@ -93,7 +93,7 @@ Element::Element(const String& tag) :
 
 Element::~Element()
 {
-	RMLUI_ASSERT(parent == nullptr);
+	UI_ASSERT(parent == nullptr);
 
 	PluginRegistry::NotifyElementDestroy(this);
 
@@ -115,10 +115,10 @@ Element::~Element()
 
 void Element::Update(float dp_ratio, Vector2f vp_dimensions)
 {
-#ifdef RMLUI_TRACY_PROFILING
+#ifdef UI_TRACY_PROFILING
 	auto name = GetAddress(false, false);
-	RMLUI_ZoneScoped;
-	RMLUI_ZoneText(name.c_str(), name.size());
+	UI_ZoneScoped;
+	UI_ZoneText(name.c_str(), name.size());
 #endif
 
 	OnUpdate();
@@ -175,10 +175,10 @@ void Element::UpdateProperties(const float dp_ratio, const Vector2f vp_dimension
 
 void Element::Render()
 {
-#ifdef RMLUI_TRACY_PROFILING
+#ifdef UI_TRACY_PROFILING
 	auto name = GetAddress(false, false);
-	RMLUI_ZoneScoped;
-	RMLUI_ZoneText(name.c_str(), name.size());
+	UI_ZoneScoped;
+	UI_ZoneText(name.c_str(), name.size());
 #endif
 
 	UpdateAbsoluteOffsetAndRenderBoxData();
@@ -201,7 +201,7 @@ void Element::Render()
 		meta->effects.RenderEffects(RenderStage::Decoration);
 
 		{
-			RMLUI_ZoneScopedNC("OnRender", 0x228B22);
+			UI_ZoneScopedNC("OnRender", 0x228B22);
 
 			OnRender();
 		}
@@ -432,7 +432,7 @@ void Element::SetBox(const Box& box)
 {
 	if (box != main_box || additional_boxes.size() > 0)
 	{
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 		for (const BoxEdge edge : {BoxEdge::Top, BoxEdge::Right, BoxEdge::Bottom, BoxEdge::Left})
 		{
 			const float border_width = box.GetEdge(BoxArea::Border, edge);
@@ -480,7 +480,7 @@ const Box& Element::GetBox(int index, Vector2f& offset)
 
 RenderBox Element::GetRenderBox(BoxArea fill_area, int index)
 {
-	RMLUI_ASSERTMSG(fill_area >= BoxArea::Border && fill_area <= BoxArea::Content,
+	UI_ASSERTMSG(fill_area >= BoxArea::Border && fill_area <= BoxArea::Content,
 		"Render box can only be generated with fill area of border, padding or content.");
 
 	UpdateAbsoluteOffsetAndRenderBoxData();
@@ -515,7 +515,7 @@ RenderBox Element::GetRenderBox(BoxArea fill_area, int index)
 	case BoxArea::Padding: inner_size = box.padding_size; break;
 	case BoxArea::Content: inner_size = box.padding_size - box.box.GetFrameSize(BoxArea::Padding); break;
 	case BoxArea::Margin:
-	case BoxArea::Auto: RMLUI_ERROR;
+	case BoxArea::Auto: UI_ERROR;
 	}
 
 	return RenderBox{inner_size, box.offset, edge_sizes, meta->computed_values.border_radius()};
@@ -843,7 +843,7 @@ StringList Element::GetActivePseudoClasses() const
 
 void Element::OverridePseudoClass(Element* element, const String& pseudo_class, bool activate)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 	element->GetStyle()->SetPseudoClass(pseudo_class, activate, true);
 }
 
@@ -1046,13 +1046,13 @@ ElementStyle* Element::GetStyle() const
 
 ElementDocument* Element::GetOwnerDocument() const
 {
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	if (parent && !owner_document)
 	{
 		// Since we have a parent but no owner_document, then we must be a 'loose' element -- that is, constructed
 		// outside of a document and not attached to a child of any element in the hierarchy of a document.
 		// This check ensures that we didn't just forget to set the owner document.
-		RMLUI_ASSERT(!parent->GetOwnerDocument());
+		UI_ASSERT(!parent->GetOwnerDocument());
 	}
 #endif
 
@@ -1167,7 +1167,7 @@ String Element::GetInnerRML() const
 
 void Element::SetInnerRML(const String& rml)
 {
-	RMLUI_ZoneScopedC(0x6495ED);
+	UI_ZoneScopedC(0x6495ED);
 
 	// Remove all DOM children.
 	while ((int)children.size() > num_non_dom_children)
@@ -1342,7 +1342,7 @@ void Element::ScrollTo(Vector2f offset, ScrollBehavior behavior)
 
 Element* Element::AppendChild(ElementPtr child, bool dom_element)
 {
-	RMLUI_ASSERT(child);
+	UI_ASSERT(child);
 	Element* child_ptr = child.get();
 	if (dom_element)
 		children.insert(children.end() - num_non_dom_children, std::move(child));
@@ -1372,7 +1372,7 @@ Element* Element::AppendChild(ElementPtr child, bool dom_element)
 
 Element* Element::InsertBefore(ElementPtr child, Element* adjacent_element)
 {
-	RMLUI_ASSERT(child);
+	UI_ASSERT(child);
 	// Find the position in the list of children of the adjacent element. If
 	// it's nullptr or we can't find it, then we insert it at the end of the dom
 	// children, as a dom element.
@@ -1421,7 +1421,7 @@ Element* Element::InsertBefore(ElementPtr child, Element* adjacent_element)
 
 ElementPtr Element::ReplaceChild(ElementPtr inserted_element, Element* replaced_element)
 {
-	RMLUI_ASSERT(inserted_element);
+	UI_ASSERT(inserted_element);
 	auto insertion_point = children.begin();
 	while (insertion_point != children.end() && insertion_point->get() != replaced_element)
 	{
@@ -1769,7 +1769,7 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 		else if (attribute == "lang")
 		{
 			if (value.GetType() == Variant::STRING)
-				meta->style.SetProperty(PropertyId::RmlUi_Language, Property(value.GetReference<String>(), Unit::STRING));
+				meta->style.SetProperty(PropertyId::Ui_Language, Property(value.GetReference<String>(), Unit::STRING));
 			else if (value.GetType() != Variant::NONE)
 				Log::Message(Log::LT_WARNING, "Invalid 'lang' attribute, string type required. In element: %s", GetAddress().c_str());
 		}
@@ -1780,11 +1780,11 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 				const String& dir_value = value.GetReference<String>();
 
 				if (dir_value == "auto")
-					meta->style.SetProperty(PropertyId::RmlUi_Direction, Property(Style::Direction::Auto));
+					meta->style.SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Auto));
 				else if (dir_value == "ltr")
-					meta->style.SetProperty(PropertyId::RmlUi_Direction, Property(Style::Direction::Ltr));
+					meta->style.SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Ltr));
 				else if (dir_value == "rtl")
-					meta->style.SetProperty(PropertyId::RmlUi_Direction, Property(Style::Direction::Rtl));
+					meta->style.SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Rtl));
 				else
 					Log::Message(Log::LT_WARNING, "Invalid 'dir' attribute '%s', value must be 'auto', 'ltr', or 'rtl'. In element: %s",
 						dir_value.c_str(), GetAddress().c_str());
@@ -1801,7 +1801,7 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 
 void Element::OnPropertyChange(const PropertyIdSet& changed_properties)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	const bool top_right_bottom_left_changed = (           //
 		changed_properties.Contains(PropertyId::Top) ||    //
 		changed_properties.Contains(PropertyId::Right) ||  //
@@ -2212,7 +2212,7 @@ void Element::SetOwnerDocument(ElementDocument* document)
 
 void Element::SetDataModel(DataModel* new_data_model)
 {
-	RMLUI_ASSERTMSG(!data_model || !new_data_model, "We must either attach a new data model, or detach the old one.");
+	UI_ASSERTMSG(!data_model || !new_data_model, "We must either attach a new data model, or detach the old one.");
 
 	if (data_model == new_data_model)
 		return;
@@ -2238,13 +2238,13 @@ void Element::Release()
 	if (instancer)
 		instancer->ReleaseElement(this);
 	else
-		Log::Message(Log::LT_WARNING, "Leak detected: element %s not instanced via RmlUi Factory. Unable to release.", GetAddress().c_str());
+		Log::Message(Log::LT_WARNING, "Leak detected: element %s not instanced via pp-cpp-ui Factory. Unable to release.", GetAddress().c_str());
 }
 
 void Element::SetParent(Element* _parent)
 {
 	// Assumes we are already detached from the hierarchy or we are detaching now.
-	RMLUI_ASSERT(!parent || !_parent);
+	UI_ASSERT(!parent || !_parent);
 
 	parent = _parent;
 
@@ -2641,7 +2641,7 @@ void Element::AddToStackingContext(Vector<StackingContextChild>& stacking_childr
 		case Display::TableRowGroup:
 		case Display::TableColumn:
 		case Display::TableColumnGroup:
-		case Display::None: RMLUI_ERROR; break; // Handled above.
+		case Display::None: UI_ERROR; break; // Handled above.
 		}
 	}
 
@@ -2894,7 +2894,7 @@ void Element::HandleTransitionProperty()
 		}
 		else
 		{
-			RMLUI_ASSERT(keep_transitions);
+			UI_ASSERT(keep_transitions);
 
 			// Only remove the transitions that are not in our keep list.
 			const auto& keep_transitions_list = keep_transitions->transitions;
@@ -3254,4 +3254,4 @@ void Element::ClampScrollOffsetRecursive()
 		GetChild(i)->ClampScrollOffsetRecursive();
 }
 
-} // namespace Rml
+} // namespace ui

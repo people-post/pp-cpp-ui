@@ -4,7 +4,7 @@
 #include <ui/Core/Types.h>
 #include <float.h>
 
-namespace Rml {
+namespace ui {
 
 class TableWrapper;
 struct ComputedAxisSize;
@@ -142,8 +142,8 @@ float BuildRowBoxes(TrackBoxList& row_boxes, const TrackMetricList& row_metrics,
 // Return the border size of a cell spanning one or multiple tracks.
 inline float GetSpanningCellBorderSize(const TrackBoxList& boxes, const int index, const int index_last_span)
 {
-	RMLUI_ASSERT(index < (int)boxes.size() && index_last_span < (int)boxes.size());
+	UI_ASSERT(index < (int)boxes.size() && index_last_span < (int)boxes.size());
 	return boxes[index_last_span].cell_size + (boxes[index_last_span].cell_offset - boxes[index].cell_offset);
 }
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 #include <ui/Core/Element.h>
 #include <ui/Core/TransformPrimitive.h>
 
-namespace Rml {
+namespace ui {
 
 using namespace Transforms;
 
@@ -311,7 +311,7 @@ struct PrepareVisitor {
 		case TransformPrimitive::PERSPECTIVE: return this->operator()(primitive.perspective);
 		case TransformPrimitive::DECOMPOSEDMATRIX4: return this->operator()(primitive.decomposed_matrix_4);
 		}
-		RMLUI_ASSERT(false);
+		UI_ASSERT(false);
 		return false;
 	}
 };
@@ -354,7 +354,7 @@ struct GetGenericTypeVisitor {
 		case TransformPrimitive::PERSPECTIVE:
 		case TransformPrimitive::DECOMPOSEDMATRIX4: return GenericType::None;
 		}
-		RMLUI_ASSERT(false);
+		UI_ASSERT(false);
 		return GenericType::None;
 	}
 };
@@ -376,7 +376,7 @@ struct ConvertToGenericTypeVisitor {
 	template <typename T>
 	TransformPrimitive operator()(const T& p)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return p;
 	}
 
@@ -401,7 +401,7 @@ struct ConvertToGenericTypeVisitor {
 		case TransformPrimitive::ROTATEZ:     result.type = TransformPrimitive::ROTATE3D;    result.rotate_3d = this->operator()(primitive.rotate_z);     break;
 		case TransformPrimitive::ROTATE2D:    result.type = TransformPrimitive::ROTATE3D;    result.rotate_3d = this->operator()(primitive.rotate_2d);    break;
 		case TransformPrimitive::ROTATE3D:    break;
-		default: RMLUI_ASSERT(false); break;
+		default: UI_ASSERT(false); break;
 		}
 		// clang-format on
 		return result;
@@ -435,7 +435,7 @@ bool TransformUtilities::TryConvertToMatchingGenericType(TransformPrimitive& p0,
 		TransformPrimitive new_p0 = ConvertToGenericTypeVisitor{}.run(p0);
 		TransformPrimitive new_p1 = ConvertToGenericTypeVisitor{}.run(p1);
 
-		RMLUI_ASSERT(new_p0.type == new_p1.type);
+		UI_ASSERT(new_p0.type == new_p1.type);
 
 		if (new_p0.type == TransformPrimitive::ROTATE3D && !CanInterpolateRotate3D(new_p0.rotate_3d, new_p1.rotate_3d))
 			return false;
@@ -470,7 +470,7 @@ struct InterpolateVisitor {
 	}
 	bool Interpolate(Rotate3D& p0, const Rotate3D& p1)
 	{
-		RMLUI_ASSERT(CanInterpolateRotate3D(p0, p1));
+		UI_ASSERT(CanInterpolateRotate3D(p0, p1));
 		// We can only interpolate rotate3d if their rotation axes align. That should be the case if we get here,
 		// otherwise the generic type matching should decompose them. Thus, we only need to interpolate
 		// the angle value here.
@@ -479,17 +479,17 @@ struct InterpolateVisitor {
 	}
 	bool Interpolate(Matrix2D& /*p0*/, const Matrix2D& /*p1*/)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return false; /* Error if we get here, see PrepareForInterpolation() */
 	}
 	bool Interpolate(Matrix3D& /*p0*/, const Matrix3D& /*p1*/)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return false; /* Error if we get here, see PrepareForInterpolation() */
 	}
 	bool Interpolate(Perspective& /*p0*/, const Perspective& /*p1*/)
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 		return false; /* Error if we get here, see PrepareForInterpolation() */
 	}
 
@@ -505,7 +505,7 @@ struct InterpolateVisitor {
 
 	bool run(TransformPrimitive& variant)
 	{
-		RMLUI_ASSERT(variant.type == other_variant.type);
+		UI_ASSERT(variant.type == other_variant.type);
 		switch (variant.type)
 		{
 		case TransformPrimitive::MATRIX2D: return Interpolate(variant.matrix_2d, other_variant.matrix_2d);
@@ -531,7 +531,7 @@ struct InterpolateVisitor {
 		case TransformPrimitive::PERSPECTIVE: return Interpolate(variant.perspective, other_variant.perspective);
 		case TransformPrimitive::DECOMPOSEDMATRIX4: return Interpolate(variant.decomposed_matrix_4, other_variant.decomposed_matrix_4);
 		}
-		RMLUI_ASSERT(false);
+		UI_ASSERT(false);
 		return false;
 	}
 };
@@ -557,7 +557,7 @@ static String ToString(const Transforms::ResolvedPrimitive<N>& p, const String& 
 		if (only_unit_on_last_value && i < N - 1)
 			multiplier = 1.0f;
 		else if (rad_to_deg)
-			multiplier = 180.f / Math::RMLUI_PI;
+			multiplier = 180.f / Math::UI_PI;
 
 		if (TypeConverter<float, String>::Convert(p.values[i] * multiplier, tmp))
 			result += tmp;
@@ -668,7 +668,7 @@ struct ToStringVisitor {
 		case TransformPrimitive::PERSPECTIVE: return ToString(variant.perspective);
 		case TransformPrimitive::DECOMPOSEDMATRIX4: return ToString(variant.decomposed_matrix_4);
 		}
-		RMLUI_ASSERT(false);
+		UI_ASSERT(false);
 		return String();
 	}
 };
@@ -770,4 +770,4 @@ bool TransformUtilities::Decompose(Transforms::DecomposedMatrix4& d, const Matri
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

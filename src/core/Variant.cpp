@@ -2,7 +2,7 @@
 #include <ui/Core/DecorationTypes.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 Variant::Variant()
 {
@@ -124,7 +124,7 @@ void Variant::Set(const Variant& copy)
 		type = copy.type;
 		break;
 	}
-	RMLUI_ASSERT(type == copy.type);
+	UI_ASSERT(type == copy.type);
 }
 
 void Variant::Set(Variant&& other)
@@ -145,7 +145,7 @@ void Variant::Set(Variant&& other)
 		type = other.type;
 		break;
 	}
-	RMLUI_ASSERT(type == other.type);
+	UI_ASSERT(type == other.type);
 }
 
 void Variant::Set(const bool value)
@@ -526,8 +526,8 @@ bool Variant::operator==(const Variant& other) const
 	case BOXSHADOWLIST: return DEFAULT_VARIANT_COMPARE(BoxShadowList);
 	case NONE: return true;
 	}
-	RMLUI_ERRORMSG("Variant comparison not implemented for this type.");
+	UI_ERRORMSG("Variant comparison not implemented for this type.");
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

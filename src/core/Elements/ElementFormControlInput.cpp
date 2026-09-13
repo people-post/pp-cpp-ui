@@ -7,7 +7,7 @@
 #include "InputTypeSubmit.h"
 #include "InputTypeText.h"
 
-namespace Rml {
+namespace ui {
 
 ElementFormControlInput::ElementFormControlInput(const String& tag) : ElementFormControl(tag)
 {
@@ -20,7 +20,7 @@ ElementFormControlInput::~ElementFormControlInput() {}
 
 String ElementFormControlInput::GetValue() const
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	return type->GetValue();
 }
 
@@ -31,37 +31,37 @@ void ElementFormControlInput::SetValue(const String& value)
 
 bool ElementFormControlInput::IsSubmitted()
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	return type->IsSubmitted();
 }
 
 void ElementFormControlInput::Select()
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->Select();
 }
 
 void ElementFormControlInput::SetSelectionRange(int selection_start, int selection_end)
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->SetSelectionRange(selection_start, selection_end);
 }
 
 void ElementFormControlInput::GetSelection(int* selection_start, int* selection_end, String* selected_text) const
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->GetSelection(selection_start, selection_end, selected_text);
 }
 
 void ElementFormControlInput::SetCompositionRange(int range_start, int range_end)
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->SetCompositionRange(range_start, range_end);
 }
 
 void ElementFormControlInput::OnUpdate()
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->OnUpdate();
 }
 
@@ -74,19 +74,19 @@ void ElementFormControlInput::Render()
 
 void ElementFormControlInput::OnRender()
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->OnRender();
 }
 
 void ElementFormControlInput::OnResize()
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->OnResize();
 }
 
 void ElementFormControlInput::OnLayout()
 {
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 	type->OnLayout();
 }
 
@@ -134,7 +134,7 @@ void ElementFormControlInput::OnAttributeChange(const ElementAttributes& changed
 		DirtyLayout();
 	}
 
-	RMLUI_ASSERT(type);
+	UI_ASSERT(type);
 
 	if (!type->OnAttributeChange(changed_attributes))
 		DirtyLayout();
@@ -174,4 +174,4 @@ bool ElementFormControlInput::GetIntrinsicDimensions(Vector2f& dimensions, float
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

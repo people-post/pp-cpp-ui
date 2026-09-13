@@ -5,13 +5,13 @@
 #include "Header.h"
 #include "SelectionTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class SelectionContentBuilder;
 
-class RMLUICORE_API ElementText final : public Element {
+class UI_CORE_API ElementText final : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementText, Element)
+	UI_RTTI_DefineWithParent(ElementText, Element)
 
 	ElementText(const String& tag);
 	virtual ~ElementText();
@@ -121,4 +121,4 @@ private:
 	int selection_local_end = -1;
 };
 
-} // namespace Rml
+} // namespace ui

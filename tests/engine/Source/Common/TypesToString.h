@@ -11,7 +11,7 @@
 /*
  *   Provides string conversion of types for doctest.
  */
-namespace Rml {
+namespace ui {
 
 inline std::ostream& operator<<(std::ostream& os, const Colourb& value)
 {
@@ -73,4 +73,4 @@ inline std::ostream& operator<<(std::ostream& os, const Variant& value)
 	return os;
 }
 
-} // namespace Rml
+} // namespace ui

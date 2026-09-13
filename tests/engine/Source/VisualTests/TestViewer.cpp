@@ -12,7 +12,7 @@
 #include <ui/Core/XMLParser.h>
 #include <Shell.h>
 
-using namespace Rml;
+using namespace ui;
 
 static SharedPtr<XMLNodeHandlerMeta> meta_handler;
 static SharedPtr<XMLNodeHandlerLink> link_handler;
@@ -20,36 +20,36 @@ static SharedPtr<XMLNodeHandlerLink> link_handler;
 static void InitializeXmlNodeHandlers()
 {
 	meta_handler = MakeShared<XMLNodeHandlerMeta>();
-	Rml::XMLParser::RegisterNodeHandler("meta", meta_handler);
+	ui::XMLParser::RegisterNodeHandler("meta", meta_handler);
 
 	link_handler = MakeShared<XMLNodeHandlerLink>();
-	Rml::XMLParser::RegisterNodeHandler("link", link_handler);
+	ui::XMLParser::RegisterNodeHandler("link", link_handler);
 }
 
-class EventListenerLinks : public Rml::EventListener {
+class EventListenerLinks : public ui::EventListener {
 public:
-	void ProcessEvent(Rml::Event& event) override
+	void ProcessEvent(ui::Event& event) override
 	{
-		Rml::Element* element = event.GetCurrentElement();
-		Rml::String href = element->GetAttribute<Rml::String>("href", "");
+		ui::Element* element = event.GetCurrentElement();
+		ui::String href = element->GetAttribute<ui::String>("href", "");
 
 		if (href.empty() || !hover_text)
 			return;
 
-		if (event == Rml::EventId::Click)
+		if (event == ui::EventId::Click)
 		{
-			if (Rml::SystemInterface* system_interface = Rml::GetSystemInterface())
+			if (ui::SystemInterface* system_interface = ui::GetSystemInterface())
 			{
 				system_interface->SetClipboardText(href);
 				hover_text->SetInnerRML("Copied to clipboard");
 				hover_text->SetClass("confirmation", true);
 			}
 		}
-		else if (event == Rml::EventId::Mouseover)
+		else if (event == ui::EventId::Mouseover)
 		{
-			hover_text->SetInnerRML(Rml::StringUtilities::EncodeRml(href));
+			hover_text->SetInnerRML(ui::StringUtilities::EncodeRml(href));
 		}
-		else if (event == Rml::EventId::Mouseout)
+		else if (event == ui::EventId::Mouseout)
 		{
 			hover_text->SetInnerRML("");
 			hover_text->SetClass("confirmation", false);
@@ -63,36 +63,36 @@ private:
 };
 static EventListenerLinks event_listener_links;
 
-TestViewer::TestViewer(Rml::Context* context) : context(context)
+TestViewer::TestViewer(ui::Context* context) : context(context)
 {
 	InitializeXmlNodeHandlers();
 
 	const String local_data_path_prefix = "/../Tests/Data/";
 
 	document_description = context->LoadDocument(local_data_path_prefix + "description.rml");
-	RMLUI_ASSERT(document_description);
+	UI_ASSERT(document_description);
 	event_listener_links.SetHoverTextElement(document_description->GetElementById("hovertext"));
 	document_description->Show();
 
 	document_source = context->LoadDocument(local_data_path_prefix + "view_source.rml");
-	RMLUI_ASSERT(document_source);
+	UI_ASSERT(document_source);
 	document_help = context->LoadDocument(local_data_path_prefix + "visual_tests_help.rml");
-	RMLUI_ASSERT(document_help);
+	UI_ASSERT(document_help);
 	if (Element* element = document_help->GetElementById("test_directories"))
 	{
 		String rml;
 		const StringList dirs = GetTestInputDirectories();
 		for (const String& dir : dirs)
-			rml += "<value>" + Rml::StringUtilities::EncodeRml(dir) + "</value>";
+			rml += "<value>" + ui::StringUtilities::EncodeRml(dir) + "</value>";
 		element->SetInnerRML(rml);
 	}
 	if (Element* element = document_help->GetElementById("compare_input"))
 	{
-		element->SetInnerRML(Rml::StringUtilities::EncodeRml(GetCompareInputDirectory()));
+		element->SetInnerRML(ui::StringUtilities::EncodeRml(GetCompareInputDirectory()));
 	}
 	if (Element* element = document_help->GetElementById("capture_output"))
 	{
-		element->SetInnerRML(Rml::StringUtilities::EncodeRml(GetCaptureOutputDirectory()));
+		element->SetInnerRML(ui::StringUtilities::EncodeRml(GetCaptureOutputDirectory()));
 	}
 }
 
@@ -107,10 +107,10 @@ TestViewer::~TestViewer()
 	}
 }
 
-static Rml::String LoadFile(const String& file_path)
+static ui::String LoadFile(const String& file_path)
 {
 	String result;
-	Rml::GetFileInterface()->LoadFile(file_path, result);
+	ui::GetFileInterface()->LoadFile(file_path, result);
 	return result;
 }
 
@@ -133,7 +133,7 @@ void TestViewer::ShowSource(SourceType type)
 			const String rml_source = StringUtilities::EncodeRml(source_string);
 
 			Element* element = document_source->GetElementById("code");
-			RMLUI_ASSERT(element);
+			UI_ASSERT(element);
 			element->SetInnerRML(rml_source);
 
 			document_source->Show(ModalFlag::None, FocusFlag::None);
@@ -167,7 +167,7 @@ bool TestViewer::IsNavigationLocked() const
 	return false;
 }
 
-bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filename, int test_index, int number_of_tests, int filtered_test_index,
+bool TestViewer::LoadTest(const ui::String& directory, const ui::String& filename, int test_index, int number_of_tests, int filtered_test_index,
 	int filtered_number_of_tests, int suite_index, int number_of_suites, bool keep_scroll_position)
 {
 	float scroll_position = 0.f;
@@ -190,8 +190,8 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 	meta_handler->ClearMetaList();
 	link_handler->ClearLinkList();
 
-	const Rml::String test_path = directory + '/' + filename;
-	Rml::String reference_path;
+	const ui::String test_path = directory + '/' + filename;
+	ui::String reference_path;
 
 	// Load test document, and reference document if it exists.
 	{
@@ -199,7 +199,7 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 		if (source_test.empty())
 			return false;
 
-		document_test = context->LoadDocumentFromMemory(source_test, Rml::StringUtilities::Replace(test_path, ':', '|'));
+		document_test = context->LoadDocumentFromMemory(source_test, ui::StringUtilities::Replace(test_path, ':', '|'));
 		if (!document_test)
 			return false;
 
@@ -224,7 +224,7 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 
 			if (!source_reference.empty())
 			{
-				document_reference = context->LoadDocumentFromMemory(source_reference, Rml::StringUtilities::Replace(reference_path, ':', '|'));
+				document_reference = context->LoadDocumentFromMemory(source_reference, ui::StringUtilities::Replace(reference_path, ':', '|'));
 				if (document_reference)
 				{
 					document_reference->SetProperty(PropertyId::Left, Property(510.f, Unit::DP));
@@ -237,7 +237,7 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 	// Description Header
 	{
 		Element* description_header = document_description->GetElementById("header");
-		RMLUI_ASSERT(description_header);
+		UI_ASSERT(description_header);
 
 		description_header->SetInnerRML(
 			CreateString("Test suite %d of %d<br/>Test %d of %d<br/>", suite_index + 1, number_of_suites, test_index + 1, number_of_tests));
@@ -246,7 +246,7 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 	// Description Filter
 	{
 		Element* description_filter_text = document_description->GetElementById("filter_text");
-		RMLUI_ASSERT(description_filter_text);
+		UI_ASSERT(description_filter_text);
 		if (filtered_number_of_tests == 0)
 			description_filter_text->SetInnerRML("No matches");
 		else if (filtered_number_of_tests < number_of_tests && filtered_test_index >= 0)
@@ -260,7 +260,7 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 	// Description Content
 	{
 		String rml_description =
-			Rml::CreateString("<h1>%s</h1><p><a href=\"%s\">%s</a>", document_test->GetTitle().c_str(), test_path.c_str(), filename.c_str());
+			ui::CreateString("<h1>%s</h1><p><a href=\"%s\">%s</a>", document_test->GetTitle().c_str(), test_path.c_str(), filename.c_str());
 
 		if (!reference_filename.empty())
 		{
@@ -292,42 +292,42 @@ bool TestViewer::LoadTest(const Rml::String& directory, const Rml::String& filen
 		}
 
 		Element* description_content = document_description->GetElementById("content");
-		RMLUI_ASSERT(description_content);
+		UI_ASSERT(description_content);
 		description_content->SetInnerRML(rml_description);
 
 		// Add link hover and click handler.
-		Rml::ElementList link_elements;
+		ui::ElementList link_elements;
 		description_content->GetElementsByTagName(link_elements, "a");
 
-		for (Rml::Element* element : link_elements)
+		for (ui::Element* element : link_elements)
 		{
-			element->AddEventListener(Rml::EventId::Click, &event_listener_links);
-			element->AddEventListener(Rml::EventId::Mouseover, &event_listener_links);
-			element->AddEventListener(Rml::EventId::Mouseout, &event_listener_links);
+			element->AddEventListener(ui::EventId::Click, &event_listener_links);
+			element->AddEventListener(ui::EventId::Mouseover, &event_listener_links);
+			element->AddEventListener(ui::EventId::Mouseout, &event_listener_links);
 		}
 	}
 
 	return true;
 }
 
-void TestViewer::SetGoToText(const Rml::String& rml)
+void TestViewer::SetGoToText(const ui::String& rml)
 {
 	Element* description_goto = document_description->GetElementById("goto");
-	RMLUI_ASSERT(description_goto);
+	UI_ASSERT(description_goto);
 	description_goto->SetInnerRML(rml);
 }
 
-Rml::Rectanglef TestViewer::GetGoToArea() const
+ui::Rectanglef TestViewer::GetGoToArea() const
 {
 	Element* description_goto = document_description->GetElementById("goto");
-	RMLUI_ASSERT(description_goto);
-	return Rml::Rectanglef::FromPositionSize(description_goto->GetAbsoluteOffset(), description_goto->GetBox().GetSize());
+	UI_ASSERT(description_goto);
+	return ui::Rectanglef::FromPositionSize(description_goto->GetAbsoluteOffset(), description_goto->GetBox().GetSize());
 }
 
 void TestViewer::SetAttention(bool active)
 {
 	if (active)
-		document_description->SetProperty(Rml::PropertyId::BackgroundColor, Rml::Property(Rml::Colourb(100, 100, 30), Rml::Unit::COLOUR));
+		document_description->SetProperty(ui::PropertyId::BackgroundColor, ui::Property(ui::Colourb(100, 100, 30), ui::Unit::COLOUR));
 	else
-		document_description->RemoveProperty(Rml::PropertyId::BackgroundColor);
+		document_description->RemoveProperty(ui::PropertyId::BackgroundColor);
 }

@@ -12,9 +12,9 @@
 namespace std {
 
 template <>
-struct hash<::Rml::Unit> {
-	using utype = underlying_type_t<::Rml::Unit>;
-	size_t operator()(const ::Rml::Unit& t) const noexcept
+struct hash<::ui::Unit> {
+	using utype = underlying_type_t<::ui::Unit>;
+	size_t operator()(const ::ui::Unit& t) const noexcept
 	{
 		hash<utype> h;
 		return h(static_cast<utype>(t));
@@ -22,42 +22,42 @@ struct hash<::Rml::Unit> {
 };
 
 template <>
-struct hash<::Rml::Vector2i> {
-	size_t operator()(const ::Rml::Vector2i& v) const noexcept
+struct hash<::ui::Vector2i> {
+	size_t operator()(const ::ui::Vector2i& v) const noexcept
 	{
-		using namespace ::Rml::Utilities;
+		using namespace ::ui::Utilities;
 		size_t seed = hash<int>{}(v.x);
 		HashCombine(seed, v.y);
 		return seed;
 	}
 };
 template <>
-struct hash<::Rml::Vector2f> {
-	size_t operator()(const ::Rml::Vector2f& v) const noexcept
+struct hash<::ui::Vector2f> {
+	size_t operator()(const ::ui::Vector2f& v) const noexcept
 	{
-		using namespace ::Rml::Utilities;
+		using namespace ::ui::Utilities;
 		size_t seed = hash<float>{}(v.x);
 		HashCombine(seed, v.y);
 		return seed;
 	}
 };
 template <>
-struct hash<::Rml::Colourb> {
-	size_t operator()(const ::Rml::Colourb& v) const noexcept { return static_cast<size_t>(hash<uint32_t>{}(reinterpret_cast<const uint32_t&>(v))); }
+struct hash<::ui::Colourb> {
+	size_t operator()(const ::ui::Colourb& v) const noexcept { return static_cast<size_t>(hash<uint32_t>{}(reinterpret_cast<const uint32_t&>(v))); }
 };
 template <>
-struct hash<::Rml::ColourbPremultiplied> {
-	size_t operator()(const ::Rml::ColourbPremultiplied& v) const noexcept
+struct hash<::ui::ColourbPremultiplied> {
+	size_t operator()(const ::ui::ColourbPremultiplied& v) const noexcept
 	{
 		return static_cast<size_t>(hash<uint32_t>{}(reinterpret_cast<const uint32_t&>(v)));
 	}
 };
 
 template <>
-struct hash<::Rml::NumericValue> {
-	size_t operator()(const ::Rml::NumericValue& v) const noexcept
+struct hash<::ui::NumericValue> {
+	size_t operator()(const ::ui::NumericValue& v) const noexcept
 	{
-		using namespace ::Rml::Utilities;
+		using namespace ::ui::Utilities;
 		size_t seed = hash<float>{}(v.number);
 		HashCombine(seed, v.unit);
 		return seed;
@@ -65,11 +65,11 @@ struct hash<::Rml::NumericValue> {
 };
 
 template <>
-struct hash<::Rml::BoxShadow> {
-	size_t operator()(const ::Rml::BoxShadow& s) const noexcept
+struct hash<::ui::BoxShadow> {
+	size_t operator()(const ::ui::BoxShadow& s) const noexcept
 	{
-		using namespace ::Rml;
-		using namespace ::Rml::Utilities;
+		using namespace ::ui;
+		using namespace ::ui::Utilities;
 		size_t seed = std::hash<ColourbPremultiplied>{}(s.color);
 
 		HashCombine(seed, s.offset_x);
@@ -82,11 +82,11 @@ struct hash<::Rml::BoxShadow> {
 };
 
 template <>
-struct hash<::Rml::RenderBox> {
-	size_t operator()(const ::Rml::RenderBox& box) const noexcept
+struct hash<::ui::RenderBox> {
+	size_t operator()(const ::ui::RenderBox& box) const noexcept
 	{
-		using namespace ::Rml::Utilities;
-		static auto HashArray4 = [](const ::Rml::Array<float, 4>& arr) -> size_t {
+		using namespace ::ui::Utilities;
+		static auto HashArray4 = [](const ::ui::Array<float, 4>& arr) -> size_t {
 			size_t seed = 0;
 			for (const auto& v : arr)
 				HashCombine(seed, v);
@@ -103,10 +103,10 @@ struct hash<::Rml::RenderBox> {
 };
 
 template <>
-struct hash<::Rml::BoxShadowGeometryInfo> {
-	size_t operator()(const ::Rml::BoxShadowGeometryInfo& in) const noexcept
+struct hash<::ui::BoxShadowGeometryInfo> {
+	size_t operator()(const ::ui::BoxShadowGeometryInfo& in) const noexcept
 	{
-		using namespace ::Rml::Utilities;
+		using namespace ::ui::Utilities;
 		size_t seed = size_t(849128392);
 
 		HashCombine(seed, in.background_color);
@@ -131,7 +131,7 @@ struct hash<::Rml::BoxShadowGeometryInfo> {
 		{
 			HashCombine(seed, v);
 		}
-		for (const ::Rml::BoxShadow& v : in.shadow_list)
+		for (const ::ui::BoxShadow& v : in.shadow_list)
 		{
 			HashCombine(seed, v);
 		}

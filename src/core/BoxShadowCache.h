@@ -4,7 +4,7 @@
 #include <ui/Core/Geometry.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 namespace Style {
 	class ComputedValues;
 }
@@ -32,4 +32,4 @@ public:
 	static SharedPtr<BoxShadowRenderable> GetHandle(Element* element, const Style::ComputedValues& computed);
 };
 
-} // namespace Rml
+} // namespace ui

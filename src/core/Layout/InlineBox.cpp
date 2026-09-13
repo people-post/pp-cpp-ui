@@ -3,7 +3,7 @@
 #include <ui/Core/Element.h>
 #include <ui/Core/FontMetrics.h>
 
-namespace Rml {
+namespace ui {
 
 static void ZeroBoxEdge(Box& box, BoxEdge edge)
 {
@@ -49,18 +49,18 @@ InlineBoxRoot::InlineBoxRoot(Element* element) : InlineBoxBase(element)
 FragmentConstructor InlineBoxRoot::CreateFragment(InlineLayoutMode /*mode*/, float /*available_width*/, float /*right_spacing_width*/,
 	bool /*first_box*/, LayoutOverflowHandle /*overflow_handle*/)
 {
-	RMLUI_ERROR;
+	UI_ERROR;
 	return {};
 }
 
 void InlineBoxRoot::Submit(const PlacedFragment& /*placed_fragment*/)
 {
-	RMLUI_ERROR;
+	UI_ERROR;
 }
 
 InlineBox::InlineBox(const InlineLevelBox* parent, Element* element, const Box& _box) : InlineBoxBase(element), box(_box)
 {
-	RMLUI_ASSERT(box.GetSize().x < 0.f && box.GetSize().y < 0.f);
+	UI_ASSERT(box.GetSize().x < 0.f && box.GetSize().y < 0.f);
 
 	const FontMetrics& font_metrics = GetFontMetrics();
 
@@ -95,7 +95,7 @@ FragmentConstructor InlineBox::CreateFragment(InlineLayoutMode mode, float avail
 void InlineBox::Submit(const PlacedFragment& placed_fragment)
 {
 	Element* element = GetElement();
-	RMLUI_ASSERT(element && element != placed_fragment.offset_parent);
+	UI_ASSERT(element && element != placed_fragment.offset_parent);
 
 	Box element_box = box;
 	element_box.SetContent({placed_fragment.layout_width, element_box.GetSize().y});
@@ -127,4 +127,4 @@ void InlineBox::Submit(const PlacedFragment& placed_fragment)
 	}
 }
 
-} // namespace Rml
+} // namespace ui

@@ -7,7 +7,7 @@
 #include <float.h>
 #include <numeric>
 
-namespace Rml {
+namespace ui {
 
 LineBox::~LineBox() {}
 
@@ -20,7 +20,7 @@ void LineBox::SetLineBox(Vector2f _line_position, float _line_width, float _line
 
 bool LineBox::AddBox(InlineLevelBox* box, InlineLayoutMode layout_mode, LayoutOverflowHandle& inout_overflow_handle)
 {
-	RMLUI_ASSERT(!is_closed);
+	UI_ASSERT(!is_closed);
 	const bool first_box = !HasContent();
 
 	// Find the spacing this element must leave on its right side, to account for its parent inline boxes to be closed later.
@@ -47,7 +47,7 @@ bool LineBox::AddBox(InlineLevelBox* box, InlineLayoutMode layout_mode, LayoutOv
 	if (constructor.type == FragmentType::Invalid)
 	{
 		// Could not place fragment on this line, try again on a new line.
-		RMLUI_ASSERT(layout_mode == InlineLayoutMode::WrapAny);
+		UI_ASSERT(layout_mode == InlineLayoutMode::WrapAny);
 		return true;
 	}
 
@@ -63,8 +63,8 @@ bool LineBox::AddBox(InlineLevelBox* box, InlineLayoutMode layout_mode, LayoutOv
 	{
 	case FragmentType::InlineBox:
 	{
-		RMLUI_ASSERT(constructor.layout_width < 0.f);
-		RMLUI_ASSERT(rmlui_static_cast<InlineBox*>(box));
+		UI_ASSERT(constructor.layout_width < 0.f);
+		UI_ASSERT(ui_static_cast<InlineBox*>(box));
 
 		open_fragments_leaf = fragment_index;
 		open_spacing_left += box->GetSpacingLeft();
@@ -73,7 +73,7 @@ bool LineBox::AddBox(InlineLevelBox* box, InlineLayoutMode layout_mode, LayoutOv
 	case FragmentType::SizedBox:
 	case FragmentType::TextRun:
 	{
-		RMLUI_ASSERT(constructor.layout_width >= 0.f);
+		UI_ASSERT(constructor.layout_width >= 0.f);
 
 		box_cursor = box_placement_cursor + constructor.layout_width;
 		open_spacing_left = 0.f;
@@ -90,7 +90,7 @@ bool LineBox::AddBox(InlineLevelBox* box, InlineLayoutMode layout_mode, LayoutOv
 	}
 	break;
 	case FragmentType::Invalid:
-		RMLUI_ERROR; // Handled above;
+		UI_ERROR; // Handled above;
 		break;
 	}
 
@@ -99,7 +99,7 @@ bool LineBox::AddBox(InlineLevelBox* box, InlineLayoutMode layout_mode, LayoutOv
 
 void LineBox::CloseFragment(Fragment& open_fragment, float right_inner_edge_position)
 {
-	RMLUI_ASSERT(open_fragment.type == FragmentType::InlineBox);
+	UI_ASSERT(open_fragment.type == FragmentType::InlineBox);
 
 	open_fragment.children_end_index = (int)fragments.size();
 	const float spacing_left = (open_fragment.split_left ? 0.f : open_fragment.box->GetSpacingLeft());
@@ -110,7 +110,7 @@ void LineBox::CloseInlineBox(InlineBox* inline_box)
 {
 	if (open_fragments_leaf == RootFragmentIndex || fragments[open_fragments_leaf].box != inline_box)
 	{
-		RMLUI_ERRORMSG("Inline box open/close mismatch.");
+		UI_ERRORMSG("Inline box open/close mismatch.");
 		return;
 	}
 
@@ -144,7 +144,7 @@ UniquePtr<LineBox> LineBox::SplitLine(bool split_all_open_boxes)
 	FragmentIndex new_index = num_open_fragments;
 	ForAllOpenFragments([&](Fragment& old_fragment) {
 		new_index -= 1;
-		RMLUI_ASSERT((size_t)new_index < new_line->fragments.size() && old_fragment.children_end_index == 0);
+		UI_ASSERT((size_t)new_index < new_line->fragments.size() && old_fragment.children_end_index == 0);
 
 		// Copy the old fragment.
 		Fragment& new_fragment = new_line->fragments[new_index];
@@ -176,18 +176,18 @@ UniquePtr<LineBox> LineBox::SplitLine(bool split_all_open_boxes)
 	new_line->open_fragments_leaf = (int)new_line->fragments.size() - 1;
 	open_fragments_leaf = RootFragmentIndex;
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	// Verify integrity of the fragment tree after split.
 	for (int i = 0; i < (int)new_line->fragments.size(); i++)
 	{
 		const Fragment& fragment = new_line->fragments[i];
-		RMLUI_ASSERT(fragment.type == FragmentType::InlineBox);
-		RMLUI_ASSERT(fragment.parent < i);
-		RMLUI_ASSERT(fragment.parent == i - 1);
-		RMLUI_ASSERT(fragment.parent == RootFragmentIndex || new_line->fragments[fragment.parent].type == FragmentType::InlineBox);
-		RMLUI_ASSERT(
+		UI_ASSERT(fragment.type == FragmentType::InlineBox);
+		UI_ASSERT(fragment.parent < i);
+		UI_ASSERT(fragment.parent == i - 1);
+		UI_ASSERT(fragment.parent == RootFragmentIndex || new_line->fragments[fragment.parent].type == FragmentType::InlineBox);
+		UI_ASSERT(
 			fragment.aligned_subtree_root == RootFragmentIndex || new_line->IsAlignedSubtreeRoot(new_line->fragments[fragment.aligned_subtree_root]));
-		RMLUI_ASSERT(fragment.children_end_index == 0);
+		UI_ASSERT(fragment.children_end_index == 0);
 	}
 #endif
 
@@ -196,11 +196,11 @@ UniquePtr<LineBox> LineBox::SplitLine(bool split_all_open_boxes)
 
 UniquePtr<LineBox> LineBox::DetermineVerticalPositioning(const InlineBoxRoot* root_inline_box, bool split_all_open_boxes, float& out_height_of_line)
 {
-	RMLUI_ASSERT(!is_closed && !is_vertically_positioned);
+	UI_ASSERT(!is_closed && !is_vertically_positioned);
 
 	UniquePtr<LineBox> new_line_box = SplitLine(split_all_open_boxes);
 
-	RMLUI_ASSERT(open_fragments_leaf == RootFragmentIndex); // Ensure all open fragments are either closed or split.
+	UI_ASSERT(open_fragments_leaf == RootFragmentIndex); // Ensure all open fragments are either closed or split.
 
 	// Vertical alignment and sizing.
 	//
@@ -259,7 +259,7 @@ UniquePtr<LineBox> LineBox::DetermineVerticalPositioning(const InlineBoxRoot* ro
 				}
 			}
 			break;
-			default: RMLUI_ERROR; break;
+			default: UI_ERROR; break;
 			}
 		}
 	}
@@ -278,7 +278,7 @@ UniquePtr<LineBox> LineBox::DetermineVerticalPositioning(const InlineBoxRoot* ro
 		case VerticalAlignType::Center: fragment.position.y = 0.5f * (fragment.max_ascent - fragment.max_descent + out_height_of_line); break;
 		default:
 		{
-			RMLUI_ASSERT(!IsAlignedSubtreeRoot(fragment));
+			UI_ASSERT(!IsAlignedSubtreeRoot(fragment));
 			const float aligned_subtree_baseline =
 				(fragment.aligned_subtree_root < 0 ? max_ascent : fragments[fragment.aligned_subtree_root].position.y);
 			fragment.position.y = aligned_subtree_baseline + fragment.baseline_offset;
@@ -294,7 +294,7 @@ UniquePtr<LineBox> LineBox::DetermineVerticalPositioning(const InlineBoxRoot* ro
 
 void LineBox::Close(Element* offset_parent, Vector2f offset_parent_position, Style::TextAlign text_align)
 {
-	RMLUI_ASSERT(is_vertically_positioned && !is_closed);
+	UI_ASSERT(is_vertically_positioned && !is_closed);
 
 	// Horizontal alignment using available space on our line.
 	if (box_cursor < line_width)
@@ -316,7 +316,7 @@ void LineBox::Close(Element* offset_parent, Vector2f offset_parent_position, Sty
 		if (fragment.type == FragmentType::InlineBox && fragment.children_end_index == 0)
 			continue;
 
-		RMLUI_ASSERT(fragment.layout_width >= 0.f);
+		UI_ASSERT(fragment.layout_width >= 0.f);
 
 		const PlacedFragment placed_fragment = {
 			offset_parent,
@@ -361,7 +361,7 @@ InlineBox* LineBox::GetOpenInlineBox()
 	if (open_fragments_leaf == RootFragmentIndex)
 		return nullptr;
 
-	return rmlui_static_cast<InlineBox*>(fragments[open_fragments_leaf].box);
+	return ui_static_cast<InlineBox*>(fragments[open_fragments_leaf].box);
 }
 
 bool LineBox::CanCollapseLine() const
@@ -386,13 +386,13 @@ bool LineBox::CanCollapseLine() const
 
 float LineBox::GetExtentRight() const
 {
-	RMLUI_ASSERT(is_closed);
+	UI_ASSERT(is_closed);
 	return box_cursor + offset_horizontal_alignment;
 }
 
 float LineBox::GetBaseline() const
 {
-	RMLUI_ASSERT(is_closed);
+	UI_ASSERT(is_closed);
 	return total_height_above_baseline;
 }
 
@@ -412,4 +412,4 @@ void LineBox::operator delete(void* chunk, size_t size)
 	LayoutPools::DeallocateLayoutChunk(chunk, size);
 }
 
-} // namespace Rml
+} // namespace ui

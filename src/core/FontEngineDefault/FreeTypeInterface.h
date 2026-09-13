@@ -3,7 +3,7 @@
 #include <ui/Core/FontMetrics.h>
 #include "FontTypes.h"
 
-namespace Rml {
+namespace ui {
 
 namespace FreeType {
 
@@ -38,4 +38,4 @@ namespace FreeType {
 	bool HasKerning(FontFaceHandleFreetype face);
 
 } // namespace FreeType
-} // namespace Rml
+} // namespace ui

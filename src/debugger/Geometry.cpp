@@ -5,7 +5,7 @@
 #include <ui/Core/MeshUtilities.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 static Context* g_context = nullptr;
@@ -82,4 +82,4 @@ void Geometry::RenderBox(const Vector2f origin, const Vector2f dimensions, const
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

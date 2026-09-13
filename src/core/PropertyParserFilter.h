@@ -2,7 +2,7 @@
 
 #include <ui/Core/PropertyParser.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     A property parser for the filter property.
@@ -17,4 +17,4 @@ public:
 	bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const override;
 };
 
-} // namespace Rml
+} // namespace ui

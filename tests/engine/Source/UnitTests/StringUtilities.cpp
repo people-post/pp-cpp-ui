@@ -2,7 +2,7 @@
 #include <ui/Core/Types.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 TEST_CASE("StringUtilities::TrimTrailingDotZeros")
 {
@@ -35,7 +35,7 @@ TEST_CASE("StringUtilities::TrimTrailingDotZeros")
 
 TEST_CASE("StringUtilities::StartsWith")
 {
-	using namespace Rml::StringUtilities;
+	using namespace ui::StringUtilities;
 
 	CHECK(StartsWith("abc", "abc"));
 	CHECK(StartsWith("abc", "ab"));
@@ -51,7 +51,7 @@ TEST_CASE("StringUtilities::StartsWith")
 
 TEST_CASE("StringUtilities::EndsWith")
 {
-	using namespace Rml::StringUtilities;
+	using namespace ui::StringUtilities;
 
 	CHECK(EndsWith("abc", "abc"));
 	CHECK(EndsWith("abc", "bc"));
@@ -91,7 +91,7 @@ TEST_CASE("StringView")
 
 TEST_CASE("StringUtilities::ConvertByteOffsetToCharacterOffset")
 {
-	using namespace Rml::StringUtilities;
+	using namespace ui::StringUtilities;
 
 	// clang-format off
 	CHECK(ConvertByteOffsetToCharacterOffset("", 0) == 0);
@@ -115,7 +115,7 @@ TEST_CASE("StringUtilities::ConvertByteOffsetToCharacterOffset")
 
 TEST_CASE("StringUtilities::ConvertCharacterOffsetToByteOffset")
 {
-	using namespace Rml::StringUtilities;
+	using namespace ui::StringUtilities;
 
 	// clang-format off
 	CHECK(ConvertCharacterOffsetToByteOffset("", 0) == 0);
@@ -139,22 +139,22 @@ TEST_CASE("StringUtilities::ConvertCharacterOffsetToByteOffset")
 
 TEST_CASE("CreateString")
 {
-	CHECK(Rml::CreateString("Hello %s!", "world") == "Hello world!");
-	CHECK(Rml::CreateString("%g, %d, %.2f", 0.5f, 5, 2.f) == "0.5, 5, 2.00");
+	CHECK(ui::CreateString("Hello %s!", "world") == "Hello world!");
+	CHECK(ui::CreateString("%g, %d, %.2f", 0.5f, 5, 2.f) == "0.5, 5, 2.00");
 
 	constexpr int InternalBufferSize = 256;
 	for (int string_size : {InternalBufferSize - 1, InternalBufferSize, InternalBufferSize + 1})
 	{
-		Rml::String large_string(string_size, 'x');
-		CHECK(Rml::CreateString("%s", large_string.c_str()) == large_string);
+		ui::String large_string(string_size, 'x');
+		CHECK(ui::CreateString("%s", large_string.c_str()) == large_string);
 	}
 }
 
 TEST_CASE("FormatString")
 {
 	{
-		Rml::String result;
-		int length = Rml::FormatString(result, "Hello %s!", "world");
+		ui::String result;
+		int length = ui::FormatString(result, "Hello %s!", "world");
 		CHECK(result == "Hello world!");
 		CHECK(length == 12);
 	}
@@ -162,9 +162,9 @@ TEST_CASE("FormatString")
 	constexpr int InternalBufferSize = 256;
 	for (int string_size : {InternalBufferSize - 1, InternalBufferSize, InternalBufferSize + 1})
 	{
-		const Rml::String large_string(string_size, 'x');
-		Rml::String result;
-		int length = Rml::FormatString(result, "%s", large_string.c_str());
+		const ui::String large_string(string_size, 'x');
+		ui::String result;
+		int length = ui::FormatString(result, "%s", large_string.c_str());
 		CHECK(result == large_string);
 		CHECK(length == string_size);
 	}

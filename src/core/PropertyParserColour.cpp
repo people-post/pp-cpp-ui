@@ -5,7 +5,7 @@
 #include <string.h>
 #include <utility>
 
-namespace Rml {
+namespace ui {
 
 // Helper function for hsl->rgb conversion.
 static float HSL_f(float h, float s, float l, float n)
@@ -545,4 +545,4 @@ bool PropertyParserColour::GetColourFunctionValues(StringList& values, const Str
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

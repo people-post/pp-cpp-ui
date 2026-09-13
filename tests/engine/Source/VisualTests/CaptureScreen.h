@@ -11,20 +11,20 @@ struct ComparisonResult {
 	double similarity_score = 0;
 	size_t absolute_difference_sum = 0;
 	size_t max_absolute_difference_single_pixel = 0;
-	Rml::String error_msg;
+	ui::String error_msg;
 };
 
 struct TextureGeometry {
-	Rml::TextureHandle texture_handle = 0;
-	Rml::CompiledGeometryHandle geometry_handle = 0;
-	Rml::Mesh mesh;
+	ui::TextureHandle texture_handle = 0;
+	ui::CompiledGeometryHandle geometry_handle = 0;
+	ui::Mesh mesh;
 };
 
-bool CaptureScreenshot(const Rml::String& filename, int clip_width);
+bool CaptureScreenshot(const ui::String& filename, int clip_width);
 
-ComparisonResult CompareScreenToPreviousCapture(Rml::RenderInterface* render_interface, const Rml::String& filename, TextureGeometry* out_reference,
+ComparisonResult CompareScreenToPreviousCapture(ui::RenderInterface* render_interface, const ui::String& filename, TextureGeometry* out_reference,
 	TextureGeometry* out_highlight);
 
-void RenderTextureGeometry(Rml::RenderInterface* render_interface, TextureGeometry& geometry);
+void RenderTextureGeometry(ui::RenderInterface* render_interface, TextureGeometry& geometry);
 
-void ReleaseTextureGeometry(Rml::RenderInterface* render_interface, TextureGeometry& geometry);
+void ReleaseTextureGeometry(ui::RenderInterface* render_interface, TextureGeometry& geometry);

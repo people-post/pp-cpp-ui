@@ -5,7 +5,7 @@
 #include <ui/Core/Traits.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 template <typename PoolType>
 class Pool {
@@ -32,7 +32,7 @@ public:
 	    members of a pool.
 	 */
 	class Iterator {
-		friend class Rml::Pool<PoolType>;
+		friend class ui::Pool<PoolType>;
 
 	public:
 		/// Increments the iterator to reference the next node in the
@@ -40,7 +40,7 @@ public:
 		/// node this iterator references is invalid.
 		inline void operator++()
 		{
-			RMLUI_ASSERT(node != nullptr);
+			UI_ASSERT(node != nullptr);
 			node = node->next;
 		}
 		/// Returns true if it is OK to deference or increment this
@@ -103,11 +103,11 @@ private:
 
 	int num_allocated_objects;
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	int max_num_allocated_objects = 0;
 #endif
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Pool.inl"

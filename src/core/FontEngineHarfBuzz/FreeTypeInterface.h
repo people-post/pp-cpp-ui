@@ -2,9 +2,9 @@
 #include "FontGlyph.h"
 #include <ui/Core.h>
 
-using Rml::Character;
-using Rml::FontFaceHandleFreetype;
-using Rml::FontMetrics;
+using ui::Character;
+using ui::FontFaceHandleFreetype;
+using ui::FontMetrics;
 
 namespace FreeType {
 

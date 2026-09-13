@@ -3,7 +3,7 @@
 #include "StyleSheetNode.h"
 #include <tuple>
 
-namespace Rml {
+namespace ui {
 
 static inline bool IsTextElement(const Element* element)
 {
@@ -64,7 +64,7 @@ bool operator==(const CompoundSelector& a, const CompoundSelector& b)
 
 bool IsSelectorApplicable(const Element* element, const StructuralSelector& selector, const Element* scope)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	switch (selector.type)
 	{
@@ -331,7 +331,7 @@ bool IsSelectorApplicable(const Element* element, const StructuralSelector& sele
 	{
 		if (!selector.selector_tree)
 		{
-			RMLUI_ERROR;
+			UI_ERROR;
 			return false;
 		}
 
@@ -356,7 +356,7 @@ bool IsSelectorApplicable(const Element* element, const StructuralSelector& sele
 	break;
 	case StructuralSelectorType::Invalid:
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 	}
 	break;
 	}
@@ -364,4 +364,4 @@ bool IsSelectorApplicable(const Element* element, const StructuralSelector& sele
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

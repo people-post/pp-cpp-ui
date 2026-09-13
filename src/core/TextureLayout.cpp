@@ -3,7 +3,7 @@
 #include "TextureLayoutTexture.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 struct RectangleSort {
 	bool operator()(const TextureLayoutRectangle& lhs, const TextureLayoutRectangle& rhs) const
@@ -23,8 +23,8 @@ void TextureLayout::AddRectangle(int id, Vector2i dimensions)
 
 TextureLayoutRectangle& TextureLayout::GetRectangle(int index)
 {
-	RMLUI_ASSERT(index >= 0);
-	RMLUI_ASSERT(index < GetNumRectangles());
+	UI_ASSERT(index >= 0);
+	UI_ASSERT(index < GetNumRectangles());
 
 	return rectangles[index];
 }
@@ -36,8 +36,8 @@ int TextureLayout::GetNumRectangles() const
 
 TextureLayoutTexture& TextureLayout::GetTexture(int index)
 {
-	RMLUI_ASSERT(index >= 0);
-	RMLUI_ASSERT(index < GetNumTextures());
+	UI_ASSERT(index >= 0);
+	UI_ASSERT(index < GetNumTextures());
 
 	return textures[index];
 }
@@ -67,4 +67,4 @@ bool TextureLayout::GenerateLayout(int max_texture_dimensions)
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

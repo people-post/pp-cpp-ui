@@ -1,7 +1,7 @@
 #include "ElementTextSelection.h"
 #include <ui/Core/PropertyIdSet.h>
 
-namespace Rml {
+namespace ui {
 
 ElementTextSelection::ElementTextSelection(const String& tag) : Element(tag)
 {
@@ -26,4 +26,4 @@ void ElementTextSelection::OnPropertyChange(const PropertyIdSet& changed_propert
 		client->OnSelectionStyleChanged();
 }
 
-} // namespace Rml
+} // namespace ui

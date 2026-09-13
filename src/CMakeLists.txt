@@ -2,7 +2,7 @@
 
 add_subdirectory(core)
 
-if(RMLUI_SVG_PLUGIN)
+if(UI_SVG_PLUGIN)
   add_subdirectory(svg)
 endif()
 

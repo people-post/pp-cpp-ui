@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <numeric>
 
-namespace Rml {
+namespace ui {
 
 UniquePtr<LayoutBox> TableFormattingContext::Format(ContainerBox* parent_container, Element* element_table, const Box* override_initial_box)
 {
@@ -22,7 +22,7 @@ UniquePtr<LayoutBox> TableFormattingContext::Format(ContainerBox* parent_contain
 	}
 
 	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element_table->GetPosition()).size;
-	RMLUI_ASSERT(containing_block.x >= 0.f);
+	UI_ASSERT(containing_block.x >= 0.f);
 	const ComputedValues& computed_table = element_table->GetComputedValues();
 
 	// Build the initial box as specified by the table's style, as if it was a normal block element.
@@ -63,7 +63,7 @@ UniquePtr<LayoutBox> TableFormattingContext::Format(ContainerBox* parent_contain
 	// Format the table and its children.
 	context.FormatTable(table_content_size, table_overflow_size, table_baseline);
 
-	RMLUI_ASSERT(table_content_size.y >= 0);
+	UI_ASSERT(table_content_size.y >= 0);
 
 	// Update the box size based on the new table size.
 	box.SetContent(table_content_size);
@@ -174,7 +174,7 @@ void TableFormattingContext::DetermineColumnWidths(TrackBoxList& columns, float&
 void TableFormattingContext::InitializeCellBoxes(BoxList& cells, const TrackBoxList& columns) const
 {
 	// Requires that column boxes are already generated.
-	RMLUI_ASSERT(columns.size() == grid.columns.size());
+	UI_ASSERT(columns.size() == grid.columns.size());
 
 	cells.resize(grid.cells.size());
 
@@ -212,7 +212,7 @@ void TableFormattingContext::DetermineRowHeights(TrackBoxList& rows, BoxList& ce
 	*/
 
 	// Requires that cell boxes have been initialized.
-	RMLUI_ASSERT(cells.size() == grid.cells.size());
+	UI_ASSERT(cells.size() == grid.cells.size());
 
 	TrackMetricList row_metrics(grid.rows.size());
 	TracksSizing sizing(row_metrics, table_initial_content_size.y, table_gap.y);
@@ -316,7 +316,7 @@ void TableFormattingContext::DetermineRowHeights(TrackBoxList& rows, BoxList& ce
 
 void TableFormattingContext::FormatRows(const TrackBoxList& rows, float table_content_width) const
 {
-	RMLUI_ASSERT(rows.size() == grid.rows.size());
+	UI_ASSERT(rows.size() == grid.rows.size());
 
 	// Size and position the row and row group elements.
 	auto FormatRow = [this, table_content_width](Element* element, float content_height, float offset_y) {
@@ -346,7 +346,7 @@ void TableFormattingContext::FormatRows(const TrackBoxList& rows, float table_co
 
 void TableFormattingContext::FormatColumns(const TrackBoxList& columns, float table_content_height) const
 {
-	RMLUI_ASSERT(columns.size() == grid.columns.size());
+	UI_ASSERT(columns.size() == grid.columns.size());
 
 	// Size and position the column and column group elements.
 	auto FormatColumn = [this, table_content_height](Element* element, float content_width, float offset_x) {
@@ -377,7 +377,7 @@ void TableFormattingContext::FormatColumns(const TrackBoxList& columns, float ta
 void TableFormattingContext::FormatCells(BoxList& cells, Vector2f& table_overflow_size, const TrackBoxList& rows, const TrackBoxList& columns,
 	float& table_baseline) const
 {
-	RMLUI_ASSERT(cells.size() == grid.cells.size());
+	UI_ASSERT(cells.size() == grid.cells.size());
 
 	bool baseline_set = false;
 
@@ -463,4 +463,4 @@ void TableFormattingContext::FormatCells(BoxList& cells, Vector2f& table_overflo
 	}
 }
 
-} // namespace Rml
+} // namespace ui

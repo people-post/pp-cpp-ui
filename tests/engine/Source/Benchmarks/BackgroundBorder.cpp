@@ -7,7 +7,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 TEST_CASE("background_border")
 {
@@ -82,7 +82,7 @@ TEST_CASE("background_border")
 		bench.run("Background all", [&] {
 			// Force regeneration of backgrounds without changing layout
 			for (auto& element : elements)
-				element->SetProperty(Rml::PropertyId::BackgroundColor, Rml::Property(Colourb(), Unit::COLOUR));
+				element->SetProperty(ui::PropertyId::BackgroundColor, ui::Property(Colourb(), Unit::COLOUR));
 			context->Update();
 			context->Render();
 		});
@@ -90,7 +90,7 @@ TEST_CASE("background_border")
 		bench.run("Border all", [&] {
 			// Force regeneration of borders without changing layout
 			for (auto& element : elements)
-				element->SetProperty(Rml::PropertyId::BorderLeftColor, Rml::Property(Colourb(), Unit::COLOUR));
+				element->SetProperty(ui::PropertyId::BorderLeftColor, ui::Property(Colourb(), Unit::COLOUR));
 			context->Update();
 			context->Render();
 		});
@@ -104,7 +104,7 @@ TEST_CASE("background_border")
 
 		bench.run(("Border " + id).c_str(), [&] {
 			for (auto& element : elements)
-				element->SetProperty(Rml::PropertyId::BorderLeftColor, Rml::Property(Colourb(), Unit::COLOUR));
+				element->SetProperty(ui::PropertyId::BorderLeftColor, ui::Property(Colourb(), Unit::COLOUR));
 			context->Update();
 			context->Render();
 		});
@@ -174,7 +174,7 @@ TEST_CASE("box_shadow")
 	bench.run("Box-shadow (repeated)", [&] {
 		// Force regeneration of backgrounds without changing layout
 		for (auto& element : elements)
-			element->SetProperty(Rml::PropertyId::BackgroundColor, Rml::Property(Colourb(), Unit::COLOUR));
+			element->SetProperty(ui::PropertyId::BackgroundColor, ui::Property(Colourb(), Unit::COLOUR));
 		TestsShell::RenderLoop(false);
 	});
 

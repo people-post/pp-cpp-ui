@@ -2,7 +2,7 @@
 
 #include <ui/Core/EventListener.h>
 
-namespace Rml {
+namespace ui {
 
 class ElementFormControl;
 
@@ -123,4 +123,4 @@ private:
 	float step;
 };
 
-} // namespace Rml
+} // namespace ui

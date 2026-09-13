@@ -3,7 +3,7 @@
 #include <ui/Core/PropertyParser.h>
 #include "ControlledLifetimeResource.h"
 
-namespace Rml {
+namespace ui {
 
 /**
 Parses the RCSS 'animation' and 'transition' property specifications.
@@ -33,4 +33,4 @@ private:
 	static ControlledLifetimeResource<struct PropertyParserAnimationData> parser_data;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -20,19 +20,19 @@ function(setup_binary_output_directories)
 	endif()
 endfunction()
 
-# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 # From CMake 3.21 there is no need for the following function, as we can set the RUNTIME_DEPENDENCY_SET on
 # install(TARGETS) directly.
 #[[
 	Output variable to conditionally set up runtime dependency arguments when installing targets.
 	This feature is only available from CMake 3.21, on older version this feature will be disabled.
 	Output variable:
-		- RMLUI_RUNTIME_DEPENDENCY_SET_ARG: Argument to use for the install(TARGETS) command.
+		- UI_RUNTIME_DEPENDENCY_SET_ARG: Argument to use for the install(TARGETS) command.
 ]]
 function(setup_runtime_dependency_set_arg)
-	set(RMLUI_RUNTIME_DEPENDENCY_SET_ARG "" PARENT_SCOPE)
+	set(UI_RUNTIME_DEPENDENCY_SET_ARG "" PARENT_SCOPE)
 	if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.21")
-		set(RMLUI_RUNTIME_DEPENDENCY_SET_ARG RUNTIME_DEPENDENCY_SET rmlui_runtime_dependencies PARENT_SCOPE)
+		set(UI_RUNTIME_DEPENDENCY_SET_ARG RUNTIME_DEPENDENCY_SET ui_runtime_dependencies PARENT_SCOPE)
 	endif()
 endfunction()
 
@@ -40,11 +40,11 @@ endfunction()
 	Install runtime dependencies on supported platforms, when enabled by the user.
 ]]
 function(install_runtime_dependencies)
-	if(WIN32 AND RMLUI_RUNTIME_DEPENDENCY_SET_ARG)
-		option(RMLUI_INSTALL_RUNTIME_DEPENDENCIES "Include runtime dependencies when installing RmlUi." ON)
-		mark_as_advanced(RMLUI_INSTALL_RUNTIME_DEPENDENCIES)
-		if(RMLUI_INSTALL_RUNTIME_DEPENDENCIES)
-			install(RUNTIME_DEPENDENCY_SET rmlui_runtime_dependencies
+	if(WIN32 AND UI_RUNTIME_DEPENDENCY_SET_ARG)
+		option(UI_INSTALL_RUNTIME_DEPENDENCIES "Include runtime dependencies when installing pp-cpp-ui." ON)
+		mark_as_advanced(UI_INSTALL_RUNTIME_DEPENDENCIES)
+		if(UI_INSTALL_RUNTIME_DEPENDENCIES)
+			install(RUNTIME_DEPENDENCY_SET ui_runtime_dependencies
 				PRE_EXCLUDE_REGEXES "api-ms-" "ext-ms-"
 				POST_EXCLUDE_REGEXES ".*system32/.*\\.dll"
 			)

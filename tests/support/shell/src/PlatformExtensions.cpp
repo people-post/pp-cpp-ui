@@ -2,20 +2,20 @@
 #include <ui/Core/Log.h>
 #include <ui/Core/Platform.h>
 
-#if defined RMLUI_PLATFORM_WIN32
+#if defined UI_PLATFORM_WIN32
 
-	#include <RmlUi_Include_Windows.h>
+	#include <windows.h>
 	#include <io.h>
 	#include <shlwapi.h>
 
-#elif defined RMLUI_PLATFORM_MACOSX
+#elif defined UI_PLATFORM_MACOSX
 
 	#include <CoreFoundation/CoreFoundation.h>
 	#include <dirent.h>
 	#include <string.h>
 	#include <sys/stat.h>
 
-#elif defined RMLUI_PLATFORM_UNIX
+#elif defined UI_PLATFORM_UNIX
 
 	#include <X11/Xlib.h>
 	#include <dirent.h>
@@ -26,13 +26,13 @@
 
 #endif
 
-Rml::String PlatformExtensions::FindSamplesRoot()
+ui::String PlatformExtensions::FindSamplesRoot()
 {
-#ifdef RMLUI_SAMPLES_ROOT
+#ifdef UI_SAMPLES_ROOT
 	{
-		const Rml::String root = RMLUI_SAMPLES_ROOT;
-		const Rml::String lookup_path = root + "/assets/rml.rcss";
-#if defined(RMLUI_PLATFORM_WIN32)
+		const ui::String root = UI_SAMPLES_ROOT;
+		const ui::String lookup_path = root + "/assets/rml.rcss";
+#if defined(UI_PLATFORM_WIN32)
 		if (PathFileExistsA(lookup_path.c_str()))
 			return root + "\\";
 #else
@@ -43,7 +43,7 @@ Rml::String PlatformExtensions::FindSamplesRoot()
 	}
 #endif
 
-#ifdef RMLUI_PLATFORM_WIN32
+#ifdef UI_PLATFORM_WIN32
 	// Test various relative paths to the "Samples" directory, based on common build and install locations.
 	const char* candidate_paths[] = {
 		".\\",
@@ -60,49 +60,49 @@ Rml::String PlatformExtensions::FindSamplesRoot()
 	// Fetch the path of the executable.
 	if (GetModuleFileNameA(NULL, path_buffer, MAX_PATH) >= MAX_PATH && GetLastError() == ERROR_INSUFFICIENT_BUFFER)
 		return {};
-	Rml::String executable_directory_path = Rml::String(path_buffer);
+	ui::String executable_directory_path = ui::String(path_buffer);
 	executable_directory_path = executable_directory_path.substr(0, executable_directory_path.rfind('\\') + 1);
 
 	// We assume we have found the correct path if we can find the lookup file from it.
 	const char* lookup_file = "assets\\rml.rcss";
 
 	// Test the candidate paths relative to the executable folder, and the current working directory, respectively.
-	for (const Rml::String relative_target_path : candidate_paths)
+	for (const ui::String relative_target_path : candidate_paths)
 	{
-		const Rml::String absolute_target_path = executable_directory_path + relative_target_path;
-		const Rml::String absolute_lookup_path = absolute_target_path + lookup_file;
+		const ui::String absolute_target_path = executable_directory_path + relative_target_path;
+		const ui::String absolute_lookup_path = absolute_target_path + lookup_file;
 		if (PathFileExistsA(absolute_lookup_path.c_str()))
 		{
 			if (!PathCanonicalizeA(path_buffer, absolute_target_path.c_str()))
 			{
-				Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to canonicalize the path to the samples root: %s", absolute_target_path.c_str());
+				ui::Log::Message(ui::Log::LT_ERROR, "Failed to canonicalize the path to the samples root: %s", absolute_target_path.c_str());
 				return {};
 			}
 
-			return Rml::String(path_buffer);
+			return ui::String(path_buffer);
 		}
 
-		const Rml::String relative_lookup_path = relative_target_path + lookup_file;
+		const ui::String relative_lookup_path = relative_target_path + lookup_file;
 		if (PathFileExistsA(relative_lookup_path.c_str()))
 		{
 			const DWORD working_directory_length = GetFullPathNameA(relative_target_path.c_str(), MAX_PATH, path_buffer, nullptr);
 			if (working_directory_length <= 0 || working_directory_length >= MAX_PATH)
 			{
-				Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to get the full path to the samples root: %s", relative_target_path.c_str());
+				ui::Log::Message(ui::Log::LT_ERROR, "Failed to get the full path to the samples root: %s", relative_target_path.c_str());
 				return {};
 			}
 
-			return Rml::String(path_buffer);
+			return ui::String(path_buffer);
 		}
 	}
 
-	Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to find the path to the samples root");
+	ui::Log::Message(ui::Log::LT_ERROR, "Failed to find the path to the samples root");
 
-	return Rml::String();
+	return ui::String();
 
-#elif defined RMLUI_PLATFORM_MACOSX
+#elif defined UI_PLATFORM_MACOSX
 
-	Rml::String path = "../Samples/";
+	ui::String path = "../Samples/";
 
 	// Find the location of the executable.
 	CFBundleRef bundle = CFBundleGetMainBundle();
@@ -113,7 +113,7 @@ Rml::String PlatformExtensions::FindSamplesRoot()
 	if (!CFStringGetFileSystemRepresentation(executable_posix_file_name, executable_file_name, max_length))
 		executable_file_name[0] = 0;
 
-	Rml::String executable_path = Rml::String(executable_file_name);
+	ui::String executable_path = ui::String(executable_file_name);
 	executable_path = executable_path.substr(0, executable_path.rfind("/") + 1);
 
 	delete[] executable_file_name;
@@ -122,17 +122,17 @@ Rml::String PlatformExtensions::FindSamplesRoot()
 
 	return executable_path + "../../../" + path;
 
-#elif defined RMLUI_PLATFORM_EMSCRIPTEN
+#elif defined UI_PLATFORM_EMSCRIPTEN
 
-	return Rml::String("Samples/");
+	return ui::String("Samples/");
 
-#elif defined RMLUI_PLATFORM_UNIX
+#elif defined UI_PLATFORM_UNIX
 
 	char path_buffer[PATH_MAX + 1];
 	ssize_t len = readlink("/proc/self/exe", path_buffer, PATH_MAX);
 	if (len == -1)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to determine the executable path");
+		ui::Log::Message(ui::Log::LT_ERROR, "Failed to determine the executable path");
 		path_buffer[0] = 0;
 	}
 	else
@@ -140,7 +140,7 @@ Rml::String PlatformExtensions::FindSamplesRoot()
 		// readlink() does not append a null byte to buf.
 		path_buffer[len] = 0;
 	}
-	Rml::String executable_directory_path = Rml::String(path_buffer);
+	ui::String executable_directory_path = ui::String(path_buffer);
 	executable_directory_path = executable_directory_path.substr(0, executable_directory_path.rfind("/") + 1);
 
 	// We assume we have found the correct path if we can find the lookup file from it.
@@ -158,55 +158,55 @@ Rml::String PlatformExtensions::FindSamplesRoot()
 		"../../../../Samples/",
 	};
 
-	auto isRegularFile = [](const Rml::String& path) -> bool {
+	auto isRegularFile = [](const ui::String& path) -> bool {
 		struct stat sb;
 		return stat(path.c_str(), &sb) == 0 && S_ISREG(sb.st_mode);
 	};
-	auto GetAbsoluteFilePath = [&](const Rml::String& path) -> Rml::String {
+	auto GetAbsoluteFilePath = [&](const ui::String& path) -> ui::String {
 		const char* absolute_path = realpath(path.c_str(), path_buffer);
 		if (!absolute_path)
 		{
-			Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to canonicalize the path to the samples root: %s", path.c_str());
+			ui::Log::Message(ui::Log::LT_ERROR, "Failed to canonicalize the path to the samples root: %s", path.c_str());
 			return {};
 		}
-		return Rml::String(absolute_path) + '/';
+		return ui::String(absolute_path) + '/';
 	};
 
-	for (const Rml::String relative_target_path : candidate_paths)
+	for (const ui::String relative_target_path : candidate_paths)
 	{
-		const Rml::String absolute_target_path = executable_directory_path + relative_target_path;
-		const Rml::String absolute_lookup_path = absolute_target_path + lookup_file;
+		const ui::String absolute_target_path = executable_directory_path + relative_target_path;
+		const ui::String absolute_lookup_path = absolute_target_path + lookup_file;
 		if (isRegularFile(absolute_lookup_path))
 			return GetAbsoluteFilePath(absolute_target_path);
 
-		const Rml::String relative_lookup_path = relative_target_path + lookup_file;
+		const ui::String relative_lookup_path = relative_target_path + lookup_file;
 		if (isRegularFile(relative_lookup_path))
 			return GetAbsoluteFilePath(relative_target_path);
 	}
 
-	Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to find the path to the samples root");
+	ui::Log::Message(ui::Log::LT_ERROR, "Failed to find the path to the samples root");
 
-	return Rml::String();
+	return ui::String();
 
 #else
 
-	return Rml::String();
+	return ui::String();
 
 #endif
 }
 
 enum class ListType { Files, Directories };
 
-static Rml::StringList ListFilesOrDirectories(ListType type, const Rml::String& directory, const Rml::String& extension)
+static ui::StringList ListFilesOrDirectories(ListType type, const ui::String& directory, const ui::String& extension)
 {
 	if (directory.empty())
-		return Rml::StringList();
+		return ui::StringList();
 
-	Rml::StringList result;
+	ui::StringList result;
 
-#ifdef RMLUI_PLATFORM_WIN32
+#ifdef UI_PLATFORM_WIN32
 
-	const Rml::String find_path = directory + "/*." + (extension.empty() ? Rml::String("*") : extension);
+	const ui::String find_path = directory + "/*." + (extension.empty() ? ui::String("*") : extension);
 
 	_finddata_t find_data;
 	intptr_t find_handle = _findfirst(find_path.c_str(), &find_data);
@@ -235,7 +235,7 @@ static Rml::StringList ListFilesOrDirectories(ListType type, const Rml::String& 
 	struct dirent** file_list = nullptr;
 	const int file_count = scandir(directory.c_str(), &file_list, 0, alphasort);
 	if (file_count == -1)
-		return Rml::StringList();
+		return ui::StringList();
 
 	for (int i = 0; i < file_count; i++)
 	{
@@ -267,12 +267,12 @@ static Rml::StringList ListFilesOrDirectories(ListType type, const Rml::String& 
 	return result;
 }
 
-Rml::StringList PlatformExtensions::ListDirectories(const Rml::String& in_directory)
+ui::StringList PlatformExtensions::ListDirectories(const ui::String& in_directory)
 {
-	return ListFilesOrDirectories(ListType::Directories, in_directory, Rml::String());
+	return ListFilesOrDirectories(ListType::Directories, in_directory, ui::String());
 }
 
-Rml::StringList PlatformExtensions::ListFiles(const Rml::String& in_directory, const Rml::String& extension)
+ui::StringList PlatformExtensions::ListFiles(const ui::String& in_directory, const ui::String& extension)
 {
 	return ListFilesOrDirectories(ListType::Files, in_directory, extension);
 }

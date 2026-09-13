@@ -3,15 +3,15 @@
 #include "../Element.h"
 #include "../Header.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A tabulated set of panels.
  */
 
-class RMLUICORE_API ElementTabSet : public Element {
+class UI_CORE_API ElementTabSet : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementTabSet, Element)
+	UI_RTTI_DefineWithParent(ElementTabSet, Element)
 
 	ElementTabSet(const String& tag);
 	~ElementTabSet();
@@ -63,4 +63,4 @@ private:
 	int active_tab;
 };
 
-} // namespace Rml
+} // namespace ui

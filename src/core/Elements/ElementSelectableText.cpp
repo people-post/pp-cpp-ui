@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 namespace {
 
@@ -51,7 +51,7 @@ ElementSelectableText::ElementSelectableText(const String& tag) : Element(tag)
 	AddEventListener(EventId::Click, this, true);
 
 	ElementPtr unique_selection = Factory::InstanceElement(this, "#selection", "selection", XMLAttributes());
-	if (ElementTextSelection* text_selection_element = rmlui_dynamic_cast<ElementTextSelection*>(unique_selection.get()))
+	if (ElementTextSelection* text_selection_element = ui_dynamic_cast<ElementTextSelection*>(unique_selection.get()))
 	{
 		selection_style_element = text_selection_element;
 		text_selection_element->SetClient(this);
@@ -68,7 +68,7 @@ bool ElementSelectableText::IsSelectionRoot() const
 {
 	for (const Element* parent = GetParentNode(); parent; parent = parent->GetParentNode())
 	{
-		if (rmlui_dynamic_cast<const ElementSelectableText*>(parent))
+		if (ui_dynamic_cast<const ElementSelectableText*>(parent))
 			return false;
 	}
 	return true;
@@ -398,4 +398,4 @@ void ElementSelectableText::ProcessEvent(Event& event)
 	}
 }
 
-} // namespace Rml
+} // namespace ui

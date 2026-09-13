@@ -1,7 +1,7 @@
 #include "ContextInstancerDefault.h"
 #include <ui/Core/Context.h>
 
-namespace Rml {
+namespace ui {
 
 ContextInstancerDefault::ContextInstancerDefault() {}
 
@@ -22,4 +22,4 @@ void ContextInstancerDefault::Release()
 	delete this;
 }
 
-} // namespace Rml
+} // namespace ui

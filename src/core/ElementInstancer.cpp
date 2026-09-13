@@ -5,7 +5,7 @@
 #include "Pool.h"
 #include "XMLParseTools.h"
 
-namespace Rml {
+namespace ui {
 
 ElementInstancer::~ElementInstancer() {}
 
@@ -29,7 +29,7 @@ ElementPtr ElementInstancerElement::InstanceElement(Element* /*parent*/, const S
 
 void ElementInstancerElement::ReleaseElement(Element* element)
 {
-	if (rmlui_dynamic_cast<ElementSelectableText*>(element))
+	if (ui_dynamic_cast<ElementSelectableText*>(element))
 		delete element;
 	else
 		element_instancer_pools->pool_element.DestroyAndDeallocate(element);
@@ -57,7 +57,7 @@ ElementPtr ElementInstancerText::InstanceElement(Element* /*parent*/, const Stri
 
 void ElementInstancerText::ReleaseElement(Element* element)
 {
-	element_instancer_pools->pool_text_default.DestroyAndDeallocate(rmlui_static_cast<ElementText*>(element));
+	element_instancer_pools->pool_text_default.DestroyAndDeallocate(ui_static_cast<ElementText*>(element));
 }
 
 void Detail::InitializeElementInstancerPools()
@@ -73,4 +73,4 @@ void Detail::ShutdownElementInstancerPools()
 		element_instancer_pools.Leak();
 }
 
-} // namespace Rml
+} // namespace ui

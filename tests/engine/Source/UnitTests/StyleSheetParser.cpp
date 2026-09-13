@@ -28,7 +28,7 @@ static const char spritesheet_with_path_string_encoding[] = R"(
 }
 )";
 
-using namespace Rml;
+using namespace ui;
 
 TEST_CASE("style_sheet_parser.spritesheet")
 {

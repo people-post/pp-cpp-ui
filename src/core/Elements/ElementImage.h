@@ -6,7 +6,7 @@
 #include <ui/Core/Spritesheet.h>
 #include <ui/Core/Texture.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     The 'img' element can render images and sprites.
@@ -31,9 +31,9 @@ namespace Rml {
     overridden by the 'width' or 'height' attributes.
  */
 
-class RMLUICORE_API ElementImage : public Element {
+class UI_CORE_API ElementImage : public Element {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementImage, Element)
+	UI_RTTI_DefineWithParent(ElementImage, Element)
 
 	/// Constructs a new ElementImage. This should not be called directly; use the Factory instead.
 	/// @param[in] tag The tag the element was declared as in RML.
@@ -98,4 +98,4 @@ private:
 	bool geometry_dirty;
 };
 
-} // namespace Rml
+} // namespace ui

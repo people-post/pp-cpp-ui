@@ -3,7 +3,7 @@
 #include <ui/Core/Filter.h>
 #include <ui/Core/ID.h>
 
-namespace Rml {
+namespace ui {
 
 class FilterBasic : public Filter {
 public:
@@ -31,4 +31,4 @@ private:
 	PropertyIds ids = {};
 };
 
-} // namespace Rml
+} // namespace ui

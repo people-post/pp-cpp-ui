@@ -2,7 +2,7 @@
 
 #include "StringUtilities.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Interface for an editable text area.
@@ -13,12 +13,12 @@ namespace Rml {
     To capture the context of a text input, create a custom implementation of TextInputHandler.
     See the documentation of the handler for more details.
 
-    The lifetime of RmlUi's implementations is equal to the element's lifetime.
+    The lifetime of pp-cpp-ui's implementations is equal to the element's lifetime.
 
-    @see Rml::TextInputHandler
-    @see Rml::SetTextInputHandler()
+    @see ui::TextInputHandler
+    @see ui::SetTextInputHandler()
  */
-class RMLUICORE_API TextInputContext {
+class UI_CORE_API TextInputContext {
 public:
 	virtual ~TextInputContext() {}
 
@@ -59,4 +59,4 @@ public:
 	virtual void CommitComposition(StringView composition) = 0;
 };
 
-} // namespace Rml
+} // namespace ui

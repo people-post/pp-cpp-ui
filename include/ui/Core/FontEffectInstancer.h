@@ -5,7 +5,7 @@
 #include "PropertySpecification.h"
 #include "Traits.h"
 
-namespace Rml {
+namespace ui {
 
 class Factory;
 class FontEffect;
@@ -17,7 +17,7 @@ class FontEffect;
     with memory from different DLLs getting mixed up.
  */
 
-class RMLUICORE_API FontEffectInstancer {
+class UI_CORE_API FontEffectInstancer {
 public:
 	FontEffectInstancer();
 	virtual ~FontEffectInstancer();
@@ -52,7 +52,7 @@ private:
 	// Properties that define the geometry.
 	SmallUnorderedSet<PropertyId> volatile_properties;
 
-	friend class Rml::Factory;
+	friend class ui::Factory;
 };
 
-} // namespace Rml
+} // namespace ui

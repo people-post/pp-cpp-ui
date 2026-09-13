@@ -5,11 +5,11 @@
 #include "ContainerBox.h"
 #include "FormattingContext.h"
 
-namespace Rml {
+namespace ui {
 
 void LayoutEngine::FormatElement(Element* element, Vector2f containing_block)
 {
-	RMLUI_ASSERT(element && containing_block.x >= 0 && containing_block.y >= 0);
+	UI_ASSERT(element && containing_block.x >= 0 && containing_block.y >= 0);
 
 	RootBox root(containing_block);
 
@@ -20,7 +20,7 @@ void LayoutEngine::FormatElement(Element* element, Vector2f containing_block)
 	}
 
 	{
-		RMLUI_ZoneScopedN("ClampScrollOffsetRecursive");
+		UI_ZoneScopedN("ClampScrollOffsetRecursive");
 		// The size of the scrollable area might have changed, so clamp the scroll offset to avoid scrolling outside the
 		// scrollable area. During layouting, we might be changing the scrollable overflow area of the element several
 		// times, such as after enabling scrollbars. For this reason, we don't clamp the scroll offset during layouting,
@@ -30,4 +30,4 @@ void LayoutEngine::FormatElement(Element* element, Vector2f containing_block)
 	}
 }
 
-} // namespace Rml
+} // namespace ui

@@ -8,7 +8,7 @@
 #include "ComputeProperty.h"
 #include "StyleSheetParser.h"
 
-namespace Rml {
+namespace ui {
 
 StyleSheetContainer::StyleSheetContainer() {}
 
@@ -23,7 +23,7 @@ bool StyleSheetContainer::LoadStyleSheetContainer(Stream* stream, int begin_line
 
 bool StyleSheetContainer::UpdateCompiledStyleSheet(const Context* context)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	const float dp_ratio = context->GetDensityIndependentPixelRatio();
 	const Vector2i vp_dimensions_i(context->GetDimensions());
@@ -162,7 +162,7 @@ StyleSheet* StyleSheetContainer::GetCompiledStyleSheet()
 
 SharedPtr<StyleSheetContainer> StyleSheetContainer::CombineStyleSheetContainer(const StyleSheetContainer& container) const
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	SharedPtr<StyleSheetContainer> new_sheet = MakeShared<StyleSheetContainer>();
 
@@ -178,10 +178,10 @@ SharedPtr<StyleSheetContainer> StyleSheetContainer::CombineStyleSheetContainer(c
 
 void StyleSheetContainer::MergeStyleSheetContainer(const StyleSheetContainer& other)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Style sheet container must not be merged after it's been compiled. This will invalidate references to the compiled style sheet.
-	RMLUI_ASSERT(!compiled_style_sheet);
+	UI_ASSERT(!compiled_style_sheet);
 
 	auto it_other_begin = other.media_blocks.begin();
 
@@ -212,4 +212,4 @@ void StyleSheetContainer::MergeStyleSheetContainer(const StyleSheetContainer& ot
 	}
 }
 
-} // namespace Rml
+} // namespace ui

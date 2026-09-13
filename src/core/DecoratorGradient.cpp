@@ -9,7 +9,7 @@
 #include "ComputeProperty.h"
 #include "DecoratorShader.h"
 
-namespace Rml {
+namespace ui {
 
 // Returns the point along the input line ('line_point', 'line_vector') closest to the input 'point'.
 static Vector2f IntersectionPointToLineNormal(const Vector2f point, const Vector2f line_point, const Vector2f line_vector)
@@ -44,7 +44,7 @@ static ColorStopList ResolveColorStops(Element* element, const float gradient_li
 		}
 		else if (Any(stop.position.unit & Unit::ANGLE))
 		{
-			stop.position = NumericValue(ComputeAngle(stop.position) * (1.f / (2.f * Math::RMLUI_PI)), Unit::NUMBER);
+			stop.position = NumericValue(ComputeAngle(stop.position) * (1.f / (2.f * Math::UI_PI)), Unit::NUMBER);
 		}
 	}
 
@@ -116,7 +116,7 @@ static ColorStopList ResolveColorStops(Element* element, const float gradient_li
 		}
 	}
 
-	RMLUI_ASSERT(std::all_of(stops.begin(), stops.end(), [](auto&& stop) { return stop.position.unit == Unit::NUMBER; }));
+	UI_ASSERT(std::all_of(stops.begin(), stops.end(), [](auto&& stop) { return stop.position.unit == Unit::NUMBER; }));
 
 	return stops;
 }
@@ -239,7 +239,7 @@ DecoratorDataHandle DecoratorLinearGradient::GenerateElementData(Element* elemen
 	if (!render_manager)
 		return INVALID_DECORATORDATAHANDLE;
 
-	RMLUI_ASSERT(!color_stops.empty());
+	UI_ASSERT(!color_stops.empty());
 
 	const RenderBox render_box = element->GetRenderBox(paint_area);
 	LinearGradientShape gradient_shape = CalculateShape(render_box.GetFillSize());
@@ -299,7 +299,7 @@ DecoratorLinearGradient::LinearGradientShape DecoratorLinearGradient::CalculateS
 	if (corner == Corner::None)
 	{
 		// Find the target quadrant and unit vector for the given angle.
-		quadrant = uint(Math::NormaliseAngle(angle) * (4.f / (2.f * Math::RMLUI_PI))) % 4u;
+		quadrant = uint(Math::NormaliseAngle(angle) * (4.f / (2.f * Math::UI_PI))) % 4u;
 		line_vector = Vector2f(Math::Sin(angle), -Math::Cos(angle));
 	}
 	else
@@ -357,9 +357,9 @@ SharedPtr<Decorator> DecoratorLinearGradientInstancer::InstanceDecorator(const S
 		switch (direction)
 		{
 		case Direction::Top: angle = 0.f; break;
-		case Direction::Right: angle = 0.5f * Math::RMLUI_PI; break;
-		case Direction::Bottom: angle = Math::RMLUI_PI; break;
-		case Direction::Left: angle = 1.5f * Math::RMLUI_PI; break;
+		case Direction::Right: angle = 0.5f * Math::UI_PI; break;
+		case Direction::Bottom: angle = Math::UI_PI; break;
+		case Direction::Left: angle = 1.5f * Math::UI_PI; break;
 		case Direction::TopLeft: corner = Corner::TopLeft; break;
 		case Direction::TopRight: corner = Corner::TopRight; break;
 		case Direction::BottomRight: corner = Corner::BottomRight; break;
@@ -407,7 +407,7 @@ DecoratorDataHandle DecoratorRadialGradient::GenerateElementData(Element* elemen
 	if (!render_manager)
 		return INVALID_DECORATORDATAHANDLE;
 
-	RMLUI_ASSERT(!color_stops.empty() && (shape == Shape::Circle || shape == Shape::Ellipse));
+	UI_ASSERT(!color_stops.empty() && (shape == Shape::Circle || shape == Shape::Ellipse));
 
 	const RenderBox render_box = element->GetRenderBox(paint_area);
 	const Vector2f dimensions = render_box.GetFillSize();
@@ -606,7 +606,7 @@ DecoratorDataHandle DecoratorConicGradient::GenerateElementData(Element* element
 	if (!render_manager)
 		return INVALID_DECORATORDATAHANDLE;
 
-	RMLUI_ASSERT(!color_stops.empty());
+	UI_ASSERT(!color_stops.empty());
 
 	const RenderBox render_box = element->GetRenderBox(paint_area);
 	const Vector2f dimensions = render_box.GetFillSize();
@@ -694,4 +694,4 @@ SharedPtr<Decorator> DecoratorConicGradientInstancer::InstanceDecorator(const St
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

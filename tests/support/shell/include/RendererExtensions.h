@@ -9,7 +9,7 @@ struct Image {
 	int width = 0;
 	int height = 0;
 	int num_components = 0;
-	Rml::UniquePtr<Rml::byte[]> data;
+	ui::UniquePtr<ui::byte[]> data;
 };
 Image CaptureScreen();
 

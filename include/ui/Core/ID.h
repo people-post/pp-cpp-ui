@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 
-namespace Rml {
+namespace ui {
 
 enum class ShorthandId : uint8_t {
 	Invalid,
@@ -154,8 +154,8 @@ enum class PropertyId : uint8_t {
 	NavDown,
 	NavLeft,
 
-	RmlUi_Language,
-	RmlUi_Direction,
+	Ui_Language,
+	Ui_Direction,
 
 	NumDefinedIds,
 	FirstCustomId = NumDefinedIds,
@@ -233,4 +233,4 @@ enum class EventId : uint16_t {
 	MaxNumIds = 0xffff
 };
 
-} // namespace Rml
+} // namespace ui

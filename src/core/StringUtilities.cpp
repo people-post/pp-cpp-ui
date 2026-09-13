@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 static int FormatString(String& string, const char* format, va_list argument_list)
 {
@@ -29,13 +29,13 @@ static int FormatString(String& string, const char* format, va_list argument_lis
 
 		if (length < 0)
 		{
-			RMLUI_ERRORMSG("Error while formatting string");
+			UI_ERRORMSG("Error while formatting string");
 			return 0;
 		}
 
 		if (i > 0)
 		{
-			RMLUI_ASSERT(string.size() == (size_t)length);
+			UI_ASSERT(string.size() == (size_t)length);
 			break;
 		}
 
@@ -95,7 +95,7 @@ String StringUtilities::ToUpper(String string)
 	return string;
 }
 
-RMLUICORE_API String StringUtilities::EncodeRml(const String& string)
+UI_CORE_API String StringUtilities::EncodeRml(const String& string)
 {
 	String result;
 	result.reserve(string.size());
@@ -344,7 +344,7 @@ String StringUtilities::StripWhitespace(const String& string)
 	return StripWhitespace(StringView(string));
 }
 
-RMLUICORE_API String StringUtilities::StripWhitespace(StringView string)
+UI_CORE_API String StringUtilities::StripWhitespace(StringView string)
 {
 	const char* start = string.begin();
 	const char* end = string.end();
@@ -419,7 +419,7 @@ bool StringUtilities::StringCompareCaseInsensitive(const StringView lhs, const S
 
 Character StringUtilities::ToCharacter(const char* p, const char* p_end)
 {
-	RMLUI_ASSERTMSG(p && p != p_end, "ToCharacter expects a valid, non-empty input string");
+	UI_ASSERTMSG(p && p != p_end, "ToCharacter expects a valid, non-empty input string");
 
 	if ((*p & (1 << 7)) == 0)
 		return static_cast<Character>(*p);
@@ -770,7 +770,7 @@ StringView::StringView()
 
 StringView::StringView(const char* p_begin, const char* p_end) : p_begin(p_begin), p_end(p_end)
 {
-	RMLUI_ASSERT(p_end >= p_begin);
+	UI_ASSERT(p_end >= p_begin);
 }
 StringView::StringView(const String& string) : p_begin(string.data()), p_end(string.data() + string.size()) {}
 StringView::StringView(const String& string, size_t offset) : p_begin(string.data() + offset), p_end(string.data() + string.size()) {}
@@ -790,14 +790,14 @@ StringIteratorU8::StringIteratorU8(const String& string, size_t offset) : view(s
 StringIteratorU8::StringIteratorU8(const String& string, size_t offset, size_t count) : view(string, 0, offset + count), p(string.data() + offset) {}
 StringIteratorU8& StringIteratorU8::operator++()
 {
-	RMLUI_ASSERT(p < view.end());
+	UI_ASSERT(p < view.end());
 	++p;
 	SeekForward();
 	return *this;
 }
 StringIteratorU8& StringIteratorU8::operator--()
 {
-	RMLUI_ASSERT(p >= view.begin());
+	UI_ASSERT(p >= view.begin());
 	--p;
 	SeekBack();
 	return *this;
@@ -812,4 +812,4 @@ inline void StringIteratorU8::SeekForward()
 	p = StringUtilities::SeekForwardUTF8(p, view.end());
 }
 
-} // namespace Rml
+} // namespace ui

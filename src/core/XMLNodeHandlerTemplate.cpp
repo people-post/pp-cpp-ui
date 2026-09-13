@@ -7,7 +7,7 @@
 #include "TemplateCache.h"
 #include "XMLParseTools.h"
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandlerTemplate::XMLNodeHandlerTemplate() {}
 
@@ -15,7 +15,7 @@ XMLNodeHandlerTemplate::~XMLNodeHandlerTemplate() {}
 
 Element* XMLNodeHandlerTemplate::ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes)
 {
-	RMLUI_ASSERT(name == "template");
+	UI_ASSERT(name == "template");
 	(void)name;
 
 	// Tell the parser to use the default handler for all child nodes
@@ -45,4 +45,4 @@ bool XMLNodeHandlerTemplate::ElementData(XMLParser* parser, const String& data, 
 	return Factory::InstanceElementText(parser->GetParseFrame()->element, data);
 }
 
-} // namespace Rml
+} // namespace ui

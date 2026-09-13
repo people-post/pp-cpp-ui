@@ -4,7 +4,7 @@
 #include <ui/Core/Event.h>
 #include "WidgetDropDown.h"
 
-namespace Rml {
+namespace ui {
 
 ElementFormControlSelect::ElementFormControlSelect(const String& tag) : ElementFormControl(tag), widget(nullptr)
 {
@@ -153,7 +153,7 @@ bool ElementFormControlSelect::GetIntrinsicDimensions(Vector2f& intrinsic_dimens
 
 void ElementFormControlSelect::OnAttributeChange(const ElementAttributes& changed_attributes)
 {
-	RMLUI_ASSERT(widget);
+	UI_ASSERT(widget);
 
 	ElementFormControl::OnAttributeChange(changed_attributes);
 
@@ -162,4 +162,4 @@ void ElementFormControlSelect::OnAttributeChange(const ElementAttributes& change
 		widget->OnValueChange(it->second.Get<String>());
 }
 
-} // namespace Rml
+} // namespace ui

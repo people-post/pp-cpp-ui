@@ -6,7 +6,7 @@
 #include "WidgetTextInputSingleLine.h"
 #include "WidgetTextInputSingleLinePassword.h"
 
-namespace Rml {
+namespace ui {
 
 InputTypeText::InputTypeText(ElementFormControlInput* element, Visibility visibility) : InputType(element)
 {
@@ -114,4 +114,4 @@ void InputTypeText::SetCompositionRange(int range_start, int range_end)
 	widget->SetCompositionRange(range_start, range_end);
 }
 
-} // namespace Rml
+} // namespace ui

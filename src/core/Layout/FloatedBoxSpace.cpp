@@ -6,7 +6,7 @@
 #include "LayoutPools.h"
 #include <float.h>
 
-namespace Rml {
+namespace ui {
 
 FloatedBoxSpace::FloatedBoxSpace() {}
 
@@ -232,4 +232,4 @@ void FloatedBoxSpace::operator delete(void* chunk, size_t size)
 	LayoutPools::DeallocateLayoutChunk(chunk, size);
 }
 
-} // namespace Rml
+} // namespace ui

@@ -6,7 +6,7 @@
 #include <ui/Core/Spritesheet.h>
 #include "Pool.h"
 
-namespace Rml {
+namespace ui {
 
 class DecoratorShader : public Decorator {
 public:
@@ -46,4 +46,4 @@ struct ShaderElementData {
 };
 Pool<ShaderElementData>& GetShaderElementDataPool();
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include "TextureLayoutRectangle.h"
 #include "TextureLayoutTexture.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A texture layout generates and stores a layout of rectangles within a series of textures. It is
@@ -50,4 +50,4 @@ private:
 	RectangleList rectangles;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -5,7 +5,7 @@
 #include <ui/Core/Texture.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 Decorator::Decorator() {}
 
@@ -74,4 +74,4 @@ RenderManager& DecoratorInstancerInterface::GetRenderManager() const
 	return render_manager;
 }
 
-} // namespace Rml
+} // namespace ui

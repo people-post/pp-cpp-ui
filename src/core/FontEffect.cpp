@@ -1,7 +1,7 @@
 #include <ui/Core/FontEffect.h>
 #include <ui/Core/FontEffectInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 FontEffect::FontEffect() : layer(Layer::Back), colour(255, 255, 255), fingerprint(0) {}
 
@@ -64,4 +64,4 @@ void FontEffect::FillColorValuesFromAlpha(byte* destination, Vector2i dimensions
 	}
 }
 
-} // namespace Rml
+} // namespace ui

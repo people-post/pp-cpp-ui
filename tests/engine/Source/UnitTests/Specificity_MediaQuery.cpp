@@ -4,7 +4,7 @@
 #include <ui/Core/ElementDocument.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String simple_doc1_rml = R"(
 <rml>

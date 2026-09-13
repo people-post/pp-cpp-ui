@@ -2,7 +2,7 @@
 
 #include "WidgetTextInput.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A specialisation of the text input widget for multi-line text fields.
@@ -20,4 +20,4 @@ protected:
 	void LineBreak() override;
 };
 
-} // namespace Rml
+} // namespace ui

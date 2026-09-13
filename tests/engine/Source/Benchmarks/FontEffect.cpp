@@ -7,7 +7,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 static const String rml_font_effect_document = R"(
 <rml>
@@ -48,7 +48,7 @@ TEST_CASE("font_effect")
 		context->Render();
 
 		bench.run(effect_name, [&]() {
-			Rml::ReleaseFontResources();
+			ui::ReleaseFontResources();
 			context->Render();
 		});
 

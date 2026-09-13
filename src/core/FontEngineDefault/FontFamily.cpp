@@ -4,7 +4,7 @@
 #include "FontFace.h"
 #include <limits.h>
 
-namespace Rml {
+namespace ui {
 
 FontFamily::FontFamily(const String& name) : name(name) {}
 
@@ -64,4 +64,4 @@ void FontFamily::ReleaseFontResources()
 		entry.face->ReleaseFontResources();
 }
 
-} // namespace Rml
+} // namespace ui

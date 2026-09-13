@@ -1,10 +1,10 @@
 #include "DebuggerSystemInterface.h"
 #include "ElementLog.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
-DebuggerSystemInterface::DebuggerSystemInterface(Rml::SystemInterface* _application_interface, ElementLog* _log)
+DebuggerSystemInterface::DebuggerSystemInterface(ui::SystemInterface* _application_interface, ElementLog* _log)
 {
 	application_interface = _application_interface;
 	log = _log;
@@ -52,7 +52,7 @@ void DebuggerSystemInterface::GetClipboardText(String& text)
 	application_interface->GetClipboardText(text);
 }
 
-void DebuggerSystemInterface::ActivateKeyboard(Rml::Vector2f caret_position, float line_height)
+void DebuggerSystemInterface::ActivateKeyboard(ui::Vector2f caret_position, float line_height)
 {
 	application_interface->ActivateKeyboard(caret_position, line_height);
 }
@@ -63,4 +63,4 @@ void DebuggerSystemInterface::DeactivateKeyboard()
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

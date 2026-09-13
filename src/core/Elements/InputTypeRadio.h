@@ -2,7 +2,7 @@
 
 #include "InputType.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A radio button input type handler.
@@ -42,4 +42,4 @@ private:
 	void PopRadioSet();
 };
 
-} // namespace Rml
+} // namespace ui

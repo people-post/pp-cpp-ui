@@ -5,7 +5,7 @@
 #include <ui/Core/Types.h>
 #include "GeometryBackgroundBorder.h"
 
-namespace Rml {
+namespace ui {
 
 void MeshUtilities::GenerateQuad(Mesh& mesh, Vector2f origin, Vector2f dimensions, ColourbPremultiplied colour)
 {
@@ -57,7 +57,7 @@ void MeshUtilities::GenerateLine(Mesh& mesh, Vector2f position, Vector2f size, C
 void MeshUtilities::GenerateBackgroundBorder(Mesh& out_mesh, const RenderBox& render_box, ColourbPremultiplied background_color,
 	const ColourbPremultiplied border_colors[4])
 {
-	RMLUI_ASSERT(border_colors);
+	UI_ASSERT(border_colors);
 
 	Vector<Vertex>& vertices = out_mesh.vertices;
 	Vector<int>& indices = out_mesh.indices;
@@ -106,11 +106,11 @@ void MeshUtilities::GenerateBackgroundBorder(Mesh& out_mesh, const RenderBox& re
 	}
 #endif
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	const int num_vertices = (int)vertices.size();
 	for (int index : indices)
 	{
-		RMLUI_ASSERT(index < num_vertices);
+		UI_ASSERT(index < num_vertices);
 	}
 #endif
 }
@@ -137,4 +137,4 @@ void MeshUtilities::GenerateBackground(Mesh& out_mesh, const RenderBox& render_b
 	geometry.DrawBackground(metrics, color);
 }
 
-} // namespace Rml
+} // namespace ui

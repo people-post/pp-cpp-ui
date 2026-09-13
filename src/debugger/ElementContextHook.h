@@ -3,7 +3,7 @@
 #include <ui/Core/ElementDocument.h>
 #include "ElementDebugDocument.h"
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 class DebuggerPlugin;
@@ -14,7 +14,7 @@ class DebuggerPlugin;
 
 class ElementContextHook : public ElementDebugDocument {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementContextHook, ElementDebugDocument)
+	UI_RTTI_DefineWithParent(ElementContextHook, ElementDebugDocument)
 
 	ElementContextHook(const String& tag);
 	virtual ~ElementContextHook();
@@ -28,4 +28,4 @@ private:
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

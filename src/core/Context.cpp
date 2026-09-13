@@ -24,7 +24,7 @@
 #include <iterator>
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 static constexpr float DOUBLE_CLICK_TIME = 0.5f;    // [s]
 static constexpr float DOUBLE_CLICK_MAX_DIST = 3.f; // [dp]
@@ -120,7 +120,7 @@ static Element* PreferContentOverScrollbar(Context* context, Vector2f point, Ele
 	return hover;
 }
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 static const char* ElementTagOrNull(Element* element)
 {
 	return element ? element->GetTagName().c_str() : "null";
@@ -136,22 +136,22 @@ static void LogPointerInteraction(const char* phase, Element* hover, Element* in
 
 static void DebugVerifyLocaleSetting()
 {
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 	constexpr float expected_value = 1000.5f;
-	const Rml::String expected_string = "1000.5";
-	const Rml::String formatted_string = Rml::ToString(expected_value);
-	const float parsed_value = Rml::FromString<float>(expected_string);
+	const ui::String expected_string = "1000.5";
+	const ui::String formatted_string = ui::ToString(expected_value);
+	const float parsed_value = ui::FromString<float>(expected_string);
 
-	const char* description = "RmlUi expects the global locale to be set to the default minimal \"C\" locale, please see `std::setlocale`.";
+	const char* description = "pp-cpp-ui expects the global locale to be set to the default minimal \"C\" locale, please see `std::setlocale`.";
 	if (formatted_string != expected_string)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR,
+		ui::Log::Message(ui::Log::LT_ERROR,
 			"Incompatible locale setting detected while formatting %f. Formatted: \"%s\". Expected: \"%s\". Current locale: %s. %s", expected_value,
 			formatted_string.c_str(), expected_string.c_str(), std::setlocale(LC_ALL, nullptr), description);
 	}
 	if (parsed_value != expected_value)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR,
+		ui::Log::Message(ui::Log::LT_ERROR,
 			"Incompatible locale setting detected while parsing \"%s\". Parsed: %f. Expected: %f. Current locale: %s. %s", expected_string.c_str(),
 			parsed_value, expected_value, std::setlocale(LC_ALL, nullptr), description);
 	}
@@ -169,8 +169,8 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	root->SetProperty(PropertyId::ZIndex, Property(0, Unit::NUMBER));
 
 	cursor_proxy = Factory::InstanceElement(nullptr, documents_base_tag, documents_base_tag, XMLAttributes());
-	ElementDocument* cursor_proxy_document = rmlui_dynamic_cast<ElementDocument*>(cursor_proxy.get());
-	RMLUI_ASSERT(cursor_proxy_document);
+	ElementDocument* cursor_proxy_document = ui_dynamic_cast<ElementDocument*>(cursor_proxy.get());
+	UI_ASSERT(cursor_proxy_document);
 	cursor_proxy_document->context = this;
 
 	// The cursor proxy takes the style from its cloned element's document. The latter may define style rules for `<body>` which we don't want on the
@@ -280,7 +280,7 @@ float Context::GetDensityIndependentPixelRatio() const
 
 bool Context::Update()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	DebugVerifyLocaleSetting();
 
 	next_update_timeout = std::numeric_limits<double>::infinity();
@@ -331,7 +331,7 @@ bool Context::Update()
 
 bool Context::Render()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	render_manager->PrepareRender(dimensions);
 
@@ -369,12 +369,12 @@ ElementDocument* Context::CreateDocument(const String& instancer_name)
 		return nullptr;
 	}
 
-	ElementDocument* document = rmlui_dynamic_cast<ElementDocument*>(element.get());
+	ElementDocument* document = ui_dynamic_cast<ElementDocument*>(element.get());
 	if (!document)
 	{
 		Log::Message(Log::LT_ERROR,
 			"Failed to instance document on instancer_name '%s', Found type '%s', was expecting derivative of ElementDocument.",
-			instancer_name.c_str(), rmlui_type_name(*element));
+			instancer_name.c_str(), ui_type_name(*element));
 		return nullptr;
 	}
 
@@ -407,7 +407,7 @@ ElementDocument* Context::LoadDocument(Stream* stream)
 	if (!element)
 		return nullptr;
 
-	ElementDocument* document = rmlui_static_cast<ElementDocument*>(element.get());
+	ElementDocument* document = ui_static_cast<ElementDocument*>(element.get());
 
 	root->AppendChild(std::move(element));
 
@@ -988,7 +988,7 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 			drag = nullptr;
 		}
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 		LogPointerInteraction("mousedown", hover, interactive, active, false, false);
 #endif
 	}
@@ -1054,7 +1054,7 @@ bool Context::ProcessMouseButtonUp(int button_index, int key_modifier_state)
 		if (click_dispatched)
 			click_target->DispatchEvent(EventId::Click, parameters);
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 		LogPointerInteraction("mouseup", hover, ClickRouting::FindInteractiveElement(hover), press_hover, false, click_dispatched);
 #endif
 
@@ -1207,7 +1207,7 @@ bool Context::ProcessTouchCancel(const TouchList& touches)
 bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 {
 	TouchState* state = LookupTouch(touch.identifier);
-	RMLUI_ASSERTMSG(state == nullptr, "Receiving touch start event for an already started touch.");
+	UI_ASSERTMSG(state == nullptr, "Receiving touch start event for an already started touch.");
 	if (!state)
 	{
 		auto it_inserted = touch_states.emplace(touch.identifier, TouchState()).first;
@@ -1401,7 +1401,7 @@ TextInputHandler* Context::GetTextInputHandler() const
 
 void Context::SetInstancer(ContextInstancer* _instancer)
 {
-	RMLUI_ASSERT(instancer == nullptr);
+	UI_ASSERT(instancer == nullptr);
 	instancer = _instancer;
 }
 
@@ -1541,7 +1541,7 @@ void Context::OnElementDetach(Element* element)
 
 bool Context::OnFocusChange(Element* new_focus, bool focus_visible)
 {
-	RMLUI_ASSERT(new_focus);
+	UI_ASSERT(new_focus);
 
 	ElementSet old_chain;
 	ElementSet new_chain;
@@ -1817,7 +1817,7 @@ Element* Context::GetElementAtPoint(Vector2f point, const Element* ignore_elemen
 
 void Context::CreateDragClone(Element* element)
 {
-	RMLUI_ASSERTMSG(cursor_proxy, "Unable to create drag clone, no cursor proxy document.");
+	UI_ASSERTMSG(cursor_proxy, "Unable to create drag clone, no cursor proxy document.");
 
 	ReleaseDragClone();
 
@@ -1978,7 +1978,7 @@ const String& Context::GetDocumentsBaseTag()
 
 void Context::RequestNextUpdate(double delay)
 {
-	RMLUI_ASSERT(delay >= 0.0);
+	UI_ASSERT(delay >= 0.0);
 	next_update_timeout = Math::Min(next_update_timeout, delay);
 }
 
@@ -1987,4 +1987,4 @@ double Context::GetNextUpdateDelay() const
 	return next_update_timeout;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -7,7 +7,7 @@
 #include <ui/Core/Utilities.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 PropertyParserFontEffect::PropertyParserFontEffect() {}
 
@@ -27,7 +27,7 @@ bool PropertyParserFontEffect::ParseValue(Property& property, const String& font
 		return true;
 	}
 
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	FontEffects font_effects;
 
@@ -82,7 +82,7 @@ bool PropertyParserFontEffect::ParseValue(Property& property, const String& font
 			// Set unspecified values to their defaults
 			specification.SetPropertyDefaults(properties);
 
-			RMLUI_ZoneScopedN("InstanceFontEffect");
+			UI_ZoneScopedN("InstanceFontEffect");
 			SharedPtr<FontEffect> font_effect = instancer->InstanceFontEffect(type, properties);
 			if (font_effect)
 			{
@@ -116,4 +116,4 @@ bool PropertyParserFontEffect::ParseValue(Property& property, const String& font
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

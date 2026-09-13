@@ -3,11 +3,11 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-namespace Rml {
+namespace ui {
 
 namespace Detail {
 
-	inline void* rmlui_align(size_t alignment, size_t size, void*& ptr, size_t& space)
+	inline void* ui_align(size_t alignment, size_t size, void*& ptr, size_t& space)
 	{
 #if defined(_MSC_VER)
 		return std::align(alignment, size, ptr, space);
@@ -29,7 +29,7 @@ namespace Detail {
 
 	BasicStackAllocator::~BasicStackAllocator() noexcept
 	{
-		RMLUI_ASSERT(p == data);
+		UI_ASSERT(p == data);
 		free(data);
 	}
 
@@ -37,7 +37,7 @@ namespace Detail {
 	{
 		size_t available_space = N - ((byte*)p - data);
 
-		if (rmlui_align(alignment, byte_size, p, available_space))
+		if (ui_align(alignment, byte_size, p, available_space))
 		{
 			void* result = p;
 			p = (byte*)p + byte_size;
@@ -66,4 +66,4 @@ namespace Detail {
 
 } // namespace Detail
 
-} // namespace Rml
+} // namespace ui

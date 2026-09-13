@@ -5,11 +5,11 @@
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
 
-namespace Rml {
+namespace ui {
 
 UniquePtr<LayoutBox> ReplacedFormattingContext::Format(ContainerBox* parent_container, Element* element, const Box* override_initial_box)
 {
-	RMLUI_ASSERT(element->IsReplaced());
+	UI_ASSERT(element->IsReplaced());
 
 	// Replaced elements provide their own rendering, we just set their box here and notify them that the element has been sized.
 	auto replaced_box = MakeUnique<ReplacedBox>(element);
@@ -48,4 +48,4 @@ String ReplacedBox::DebugDumpTree(int depth) const
 	return String(depth * 2, ' ') + "ReplacedBox";
 }
 
-} // namespace Rml
+} // namespace ui

@@ -10,12 +10,12 @@
 	#pragma warning(default : 4062)
 #endif
 
-namespace Rml {
+namespace ui {
 
 class DataParser;
 
 /*
-    The abstract machine for RmlUi data expressions.
+    The abstract machine for pp-cpp-ui data expressions.
 
     The machine can execute a program which contains a list of instructions listed below.
 
@@ -178,18 +178,18 @@ public:
 
 	Program ReleaseProgram()
 	{
-		RMLUI_ASSERT(!parse_error);
+		UI_ASSERT(!parse_error);
 		return std::move(program);
 	}
 	AddressList ReleaseAddresses()
 	{
-		RMLUI_ASSERT(!parse_error);
+		UI_ASSERT(!parse_error);
 		return std::move(variable_addresses);
 	}
 
 	void Emit(Instruction instruction, Variant data = Variant())
 	{
-		RMLUI_ASSERTMSG(instruction != Instruction::Push && instruction != Instruction::Pop && instruction != Instruction::NumArguments &&
+		UI_ASSERTMSG(instruction != Instruction::Push && instruction != Instruction::Pop && instruction != Instruction::NumArguments &&
 				instruction != Instruction::TransformFnc && instruction != Instruction::EventFnc && instruction != Instruction::Variable &&
 				instruction != Instruction::Assign,
 			"Use Push(), Pop(), Function(), Variable(), and Assign() procedures for stack manipulation and variable instructions.");
@@ -213,8 +213,8 @@ public:
 	}
 	void Function(Instruction instruction, int num_arguments, String&& name)
 	{
-		RMLUI_ASSERT(instruction == Instruction::TransformFnc || instruction == Instruction::EventFnc);
-		RMLUI_ASSERT(num_arguments >= 0);
+		UI_ASSERT(instruction == Instruction::TransformFnc || instruction == Instruction::EventFnc);
+		UI_ASSERT(num_arguments >= 0);
 		if (program_stack_size < num_arguments)
 		{
 			Error(CreateString("Internal parser error: Popping %d arguments, but the stack contains only %d elements.", num_arguments,
@@ -234,7 +234,7 @@ public:
 
 	void SetProgramState(const ProgramState& state)
 	{
-		RMLUI_ASSERT(state.program_length <= program.size());
+		UI_ASSERT(state.program_length <= program.size());
 		program.resize(state.program_length);
 		program_stack_size = state.stack_size;
 	}
@@ -836,7 +836,7 @@ namespace Parse {
 
 	static void Function(DataParser& parser, Instruction function_type, String&& func_name, bool first_argument_piped)
 	{
-		RMLUI_ASSERT(function_type == Instruction::TransformFnc || function_type == Instruction::EventFnc);
+		UI_ASSERT(function_type == Instruction::TransformFnc || function_type == Instruction::EventFnc);
 
 		// We already matched the variable name, and also pushed the first argument to the stack if it was piped using '|'.
 		int num_arguments = first_argument_piped ? 1 : 0;
@@ -901,7 +901,7 @@ public:
 	bool Error(const String& message) const
 	{
 		Log::Message(Log::LT_WARNING, "Error during execution. %s", message.c_str());
-		RMLUI_ERROR;
+		UI_ERROR;
 		return false;
 	}
 
@@ -1094,7 +1094,7 @@ private:
 			next_instruction = data.Get<size_t>(0);
 		}
 		break;
-		default: RMLUI_ERRORMSG("Instruction not implemented."); break;
+		default: UI_ERRORMSG("Instruction not implemented."); break;
 		}
 		return true;
 	}
@@ -1215,4 +1215,4 @@ bool DataExpressionInterface::EventCallback(const String& name, const VariantLis
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

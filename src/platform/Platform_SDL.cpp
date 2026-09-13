@@ -4,10 +4,10 @@
 #include <ui/Core/StringUtilities.h>
 #include <ui/Core/SystemInterface.h>
 
-static Rml::TouchList TouchEventToTouchList(SDL_Event& ev, Rml::Context* context, SDL_FingerID finger_id)
+static ui::TouchList TouchEventToTouchList(SDL_Event& ev, ui::Context* context, SDL_FingerID finger_id)
 {
-	const Rml::Vector2f position = Rml::Vector2f{ev.tfinger.x, ev.tfinger.y} * Rml::Vector2f{context->GetDimensions()};
-	return {Rml::Touch{static_cast<Rml::TouchId>(finger_id), position}};
+	const ui::Vector2f position = ui::Vector2f{ev.tfinger.x, ev.tfinger.y} * ui::Vector2f{context->GetDimensions()};
+	return {ui::Touch{static_cast<ui::TouchId>(finger_id), position}};
 }
 
 SystemInterface_SDL::SystemInterface_SDL()
@@ -66,7 +66,7 @@ double SystemInterface_SDL::GetElapsedTime()
 	return double(SDL_GetPerformanceCounter() - start) / frequency;
 }
 
-void SystemInterface_SDL::SetMouseCursor(const Rml::String& cursor_name)
+void SystemInterface_SDL::SetMouseCursor(const ui::String& cursor_name)
 {
 	SDL_Cursor* cursor = nullptr;
 
@@ -88,31 +88,31 @@ void SystemInterface_SDL::SetMouseCursor(const Rml::String& cursor_name)
 		cursor = cursor_text;
 	else if (cursor_name == "unavailable")
 		cursor = cursor_unavailable;
-	else if (Rml::StringUtilities::StartsWith(cursor_name, "rmlui-scroll"))
+	else if (ui::StringUtilities::StartsWith(cursor_name, "rmlui-scroll"))
 		cursor = cursor_move;
 
 	if (cursor)
 		SDL_SetCursor(cursor);
 }
 
-void SystemInterface_SDL::SetClipboardText(const Rml::String& text)
+void SystemInterface_SDL::SetClipboardText(const ui::String& text)
 {
 	SDL_SetClipboardText(text.c_str());
 }
 
-void SystemInterface_SDL::GetClipboardText(Rml::String& text)
+void SystemInterface_SDL::GetClipboardText(ui::String& text)
 {
 	char* raw_text = SDL_GetClipboardText();
-	text = Rml::String(raw_text);
+	text = ui::String(raw_text);
 	SDL_free(raw_text);
 }
 
-void SystemInterface_SDL::ActivateKeyboard(Rml::Vector2f caret_position, float line_height)
+void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float line_height)
 {
 	if (window)
 	{
 #if SDL_MAJOR_VERSION >= 3
-		// RmlUi layout is in framebuffer pixels (SyncContext uses GetWindowSizeInPixels).
+		// pp-cpp-ui layout is in framebuffer pixels (SyncContext uses GetWindowSizeInPixels).
 		// SDL_SetTextInputArea expects window coordinates (points on iOS). Passing pixels
 		// makes UIKit pan the GL view by ~display-scale too far → mostly black screen.
 		const float density = SDL_GetWindowPixelDensity(window);
@@ -155,7 +155,7 @@ void SystemInterface_SDL::DeactivateKeyboard()
 	}
 }
 
-bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Window* window, SDL_Event& ev)
+bool RmlSDL::InputEventHandler(ui::Context* context, SDL_Window* window, SDL_Event& ev)
 {
 #if SDL_MAJOR_VERSION >= 3
 	#define RMLSDL_WINDOW_EVENTS_BEGIN
@@ -213,7 +213,7 @@ bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Window* window, SDL_Ev
 
 	switch (ev.type)
 	{
-#ifndef RMLUI_BACKEND_SIMULATE_TOUCH
+#ifndef UI_BACKEND_SIMULATE_TOUCH
 	case event_mouse_motion:
 	{
 		const float pixel_density = GetPixelDensity(window);
@@ -257,24 +257,24 @@ bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Window* window, SDL_Ev
 	break;
 	case event_text_input:
 	{
-		result = context->ProcessTextInput(Rml::String(&ev.text.text[0]));
+		result = context->ProcessTextInput(ui::String(&ev.text.text[0]));
 	}
 	break;
 	case event_finger_down:
 	{
-		const Rml::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));
+		const ui::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));
 		result = context->ProcessTouchStart(touches, GetKeyModifierState());
 	}
 	break;
 	case event_finger_motion:
 	{
-		const Rml::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));
+		const ui::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));
 		result = context->ProcessTouchMove(touches, GetKeyModifierState());
 	}
 	break;
 	case event_finger_up:
 	{
-		const Rml::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));
+		const ui::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));
 		result = context->ProcessTouchEnd(touches, GetKeyModifierState());
 	}
 	break;
@@ -283,7 +283,7 @@ bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Window* window, SDL_Ev
 
 	case event_window_size_changed:
 	{
-		Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
+		ui::Vector2i dimensions(ev.window.data1, ev.window.data2);
 		context->SetDimensions(dimensions);
 	}
 	break;
@@ -310,7 +310,7 @@ bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Window* window, SDL_Ev
 	return result;
 }
 
-Rml::Input::KeyIdentifier RmlSDL::ConvertKey(int sdlkey)
+ui::Input::KeyIdentifier RmlSDL::ConvertKey(int sdlkey)
 {
 #if SDL_MAJOR_VERSION >= 3
 	constexpr auto key_a = SDLK_A;
@@ -375,124 +375,124 @@ Rml::Input::KeyIdentifier RmlSDL::ConvertKey(int sdlkey)
 	// clang-format off
 	switch (sdlkey)
 	{
-	case SDLK_UNKNOWN:      return Rml::Input::KI_UNKNOWN;
-	case SDLK_ESCAPE:       return Rml::Input::KI_ESCAPE;
-	case SDLK_SPACE:        return Rml::Input::KI_SPACE;
-	case SDLK_0:            return Rml::Input::KI_0;
-	case SDLK_1:            return Rml::Input::KI_1;
-	case SDLK_2:            return Rml::Input::KI_2;
-	case SDLK_3:            return Rml::Input::KI_3;
-	case SDLK_4:            return Rml::Input::KI_4;
-	case SDLK_5:            return Rml::Input::KI_5;
-	case SDLK_6:            return Rml::Input::KI_6;
-	case SDLK_7:            return Rml::Input::KI_7;
-	case SDLK_8:            return Rml::Input::KI_8;
-	case SDLK_9:            return Rml::Input::KI_9;
-	case key_a:             return Rml::Input::KI_A;
-	case key_b:             return Rml::Input::KI_B;
-	case key_c:             return Rml::Input::KI_C;
-	case key_d:             return Rml::Input::KI_D;
-	case key_e:             return Rml::Input::KI_E;
-	case key_f:             return Rml::Input::KI_F;
-	case key_g:             return Rml::Input::KI_G;
-	case key_h:             return Rml::Input::KI_H;
-	case key_i:             return Rml::Input::KI_I;
-	case key_j:             return Rml::Input::KI_J;
-	case key_k:             return Rml::Input::KI_K;
-	case key_l:             return Rml::Input::KI_L;
-	case key_m:             return Rml::Input::KI_M;
-	case key_n:             return Rml::Input::KI_N;
-	case key_o:             return Rml::Input::KI_O;
-	case key_p:             return Rml::Input::KI_P;
-	case key_q:             return Rml::Input::KI_Q;
-	case key_r:             return Rml::Input::KI_R;
-	case key_s:             return Rml::Input::KI_S;
-	case key_t:             return Rml::Input::KI_T;
-	case key_u:             return Rml::Input::KI_U;
-	case key_v:             return Rml::Input::KI_V;
-	case key_w:             return Rml::Input::KI_W;
-	case key_x:             return Rml::Input::KI_X;
-	case key_y:             return Rml::Input::KI_Y;
-	case key_z:             return Rml::Input::KI_Z;
-	case SDLK_SEMICOLON:    return Rml::Input::KI_OEM_1;
-	case SDLK_PLUS:         return Rml::Input::KI_OEM_PLUS;
-	case SDLK_COMMA:        return Rml::Input::KI_OEM_COMMA;
-	case SDLK_MINUS:        return Rml::Input::KI_OEM_MINUS;
-	case SDLK_PERIOD:       return Rml::Input::KI_OEM_PERIOD;
-	case SDLK_SLASH:        return Rml::Input::KI_OEM_2;
-	case key_grave:         return Rml::Input::KI_OEM_3;
-	case SDLK_LEFTBRACKET:  return Rml::Input::KI_OEM_4;
-	case SDLK_BACKSLASH:    return Rml::Input::KI_OEM_5;
-	case SDLK_RIGHTBRACKET: return Rml::Input::KI_OEM_6;
-	case key_dblapostrophe: return Rml::Input::KI_OEM_7;
-	case SDLK_KP_0:         return Rml::Input::KI_NUMPAD0;
-	case SDLK_KP_1:         return Rml::Input::KI_NUMPAD1;
-	case SDLK_KP_2:         return Rml::Input::KI_NUMPAD2;
-	case SDLK_KP_3:         return Rml::Input::KI_NUMPAD3;
-	case SDLK_KP_4:         return Rml::Input::KI_NUMPAD4;
-	case SDLK_KP_5:         return Rml::Input::KI_NUMPAD5;
-	case SDLK_KP_6:         return Rml::Input::KI_NUMPAD6;
-	case SDLK_KP_7:         return Rml::Input::KI_NUMPAD7;
-	case SDLK_KP_8:         return Rml::Input::KI_NUMPAD8;
-	case SDLK_KP_9:         return Rml::Input::KI_NUMPAD9;
-	case SDLK_KP_ENTER:     return Rml::Input::KI_NUMPADENTER;
-	case SDLK_KP_MULTIPLY:  return Rml::Input::KI_MULTIPLY;
-	case SDLK_KP_PLUS:      return Rml::Input::KI_ADD;
-	case SDLK_KP_MINUS:     return Rml::Input::KI_SUBTRACT;
-	case SDLK_KP_PERIOD:    return Rml::Input::KI_DECIMAL;
-	case SDLK_KP_DIVIDE:    return Rml::Input::KI_DIVIDE;
-	case SDLK_KP_EQUALS:    return Rml::Input::KI_OEM_NEC_EQUAL;
-	case SDLK_BACKSPACE:    return Rml::Input::KI_BACK;
-	case SDLK_TAB:          return Rml::Input::KI_TAB;
-	case SDLK_CLEAR:        return Rml::Input::KI_CLEAR;
-	case SDLK_RETURN:       return Rml::Input::KI_RETURN;
-	case SDLK_PAUSE:        return Rml::Input::KI_PAUSE;
-	case SDLK_CAPSLOCK:     return Rml::Input::KI_CAPITAL;
-	case SDLK_PAGEUP:       return Rml::Input::KI_PRIOR;
-	case SDLK_PAGEDOWN:     return Rml::Input::KI_NEXT;
-	case SDLK_END:          return Rml::Input::KI_END;
-	case SDLK_HOME:         return Rml::Input::KI_HOME;
-	case SDLK_LEFT:         return Rml::Input::KI_LEFT;
-	case SDLK_UP:           return Rml::Input::KI_UP;
-	case SDLK_RIGHT:        return Rml::Input::KI_RIGHT;
-	case SDLK_DOWN:         return Rml::Input::KI_DOWN;
-	case SDLK_INSERT:       return Rml::Input::KI_INSERT;
-	case SDLK_DELETE:       return Rml::Input::KI_DELETE;
-	case SDLK_HELP:         return Rml::Input::KI_HELP;
-	case SDLK_F1:           return Rml::Input::KI_F1;
-	case SDLK_F2:           return Rml::Input::KI_F2;
-	case SDLK_F3:           return Rml::Input::KI_F3;
-	case SDLK_F4:           return Rml::Input::KI_F4;
-	case SDLK_F5:           return Rml::Input::KI_F5;
-	case SDLK_F6:           return Rml::Input::KI_F6;
-	case SDLK_F7:           return Rml::Input::KI_F7;
-	case SDLK_F8:           return Rml::Input::KI_F8;
-	case SDLK_F9:           return Rml::Input::KI_F9;
-	case SDLK_F10:          return Rml::Input::KI_F10;
-	case SDLK_F11:          return Rml::Input::KI_F11;
-	case SDLK_F12:          return Rml::Input::KI_F12;
-	case SDLK_F13:          return Rml::Input::KI_F13;
-	case SDLK_F14:          return Rml::Input::KI_F14;
-	case SDLK_F15:          return Rml::Input::KI_F15;
-	case SDLK_NUMLOCKCLEAR: return Rml::Input::KI_NUMLOCK;
-	case SDLK_SCROLLLOCK:   return Rml::Input::KI_SCROLL;
-	case SDLK_LSHIFT:       return Rml::Input::KI_LSHIFT;
-	case SDLK_RSHIFT:       return Rml::Input::KI_RSHIFT;
-	case SDLK_LCTRL:        return Rml::Input::KI_LCONTROL;
-	case SDLK_RCTRL:        return Rml::Input::KI_RCONTROL;
-	case SDLK_LALT:         return Rml::Input::KI_LMENU;
-	case SDLK_RALT:         return Rml::Input::KI_RMENU;
-	case SDLK_LGUI:         return Rml::Input::KI_LMETA;
-	case SDLK_RGUI:         return Rml::Input::KI_RMETA;
+	case SDLK_UNKNOWN:      return ui::Input::KI_UNKNOWN;
+	case SDLK_ESCAPE:       return ui::Input::KI_ESCAPE;
+	case SDLK_SPACE:        return ui::Input::KI_SPACE;
+	case SDLK_0:            return ui::Input::KI_0;
+	case SDLK_1:            return ui::Input::KI_1;
+	case SDLK_2:            return ui::Input::KI_2;
+	case SDLK_3:            return ui::Input::KI_3;
+	case SDLK_4:            return ui::Input::KI_4;
+	case SDLK_5:            return ui::Input::KI_5;
+	case SDLK_6:            return ui::Input::KI_6;
+	case SDLK_7:            return ui::Input::KI_7;
+	case SDLK_8:            return ui::Input::KI_8;
+	case SDLK_9:            return ui::Input::KI_9;
+	case key_a:             return ui::Input::KI_A;
+	case key_b:             return ui::Input::KI_B;
+	case key_c:             return ui::Input::KI_C;
+	case key_d:             return ui::Input::KI_D;
+	case key_e:             return ui::Input::KI_E;
+	case key_f:             return ui::Input::KI_F;
+	case key_g:             return ui::Input::KI_G;
+	case key_h:             return ui::Input::KI_H;
+	case key_i:             return ui::Input::KI_I;
+	case key_j:             return ui::Input::KI_J;
+	case key_k:             return ui::Input::KI_K;
+	case key_l:             return ui::Input::KI_L;
+	case key_m:             return ui::Input::KI_M;
+	case key_n:             return ui::Input::KI_N;
+	case key_o:             return ui::Input::KI_O;
+	case key_p:             return ui::Input::KI_P;
+	case key_q:             return ui::Input::KI_Q;
+	case key_r:             return ui::Input::KI_R;
+	case key_s:             return ui::Input::KI_S;
+	case key_t:             return ui::Input::KI_T;
+	case key_u:             return ui::Input::KI_U;
+	case key_v:             return ui::Input::KI_V;
+	case key_w:             return ui::Input::KI_W;
+	case key_x:             return ui::Input::KI_X;
+	case key_y:             return ui::Input::KI_Y;
+	case key_z:             return ui::Input::KI_Z;
+	case SDLK_SEMICOLON:    return ui::Input::KI_OEM_1;
+	case SDLK_PLUS:         return ui::Input::KI_OEM_PLUS;
+	case SDLK_COMMA:        return ui::Input::KI_OEM_COMMA;
+	case SDLK_MINUS:        return ui::Input::KI_OEM_MINUS;
+	case SDLK_PERIOD:       return ui::Input::KI_OEM_PERIOD;
+	case SDLK_SLASH:        return ui::Input::KI_OEM_2;
+	case key_grave:         return ui::Input::KI_OEM_3;
+	case SDLK_LEFTBRACKET:  return ui::Input::KI_OEM_4;
+	case SDLK_BACKSLASH:    return ui::Input::KI_OEM_5;
+	case SDLK_RIGHTBRACKET: return ui::Input::KI_OEM_6;
+	case key_dblapostrophe: return ui::Input::KI_OEM_7;
+	case SDLK_KP_0:         return ui::Input::KI_NUMPAD0;
+	case SDLK_KP_1:         return ui::Input::KI_NUMPAD1;
+	case SDLK_KP_2:         return ui::Input::KI_NUMPAD2;
+	case SDLK_KP_3:         return ui::Input::KI_NUMPAD3;
+	case SDLK_KP_4:         return ui::Input::KI_NUMPAD4;
+	case SDLK_KP_5:         return ui::Input::KI_NUMPAD5;
+	case SDLK_KP_6:         return ui::Input::KI_NUMPAD6;
+	case SDLK_KP_7:         return ui::Input::KI_NUMPAD7;
+	case SDLK_KP_8:         return ui::Input::KI_NUMPAD8;
+	case SDLK_KP_9:         return ui::Input::KI_NUMPAD9;
+	case SDLK_KP_ENTER:     return ui::Input::KI_NUMPADENTER;
+	case SDLK_KP_MULTIPLY:  return ui::Input::KI_MULTIPLY;
+	case SDLK_KP_PLUS:      return ui::Input::KI_ADD;
+	case SDLK_KP_MINUS:     return ui::Input::KI_SUBTRACT;
+	case SDLK_KP_PERIOD:    return ui::Input::KI_DECIMAL;
+	case SDLK_KP_DIVIDE:    return ui::Input::KI_DIVIDE;
+	case SDLK_KP_EQUALS:    return ui::Input::KI_OEM_NEC_EQUAL;
+	case SDLK_BACKSPACE:    return ui::Input::KI_BACK;
+	case SDLK_TAB:          return ui::Input::KI_TAB;
+	case SDLK_CLEAR:        return ui::Input::KI_CLEAR;
+	case SDLK_RETURN:       return ui::Input::KI_RETURN;
+	case SDLK_PAUSE:        return ui::Input::KI_PAUSE;
+	case SDLK_CAPSLOCK:     return ui::Input::KI_CAPITAL;
+	case SDLK_PAGEUP:       return ui::Input::KI_PRIOR;
+	case SDLK_PAGEDOWN:     return ui::Input::KI_NEXT;
+	case SDLK_END:          return ui::Input::KI_END;
+	case SDLK_HOME:         return ui::Input::KI_HOME;
+	case SDLK_LEFT:         return ui::Input::KI_LEFT;
+	case SDLK_UP:           return ui::Input::KI_UP;
+	case SDLK_RIGHT:        return ui::Input::KI_RIGHT;
+	case SDLK_DOWN:         return ui::Input::KI_DOWN;
+	case SDLK_INSERT:       return ui::Input::KI_INSERT;
+	case SDLK_DELETE:       return ui::Input::KI_DELETE;
+	case SDLK_HELP:         return ui::Input::KI_HELP;
+	case SDLK_F1:           return ui::Input::KI_F1;
+	case SDLK_F2:           return ui::Input::KI_F2;
+	case SDLK_F3:           return ui::Input::KI_F3;
+	case SDLK_F4:           return ui::Input::KI_F4;
+	case SDLK_F5:           return ui::Input::KI_F5;
+	case SDLK_F6:           return ui::Input::KI_F6;
+	case SDLK_F7:           return ui::Input::KI_F7;
+	case SDLK_F8:           return ui::Input::KI_F8;
+	case SDLK_F9:           return ui::Input::KI_F9;
+	case SDLK_F10:          return ui::Input::KI_F10;
+	case SDLK_F11:          return ui::Input::KI_F11;
+	case SDLK_F12:          return ui::Input::KI_F12;
+	case SDLK_F13:          return ui::Input::KI_F13;
+	case SDLK_F14:          return ui::Input::KI_F14;
+	case SDLK_F15:          return ui::Input::KI_F15;
+	case SDLK_NUMLOCKCLEAR: return ui::Input::KI_NUMLOCK;
+	case SDLK_SCROLLLOCK:   return ui::Input::KI_SCROLL;
+	case SDLK_LSHIFT:       return ui::Input::KI_LSHIFT;
+	case SDLK_RSHIFT:       return ui::Input::KI_RSHIFT;
+	case SDLK_LCTRL:        return ui::Input::KI_LCONTROL;
+	case SDLK_RCTRL:        return ui::Input::KI_RCONTROL;
+	case SDLK_LALT:         return ui::Input::KI_LMENU;
+	case SDLK_RALT:         return ui::Input::KI_RMENU;
+	case SDLK_LGUI:         return ui::Input::KI_LMETA;
+	case SDLK_RGUI:         return ui::Input::KI_RMETA;
 	/*
-	case SDLK_LSUPER:       return Rml::Input::KI_LWIN;
-	case SDLK_RSUPER:       return Rml::Input::KI_RWIN;
+	case SDLK_LSUPER:       return ui::Input::KI_LWIN;
+	case SDLK_RSUPER:       return ui::Input::KI_RWIN;
 	*/
 	default: break;
 	}
 	// clang-format on
 
-	return Rml::Input::KI_UNKNOWN;
+	return ui::Input::KI_UNKNOWN;
 }
 
 int RmlSDL::ConvertMouseButton(int button)
@@ -527,19 +527,19 @@ int RmlSDL::GetKeyModifierState()
 	int retval = 0;
 
 	if (sdl_mods & mod_ctrl)
-		retval |= Rml::Input::KM_CTRL;
+		retval |= ui::Input::KM_CTRL;
 
 	if (sdl_mods & mod_shift)
-		retval |= Rml::Input::KM_SHIFT;
+		retval |= ui::Input::KM_SHIFT;
 
 	if (sdl_mods & mod_alt)
-		retval |= Rml::Input::KM_ALT;
+		retval |= ui::Input::KM_ALT;
 
 	if (sdl_mods & mod_num)
-		retval |= Rml::Input::KM_NUMLOCK;
+		retval |= ui::Input::KM_NUMLOCK;
 
 	if (sdl_mods & mod_caps)
-		retval |= Rml::Input::KM_CAPSLOCK;
+		retval |= ui::Input::KM_CAPSLOCK;
 
 	return retval;
 }

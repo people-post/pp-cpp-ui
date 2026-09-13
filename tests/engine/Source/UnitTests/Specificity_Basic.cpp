@@ -4,7 +4,7 @@
 #include <ui/Core/ElementDocument.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 /*
  *	Here we are testing that properties with the same specificty, but declared at

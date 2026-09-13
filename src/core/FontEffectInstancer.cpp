@@ -1,7 +1,7 @@
 #include <ui/Core/FontEffectInstancer.h>
 #include <ui/Core/PropertyDefinition.h>
 
-namespace Rml {
+namespace ui {
 
 FontEffectInstancer::FontEffectInstancer() : properties(10, 10) {}
 
@@ -26,4 +26,4 @@ ShorthandId FontEffectInstancer::RegisterShorthand(const String& shorthand_name,
 	return properties.RegisterShorthand(shorthand_name, property_names, type);
 }
 
-} // namespace Rml
+} // namespace ui

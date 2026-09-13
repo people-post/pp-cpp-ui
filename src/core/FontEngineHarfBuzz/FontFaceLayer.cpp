@@ -111,7 +111,7 @@ bool FontFaceLayer::Generate(const FontFaceHandleHarfBuzz* handle, const FontFac
 			TextureLayoutRectangle& rectangle = texture_layout.GetRectangle(i);
 			const TextureLayoutTexture& texture = texture_layout.GetTexture(rectangle.GetTextureIndex());
 			uint64_t font_glyph_id = rectangle.GetId();
-			RMLUI_ASSERT(character_boxes.find(font_glyph_id) != character_boxes.end());
+			UI_ASSERT(character_boxes.find(font_glyph_id) != character_boxes.end());
 			TextureBox& box = character_boxes[font_glyph_id];
 
 			// Set the character's texture index.
@@ -166,7 +166,7 @@ bool FontFaceLayer::GenerateTexture(Vector<byte>& texture_data, Vector2i& textur
 	{
 		TextureLayoutRectangle& rectangle = texture_layout.GetRectangle(i);
 		uint64_t font_glyph_id = rectangle.GetId();
-		RMLUI_ASSERT(character_boxes.find(font_glyph_id) != character_boxes.end());
+		UI_ASSERT(character_boxes.find(font_glyph_id) != character_boxes.end());
 
 		TextureBox& box = character_boxes[font_glyph_id];
 
@@ -175,11 +175,11 @@ bool FontFaceLayer::GenerateTexture(Vector<byte>& texture_data, Vector2i& textur
 
 		const FontGlyph* glyph = nullptr;
 		FontGlyphIndex glyph_index = GetFontGlyphIndexFromID(font_glyph_id);
-		Rml::Character glyph_character = GetCharacterCodepointFromID(font_glyph_id);
+		ui::Character glyph_character = GetCharacterCodepointFromID(font_glyph_id);
 		bool is_cluster = IsFontGlyphIDPartOfCluster(font_glyph_id);
 
 		// Get the glyph bitmap by looking it up with the glyph index.
-		RMLUI_ASSERT(glyph_maps.glyphs != nullptr);
+		UI_ASSERT(glyph_maps.glyphs != nullptr);
 		auto it = glyph_maps.glyphs->find(is_cluster ? 0 : glyph_index);
 		if (it == glyph_maps.glyphs->end() || glyph_index == 0 || is_cluster)
 		{
@@ -262,8 +262,8 @@ const FontEffect* FontFaceLayer::GetFontEffect() const
 
 Texture FontFaceLayer::GetTexture(RenderManager& render_manager, int index)
 {
-	RMLUI_ASSERT(index >= 0);
-	RMLUI_ASSERT(index < GetNumTextures());
+	UI_ASSERT(index >= 0);
+	UI_ASSERT(index < GetNumTextures());
 
 	return (*textures_ptr)[index].GetTexture(render_manager);
 }
@@ -334,7 +334,7 @@ void FontFaceLayer::CreateTextureLayout(const FontGlyph& glyph, FontGlyphIndex g
 	box.origin = Vector2f(float(glyph_origin.x + glyph.bearing.x), float(glyph_origin.y - glyph.bearing.y));
 	box.dimensions = Vector2f(glyph_dimensions);
 
-	RMLUI_ASSERT(box.dimensions.x >= 0 && box.dimensions.y >= 0);
+	UI_ASSERT(box.dimensions.x >= 0 && box.dimensions.y >= 0);
 
 	uint64_t font_glyph_id = CreateFontGlyphID(glyph_index, glyph_character, is_cluster);
 	character_boxes[font_glyph_id] = box;

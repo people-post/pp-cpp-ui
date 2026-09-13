@@ -4,7 +4,7 @@
 #include "DataController.h"
 #include "DataView.h"
 
-namespace Rml {
+namespace ui {
 
 static DataAddress ParseAddress(const String& address_str)
 {
@@ -42,7 +42,7 @@ static DataAddress ParseAddress(const String& address_str)
 		// TODO: Abort on invalid characters among [ ] and after the last found bracket?
 	}
 
-	RMLUI_ASSERT(!address.empty() && !address[0].name.empty());
+	UI_ASSERT(!address.empty() && !address[0].name.empty());
 
 	return address;
 }
@@ -100,7 +100,7 @@ DataModel::DataModel(DataTypeRegister* data_type_register) : data_type_register(
 
 DataModel::~DataModel()
 {
-	RMLUI_ASSERT(attached_elements.empty());
+	UI_ASSERT(attached_elements.empty());
 }
 
 void DataModel::AddView(DataViewPtr view)
@@ -320,14 +320,14 @@ bool DataModel::GetVariableInto(const DataAddress& address, Variant& out_value) 
 
 void DataModel::DirtyVariable(const String& variable_name)
 {
-	RMLUI_ASSERTMSG(LegalVariableName(variable_name) == nullptr, "Illegal variable name provided. Only top-level variables can be dirtied.");
-	RMLUI_ASSERTMSG(variables.count(variable_name) == 1, "In DirtyVariable: Variable name not found among added variables.");
+	UI_ASSERTMSG(LegalVariableName(variable_name) == nullptr, "Illegal variable name provided. Only top-level variables can be dirtied.");
+	UI_ASSERTMSG(variables.count(variable_name) == 1, "In DirtyVariable: Variable name not found among added variables.");
 	dirty_variables.emplace(variable_name);
 }
 
 bool DataModel::IsVariableDirty(const String& variable_name) const
 {
-	RMLUI_ASSERTMSG(LegalVariableName(variable_name) == nullptr, "Illegal variable name provided. Only top-level variables can be dirtied.");
+	UI_ASSERTMSG(LegalVariableName(variable_name) == nullptr, "Illegal variable name provided. Only top-level variables can be dirtied.");
 	return dirty_variables.count(variable_name) == 1;
 }
 
@@ -375,4 +375,4 @@ bool DataModel::Update(bool clear_dirty_variables)
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -9,7 +9,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 static const String document_rml = R"(
 <rml>
@@ -45,7 +45,7 @@ TEST_CASE("WidgetTextInput")
 	REQUIRE(document);
 	document->Show();
 
-	auto el = rmlui_dynamic_cast<ElementFormControlTextArea*>(document->GetElementById("textarea"));
+	auto el = ui_dynamic_cast<ElementFormControlTextArea*>(document->GetElementById("textarea"));
 	REQUIRE(el);
 
 	auto IncrementTime = [system_interface = TestsShell::GetTestsSystemInterface(), t = 0.0]() mutable {

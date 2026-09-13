@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <tuple>
 
-namespace Rml {
+namespace ui {
 
 static inline bool IsTextElement(const Element* element)
 {
@@ -67,7 +67,7 @@ StyleSheetNode* StyleSheetNode::GetOrCreateChildNode(CompoundSelector&& other)
 
 void StyleSheetNode::MergeHierarchy(StyleSheetNode* node, int specificity_offset)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Merge the other node's properties into ours.
 	properties.Merge(node->properties, specificity_offset);
@@ -81,7 +81,7 @@ void StyleSheetNode::MergeHierarchy(StyleSheetNode* node, int specificity_offset
 
 UniquePtr<StyleSheetNode> StyleSheetNode::DeepCopy(StyleSheetNode* in_parent) const
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	auto node = MakeUnique<StyleSheetNode>(in_parent, selector);
 
@@ -266,7 +266,7 @@ bool StyleSheetNode::MatchAttributes(const Element* element) const
 
 bool StyleSheetNode::TraverseMatch(const Element* element, const Element* scope) const
 {
-	RMLUI_ASSERT(parent);
+	UI_ASSERT(parent);
 	if (!parent->parent)
 		return true;
 
@@ -389,4 +389,4 @@ void StyleSheetNode::CalculateAndSetSpecificity()
 		specificity += parent->specificity;
 }
 
-} // namespace Rml
+} // namespace ui

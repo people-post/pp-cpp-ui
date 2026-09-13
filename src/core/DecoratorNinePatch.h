@@ -4,7 +4,7 @@
 #include <ui/Core/ID.h>
 #include <ui/Core/Spritesheet.h>
 
-namespace Rml {
+namespace ui {
 
 class DecoratorNinePatch : public Decorator {
 public:
@@ -38,4 +38,4 @@ private:
 	PropertyId edge_ids[4];
 };
 
-} // namespace Rml
+} // namespace ui

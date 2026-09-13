@@ -1,4 +1,4 @@
-The RmlUi samples include fonts that are separately licensed. They are listed
+The pp-cpp-ui samples include fonts that are separately licensed. They are listed
 below along with their licenses.
 
 -----------------------------------------------------------

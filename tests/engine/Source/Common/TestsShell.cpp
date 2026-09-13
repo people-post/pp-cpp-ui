@@ -5,52 +5,52 @@
 #include <ui/Core/Element.h>
 #include <ui/Core/EventListener.h>
 #include <ui/Debugger.h>
-#include <RmlUi_Backend.h>
+#include <Ui_Backend.h>
 #include <Shell.h>
 #include <cstdlib>
 #include <doctest.h>
 
 namespace {
-const Rml::Vector2i window_size(1500, 800);
+const ui::Vector2i window_size(1500, 800);
 
 // Set the following environment variable to render to the shell window with the current backend, instead of the to
 // dummy renderer. Useful for viewing the result while building RML.
 const bool use_backend_shell = [] {
-	if (const char* env_variable = std::getenv("RMLUI_TESTS_USE_SHELL"))
-		return Rml::FromString<bool>(env_variable);
+	if (const char* env_variable = std::getenv("UI_TESTS_USE_SHELL"))
+		return ui::FromString<bool>(env_variable);
 	return false;
 }();
 
 bool shell_initialized = false;
 bool debugger_allowed = true;
 int num_documents_begin = 0;
-Rml::Context* shell_context = nullptr;
+ui::Context* shell_context = nullptr;
 
 TestsSystemInterface tests_system_interface;
 
 // The tests renderer only collects statistics, does not render anything.
-Rml::UniquePtr<TestsRenderInterface> tests_render_interface;
+ui::UniquePtr<TestsRenderInterface> tests_render_interface;
 
-class TestsShellEventListener : public Rml::EventListener {
+class TestsShellEventListener : public ui::EventListener {
 public:
-	void ProcessEvent(Rml::Event& event) override
+	void ProcessEvent(ui::Event& event) override
 	{
-		if (event.GetId() == Rml::EventId::Keydown)
+		if (event.GetId() == ui::EventId::Keydown)
 		{
-			Rml::Input::KeyIdentifier key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
+			ui::Input::KeyIdentifier key_identifier = (ui::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 
 			// Will escape the current render loop
-			if (key_identifier == Rml::Input::KI_ESCAPE || key_identifier == Rml::Input::KI_RETURN || key_identifier == Rml::Input::KI_NUMPADENTER)
+			if (key_identifier == ui::Input::KI_ESCAPE || key_identifier == ui::Input::KI_RETURN || key_identifier == ui::Input::KI_NUMPADENTER)
 				Backend::RequestExit();
 		}
 	}
 
-	void OnDetach(Rml::Element* /*element*/) override { delete this; }
+	void OnDetach(ui::Element* /*element*/) override { delete this; }
 };
 
 } // namespace
 
-static void InitializeShell(bool allow_debugger, Rml::RenderInterface* override_render_interface)
+static void InitializeShell(bool allow_debugger, ui::RenderInterface* override_render_interface)
 {
 	if (shell_initialized)
 		return;
@@ -63,39 +63,39 @@ static void InitializeShell(bool allow_debugger, Rml::RenderInterface* override_
 	if (use_backend_shell)
 	{
 		// Initialize the backend and launch a window.
-		REQUIRE(Backend::Initialize("RmlUi Tests", window_size.x, window_size.y, true));
+		REQUIRE(Backend::Initialize("pp-cpp-ui Tests", window_size.x, window_size.y, true));
 
 		// Use our custom tests system interface.
-		Rml::SetSystemInterface(&tests_system_interface);
+		ui::SetSystemInterface(&tests_system_interface);
 		// However, use the backend's render interface.
-		Rml::SetRenderInterface(Backend::GetRenderInterface());
+		ui::SetRenderInterface(Backend::GetRenderInterface());
 
-		REQUIRE(Rml::Initialise());
-		shell_context = Rml::CreateContext("main", window_size);
+		REQUIRE(ui::Initialise());
+		shell_context = ui::CreateContext("main", window_size);
 		Shell::LoadFonts();
 
 		if (allow_debugger)
 		{
-			Rml::Debugger::Initialise(shell_context);
+			ui::Debugger::Initialise(shell_context);
 			num_documents_begin = shell_context->GetNumDocuments();
 		}
 
-		shell_context->GetRootElement()->AddEventListener(Rml::EventId::Keydown, new TestsShellEventListener, true);
+		shell_context->GetRootElement()->AddEventListener(ui::EventId::Keydown, new TestsShellEventListener, true);
 	}
 
 	else
 	{
 		// Set our custom system and render interfaces.
-		Rml::SetSystemInterface(&tests_system_interface);
-		Rml::SetRenderInterface(override_render_interface ? override_render_interface : TestsShell::GetTestsRenderInterface());
+		ui::SetSystemInterface(&tests_system_interface);
+		ui::SetRenderInterface(override_render_interface ? override_render_interface : TestsShell::GetTestsRenderInterface());
 
-		REQUIRE(Rml::Initialise());
-		shell_context = Rml::CreateContext("main", window_size);
+		REQUIRE(ui::Initialise());
+		shell_context = ui::CreateContext("main", window_size);
 		Shell::LoadFonts();
 	}
 }
 
-Rml::Context* TestsShell::GetContext(bool allow_debugger, Rml::RenderInterface* override_render_interface)
+ui::Context* TestsShell::GetContext(bool allow_debugger, ui::RenderInterface* override_render_interface)
 {
 	InitializeShell(allow_debugger, override_render_interface);
 	return shell_context;
@@ -143,11 +143,11 @@ void TestsShell::ShutdownShell(bool reset_tests_render_interface)
 
 	if (debugger_allowed)
 	{
-		RMLUI_ASSERTMSG(shell_context->GetNumDocuments() == num_documents_begin, "Make sure all previously opened documents have been closed.");
+		UI_ASSERTMSG(shell_context->GetNumDocuments() == num_documents_begin, "Make sure all previously opened documents have been closed.");
 		(void)num_documents_begin;
 	}
 
-	Rml::Shutdown();
+	ui::Shutdown();
 
 	tests_system_interface.Reset();
 
@@ -167,9 +167,9 @@ void TestsShell::SetNumExpectedWarnings(int num_warnings)
 	tests_system_interface.SetNumExpectedWarnings(num_warnings);
 }
 
-Rml::String TestsShell::GetRenderStats()
+ui::String TestsShell::GetRenderStats()
 {
-	Rml::String result;
+	ui::String result;
 
 	if (!use_backend_shell)
 	{
@@ -178,7 +178,7 @@ Rml::String TestsShell::GetRenderStats()
 		shell_context->Render();
 		auto& counters = tests_render_interface->GetCounters();
 
-		result = Rml::CreateString("Context::Render() stats:\n"
+		result = ui::CreateString("Context::Render() stats:\n"
 								   "  Compile geometry: %zu\n"
 								   "  Render geometry: %zu\n"
 								   "  Release geometry: %zu\n"
@@ -204,7 +204,7 @@ TestsRenderInterface* TestsShell::GetTestsRenderInterface()
 		return nullptr;
 
 	if (!tests_render_interface)
-		tests_render_interface = Rml::MakeUnique<TestsRenderInterface>();
+		tests_render_interface = ui::MakeUnique<TestsRenderInterface>();
 
 	return tests_render_interface.get();
 }

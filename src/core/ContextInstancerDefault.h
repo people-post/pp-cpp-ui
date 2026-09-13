@@ -2,7 +2,7 @@
 
 #include <ui/Core/ContextInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     Default instancer for instancing contexts.
@@ -23,4 +23,4 @@ public:
 	void Release() override;
 };
 
-} // namespace Rml
+} // namespace ui

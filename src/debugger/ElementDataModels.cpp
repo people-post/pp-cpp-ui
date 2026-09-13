@@ -10,7 +10,7 @@
 #include "DataModelsSource.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 namespace Debugger {
 
 static void ReadDataVariableRecursive(String& out_rml, const int indent_level, const DataVariable variable)
@@ -150,7 +150,7 @@ void ElementDataModels::ProcessEvent(Event& event)
 
 void ElementDataModels::UpdateContent()
 {
-	RMLUI_ASSERT(debug_context);
+	UI_ASSERT(debug_context);
 	Element* models_content_element = GetElementById("content");
 
 	SmallOrderedMap<String, String> new_model_rml_map;
@@ -198,4 +198,4 @@ void ElementDataModels::UpdateContent()
 }
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

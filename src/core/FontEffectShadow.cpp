@@ -1,7 +1,7 @@
 #include "FontEffectShadow.h"
 #include <ui/Core/PropertyDefinition.h>
 
-namespace Rml {
+namespace ui {
 
 FontEffectShadow::FontEffectShadow() : offset(0, 0)
 {
@@ -59,4 +59,4 @@ SharedPtr<FontEffect> FontEffectShadowInstancer::InstanceFontEffect(const String
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

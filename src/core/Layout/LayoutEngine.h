@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     See the CSS glossary for terms used in the layout engine:
@@ -16,4 +16,4 @@ public:
 	static void FormatElement(Element* element, Vector2f containing_block);
 };
 
-} // namespace Rml
+} // namespace ui

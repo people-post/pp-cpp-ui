@@ -2,7 +2,7 @@
 
 #include "Header.h"
 
-namespace Rml {
+namespace ui {
 
 using byte = unsigned char;
 
@@ -111,13 +111,13 @@ public:
 
 	ColourType red, green, blue, alpha;
 
-#if defined(RMLUI_COLOUR_USER_EXTRA)
-	RMLUI_COLOUR_USER_EXTRA
-#elif defined(RMLUI_COLOUR_USER_INCLUDE)
-	#include RMLUI_COLOUR_USER_INCLUDE
+#if defined(UI_COLOUR_USER_EXTRA)
+	UI_COLOUR_USER_EXTRA
+#elif defined(UI_COLOUR_USER_INCLUDE)
+	#include UI_COLOUR_USER_INCLUDE
 #endif
 };
 
-} // namespace Rml
+} // namespace ui
 
 #include "Colour.inl"

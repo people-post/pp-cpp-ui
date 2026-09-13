@@ -3,7 +3,7 @@
 #include <ui/Core/Texture.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class Geometry;
@@ -46,4 +46,4 @@ namespace SVG {
 	};
 
 } // namespace SVG
-} // namespace Rml
+} // namespace ui

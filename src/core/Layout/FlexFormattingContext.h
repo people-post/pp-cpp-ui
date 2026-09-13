@@ -3,7 +3,7 @@
 #include <ui/Core/Types.h>
 #include "FormattingContext.h"
 
-namespace Rml {
+namespace ui {
 
 class LayoutBox;
 class ContainerBox;
@@ -39,4 +39,4 @@ private:
 	FlexContainer* flex_container_box = nullptr;
 };
 
-} // namespace Rml
+} // namespace ui

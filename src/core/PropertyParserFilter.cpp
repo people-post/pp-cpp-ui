@@ -5,7 +5,7 @@
 #include <ui/Core/PropertySpecification.h>
 #include <ui/Core/StyleSheetTypes.h>
 
-namespace Rml {
+namespace ui {
 
 PropertyParserFilter::PropertyParserFilter() {}
 
@@ -25,7 +25,7 @@ bool PropertyParserFilter::ParseValue(Property& property, const String& filter_s
 		return true;
 	}
 
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Make sure we don't split inside the parenthesis since they may appear in filter shorthands.
 	StringList filter_string_list;
@@ -88,4 +88,4 @@ bool PropertyParserFilter::ParseValue(Property& property, const String& filter_s
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

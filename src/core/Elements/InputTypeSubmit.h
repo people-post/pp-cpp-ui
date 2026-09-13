@@ -3,7 +3,7 @@
 #include <ui/Core/ElementText.h>
 #include "InputType.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     A submit input type handler.
@@ -35,4 +35,4 @@ private:
 	ElementText* value_element = nullptr;
 };
 
-} // namespace Rml
+} // namespace ui

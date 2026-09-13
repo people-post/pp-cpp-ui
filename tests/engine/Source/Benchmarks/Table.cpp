@@ -7,7 +7,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 static const String rml_table_document = R"(
 <rml>

@@ -9,7 +9,7 @@
 #include <ui/Core/Traits.h>
 #include "FontTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class FontFaceLayer;
 
@@ -124,4 +124,4 @@ private:
 	FontFaceHandleFreetype ft_face;
 };
 
-} // namespace Rml
+} // namespace ui

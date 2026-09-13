@@ -3,7 +3,7 @@
 #include <ui/Core/SelectionTypes.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class ElementText;
@@ -33,4 +33,4 @@ private:
 	Vector<TextSegment> segments;
 };
 
-} // namespace Rml
+} // namespace ui

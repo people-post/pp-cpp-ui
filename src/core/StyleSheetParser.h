@@ -3,7 +3,7 @@
 #include <ui/Core/StyleSheetTypes.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class PropertyDictionary;
 class Stream;
@@ -99,4 +99,4 @@ private:
 	int line_number;
 };
 
-} // namespace Rml
+} // namespace ui

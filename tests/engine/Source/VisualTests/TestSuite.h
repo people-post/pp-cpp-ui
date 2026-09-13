@@ -7,17 +7,17 @@ class TestSuite {
 public:
 	enum class Direction { None, Forward, Backward, Any };
 
-	TestSuite(Rml::String directory, Rml::StringList files) : directory(std::move(directory)), files(std::move(files))
+	TestSuite(ui::String directory, ui::StringList files) : directory(std::move(directory)), files(std::move(files))
 	{
-		RMLUI_ASSERTMSG(!this->files.empty(), "At least one file in the test suite is required.");
+		UI_ASSERTMSG(!this->files.empty(), "At least one file in the test suite is required.");
 	}
 
-	const Rml::String& GetDirectory() const { return directory; }
-	const Rml::String& GetFilename() const { return files[index]; }
-	Rml::String GetPath() const { return directory + '/' + files[index]; }
+	const ui::String& GetDirectory() const { return directory; }
+	const ui::String& GetFilename() const { return files[index]; }
+	ui::String GetPath() const { return directory + '/' + files[index]; }
 
-	const Rml::String& GetFilter() const { return filter; }
-	void SetFilter(Rml::String new_filter)
+	const ui::String& GetFilter() const { return filter; }
+	void SetFilter(ui::String new_filter)
 	{
 		filter = new_filter;
 		UpdateFilteredTests();
@@ -83,8 +83,8 @@ private:
 
 	bool MatchesFilter(int id) const
 	{
-		RMLUI_ASSERT(id >= 0 && id < (int)files.size());
-		return (files[id].find(filter) != Rml::String::npos);
+		UI_ASSERT(id >= 0 && id < (int)files.size());
+		return (files[id].find(filter) != ui::String::npos);
 	}
 
 	void UpdateFilteredTests()
@@ -97,14 +97,14 @@ private:
 		}
 	}
 
-	Rml::String directory;
-	Rml::StringList files;
+	ui::String directory;
+	ui::StringList files;
 
 	int index = 0;
 
-	Rml::String filter;
+	ui::String filter;
 
-	Rml::Vector<int> filtered_tests_indices;
+	ui::Vector<int> filtered_tests_indices;
 };
 
-using TestSuiteList = Rml::Vector<TestSuite>;
+using TestSuiteList = ui::Vector<TestSuite>;

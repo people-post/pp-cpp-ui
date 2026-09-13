@@ -3,7 +3,7 @@
 #include <ui/Core/PropertyIdSet.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 // An iterator for local properties defined on an element.
 // Note: Modifying the underlying style invalidates the iterator.
@@ -75,4 +75,4 @@ private:
 	}
 };
 
-} // namespace Rml
+} // namespace ui

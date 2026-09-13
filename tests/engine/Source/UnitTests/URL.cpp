@@ -6,15 +6,15 @@
 #include <algorithm>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
-class BasicSystemInterface : public Rml::SystemInterface {
+class BasicSystemInterface : public ui::SystemInterface {
 public:
 	double GetElapsedTime() override { return 0.0; }
 	bool LogMessage(Log::Type type, const String& message) override
 	{
 		CHECK(type > Log::LT_WARNING);
-		return Rml::SystemInterface::LogMessage(type == Log::LT_ASSERT ? Log::LT_ERROR : type, message);
+		return ui::SystemInterface::LogMessage(type == Log::LT_ASSERT ? Log::LT_ERROR : type, message);
 	}
 };
 
@@ -36,8 +36,8 @@ static inline String JoinPath(const char* document_path, const char* path)
 
 TEST_CASE("url.normalize")
 {
-	SystemInterface* old_system_interface = Rml::GetSystemInterface();
-	Rml::SetSystemInterface(&basic_system_interface);
+	SystemInterface* old_system_interface = ui::GetSystemInterface();
+	ui::SetSystemInterface(&basic_system_interface);
 
 	CHECK(Normalize("blue") == "blue");
 	CHECK(Normalize("blue.png") == "blue.png");
@@ -108,13 +108,13 @@ TEST_CASE("url.normalize")
 	// CHECK(Normalize(R"(C:\data.\blue.png)") == "C:/data./blue.png");
 	// CHECK(Normalize(R"(C:\data\..\blue.png)") == "C:/blue.png");
 
-	Rml::SetSystemInterface(old_system_interface);
+	ui::SetSystemInterface(old_system_interface);
 }
 
 TEST_CASE("url.join")
 {
-	SystemInterface* old_system_interface = Rml::GetSystemInterface();
-	Rml::SetSystemInterface(&basic_system_interface);
+	SystemInterface* old_system_interface = ui::GetSystemInterface();
+	ui::SetSystemInterface(&basic_system_interface);
 
 	CHECK(JoinPath("data/gui/d.rml", "blue.png") == "data/gui/blue.png");
 	CHECK(JoinPath("data/gui/d.rml", "../../data/images/icons/blue.png") == "data/images/icons/blue.png");
@@ -194,5 +194,5 @@ TEST_CASE("url.join")
 	// CHECK(JoinPath(R"(C:\data\d.rml)", R"(/..\blue.png)") == R"(/../blue.png)");
 	// CHECK(JoinPath(R"(C:\data\d.rml)", R"(/../../blue.png)") == R"(/../../blue.png)");
 
-	Rml::SetSystemInterface(old_system_interface);
+	ui::SetSystemInterface(old_system_interface);
 }

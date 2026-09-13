@@ -1,7 +1,7 @@
 #include <ui/Core/CompiledFilterShader.h>
 #include "RenderManagerAccess.h"
 
-namespace Rml {
+namespace ui {
 
 void CompiledFilter::AddHandleTo(FilterHandleList& list)
 {
@@ -29,4 +29,4 @@ void CompiledShader::Release()
 	}
 }
 
-} // namespace Rml
+} // namespace ui

@@ -16,7 +16,7 @@
 #include "PropertyParserTransform.h"
 #include "PropertyShorthandDefinition.h"
 
-namespace Rml {
+namespace ui {
 
 static StyleSheetSpecification* instance = nullptr;
 
@@ -46,7 +46,7 @@ StyleSheetSpecification::StyleSheetSpecification() :
 	// Reserve space for all defined ids and some more for custom properties
 	properties((size_t)PropertyId::MaxNumIds, 2 * (size_t)ShorthandId::NumDefinedIds)
 {
-	RMLUI_ASSERT(instance == nullptr);
+	UI_ASSERT(instance == nullptr);
 	instance = this;
 
 	default_parsers.reset(new DefaultStyleSheetParsers);
@@ -54,7 +54,7 @@ StyleSheetSpecification::StyleSheetSpecification() :
 
 StyleSheetSpecification::~StyleSheetSpecification()
 {
-	RMLUI_ASSERT(instance == this);
+	UI_ASSERT(instance == this);
 	instance = nullptr;
 }
 
@@ -71,7 +71,7 @@ ShorthandId StyleSheetSpecification::RegisterShorthand(ShorthandId id, const Str
 
 void StyleSheetSpecification::Initialise()
 {
-	RMLUI_ASSERT(!instance);
+	UI_ASSERT(!instance);
 
 	PropertyParserAnimation::Initialize();
 	PropertyParserColour::Initialize();
@@ -86,7 +86,7 @@ void StyleSheetSpecification::Initialise()
 
 void StyleSheetSpecification::Shutdown()
 {
-	RMLUI_ASSERT(instance);
+	UI_ASSERT(instance);
 
 	delete instance;
 
@@ -121,7 +121,7 @@ PropertyParser* StyleSheetSpecification::GetParser(const String& parser_name)
 PropertyDefinition& StyleSheetSpecification::RegisterProperty(const String& property_name, const String& default_value, bool inherited,
 	bool forces_layout)
 {
-	RMLUI_ASSERTMSG((size_t)instance->properties.property_map->GetId(property_name) < (size_t)PropertyId::FirstCustomId,
+	UI_ASSERTMSG((size_t)instance->properties.property_map->GetId(property_name) < (size_t)PropertyId::FirstCustomId,
 		"Custom property name matches an internal property, please make a unique name for the given property.");
 	return instance->RegisterProperty(PropertyId::Invalid, property_name, default_value, inherited, forces_layout);
 }
@@ -153,9 +153,9 @@ const PropertyIdSet& StyleSheetSpecification::GetRegisteredPropertiesForcingLayo
 
 ShorthandId StyleSheetSpecification::RegisterShorthand(const String& shorthand_name, const String& property_names, ShorthandType type)
 {
-	RMLUI_ASSERTMSG(instance->properties.property_map->GetId(shorthand_name) == PropertyId::Invalid,
+	UI_ASSERTMSG(instance->properties.property_map->GetId(shorthand_name) == PropertyId::Invalid,
 		"Custom shorthand name matches a property name, please make a unique name.");
-	RMLUI_ASSERTMSG((size_t)instance->properties.shorthand_map->GetId(shorthand_name) < (size_t)ShorthandId::FirstCustomId,
+	UI_ASSERTMSG((size_t)instance->properties.shorthand_map->GetId(shorthand_name) < (size_t)ShorthandId::FirstCustomId,
 		"Custom shorthand name matches an internal shorthand, please make a unique name for the given shorthand property.");
 	return instance->properties.RegisterShorthand(shorthand_name, property_names, type);
 }
@@ -430,12 +430,12 @@ void StyleSheetSpecification::RegisterDefaultProperties()
 	RegisterShorthand(ShorthandId::FlexFlow, "flex-flow", "flex-direction, flex-wrap", ShorthandType::FallThrough);
 
 	// Internationalization properties (internal)
-	RegisterProperty(PropertyId::RmlUi_Language, "--rmlui-language", "", true, true).AddParser("string");
-	RegisterProperty(PropertyId::RmlUi_Direction, "--rmlui-direction", "auto", true, true).AddParser("keyword", "auto, ltr, rtl");
+	RegisterProperty(PropertyId::Ui_Language, "--ui-language", "", true, true).AddParser("string");
+	RegisterProperty(PropertyId::Ui_Direction, "--ui-direction", "auto", true, true).AddParser("keyword", "auto, ltr, rtl");
 
-	RMLUI_ASSERTMSG(instance->properties.shorthand_map->AssertAllInserted(ShorthandId::NumDefinedIds), "Missing specification for one or more Shorthand IDs.");
-	RMLUI_ASSERTMSG(instance->properties.property_map->AssertAllInserted(PropertyId::NumDefinedIds), "Missing specification for one or more Property IDs.");
+	UI_ASSERTMSG(instance->properties.shorthand_map->AssertAllInserted(ShorthandId::NumDefinedIds), "Missing specification for one or more Shorthand IDs.");
+	UI_ASSERTMSG(instance->properties.property_map->AssertAllInserted(PropertyId::NumDefinedIds), "Missing specification for one or more Property IDs.");
 	// clang-format on
 }
 
-} // namespace Rml
+} // namespace ui

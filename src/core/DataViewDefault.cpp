@@ -10,7 +10,7 @@
 #include "DataModel.h"
 #include "XMLParseTools.h"
 
-namespace Rml {
+namespace ui {
 
 // Some data views need to offset the update order for proper behavior.
 //  'data-value' may need other attributes applied first, e.g. min/max attributes.
@@ -37,7 +37,7 @@ bool DataViewCommon::Initialize(DataModel& model, Element* element, const String
 
 StringList DataViewCommon::GetVariableNameList() const
 {
-	RMLUI_ASSERT(expression);
+	UI_ASSERT(expression);
 	return expression->GetVariableNameList();
 }
 
@@ -48,7 +48,7 @@ const String& DataViewCommon::GetModifier() const
 
 DataExpression& DataViewCommon::GetExpression()
 {
-	RMLUI_ASSERT(expression);
+	UI_ASSERT(expression);
 	return *expression;
 }
 
@@ -283,7 +283,7 @@ DataViewText::DataViewText(Element* element) : DataView(element, 0) {}
 
 bool DataViewText::Initialize(DataModel& model, Element* element, const String& /*expression*/, const String& /*modifier*/)
 {
-	ElementText* element_text = rmlui_dynamic_cast<ElementText*>(element);
+	ElementText* element_text = ui_dynamic_cast<ElementText*>(element);
 	if (!element_text)
 		return false;
 
@@ -357,7 +357,7 @@ bool DataViewText::Update(DataModel& model)
 
 		for (DataEntry& entry : data_entries)
 		{
-			RMLUI_ASSERT(entry.data_expression);
+			UI_ASSERT(entry.data_expression);
 			Variant variant;
 			bool result = entry.data_expression->Run(expression_interface, variant);
 			const String value = variant.Get<String>();
@@ -378,7 +378,7 @@ bool DataViewText::Update(DataModel& model)
 			if (SystemInterface* system_interface = GetSystemInterface())
 				system_interface->TranslateString(text, new_text);
 
-			rmlui_static_cast<ElementText*>(element)->SetText(text);
+			ui_static_cast<ElementText*>(element)->SetText(text);
 		}
 		else
 		{
@@ -396,7 +396,7 @@ StringList DataViewText::GetVariableNameList() const
 
 	for (const DataEntry& entry : data_entries)
 	{
-		RMLUI_ASSERT(entry.data_expression);
+		UI_ASSERT(entry.data_expression);
 
 		StringList entry_list = entry.data_expression->GetVariableNameList();
 		full_list.insert(full_list.end(), MakeMoveIterator(entry_list.begin()), MakeMoveIterator(entry_list.end()));
@@ -535,7 +535,7 @@ bool DataViewFor::Update(DataModel& model)
 
 			elements[i]->SetInnerRML(GetTemplateInnerRml());
 
-			RMLUI_ASSERT(i < (int)elements.size());
+			UI_ASSERT(i < (int)elements.size());
 		}
 		if (i >= size)
 		{
@@ -553,7 +553,7 @@ bool DataViewFor::Update(DataModel& model)
 
 StringList DataViewFor::GetVariableNameList() const
 {
-	RMLUI_ASSERT(!container_address.empty());
+	UI_ASSERT(!container_address.empty());
 	return StringList{container_address.front().name};
 }
 
@@ -613,4 +613,4 @@ void DataViewAlias::Release()
 	delete this;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -8,14 +8,14 @@
 #include "LayoutDetails.h"
 #include "LineBox.h"
 
-namespace Rml {
+namespace ui {
 
 BlockContainer::BlockContainer(ContainerBox* _parent_container, FloatedBoxSpace* _space, Element* _element, const Box& _box, float _min_height,
 	float _max_height) :
 	ContainerBox(Type::BlockContainer, _element, _parent_container), box(_box), min_height(_min_height), max_height(_max_height), space(_space)
 {
-	RMLUI_ASSERT(element);
-	RMLUI_ASSERT(box.GetSize().x >= 0.f);
+	UI_ASSERT(element);
+	UI_ASSERT(box.GetSize().x >= 0.f);
 
 	if (!space)
 	{
@@ -56,7 +56,7 @@ bool BlockContainer::Close(BlockContainer* parent_block_container)
 	// If we are the root of our block formatting context, this will be null. Otherwise increment our parent's cursor to account for this box.
 	if (parent_block_container)
 	{
-		RMLUI_ASSERTMSG(GetParent() == parent_block_container, "Mismatched parent box.");
+		UI_ASSERTMSG(GetParent() == parent_block_container, "Mismatched parent box.");
 
 		// If this close fails, it means this block box has caused our parent box to generate an automatic vertical scrollbar.
 		if (!parent_block_container->EncloseChildBox(this, position, box.GetSizeAcross(BoxDirection::Vertical, BoxArea::Border),
@@ -140,7 +140,7 @@ BlockContainer* BlockContainer::OpenBlockBox(Element* child_element, const Box& 
 
 LayoutBox* BlockContainer::AddBlockLevelBox(UniquePtr<LayoutBox> block_level_box_ptr, Element* child_element, const Box& child_box)
 {
-	RMLUI_ASSERT(child_box.GetSize().y >= 0.f); // Assumes child element already formatted and sized.
+	UI_ASSERT(child_box.GetSize().y >= 0.f); // Assumes child element already formatted and sized.
 
 	if (!CloseOpenInlineContainer())
 		return nullptr;
@@ -169,7 +169,7 @@ LayoutBox* BlockContainer::AddBlockLevelBox(UniquePtr<LayoutBox> block_level_box
 
 InlineBoxHandle BlockContainer::AddInlineElement(Element* element, const Box& child_box)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Inline-level elements need to be added to an inline container, open one if needed.
 	InlineContainer* inline_container = EnsureOpenInlineContainer();
@@ -412,7 +412,7 @@ const Box& BlockContainer::GetBox() const
 
 void BlockContainer::ResetContents()
 {
-	RMLUI_ZoneScopedC(0xDD3322);
+	UI_ZoneScopedC(0xDD3322);
 
 	if (root_space)
 		root_space->Reset();
@@ -444,7 +444,7 @@ InlineContainer* BlockContainer::GetOpenInlineContainer()
 const InlineContainer* BlockContainer::GetOpenInlineContainer() const
 {
 	if (!child_boxes.empty() && child_boxes.back()->GetType() == Type::InlineContainer)
-		return rmlui_static_cast<InlineContainer*>(child_boxes.back().get());
+		return ui_static_cast<InlineContainer*>(child_boxes.back().get());
 	return nullptr;
 }
 
@@ -502,7 +502,7 @@ void BlockContainer::EnsureEmptyInterruptedLineBox()
 {
 	if (interrupted_line_box)
 	{
-		RMLUI_ERROR; // Internal error: Interrupted line box leaked.
+		UI_ERROR; // Internal error: Interrupted line box leaked.
 		interrupted_line_box.reset();
 	}
 }
@@ -544,4 +544,4 @@ bool BlockContainer::GetBaselineOfLastLine(float& out_baseline) const
 	return false;
 }
 
-} // namespace Rml
+} // namespace ui

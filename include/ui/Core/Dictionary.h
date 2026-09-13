@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "Variant.h"
 
-namespace Rml {
+namespace ui {
 
 inline Variant* GetIf(Dictionary& dictionary, const String& key)
 {
@@ -29,4 +29,4 @@ inline T Get(const Dictionary& dictionary, const String& key, const T& default_v
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

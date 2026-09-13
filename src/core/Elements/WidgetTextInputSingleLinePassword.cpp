@@ -1,7 +1,7 @@
 #include "WidgetTextInputSingleLinePassword.h"
 #include <ui/Core/ElementText.h>
 
-namespace Rml {
+namespace ui {
 
 WidgetTextInputSingleLinePassword::WidgetTextInputSingleLinePassword(ElementFormControl* parent) : WidgetTextInputSingleLine(parent) {}
 
@@ -23,4 +23,4 @@ int WidgetTextInputSingleLinePassword::AttributeIndexToDisplayIndex(int attribut
 	return (int)StringUtilities::LengthUTF8(StringView(attribute_value, 0, (size_t)attribute_index));
 }
 
-} // namespace Rml
+} // namespace ui

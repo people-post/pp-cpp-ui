@@ -8,7 +8,7 @@
 #include <nanobench.h>
 
 using namespace ankerl;
-using namespace Rml;
+using namespace ui;
 
 static const String rml_flexbox_basic_document = R"(
 <rml>
@@ -532,13 +532,13 @@ TEST_CASE("flexbox.chat")
 		chat->SetInnerRML(short_words);
 		context->Update();
 		context->Render();
-		RMLUI_FrameMark;
+		UI_FrameMark;
 	});
 	bench.run("Long words", [&] {
 		chat->SetInnerRML(long_words);
 		context->Update();
 		context->Render();
-		RMLUI_FrameMark;
+		UI_FrameMark;
 	});
 
 	document->Close();

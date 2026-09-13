@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <type_traits>
 
-namespace Rml {
+namespace ui {
 
 /**
     A vector-like container that returns stable indices to refer to entries.
@@ -50,19 +50,19 @@ public:
 	}
 	T erase(StableVectorIndex index)
 	{
-		RMLUI_ASSERT(size_t(index) < elements.size() && std::find(free_slots.begin(), free_slots.end(), uint32_t(index)) == free_slots.end());
+		UI_ASSERT(size_t(index) < elements.size() && std::find(free_slots.begin(), free_slots.end(), uint32_t(index)) == free_slots.end());
 		free_slots.push_back(uint32_t(index));
 		return std::exchange(elements[size_t(index)], T());
 	}
 
 	T& operator[](StableVectorIndex index)
 	{
-		RMLUI_ASSERT(size_t(index) < elements.size() && std::find(free_slots.begin(), free_slots.end(), uint32_t(index)) == free_slots.end());
+		UI_ASSERT(size_t(index) < elements.size() && std::find(free_slots.begin(), free_slots.end(), uint32_t(index)) == free_slots.end());
 		return elements[size_t(index)];
 	}
 	const T& operator[](StableVectorIndex index) const
 	{
-		RMLUI_ASSERT(size_t(index) < elements.size() && std::find(free_slots.begin(), free_slots.end(), uint32_t(index)) == free_slots.end());
+		UI_ASSERT(size_t(index) < elements.size() && std::find(free_slots.begin(), free_slots.end(), uint32_t(index)) == free_slots.end());
 		return elements[size_t(index)];
 	}
 
@@ -92,4 +92,4 @@ private:
 	Vector<uint32_t> free_slots;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 using LineNumberList = Vector<int>;
 
@@ -45,4 +45,4 @@ public:
 	void MergeResources(ResourceList& target, const ResourceList& source);
 };
 
-} // namespace Rml
+} // namespace ui

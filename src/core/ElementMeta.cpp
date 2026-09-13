@@ -1,6 +1,6 @@
 #include "ElementMeta.h"
 
-namespace Rml {
+namespace ui {
 
 ControlledLifetimeResource<ElementMetaPool> ElementMetaPool::element_meta_pool;
 
@@ -20,11 +20,11 @@ void ElementMetaPool::Shutdown()
 	{
 		Log::Message(Log::LT_ERROR,
 			"Element meta pool not empty on shutdown, %d object(s) leaked. This will likely lead to a crash when element is destroyed. Ensure that "
-			"no Rml::Element objects are kept alive in user space at the end of Rml::Shutdown.",
+			"no ui::Element objects are kept alive in user space at the end of ui::Shutdown.",
 			num_objects);
-		RMLUI_ERROR;
+		UI_ERROR;
 		element_meta_pool.Leak();
 	}
 }
 
-} // namespace Rml
+} // namespace ui

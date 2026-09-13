@@ -4,7 +4,7 @@
 #include <ui/Core/Elements/ElementForm.h>
 #include <ui/Core/Elements/ElementFormControlInput.h>
 
-namespace Rml {
+namespace ui {
 
 InputTypeRadio::InputTypeRadio(ElementFormControlInput* element) : InputType(element)
 {
@@ -73,7 +73,7 @@ void InputTypeRadio::PopRadioSet()
 	// Uncheck all other radio buttons with our name in the form.
 	String stop_tag;
 	Element* parent = element->GetParentNode();
-	while (parent != nullptr && rmlui_dynamic_cast<ElementForm*>(parent) == nullptr)
+	while (parent != nullptr && ui_dynamic_cast<ElementForm*>(parent) == nullptr)
 		parent = parent->GetParentNode();
 
 	// If no containing form was found, use the containing document as the parent
@@ -90,7 +90,7 @@ void InputTypeRadio::PopRadioSet()
 
 		for (size_t i = 0; i < form_controls.size(); ++i)
 		{
-			ElementFormControlInput* radio_control = rmlui_dynamic_cast<ElementFormControlInput*>(form_controls[i]);
+			ElementFormControlInput* radio_control = ui_dynamic_cast<ElementFormControlInput*>(form_controls[i]);
 			if (radio_control != nullptr && element != radio_control && radio_control->GetAttribute<String>("type", "text") == "radio" &&
 				radio_control->GetName() == element->GetName())
 			{
@@ -100,4 +100,4 @@ void InputTypeRadio::PopRadioSet()
 	}
 }
 
-} // namespace Rml
+} // namespace ui

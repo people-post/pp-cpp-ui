@@ -3,7 +3,7 @@
 #include <ui/Core/Box.h>
 #include "InlineLevelBox.h"
 
-namespace Rml {
+namespace ui {
 
 class InlineBoxBase : public InlineLevelBox {
 public:
@@ -66,4 +66,4 @@ public:
 	String DebugDumpNameValue() const override { return "InlineBoxRoot"; }
 };
 
-} // namespace Rml
+} // namespace ui

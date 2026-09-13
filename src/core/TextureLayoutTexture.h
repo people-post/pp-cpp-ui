@@ -3,7 +3,7 @@
 #include <ui/Core/Texture.h>
 #include "TextureLayoutRow.h"
 
-namespace Rml {
+namespace ui {
 
 class TextureLayout;
 
@@ -40,4 +40,4 @@ private:
 	RowList rows;
 };
 
-} // namespace Rml
+} // namespace ui

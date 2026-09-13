@@ -2,7 +2,7 @@
 #include <ui/Core/ID.h>
 #include "ControlledLifetimeResource.h"
 
-namespace Rml {
+namespace ui {
 
 struct EventSpecificationData {
 	// An EventId is an index into the specifications vector, must be listed in the same order as the EventId values.
@@ -64,14 +64,14 @@ namespace EventSpecificationInterface {
 		for (auto& specification : specifications)
 			type_lookup.emplace(specification.type, specification.id);
 
-#ifdef RMLUI_DEBUG
+#ifdef UI_DEBUG
 		// Verify that all event ids are specified
-		RMLUI_ASSERT((int)specifications.size() == (int)EventId::NumDefinedIds);
+		UI_ASSERT((int)specifications.size() == (int)EventId::NumDefinedIds);
 
 		for (int i = 0; i < (int)specifications.size(); i++)
 		{
 			// Verify correct order
-			RMLUI_ASSERT(i == (int)specifications[i].id);
+			UI_ASSERT(i == (int)specifications[i].id);
 		}
 #endif
 	}
@@ -106,7 +106,7 @@ namespace EventSpecificationInterface {
 		if (new_id_num >= size_t(EventId::MaxNumIds))
 		{
 			Log::Message(Log::LT_ERROR, "Error while registering event type '%s': Maximum number of allowed events exceeded.", event_type.c_str());
-			RMLUI_ERROR;
+			UI_ERROR;
 			return specifications.front();
 		}
 
@@ -163,4 +163,4 @@ namespace EventSpecificationInterface {
 	}
 
 } // namespace EventSpecificationInterface
-} // namespace Rml
+} // namespace ui

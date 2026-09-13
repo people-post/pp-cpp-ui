@@ -1,4 +1,4 @@
-namespace Rml {
+namespace ui {
 
 template <typename Type>
 Vector2<Type>::Vector2() : x{}, y{}
@@ -203,4 +203,4 @@ inline Vector2<Type> operator*(Type lhs, Vector2<Type> rhs)
 	return rhs * lhs;
 }
 
-} // namespace Rml
+} // namespace ui

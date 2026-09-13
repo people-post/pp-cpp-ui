@@ -3,13 +3,13 @@
 #include "StreamFile.h"
 #include "Template.h"
 
-namespace Rml {
+namespace ui {
 
 static TemplateCache* instance = nullptr;
 
 TemplateCache::TemplateCache()
 {
-	RMLUI_ASSERT(instance == nullptr);
+	UI_ASSERT(instance == nullptr);
 	instance = this;
 }
 
@@ -93,4 +93,4 @@ void TemplateCache::Clear()
 	instance->template_ids.clear();
 }
 
-} // namespace Rml
+} // namespace ui

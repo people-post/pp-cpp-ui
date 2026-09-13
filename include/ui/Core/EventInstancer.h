@@ -4,7 +4,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class Event;
@@ -13,7 +13,7 @@ class Event;
     Abstract instancer interface for instancing events. This is required to be overridden for scripting systems.
  */
 
-class RMLUICORE_API EventInstancer : public Releasable {
+class UI_CORE_API EventInstancer : public Releasable {
 public:
 	virtual ~EventInstancer();
 
@@ -30,4 +30,4 @@ public:
 	virtual void ReleaseEvent(Event* event) = 0;
 };
 
-} // namespace Rml
+} // namespace ui

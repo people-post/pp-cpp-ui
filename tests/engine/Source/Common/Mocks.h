@@ -6,19 +6,19 @@
 #include <doctest.h>
 #include <doctest/trompeloeil.hpp>
 
-class MockEventListener : public trompeloeil::mock_interface<Rml::EventListener> {
+class MockEventListener : public trompeloeil::mock_interface<ui::EventListener> {
 public:
 	IMPLEMENT_MOCK1(OnAttach);
 	IMPLEMENT_MOCK1(OnDetach);
 	IMPLEMENT_MOCK1(ProcessEvent);
 };
 
-class MockEventListenerInstancer : public trompeloeil::mock_interface<Rml::EventListenerInstancer> {
+class MockEventListenerInstancer : public trompeloeil::mock_interface<ui::EventListenerInstancer> {
 public:
 	IMPLEMENT_MOCK2(InstanceEventListener);
 };
 
-class MockRenderInterface : public trompeloeil::mock_interface<Rml::RenderInterface> {
+class MockRenderInterface : public trompeloeil::mock_interface<ui::RenderInterface> {
 public:
 	IMPLEMENT_MOCK2(CompileGeometry);
 	IMPLEMENT_MOCK3(RenderGeometry);

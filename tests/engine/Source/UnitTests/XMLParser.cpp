@@ -7,7 +7,7 @@
 #include <ui/Core/Factory.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String document_xml_tags_in_css = R"(
 <rml>
@@ -59,7 +59,7 @@ TEST_CASE("XMLParser")
 	Context* context = TestsShell::GetContext();
 	REQUIRE(context);
 
-	// Style nodes should accept XML reserved characters, see https://github.com/mikke89/RmlUi/issues/341
+	// Style nodes should accept XML reserved characters, see https://github.com/mikke89/pp-cpp-ui/issues/341
 
 	ElementDocument* document = context->LoadDocumentFromMemory(document_xml_tags_in_css);
 	REQUIRE(document);

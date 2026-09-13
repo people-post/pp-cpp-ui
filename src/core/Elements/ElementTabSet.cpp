@@ -2,7 +2,7 @@
 #include <ui/Core/Factory.h>
 #include <ui/Core/Math.h>
 
-namespace Rml {
+namespace ui {
 
 ElementTabSet::ElementTabSet(const String& tag) : Element(tag)
 {
@@ -182,4 +182,4 @@ Element* ElementTabSet::GetChildByTag(const String& tag)
 	return result;
 }
 
-} // namespace Rml
+} // namespace ui

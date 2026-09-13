@@ -2,7 +2,7 @@
 #include <ui/Core/Element.h>
 #include <ui/Core/EventInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 Event::Event() {}
 
@@ -112,7 +112,7 @@ void Event::Release()
 	if (instancer)
 		instancer->ReleaseEvent(this);
 	else
-		Log::Message(Log::LT_WARNING, "Leak detected: Event %s not instanced via RmlUi Factory. Unable to release.", type.c_str());
+		Log::Message(Log::LT_WARNING, "Leak detected: Event %s not instanced via pp-cpp-ui Factory. Unable to release.", type.c_str());
 }
 
 EventId Event::GetId() const
@@ -137,7 +137,7 @@ void Event::ProjectMouse(Element* element)
 		Variant* mouse_y = GetIf(parameters, "mouse_y");
 		if (!mouse_x || !mouse_y)
 		{
-			RMLUI_ERROR;
+			UI_ERROR;
 			return;
 		}
 
@@ -154,4 +154,4 @@ void Event::ProjectMouse(Element* element)
 	}
 }
 
-} // namespace Rml
+} // namespace ui

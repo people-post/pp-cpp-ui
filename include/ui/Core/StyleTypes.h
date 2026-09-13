@@ -2,7 +2,7 @@
 
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 namespace Style {
 
 	struct LengthPercentageAuto {
@@ -44,7 +44,7 @@ namespace Style {
 		TableColumnGroup,
 		TableCell
 	};
-	// Fork: Sticky (pp-browser) — in-flow, scrollport-clamped offset. See RMLUI_UPSTREAM.md.
+	// Fork: Sticky (pp-browser) — in-flow, scrollport-clamped offset. See UI_UPSTREAM.md.
 	enum class Position : uint8_t { Static, Relative, Absolute, Fixed, Sticky };
 
 	using Top = LengthPercentageAuto;
@@ -143,4 +143,4 @@ namespace Style {
 
 using ComputedValues = Style::ComputedValues;
 
-} // namespace Rml
+} // namespace ui

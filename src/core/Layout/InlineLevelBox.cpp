@@ -8,7 +8,7 @@
 #include "LayoutDetails.h"
 #include "LayoutPools.h"
 
-namespace Rml {
+namespace ui {
 
 void* InlineLevelBox::operator new(size_t size)
 {
@@ -47,7 +47,7 @@ const FontMetrics& InlineLevelBox::GetFontMetrics() const
 
 void InlineLevelBox::SetHeightAndVerticalAlignment(float _height_above_baseline, float _depth_below_baseline, const InlineLevelBox* parent)
 {
-	RMLUI_ASSERT(parent);
+	UI_ASSERT(parent);
 	using Style::VerticalAlign;
 
 	SetHeight(_height_above_baseline, _depth_below_baseline);
@@ -107,8 +107,8 @@ String InlineLevelBox::DebugDumpTree(int depth) const
 
 InlineLevelBox_Atomic::InlineLevelBox_Atomic(const InlineLevelBox* parent, Element* element, const Box& box) : InlineLevelBox(element), box(box)
 {
-	RMLUI_ASSERT(parent && element);
-	RMLUI_ASSERT(box.GetSize().x >= 0.f && box.GetSize().y >= 0.f);
+	UI_ASSERT(parent && element);
+	UI_ASSERT(box.GetSize().x >= 0.f && box.GetSize().y >= 0.f);
 
 	const float outer_height = box.GetSizeAcross(BoxDirection::Vertical, BoxArea::Margin);
 
@@ -182,7 +182,7 @@ FragmentConstructor InlineLevelBox_Text::CreateFragment(InlineLayoutMode mode, f
 
 void InlineLevelBox_Text::Submit(const PlacedFragment& placed_fragment)
 {
-	RMLUI_ASSERT((size_t)placed_fragment.handle < fragments.size());
+	UI_ASSERT((size_t)placed_fragment.handle < fragments.size());
 
 	const int fragment_index = (int)placed_fragment.handle;
 	const bool principal_box = (fragment_index == 0);
@@ -211,6 +211,6 @@ String InlineLevelBox_Text::DebugDumpNameValue() const
 
 ElementText* InlineLevelBox_Text::GetTextElement()
 {
-	return rmlui_static_cast<ElementText*>(GetElement());
+	return ui_static_cast<ElementText*>(GetElement());
 }
-} // namespace Rml
+} // namespace ui

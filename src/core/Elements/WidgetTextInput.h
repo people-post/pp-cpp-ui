@@ -6,7 +6,7 @@
 #include "ElementTextSelection.h"
 #include <float.h>
 
-namespace Rml {
+namespace ui {
 
 class ElementText;
 class ElementFormControl;
@@ -310,4 +310,4 @@ private:
 	Geometry cursor_geometry;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -5,7 +5,7 @@
 #include <ui/Core/SystemInterface.h>
 #include <ui/Core/XMLParser.h>
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandlerTextArea::XMLNodeHandlerTextArea() {}
 
@@ -13,7 +13,7 @@ XMLNodeHandlerTextArea::~XMLNodeHandlerTextArea() {}
 
 Element* XMLNodeHandlerTextArea::ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes)
 {
-	ElementFormControlTextArea* text_area = rmlui_dynamic_cast<ElementFormControlTextArea*>(parser->GetParseFrame()->element);
+	ElementFormControlTextArea* text_area = ui_dynamic_cast<ElementFormControlTextArea*>(parser->GetParseFrame()->element);
 	if (!text_area)
 	{
 		ElementPtr new_element = Factory::InstanceElement(parser->GetParseFrame()->element, name, name, attributes);
@@ -35,7 +35,7 @@ bool XMLNodeHandlerTextArea::ElementEnd(XMLParser* /*parser*/, const String& /*n
 
 bool XMLNodeHandlerTextArea::ElementData(XMLParser* parser, const String& data, XMLDataType /*type*/)
 {
-	ElementFormControlTextArea* text_area = rmlui_dynamic_cast<ElementFormControlTextArea*>(parser->GetParseFrame()->element);
+	ElementFormControlTextArea* text_area = ui_dynamic_cast<ElementFormControlTextArea*>(parser->GetParseFrame()->element);
 	if (text_area != nullptr)
 	{
 		// Do any necessary translation.
@@ -48,4 +48,4 @@ bool XMLNodeHandlerTextArea::ElementData(XMLParser* parser, const String& data, 
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

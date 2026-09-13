@@ -4,7 +4,7 @@
 #include <ui/Core/Header.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class DataModel;
@@ -48,4 +48,4 @@ private:
 	AddressList addresses;
 };
 
-} // namespace Rml
+} // namespace ui

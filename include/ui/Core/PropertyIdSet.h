@@ -4,7 +4,7 @@
 #include "Types.h"
 #include <bitset>
 
-namespace Rml {
+namespace ui {
 
 class PropertyIdSetIterator;
 
@@ -16,7 +16,7 @@ class PropertyIdSetIterator;
     Supports union and intersection operations between two sets, as well as iteration through the IDs that are inserted.
 */
 
-class RMLUICORE_API PropertyIdSet {
+class UI_CORE_API PropertyIdSet {
 private:
 	static constexpr size_t N = size_t(PropertyId::MaxNumIds);
 	std::bitset<N> defined_ids;
@@ -26,14 +26,14 @@ public:
 
 	void Insert(PropertyId id)
 	{
-		RMLUI_ASSERT(size_t(id) < N);
+		UI_ASSERT(size_t(id) < N);
 		defined_ids.set((size_t)id);
 	}
 
 	void Clear() { defined_ids.reset(); }
 	void Erase(PropertyId id)
 	{
-		RMLUI_ASSERT(size_t(id) < N);
+		UI_ASSERT(size_t(id) < N);
 		defined_ids.reset((size_t)id);
 	}
 
@@ -78,7 +78,7 @@ public:
 	inline PropertyIdSetIterator Erase(PropertyIdSetIterator it);
 };
 
-class RMLUICORE_API PropertyIdSetIterator {
+class UI_CORE_API PropertyIdSetIterator {
 public:
 	PropertyIdSetIterator() = default;
 	PropertyIdSetIterator(const PropertyIdSet* container, size_t id_index) : container(container), id_index(id_index) { ProceedToNextValid(); }
@@ -124,10 +124,10 @@ PropertyIdSetIterator PropertyIdSet::end() const
 
 PropertyIdSetIterator PropertyIdSet::Erase(PropertyIdSetIterator it)
 {
-	RMLUI_ASSERT(it.container == this && it.id_index < N);
+	UI_ASSERT(it.container == this && it.id_index < N);
 	defined_ids.reset(it.id_index);
 	++it;
 	return it;
 }
 
-} // namespace Rml
+} // namespace ui

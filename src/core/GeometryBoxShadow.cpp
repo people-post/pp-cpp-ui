@@ -9,19 +9,19 @@
 #include <ui/Core/Profiling.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 BoxShadowGeometryInfo GeometryBoxShadow::Resolve(Element* element, const CornerSizes& border_radius, ColourbPremultiplied background_color,
 	const Array<ColourbPremultiplied, 4>& border_colors, float opacity)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Find the box-shadow texture dimension and offset required to cover all box-shadows and element boxes combined.
 	Vector2f element_offset_in_texture;
 	Vector2i texture_dimensions;
 
 	const Property* p_box_shadow = element->GetLocalProperty(PropertyId::BoxShadow);
-	RMLUI_ASSERT(p_box_shadow->value.GetType() == Variant::BOXSHADOWLIST);
+	UI_ASSERT(p_box_shadow->value.GetType() == Variant::BOXSHADOWLIST);
 	BoxShadowList shadow_list = p_box_shadow->value.Get<BoxShadowList>();
 
 	// Resolve all lengths to px units.
@@ -93,7 +93,7 @@ BoxShadowGeometryInfo GeometryBoxShadow::Resolve(Element* element, const CornerS
 void GeometryBoxShadow::GenerateTexture(CallbackTexture& out_shadow_texture, Geometry& out_background_border_geometry, RenderManager& render_manager,
 	const BoxShadowGeometryInfo& info)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	Mesh mesh = out_background_border_geometry.Release(Geometry::ReleaseMode::ClearMesh);
 	for (size_t i = 0; i < info.padding_render_boxes.size(); i++)
@@ -101,10 +101,10 @@ void GeometryBoxShadow::GenerateTexture(CallbackTexture& out_shadow_texture, Geo
 	out_background_border_geometry = render_manager.MakeGeometry(std::move(mesh));
 
 	// Callback for generating the box-shadow texture. Using a callback ensures that the texture can be regenerated at any time, for example if the
-	// device loses its GPU context and the client calls Rml::ReleaseTextures().
+	// device loses its GPU context and the client calls ui::ReleaseTextures().
 	auto texture_callback = [&info, &out_background_border_geometry](const CallbackTextureInterface& texture_interface) -> bool {
-		RMLUI_ASSERT(info.border_render_boxes.size() == info.padding_render_boxes.size());
-		RMLUI_ZoneScopedN("BoxShadow::GenerateTexture::Callback");
+		UI_ASSERT(info.border_render_boxes.size() == info.padding_render_boxes.size());
+		UI_ZoneScopedN("BoxShadow::GenerateTexture::Callback");
 		size_t num_boxes = info.border_render_boxes.size();
 
 		RenderManager& render_manager = texture_interface.GetRenderManager();
@@ -204,7 +204,7 @@ void GeometryBoxShadow::GenerateTexture(CallbackTexture& out_shadow_texture, Geo
 			{
 				render_manager.SetClipMask(ClipMaskOperation::SetInverse, &geometry_shadow, shadow_offset + info.element_offset_in_texture);
 
-				for (Rml::Vertex& vertex : mesh_padding.vertices)
+				for (ui::Vertex& vertex : mesh_padding.vertices)
 					vertex.colour = shadow.color;
 
 				// @performance: Don't need to copy the mesh if this is the last use of it.
@@ -241,4 +241,4 @@ void GeometryBoxShadow::GenerateTexture(CallbackTexture& out_shadow_texture, Geo
 
 	out_shadow_texture = render_manager.MakeCallbackTexture(std::move(texture_callback));
 }
-} // namespace Rml
+} // namespace ui

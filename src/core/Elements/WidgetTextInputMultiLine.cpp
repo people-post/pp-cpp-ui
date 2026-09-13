@@ -3,7 +3,7 @@
 #include <ui/Core/ElementText.h>
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 WidgetTextInputMultiLine::WidgetTextInputMultiLine(ElementFormControl* parent) : WidgetTextInput(parent) {}
 
@@ -16,4 +16,4 @@ void WidgetTextInputMultiLine::SanitizeValue(String& value)
 
 void WidgetTextInputMultiLine::LineBreak() {}
 
-} // namespace Rml
+} // namespace ui

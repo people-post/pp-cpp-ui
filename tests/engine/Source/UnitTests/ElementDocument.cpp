@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static void SimulateClick(Context* context, Vector2i position)
 {
@@ -278,19 +278,19 @@ TEST_CASE("Modal.MultipleDocuments")
 	constexpr float halfwidth = 150;
 
 	ElementDocument* document1 = context->LoadDocument("assets/demo.rml");
-	document1->Show(Rml::ModalFlag::Modal);
+	document1->Show(ui::ModalFlag::Modal);
 	document1->GetElementById("title")->SetInnerRML("Modal 1");
 	constexpr float margin1 = 50;
 	document1->SetProperty(PropertyId::MarginLeft, Property{margin1, Unit::PX});
 
-	Rml::ElementDocument* document2 = context->LoadDocument("assets/demo.rml");
-	document2->Show(Rml::ModalFlag::Modal);
+	ui::ElementDocument* document2 = context->LoadDocument("assets/demo.rml");
+	document2->Show(ui::ModalFlag::Modal);
 	document2->GetElementById("title")->SetInnerRML("Modal 2");
 	constexpr float margin2 = 350;
 	document2->SetProperty(PropertyId::MarginLeft, Property{margin2, Unit::PX});
 
-	Rml::ElementDocument* document3 = context->LoadDocument("assets/demo.rml");
-	document3->Show(Rml::ModalFlag::None);
+	ui::ElementDocument* document3 = context->LoadDocument("assets/demo.rml");
+	document3->Show(ui::ModalFlag::None);
 	document3->GetElementById("title")->SetInnerRML("Non-modal");
 	constexpr float margin3 = 650;
 	document3->SetProperty(PropertyId::MarginLeft, Property{margin3, Unit::PX});
@@ -341,9 +341,9 @@ TEST_CASE("Modal.FocusWithin")
 {
 	Context* context = TestsShell::GetContext();
 
-	Rml::ElementDocument* document = context->LoadDocument("assets/demo.rml");
+	ui::ElementDocument* document = context->LoadDocument("assets/demo.rml");
 	document->GetElementById("content")->SetInnerRML("<input type='text' id='input'/>");
-	document->Show(Rml::ModalFlag::Modal);
+	document->Show(ui::ModalFlag::Modal);
 
 	REQUIRE(context->GetFocusElement() == document);
 	Element* input = document->GetElementById("input");

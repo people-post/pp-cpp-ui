@@ -2,37 +2,37 @@
 	Set up external dependencies required by the built-in backends.
 
 	All dependencies are searched as soft dependencies so that they won't error out if the library is declared by other
-	means. This file is not meant to be used by consumers of the library, only by the RmlUi CMake project.
+	means. This file is not meant to be used by consumers of the library, only by the pp-cpp-ui CMake project.
 ]]
 
 # --- Window/input APIs ---
 
 # SDL 2 and 3 common setup
-if(RMLUI_BACKEND MATCHES "^SDL")
-	set(RMLUI_SDL_VERSION_MAJOR "" CACHE STRING "Major version of SDL to search for, or empty for automatic search.")
-	mark_as_advanced(RMLUI_SDL_VERSION_MAJOR)
+if(UI_BACKEND MATCHES "^SDL")
+	set(UI_SDL_VERSION_MAJOR "" CACHE STRING "Major version of SDL to search for, or empty for automatic search.")
+	mark_as_advanced(UI_SDL_VERSION_MAJOR)
 
 	# List of SDL backends that require SDL_image to work with samples
-	set(RMLUI_SDL_BACKENDS_WITH_SDLIMAGE "SDL_GL2" "SDL_GL3" "SDL_SDLrenderer" "SDL_GPU")
+	set(UI_SDL_BACKENDS_WITH_SDLIMAGE "SDL_GL2" "SDL_GL3" "SDL_SDLrenderer" "SDL_GPU")
 
 	# Determine if the selected SDL backend requires SDL_image
-	if(RMLUI_BACKEND IN_LIST RMLUI_SDL_BACKENDS_WITH_SDLIMAGE)
-		set(RMLUI_SDLIMAGE_REQUIRED TRUE)
+	if(UI_BACKEND IN_LIST UI_SDL_BACKENDS_WITH_SDLIMAGE)
+		set(UI_SDLIMAGE_REQUIRED TRUE)
 	else()
-		set(RMLUI_SDLIMAGE_REQUIRED FALSE)
+		set(UI_SDLIMAGE_REQUIRED FALSE)
 	endif()
-	unset(RMLUI_SDL_BACKENDS_WITH_SDLIMAGE)
+	unset(UI_SDL_BACKENDS_WITH_SDLIMAGE)
 endif()
 
 # SDL 3
-if(RMLUI_BACKEND MATCHES "^SDL" AND (RMLUI_SDL_VERSION_MAJOR EQUAL "3" OR RMLUI_SDL_VERSION_MAJOR STREQUAL ""))
+if(UI_BACKEND MATCHES "^SDL" AND (UI_SDL_VERSION_MAJOR EQUAL "3" OR UI_SDL_VERSION_MAJOR STREQUAL ""))
 	find_package("SDL3" QUIET)
 
 	if(NOT TARGET SDL3::SDL3 AND TARGET SDL3::SDL3-static)
 		add_library(SDL3::SDL3 ALIAS SDL3::SDL3-static)
 	endif()
 
-	if(NOT TARGET SDL3::SDL3 AND RMLUI_SDL_VERSION_MAJOR EQUAL "3")
+	if(NOT TARGET SDL3::SDL3 AND UI_SDL_VERSION_MAJOR EQUAL "3")
 		report_dependency_not_found("SDL3" "SDL3" SDL3::SDL3)
 	endif()
 
@@ -45,10 +45,10 @@ if(RMLUI_BACKEND MATCHES "^SDL" AND (RMLUI_SDL_VERSION_MAJOR EQUAL "3" OR RMLUI_
 		if(NOT TARGET SDL::SDL)
 			add_library(SDL::SDL INTERFACE IMPORTED)
 			target_link_libraries(SDL::SDL INTERFACE SDL3::SDL3)
-			target_compile_definitions(SDL::SDL INTERFACE RMLUI_SDL_VERSION_MAJOR=3)
+			target_compile_definitions(SDL::SDL INTERFACE UI_SDL_VERSION_MAJOR=3)
 		endif()
 
-		if(RMLUI_SDLIMAGE_REQUIRED)
+		if(UI_SDLIMAGE_REQUIRED)
 			find_package("SDL3_image")
 			report_dependency_found_or_error("SDL3_image" "SDL3_image" SDL3_image::SDL3_image)
 			if(NOT TARGET SDL_image::SDL_image)
@@ -60,7 +60,7 @@ if(RMLUI_BACKEND MATCHES "^SDL" AND (RMLUI_SDL_VERSION_MAJOR EQUAL "3" OR RMLUI_
 endif()
 
 # SDL 2
-if(RMLUI_BACKEND MATCHES "^SDL" AND NOT TARGET SDL::SDL AND (RMLUI_SDL_VERSION_MAJOR EQUAL "2" OR RMLUI_SDL_VERSION_MAJOR STREQUAL ""))
+if(UI_BACKEND MATCHES "^SDL" AND NOT TARGET SDL::SDL AND (UI_SDL_VERSION_MAJOR EQUAL "2" OR UI_SDL_VERSION_MAJOR STREQUAL ""))
 	# Although the official CMake find module is called FindSDL.cmake, the official config module provided by the SDL
 	# package for its version 2 is called SDL2Config.cmake. Following this trend, the official SDL config files change
 	# their name according to their major version number
@@ -89,18 +89,18 @@ if(RMLUI_BACKEND MATCHES "^SDL" AND NOT TARGET SDL::SDL AND (RMLUI_SDL_VERSION_M
 
 	add_library(SDL::SDL INTERFACE IMPORTED)
 	target_link_libraries(SDL::SDL INTERFACE SDL2::SDL2)
-	target_compile_definitions(SDL::SDL INTERFACE RMLUI_SDL_VERSION_MAJOR=2)
+	target_compile_definitions(SDL::SDL INTERFACE UI_SDL_VERSION_MAJOR=2)
 
 	# Check version requirement for the SDL renderer
-	if(RMLUI_BACKEND STREQUAL "SDL_SDLrenderer" AND SDL2_VERSION VERSION_LESS "2.0.20")
-		message(FATAL_ERROR "SDL native renderer backend (${RMLUI_BACKEND}) requires SDL 2.0.20 (found ${SDL2_VERSION}).")
+	if(UI_BACKEND STREQUAL "SDL_SDLrenderer" AND SDL2_VERSION VERSION_LESS "2.0.20")
+		message(FATAL_ERROR "SDL native renderer backend (${UI_BACKEND}) requires SDL 2.0.20 (found ${SDL2_VERSION}).")
 	endif()
 
-	if(RMLUI_BACKEND STREQUAL "SDL_GPU")
-		message(FATAL_ERROR "SDL GPU backend (${RMLUI_BACKEND}) requires SDL3 (found ${SDL2_VERSION}).")
+	if(UI_BACKEND STREQUAL "SDL_GPU")
+		message(FATAL_ERROR "SDL GPU backend (${UI_BACKEND}) requires SDL3 (found ${SDL2_VERSION}).")
 	endif()
 
-	if(RMLUI_SDLIMAGE_REQUIRED)
+	if(UI_SDLIMAGE_REQUIRED)
 		find_package("SDL2_image")
 		report_dependency_found_or_error("SDL2_image" "SDL2_image" SDL2_image::SDL2_image)
 		add_library(SDL_image::SDL_image INTERFACE IMPORTED)
@@ -108,12 +108,12 @@ if(RMLUI_BACKEND MATCHES "^SDL" AND NOT TARGET SDL::SDL AND (RMLUI_SDL_VERSION_M
 	endif()
 endif()
 
-if(RMLUI_BACKEND MATCHES "^SDL" AND NOT TARGET SDL::SDL)
-	message(FATAL_ERROR "SDL version ${RMLUI_SDL_VERSION_MAJOR} is not supported.")
+if(UI_BACKEND MATCHES "^SDL" AND NOT TARGET SDL::SDL)
+	message(FATAL_ERROR "SDL version ${UI_SDL_VERSION_MAJOR} is not supported.")
 endif()
 
 # GLFW
-if(RMLUI_BACKEND MATCHES "^(BackwardCompatible_)?GLFW")
+if(UI_BACKEND MATCHES "^(BackwardCompatible_)?GLFW")
 	find_package("glfw3" "3.3")
 
 	# Instead of relying on the <package_name>_FOUND variable, we check directly for the target
@@ -121,9 +121,9 @@ if(RMLUI_BACKEND MATCHES "^(BackwardCompatible_)?GLFW")
 endif()
 
 # SFML
-if(RMLUI_BACKEND MATCHES "^SFML")
-	set(RMLUI_SFML_VERSION_MAJOR "" CACHE STRING "Major version of SFML to search for, or empty for automatic search.")
-	mark_as_advanced(RMLUI_SFML_VERSION_MAJOR)
+if(UI_BACKEND MATCHES "^SFML")
+	set(UI_SFML_VERSION_MAJOR "" CACHE STRING "Major version of SFML to search for, or empty for automatic search.")
+	mark_as_advanced(UI_SFML_VERSION_MAJOR)
 
 	#[[
 		Starting with SFML 3.0, the recommended method to find the library is using
@@ -139,37 +139,37 @@ if(RMLUI_BACKEND MATCHES "^SFML")
 	]]
 
 	# List of required components in capital case
-	set(RMLUI_SFML_REQUIRED_COMPONENTS "Graphics" "Window" "System")
+	set(UI_SFML_REQUIRED_COMPONENTS "Graphics" "Window" "System")
 
 	# Look for SFML 3 first. We always require the window module, so use that to test if the dependency has been found.
-	if(NOT TARGET SFML::Window AND (RMLUI_SFML_VERSION_MAJOR EQUAL "3" OR RMLUI_SFML_VERSION_MAJOR STREQUAL ""))
-		find_package("SFML" "3" COMPONENTS ${RMLUI_SFML_REQUIRED_COMPONENTS} QUIET)
+	if(NOT TARGET SFML::Window AND (UI_SFML_VERSION_MAJOR EQUAL "3" OR UI_SFML_VERSION_MAJOR STREQUAL ""))
+		find_package("SFML" "3" COMPONENTS ${UI_SFML_REQUIRED_COMPONENTS} QUIET)
 	endif()
 
 	# Look for SFML 2 next unless another version is found.
-	if(NOT TARGET SFML::Window AND (RMLUI_SFML_VERSION_MAJOR EQUAL "2" OR RMLUI_SFML_VERSION_MAJOR STREQUAL ""))
-		list(TRANSFORM RMLUI_SFML_REQUIRED_COMPONENTS TOLOWER OUTPUT_VARIABLE RMLUI_SFML_REQUIRED_COMPONENTS_LOWER_CASE)
-		find_package("SFML" "2" COMPONENTS ${RMLUI_SFML_REQUIRED_COMPONENTS_LOWER_CASE} QUIET)
+	if(NOT TARGET SFML::Window AND (UI_SFML_VERSION_MAJOR EQUAL "2" OR UI_SFML_VERSION_MAJOR STREQUAL ""))
+		list(TRANSFORM UI_SFML_REQUIRED_COMPONENTS TOLOWER OUTPUT_VARIABLE UI_SFML_REQUIRED_COMPONENTS_LOWER_CASE)
+		find_package("SFML" "2" COMPONENTS ${UI_SFML_REQUIRED_COMPONENTS_LOWER_CASE} QUIET)
 	endif()
 
 	if(NOT TARGET SFML::Window)
 		#[[
-			Since the RmlUi CMake project uses the SFML 3.0 namespaced target names, if the version is lower then wrappers
+			Since the pp-cpp-ui CMake project uses the SFML 3.0 namespaced target names, if the version is lower then wrappers
 			need to be set up.
 
 			If e.g. sfml-window exists, then that means the version is either SFML 2.5 or 2.6 which set up
 			module-specific CMake targets but with different names using a config file. Therefore, we need to alias the
-			target names to match those declared by SFML 3.0 and used by RmlUi.
+			target names to match those declared by SFML 3.0 and used by pp-cpp-ui.
 		]]
 
 		# For each SFML component the project requires
-		foreach(rmlui_sfml_component ${RMLUI_SFML_REQUIRED_COMPONENTS})
+		foreach(ui_sfml_component ${UI_SFML_REQUIRED_COMPONENTS})
 			# Make the component name lowercase
-			string(TOLOWER ${rmlui_sfml_component} rmlui_sfml_component_lower)
+			string(TOLOWER ${ui_sfml_component} ui_sfml_component_lower)
 
-			if(TARGET sfml-${rmlui_sfml_component_lower})
+			if(TARGET sfml-${ui_sfml_component_lower})
 				#[[
-					RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+					UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 					Because the target CMake version is 3.10, we can't alias non-global targets nor global imported targets.
 
 					Promoting an imported target to the global scope without it being necessary can cause undesired behavior,
@@ -179,22 +179,22 @@ if(RMLUI_BACKEND MATCHES "^SFML")
 				]]
 
 				# If the target exists, alias it
-				add_library(SFML::${rmlui_sfml_component} INTERFACE IMPORTED)
-				target_link_libraries(SFML::${rmlui_sfml_component} INTERFACE sfml-${rmlui_sfml_component_lower})
+				add_library(SFML::${ui_sfml_component} INTERFACE IMPORTED)
+				target_link_libraries(SFML::${ui_sfml_component} INTERFACE sfml-${ui_sfml_component_lower})
 			endif()
 		endforeach()
 	endif()
 
 	if(NOT TARGET SFML::Window)
-		list(TRANSFORM RMLUI_SFML_REQUIRED_COMPONENTS PREPEND "SFML::" OUTPUT_VARIABLE RMLUI_SFML_REQUIRED_TARGETS)
-		report_dependency_not_found("SFML" "SFML" "${RMLUI_SFML_REQUIRED_TARGETS}")
+		list(TRANSFORM UI_SFML_REQUIRED_COMPONENTS PREPEND "SFML::" OUTPUT_VARIABLE UI_SFML_REQUIRED_TARGETS)
+		report_dependency_not_found("SFML" "SFML" "${UI_SFML_REQUIRED_TARGETS}")
 	endif()
 
 	report_dependency_found("SFML" SFML)
 endif()
 
 # X11
-if(RMLUI_BACKEND MATCHES "^X11")
+if(UI_BACKEND MATCHES "^X11")
 	find_package("X11")
 endif()
 
@@ -204,18 +204,18 @@ endif()
 
 # Set preferred OpenGL ABI on Linux for target OpenGL::GL
 # More info: https://cmake.org/cmake/help/latest/module/FindOpenGL.html#linux-specific
-# RMLUI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
+# UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 # Can remove this with CMake 3.11 as this has become the default. See policy CMP0072.
 set(OpenGL_GL_PREFERENCE "GLVND")
 
-if(RMLUI_BACKEND MATCHES "GL2$")
+if(UI_BACKEND MATCHES "GL2$")
 	find_package("OpenGL" "2")
 	report_dependency_found_or_error("OpenGL" "OpenGL" OpenGL::GL)
 endif()
 
 # We use 'glad' as an OpenGL loader for GL3 backends, thus we don't normally need to link to OpenGL::GL. The exception
 # is for Emscripten, where we use a custom find module to provide OpenGL support.
-if(EMSCRIPTEN AND RMLUI_BACKEND MATCHES "GL3$")
+if(EMSCRIPTEN AND UI_BACKEND MATCHES "GL3$")
 	find_package("OpenGL" "3")
 	report_dependency_found_or_error("OpenGL" "OpenGL" OpenGL::GL)
 endif()

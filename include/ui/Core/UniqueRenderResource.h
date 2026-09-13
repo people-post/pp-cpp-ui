@@ -3,7 +3,7 @@
 #include "Types.h"
 #include <utility>
 
-namespace Rml {
+namespace ui {
 
 class RenderManager;
 
@@ -11,7 +11,7 @@ class RenderManager;
     Abstraction for a uniquely owned render resource. The underlying resource is released upon destruction.
  */
 template <typename Derived, typename Handle, Handle InvalidHandleValue>
-class RMLUICORE_API UniqueRenderResource {
+class UI_CORE_API UniqueRenderResource {
 public:
 	static constexpr Handle InvalidHandle() { return InvalidHandleValue; }
 
@@ -53,4 +53,4 @@ private:
 	}
 };
 
-} // namespace Rml
+} // namespace ui

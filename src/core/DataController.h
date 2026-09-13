@@ -4,7 +4,7 @@
 #include <ui/Core/Traits.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class DataModel;
@@ -80,4 +80,4 @@ private:
 	ElementControllersMap controllers;
 };
 
-} // namespace Rml
+} // namespace ui

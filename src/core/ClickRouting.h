@@ -3,11 +3,11 @@
 #include <ui/Core/Header.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 
-/// Pointer-driven click target resolution for Rml::Context.
+/// Pointer-driven click target resolution for ui::Context.
 namespace ClickRouting {
 
 using FindFocusElementFn = Element* (*)(Element*);
@@ -30,4 +30,4 @@ Element* ResolveClickTargetWithPredicate(Element* press_hover, Element* release_
 	PointWithinFn point_within, void* point_within_context);
 
 } // namespace ClickRouting
-} // namespace Rml
+} // namespace ui

@@ -13,7 +13,7 @@
 #include "PropertyParserDecorator.h"
 #include "TransformUtilities.h"
 
-namespace Rml {
+namespace ui {
 
 bool TypeConverter<Unit, String>::Convert(const Unit& src, String& dest)
 {
@@ -277,4 +277,4 @@ bool TypeConverter<String, Colourb>::Convert(const String& src, Colourb& dest)
 	return PropertyParserColour::ParseColour(dest, src);
 }
 
-} // namespace Rml
+} // namespace ui

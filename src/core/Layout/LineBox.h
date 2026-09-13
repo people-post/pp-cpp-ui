@@ -3,7 +3,7 @@
 #include <ui/Core/StyleTypes.h>
 #include "InlineTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class InlineBox;
 class InlineBoxRoot;
@@ -182,4 +182,4 @@ private:
 	float total_height_above_baseline = 0.f;
 };
 
-} // namespace Rml
+} // namespace ui

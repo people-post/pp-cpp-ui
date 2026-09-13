@@ -3,7 +3,7 @@
 #include <ui/Core/StreamMemory.h>
 #include "DocumentHeader.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 
@@ -37,4 +37,4 @@ private:
 	UniquePtr<StreamMemory> body;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -5,7 +5,7 @@
 #include "DataModel.h"
 #include "EventSpecification.h"
 
-namespace Rml {
+namespace ui {
 
 DataControllerValue::DataControllerValue(Element* element) : DataController(element) {}
 
@@ -17,7 +17,7 @@ DataControllerValue::~DataControllerValue()
 
 bool DataControllerValue::Initialize(DataModel& model, Element* element, const String& variable_name, const String& /*modifier*/)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	DataAddress variable_address = model.ResolveAddress(variable_name, element);
 	if (variable_address.empty())
@@ -76,7 +76,7 @@ DataControllerEvent::~DataControllerEvent()
 
 bool DataControllerEvent::Initialize(DataModel& model, Element* element, const String& expression_str, const String& modifier)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	expression = MakeUnique<DataExpression>(expression_str);
 	DataExpressionInterface expr_interface(&model, element);
@@ -115,4 +115,4 @@ void DataControllerEvent::Release()
 	delete this;
 }
 
-} // namespace Rml
+} // namespace ui

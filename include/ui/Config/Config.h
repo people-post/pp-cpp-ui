@@ -1,15 +1,15 @@
 #pragma once
 
 /*
- * This file provides the means to configure various types used across RmlUi. It is possible to override container
+ * This file provides the means to configure various types used across pp-cpp-ui. It is possible to override container
  * types with your own, provided they are compatible with STL, or customize STL containers, for example by setting
  * custom allocators. This file may be edited directly, or can be copied to an alternate location, modified, and
- * included by setting the CMake option CUSTOM_CONFIGURATION_FILE (RMLUI_CUSTOM_CONFIGURATION_FILE preprocessor
+ * included by setting the CMake option CUSTOM_CONFIGURATION_FILE (UI_CUSTOM_CONFIGURATION_FILE preprocessor
  * define) to the path of that file.
  */
 
-#ifdef RMLUI_CUSTOM_CONFIGURATION_FILE
-	#include RMLUI_CUSTOM_CONFIGURATION_FILE
+#ifdef UI_CUSTOM_CONFIGURATION_FILE
+	#include UI_CUSTOM_CONFIGURATION_FILE
 #else
 	#include <array>
 	#include <functional>
@@ -23,27 +23,27 @@
 	#include <utility>
 	#include <vector>
 
-	#ifdef RMLUI_NO_THIRDPARTY_CONTAINERS
+	#ifdef UI_NO_THIRDPARTY_CONTAINERS
 		#include <set>
 		#include <unordered_set>
 	#else
 		#include "../Core/Containers/itlib/flat_map.hpp"
 		#include "../Core/Containers/itlib/flat_set.hpp"
 		#include "../Core/Containers/robin_hood.h"
-	#endif // RMLUI_NO_THIRDPARTY_CONTAINERS
+	#endif // UI_NO_THIRDPARTY_CONTAINERS
 
-namespace Rml {
+namespace ui {
 
 	// Default matrix type to be used. This alias may be set to ColumnMajorMatrix4f or RowMajorMatrix4f. This alias can not
     // be set here because matrix types are defined after this include in Core/Types.h.
-	#ifdef RMLUI_MATRIX_ROW_MAJOR
-		#define RMLUI_MATRIX4_TYPE RowMajorMatrix4f
+	#ifdef UI_MATRIX_ROW_MAJOR
+		#define UI_MATRIX4_TYPE RowMajorMatrix4f
 	#else
-		#define RMLUI_MATRIX4_TYPE ColumnMajorMatrix4f
+		#define UI_MATRIX4_TYPE ColumnMajorMatrix4f
 	#endif
 
-	// A way to disable 'final' specified for Rml::Releaser class. It breaks EASTL.
-	#define RMLUI_RELEASER_FINAL final
+	// A way to disable 'final' specified for ui::Releaser class. It breaks EASTL.
+	#define UI_RELEASER_FINAL final
 
 // Containers types.
 template <typename T>
@@ -65,7 +65,7 @@ using StableUnorderedMap = std::unordered_map<Key, Value>;
 template <typename Key, typename Value>
 using UnorderedMultimap = std::unordered_multimap<Key, Value>;
 
-	#ifdef RMLUI_NO_THIRDPARTY_CONTAINERS
+	#ifdef UI_NO_THIRDPARTY_CONTAINERS
 template <typename Key, typename Value>
 using UnorderedMap = std::unordered_map<Key, Value>;
 template <typename Key, typename Value>
@@ -91,7 +91,7 @@ template <typename T>
 using SmallUnorderedSet = itlib::flat_set<T>;
 template <typename T>
 using SmallOrderedSet = itlib::flat_set<T>;
-	#endif // RMLUI_NO_THIRDPARTY_CONTAINERS
+	#endif // UI_NO_THIRDPARTY_CONTAINERS
 
 // Utilities.
 template <typename T>
@@ -130,25 +130,25 @@ inline UniquePtr<T> MakeUnique(Args&&... args)
 	return std::make_unique<T, Args...>(std::forward<Args>(args)...);
 }
 
-} // namespace Rml
+} // namespace ui
 
 /***
-// The following defines should be used for inserting custom type cast operators for conversion of RmlUi types
-// to user types. RmlUi uses template math types, therefore conversion operators to non-templated types
+// The following defines should be used for inserting custom type cast operators for conversion of pp-cpp-ui types
+// to user types. pp-cpp-ui uses template math types, therefore conversion operators to non-templated types
 // should be done using SFINAE as in example below.
 
-// Extra code to be inserted into RmlUi::Color<> class body. Note: be mindful of colorspaces used by different
-// color types. RmlUi assumes that float colors are interpreted in linear colorspace while byte colors are
+// Extra code to be inserted into ui::Color<> class body. Note: be mindful of colorspaces used by different
+// color types. pp-cpp-ui assumes that float colors are interpreted in linear colorspace while byte colors are
 // interpreted as sRGB.
-#define RMLUI_COLOUR_USER_EXTRA                                                                         \
+#define UI_COLOUR_USER_EXTRA                                                                         \
     template<typename U = ColourType, typename std::enable_if_t<std::is_same_v<U, byte>>* = nullptr>    \
     operator MyColor() const { return MyColor(                                                          \
         (float)red / 255.0f, (float)green / 255.0f, (float)blue / 255.0f, (float)alpha / 255.0f); }     \
     template<typename U = ColourType, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>   \
     operator MyColor() const { return MyColor(red, green, blue, alpha); }                               \
 
-// Extra code to be inserted into RmlUi::Vector2<> class body.
-#define RMLUI_VECTOR2_USER_EXTRA                                                                        \
+// Extra code to be inserted into ui::Vector2<> class body.
+#define UI_VECTOR2_USER_EXTRA                                                                        \
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, int>>* = nullptr>           \
     operator typename MyIntVector2() const { return MyIntVector2(x, y); }                               \
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>         \
@@ -158,8 +158,8 @@ inline UniquePtr<T> MakeUnique(Args&&... args)
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>         \
     Vector2(MyVector2 value) : Vector2(value.x_, value.y_) { }                                          \
 
-// Extra code to be inserted into RmlUi::Vector3<> class body.
-#define RMLUI_VECTOR3_USER_EXTRA                                                                        \
+// Extra code to be inserted into ui::Vector3<> class body.
+#define UI_VECTOR3_USER_EXTRA                                                                        \
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, int>>* = nullptr>           \
     operator typename MyIntVector3() const { return MyIntVector3(x, y, z); }                            \
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>         \
@@ -169,8 +169,8 @@ inline UniquePtr<T> MakeUnique(Args&&... args)
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>         \
     Vector3(MyVector3 value) : Vector3(value.x_, value.y_, value.z_) { }                                \
 
-// Extra code to be inserted into RmlUi::Vector4<> class body.
-#define RMLUI_VECTOR4_USER_EXTRA                                                                        \
+// Extra code to be inserted into ui::Vector4<> class body.
+#define UI_VECTOR4_USER_EXTRA                                                                        \
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, int>>* = nullptr>           \
     operator typename MyIntVector4() const { return MyIntVector4(x, y, z, w); }                         \
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>         \
@@ -180,8 +180,8 @@ inline UniquePtr<T> MakeUnique(Args&&... args)
     template<typename U = Type, typename std::enable_if_t<std::is_same_v<U, float>>* = nullptr>         \
     Vector4(MyVector4 value) : Vector4(value.x_, value.y_, value.z_, value.w_) { }                      \
 
-// Extra code to be inserted into RmlUi::Matrix4<> class body.
-    #define RMLUI_MATRIX4_USER_EXTRA operator MyMatrix4() const { return MyMatrix4(data()); }
+// Extra code to be inserted into ui::Matrix4<> class body.
+    #define UI_MATRIX4_USER_EXTRA operator MyMatrix4() const { return MyMatrix4(data()); }
 ***/
 
 #endif

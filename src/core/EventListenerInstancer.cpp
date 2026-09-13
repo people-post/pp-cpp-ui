@@ -1,7 +1,7 @@
 #include <ui/Core/EventListenerInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 EventListenerInstancer::~EventListenerInstancer() {}
 
-} // namespace Rml
+} // namespace ui

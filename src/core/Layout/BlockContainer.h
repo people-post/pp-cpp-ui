@@ -3,7 +3,7 @@
 #include <ui/Core/Types.h>
 #include "ContainerBox.h"
 
-namespace Rml {
+namespace ui {
 
 class FloatedBoxSpace;
 class LineBox;
@@ -162,4 +162,4 @@ private:
 	Vector2f inner_content_size;
 };
 
-} // namespace Rml
+} // namespace ui

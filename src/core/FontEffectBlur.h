@@ -4,7 +4,7 @@
 #include <ui/Core/FontEffect.h>
 #include <ui/Core/FontEffectInstancer.h>
 
-namespace Rml {
+namespace ui {
 
 /**
     A concrete font effect for rendering Gaussian blurred text.
@@ -43,4 +43,4 @@ private:
 	PropertyId id_width, id_color;
 };
 
-} // namespace Rml
+} // namespace ui

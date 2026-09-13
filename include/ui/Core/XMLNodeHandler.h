@@ -4,7 +4,7 @@
 #include "Traits.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class XMLParser;
@@ -14,7 +14,7 @@ enum class XMLDataType;
     A handler gets ElementStart, ElementEnd and ElementData called by the XMLParser.
  */
 
-class RMLUICORE_API XMLNodeHandler : public NonCopyMoveable {
+class UI_CORE_API XMLNodeHandler : public NonCopyMoveable {
 public:
 	virtual ~XMLNodeHandler();
 
@@ -36,4 +36,4 @@ public:
 	virtual bool ElementData(XMLParser* parser, const String& data, XMLDataType type) = 0;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 struct Spritesheet;
 
@@ -54,4 +54,4 @@ private:
 	SpriteMap sprite_map;
 };
 
-} // namespace Rml
+} // namespace ui

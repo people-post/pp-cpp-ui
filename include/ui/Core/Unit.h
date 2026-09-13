@@ -3,7 +3,7 @@
 #include "Header.h"
 #include <type_traits>
 
-namespace Rml {
+namespace ui {
 
 enum class Unit {
 	UNKNOWN = 0,
@@ -82,4 +82,4 @@ inline bool Any(Units units)
 	return units != Unit::UNKNOWN;
 }
 
-} // namespace Rml
+} // namespace ui

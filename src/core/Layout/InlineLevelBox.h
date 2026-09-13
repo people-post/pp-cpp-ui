@@ -4,7 +4,7 @@
 #include <ui/Core/StyleTypes.h>
 #include "InlineTypes.h"
 
-namespace Rml {
+namespace ui {
 
 class ElementText;
 struct FontMetrics;
@@ -39,7 +39,7 @@ public:
 	void operator delete(void* chunk, size_t size);
 
 protected:
-	InlineLevelBox(Element* element) : element(element) { RMLUI_ASSERT(element); }
+	InlineLevelBox(Element* element) : element(element) { UI_ASSERT(element); }
 
 	Element* GetElement() const { return element; }
 	const FontMetrics& GetFontMetrics() const;
@@ -112,4 +112,4 @@ private:
 	StringList fragments;
 };
 
-} // namespace Rml
+} // namespace ui

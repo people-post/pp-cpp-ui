@@ -2,7 +2,7 @@
 
 #include <ui/Core/ID.h>
 
-namespace Rml {
+namespace ui {
 
 enum class ShorthandType;
 class PropertyDefinition;
@@ -42,4 +42,4 @@ struct ShorthandDefinition {
 	ShorthandType type;
 };
 
-} // namespace Rml
+} // namespace ui

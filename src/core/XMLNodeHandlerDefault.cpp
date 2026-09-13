@@ -7,7 +7,7 @@
 #include <ui/Core/XMLParser.h>
 #include "XMLParseTools.h"
 
-namespace Rml {
+namespace ui {
 
 XMLNodeHandlerDefault::XMLNodeHandlerDefault() {}
 
@@ -15,7 +15,7 @@ XMLNodeHandlerDefault::~XMLNodeHandlerDefault() {}
 
 Element* XMLNodeHandlerDefault::ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes)
 {
-	RMLUI_ZoneScopedC(0x556B2F);
+	UI_ZoneScopedC(0x556B2F);
 
 	// Determine the parent
 	Element* parent = parser->GetParseFrame()->element;
@@ -41,11 +41,11 @@ bool XMLNodeHandlerDefault::ElementEnd(XMLParser* /*parser*/, const String& /*na
 
 bool XMLNodeHandlerDefault::ElementData(XMLParser* parser, const String& data, XMLDataType type)
 {
-	RMLUI_ZoneScopedC(0x006400);
+	UI_ZoneScopedC(0x006400);
 
 	// Determine the parent
 	Element* parent = parser->GetParseFrame()->element;
-	RMLUI_ASSERT(parent);
+	UI_ASSERT(parent);
 
 	if (type == XMLDataType::InnerXML)
 	{
@@ -58,4 +58,4 @@ bool XMLNodeHandlerDefault::ElementData(XMLParser* parser, const String& data, X
 	return Factory::InstanceElementText(parent, data);
 }
 
-} // namespace Rml
+} // namespace ui

@@ -2,7 +2,7 @@
 	Lists of options available to configure certain aspects of the project.
 ]]
 
-set(RMLUI_BACKEND_OPTIONS
+set(UI_BACKEND_OPTIONS
 	"auto"
 	"native"
 	"Win32_GL2"
@@ -21,12 +21,12 @@ set(RMLUI_BACKEND_OPTIONS
 	"BackwardCompatible_GLFW_GL3"
 )
 
-set(RMLUI_FONT_ENGINE_OPTIONS
+set(UI_FONT_ENGINE_OPTIONS
 	"none"
 	"freetype"
 )
 
-set(RMLUI_LUA_BINDINGS_LIBRARY_OPTIONS
+set(UI_LUA_BINDINGS_LIBRARY_OPTIONS
 	"lua"
 	"lua_as_cxx"
 	"luajit"

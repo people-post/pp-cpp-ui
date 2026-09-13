@@ -5,7 +5,7 @@
 #include "PropertyIdSet.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class StyleSheetSpecification;
 class PropertyDefinition;
@@ -34,7 +34,7 @@ enum class ShorthandType {
     A property specification stores a group of property definitions.
  */
 
-class RMLUICORE_API PropertySpecification {
+class UI_CORE_API PropertySpecification {
 public:
 	PropertySpecification(size_t reserve_num_properties, size_t reserve_num_shorthands);
 	~PropertySpecification();
@@ -108,8 +108,8 @@ private:
 	enum class SplitOption { None, Whitespace, Comma };
 	void ParsePropertyValues(StringList& values_list, const String& values, SplitOption split_option) const;
 
-	friend class Rml::StyleSheetSpecification;
+	friend class ui::StyleSheetSpecification;
 	friend class TestPropertySpecification;
 };
 
-} // namespace Rml
+} // namespace ui

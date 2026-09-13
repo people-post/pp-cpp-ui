@@ -3,9 +3,9 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
-class RMLUICORE_API URL {
+class UI_CORE_API URL {
 public:
 	/// Constructs an empty URL.
 	URL();
@@ -109,4 +109,4 @@ private:
 	mutable int url_dirty;
 };
 
-} // namespace Rml
+} // namespace ui

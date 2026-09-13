@@ -4,7 +4,7 @@
 #include <ui/Core/PropertyIdSet.h>
 #include "SVGCache.h"
 
-namespace Rml {
+namespace ui {
 
 unsigned long ElementSVG::internal_id_counter = 0;
 
@@ -94,7 +94,7 @@ void ElementSVG::SetInnerRML(const String& content)
 	if (!source.empty())
 		return;
 
-	// We use CreateString instead of std::to_string to avoid having to create an extra std::string and convert it to Rml::String in case clients use
+	// We use CreateString instead of std::to_string to avoid having to create an extra std::string and convert it to ui::String in case clients use
 	// a non-std string.
 	if (!HasAttribute("rmlui-svgdata-id"))
 		SetAttribute("rmlui-svgdata-id", "svgdata:" + CreateString("%lu", internal_id_counter++));
@@ -142,4 +142,4 @@ void ElementSVG::EnsureSourceLoaded()
 		handle = SVG::SVGCache::GetHandle(source, source, SVG::SVGCache::File, this, crop_to_content, BoxArea::Content);
 	}
 }
-} // namespace Rml
+} // namespace ui

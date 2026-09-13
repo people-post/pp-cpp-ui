@@ -1,21 +1,21 @@
 #[[
-	Various global utility functions for RmlUi.
+	Various global utility functions for pp-cpp-ui.
 ]]
 
 #[[
-	Format the RmlUi version as it should normally be displayed.
+	Format the pp-cpp-ui version as it should normally be displayed.
 	Output:
-		RMLUI_VERSION_SHORT: The RmlUi version as a string
+		UI_VERSION_SHORT: The pp-cpp-ui version as a string
 ]]
-function(generate_rmlui_version_string)
-	if(NOT RMLUI_VERSION_RELEASE)
-		set(RMLUI_VERSION_SUFFIX "-dev")
+function(generate_ui_version_string)
+	if(NOT UI_VERSION_RELEASE)
+		set(UI_VERSION_SUFFIX "-dev")
 	endif()
 	if(PROJECT_VERSION_PATCH GREATER 0)
-		set(RMLUI_VERSION_PATCH ".${PROJECT_VERSION_PATCH}")
+		set(UI_VERSION_PATCH ".${PROJECT_VERSION_PATCH}")
 	endif()
-	set(RMLUI_VERSION_SHORT
-		"${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}${RMLUI_VERSION_PATCH}${RMLUI_VERSION_SUFFIX}"
+	set(UI_VERSION_SHORT
+		"${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}${UI_VERSION_PATCH}${UI_VERSION_SUFFIX}"
 		PARENT_SCOPE
 	)
 endfunction()
@@ -32,7 +32,7 @@ function(report_dependency_not_found friendly_name package_name target_name)
 		"${friendly_name} could not be found.\n"
 		"Please ensure that ${friendly_name} can be found by CMake, or linked to using \"${target_name}\" as its "
 		"target name. The location of the build directory of the dependency can be provided by setting the "
-		"\"${package_name}_ROOT\" CMake variable. If you are consuming RmlUi from another CMake project, you can "
+		"\"${package_name}_ROOT\" CMake variable. If you are consuming pp-cpp-ui from another CMake project, you can "
 		"create an ALIAS target to offer an alternative name for a CMake target."
 	)
 endfunction()
@@ -43,7 +43,7 @@ endfunction()
 		- package_name: Name of the package to search for
 		- target_name: Name of the CMake target the project will link against
 		- success_message: Message to show when the target exists (optional)
-	Note: The name and signature of this function should match the macro in `RmlUiConfig.cmake.in`.
+	Note: The name and signature of this function should match the macro in `UiConfig.cmake.in`.
 ]]
 function(report_dependency_found package_name target_name)
 	set(message "")
@@ -63,7 +63,7 @@ endfunction()
 		- package_name: Name of the package to search for
 		- target_name: Name of the CMake target the project will link against
 		- success_message [optional]: Message to show when the target exists
-	Note: The name and signature of this function should match the macro in `RmlUiConfig.cmake.in`.
+	Note: The name and signature of this function should match the macro in `UiConfig.cmake.in`.
 ]]
 function(report_dependency_found_or_error friendly_name package_name target_name)
 	if(NOT TARGET ${target_name})
@@ -93,7 +93,7 @@ function(get_data_dirs target out_var)
 endfunction()
 
 #[[
-	Set compiler options and features that are common to all RmlUi targets.
+	Set compiler options and features that are common to all pp-cpp-ui targets.
 	Arguments:
 		- target: The name of the target to set
 ]]
@@ -101,7 +101,7 @@ function(set_common_target_options target)
 	target_compile_features(${target} PUBLIC cxx_std_14)
 	set_target_properties(${target} PROPERTIES C_EXTENSIONS OFF CXX_EXTENSIONS OFF)
 
-	if(RMLUI_COMPILER_OPTIONS)
+	if(UI_COMPILER_OPTIONS)
 		if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 			target_compile_options(${target} PRIVATE -Wall -Wextra -pedantic)
 		elseif(MSVC)
@@ -113,9 +113,9 @@ function(set_common_target_options target)
 		endif()
 	endif()
 
-	if(RMLUI_WARNINGS_AS_ERRORS)
-		if(NOT RMLUI_COMPILER_OPTIONS)
-			message(FATAL_ERROR "Option RMLUI_WARNINGS_AS_ERRORS requires RMLUI_COMPILER_OPTIONS=ON.")
+	if(UI_WARNINGS_AS_ERRORS)
+		if(NOT UI_COMPILER_OPTIONS)
+			message(FATAL_ERROR "Option UI_WARNINGS_AS_ERRORS requires UI_COMPILER_OPTIONS=ON.")
 		endif()
 
 		if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -123,7 +123,7 @@ function(set_common_target_options target)
 		elseif(MSVC)
 			target_compile_options(${target} PRIVATE /WX)
 		else()
-			message(FATAL_ERROR "Unknown compiler, cannot enable option RMLUI_WARNINGS_AS_ERRORS.")
+			message(FATAL_ERROR "Unknown compiler, cannot enable option UI_WARNINGS_AS_ERRORS.")
 		endif()
 	endif()
 
@@ -193,7 +193,7 @@ function(install_sample_target target)
 	get_data_dirs(${target} data_dirs)
 	file(RELATIVE_PATH sample_path ${PROJECT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
 	install(TARGETS ${TARGET_NAME}
-		${RMLUI_RUNTIME_DEPENDENCY_SET_ARG}
+		${UI_RUNTIME_DEPENDENCY_SET_ARG}
 		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 	)
 	set(install_dirs "src" ${data_dirs})

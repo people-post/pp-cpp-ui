@@ -1,7 +1,7 @@
 #include <ui/Core/Texture.h>
 #include "RenderManagerAccess.h"
 
-namespace Rml {
+namespace ui {
 
 Texture::Texture(RenderManager* render_manager, TextureFileIndex file_index) : render_manager(render_manager), file_index(file_index) {}
 
@@ -46,4 +46,4 @@ const String& TextureSource::GetDefinitionSource() const
 	return document_path;
 }
 
-} // namespace Rml
+} // namespace ui

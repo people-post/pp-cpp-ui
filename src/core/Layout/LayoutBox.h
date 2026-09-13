@@ -3,7 +3,7 @@
 #include <ui/Core/Box.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 /*
     A box used to represent the formatting structure of the document, taking part in the box tree.
@@ -45,4 +45,4 @@ private:
 	Vector2f visible_overflow_size;
 };
 
-} // namespace Rml
+} // namespace ui

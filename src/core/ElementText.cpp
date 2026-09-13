@@ -19,7 +19,7 @@
 #include "Elements/ElementSelectableText.h"
 #include <limits>
 
-namespace Rml {
+namespace ui {
 
 static bool BuildToken(String& token, const char*& token_begin, const char* string_end, bool first_token, bool collapse_white_space,
 	bool break_at_endline, Style::TextTransform text_transformation, bool decode_escape_characters);
@@ -126,7 +126,7 @@ const String& ElementText::GetText() const
 
 void ElementText::OnRender()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	FontFaceHandle font_face_handle = GetFontFaceHandle();
 	if (font_face_handle == 0)
@@ -218,8 +218,8 @@ void ElementText::OnRender()
 bool ElementText::GenerateLine(String& line, int& line_length, float& line_width, int line_begin, float maximum_line_width, float right_spacing_width,
 	bool trim_whitespace_prefix, bool decode_escape_characters, bool allow_empty)
 {
-	RMLUI_ZoneScoped;
-	RMLUI_ASSERT(maximum_line_width >= 0.f);
+	UI_ZoneScoped;
+	UI_ASSERT(maximum_line_width >= 0.f);
 
 	FontFaceHandle font_face_handle = GetFontFaceHandle();
 
@@ -341,7 +341,7 @@ bool ElementText::GenerateLine(String& line, int& line_length, float& line_width
 
 void ElementText::ClearLines()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	lines.clear();
 	generated_decoration = Style::TextDecoration::None;
 	geometry_dirty = true;
@@ -364,7 +364,7 @@ void ElementText::SuppressAutoLayout()
 
 void ElementText::OnPropertyChange(const PropertyIdSet& changed_properties)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	Element::OnPropertyChange(changed_properties);
 
@@ -398,8 +398,8 @@ void ElementText::OnPropertyChange(const PropertyIdSet& changed_properties)
 		changed_properties.Contains(PropertyId::FontSize) ||        //
 		changed_properties.Contains(PropertyId::FontKerning) ||     //
 		changed_properties.Contains(PropertyId::LetterSpacing) ||   //
-		changed_properties.Contains(PropertyId::RmlUi_Language) ||  //
-		changed_properties.Contains(PropertyId::RmlUi_Direction) || //
+		changed_properties.Contains(PropertyId::Ui_Language) ||  //
+		changed_properties.Contains(PropertyId::Ui_Direction) || //
 		changed_properties.Contains(PropertyId::TextOverflow))
 	{
 		font_face_changed = true;
@@ -453,7 +453,7 @@ void ElementText::GetRML(String& content)
 
 bool ElementText::UpdateFontEffects()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	if (GetFontFaceHandle() == 0)
 		return false;
@@ -485,7 +485,7 @@ bool ElementText::UpdateFontEffects()
 
 void ElementText::GenerateGeometry(RenderManager& render_manager, const FontFaceHandle font_face_handle)
 {
-	RMLUI_ZoneScopedC(0xD2691E);
+	UI_ZoneScopedC(0xD2691E);
 
 	const TextOverflowResolved text_overflow = ResolveTextOverflow(GetParentNode(), font_face_handle);
 
@@ -550,8 +550,8 @@ void ElementText::GenerateGeometry(RenderManager& render_manager, const FontFace
 
 void ElementText::GenerateDecoration(Mesh& mesh, const FontFaceHandle font_face_handle)
 {
-	RMLUI_ZoneScopedC(0xA52A2A);
-	RMLUI_ASSERT(decoration);
+	UI_ZoneScopedC(0xA52A2A);
+	UI_ASSERT(decoration);
 
 	const FontMetrics& metrics = GetFontEngineInterface()->GetFontMetrics(font_face_handle);
 
@@ -575,7 +575,7 @@ void ElementText::GenerateDecoration(Mesh& mesh, const FontFaceHandle font_face_
 static bool BuildToken(String& token, const char*& token_begin, const char* string_end, bool first_token, bool collapse_white_space,
 	bool break_at_endline, Style::TextTransform text_transformation, bool decode_escape_characters)
 {
-	RMLUI_ASSERT(token_begin != string_end);
+	UI_ASSERT(token_begin != string_end);
 
 	token.reserve(string_end - token_begin + token.size());
 
@@ -836,7 +836,7 @@ void ElementText::RenderSelectionSlice(int local_start, int local_end)
 	Element* style_root = this;
 	for (Element* element = GetParentNode(); element; element = element->GetParentNode())
 	{
-		if (rmlui_dynamic_cast<ElementSelectableText*>(element))
+		if (ui_dynamic_cast<ElementSelectableText*>(element))
 		{
 			style_root = element;
 			break;
@@ -852,4 +852,4 @@ void ElementText::RenderSelectionSlice(int local_start, int local_end)
 		selection_geometry = {};
 }
 
-} // namespace Rml
+} // namespace ui

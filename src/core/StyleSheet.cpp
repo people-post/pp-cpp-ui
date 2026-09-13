@@ -9,7 +9,7 @@
 #include "StyleSheetNode.h"
 #include <algorithm>
 
-namespace Rml {
+namespace ui {
 
 StyleSheet::StyleSheet()
 {
@@ -21,7 +21,7 @@ StyleSheet::~StyleSheet() {}
 
 UniquePtr<StyleSheet> StyleSheet::CombineStyleSheet(const StyleSheet& other_sheet) const
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	UniquePtr<StyleSheet> new_sheet = UniquePtr<StyleSheet>(new StyleSheet());
 
@@ -38,7 +38,7 @@ UniquePtr<StyleSheet> StyleSheet::CombineStyleSheet(const StyleSheet& other_shee
 
 void StyleSheet::MergeStyleSheet(const StyleSheet& other_sheet)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	root->MergeHierarchy(other_sheet.root.get(), specificity_offset);
 	specificity_offset += other_sheet.specificity_offset;
@@ -64,7 +64,7 @@ void StyleSheet::MergeStyleSheet(const StyleSheet& other_sheet)
 
 void StyleSheet::BuildNodeIndex()
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 	styled_node_index = {};
 	root->BuildIndex(styled_node_index);
 }
@@ -88,7 +88,7 @@ const Keyframes* StyleSheet::GetKeyframes(const String& name) const
 const DecoratorPtrList& StyleSheet::InstanceDecorators(RenderManager& render_manager, const DecoratorDeclarationList& declaration_list,
 	const PropertySource* source) const
 {
-	RMLUI_ASSERT_NONRECURSIVE; // Since we may return a reference to the below static variable.
+	UI_ASSERT_NONRECURSIVE; // Since we may return a reference to the below static variable.
 	static DecoratorPtrList non_cached_decorator_list;
 
 	// Empty declaration values are used for interpolated values which we don't want to cache.
@@ -124,7 +124,7 @@ const DecoratorPtrList& StyleSheet::InstanceDecorators(RenderManager& render_man
 
 		if (declaration.instancer)
 		{
-			RMLUI_ZoneScopedN("InstanceDecorator");
+			UI_ZoneScopedN("InstanceDecorator");
 			decorator = declaration.instancer->InstanceDecorator(declaration.type, declaration.properties,
 				DecoratorInstancerInterface(render_manager, *this, source));
 
@@ -164,7 +164,7 @@ const Sprite* StyleSheet::GetSprite(const String& name) const
 
 SharedPtr<const ElementDefinition> StyleSheet::GetElementDefinition(const Element* element) const
 {
-	RMLUI_ASSERT_NONRECURSIVE;
+	UI_ASSERT_NONRECURSIVE;
 
 	// Using static to avoid allocations. Make sure we don't call this function recursively.
 	static Vector<const StyleSheetNode*> applicable_nodes;
@@ -236,4 +236,4 @@ SharedPtr<const ElementDefinition> StyleSheet::GetElementDefinition(const Elemen
 	return definition;
 }
 
-} // namespace Rml
+} // namespace ui

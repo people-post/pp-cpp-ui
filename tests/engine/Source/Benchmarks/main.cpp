@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 	if (doctest_context.shouldExit())
 		return doctest_result;
 
-	// RmlUi is initialized during doctest run above as necessary.
+	// pp-cpp-ui is initialized during doctest run above as necessary.
 	// Clean everything up here.
 	TestsShell::ShutdownShell();
 

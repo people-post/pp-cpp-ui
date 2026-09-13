@@ -1,7 +1,7 @@
 #include <ui/Core/FileInterface.h>
 #include <ui/Core/Log.h>
 
-namespace Rml {
+namespace ui {
 
 FileInterface::FileInterface() {}
 
@@ -38,4 +38,4 @@ bool FileInterface::LoadFile(const String& path, String& out_data)
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 class FilterTest;
 
 struct CompiledTestFilter {
@@ -100,7 +100,7 @@ TEST_CASE("filter")
 	REQUIRE(context);
 
 	FilterTestInstancer instancer;
-	Rml::Factory::RegisterFilterInstancer("test", &instancer);
+	ui::Factory::RegisterFilterInstancer("test", &instancer);
 
 	ElementDocument* document = context->LoadDocumentFromMemory(document_filter_rml);
 	document->Show();

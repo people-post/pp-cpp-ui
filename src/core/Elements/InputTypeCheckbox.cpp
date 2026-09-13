@@ -1,7 +1,7 @@
 #include "InputTypeCheckbox.h"
 #include <ui/Core/Elements/ElementFormControlInput.h>
 
-namespace Rml {
+namespace ui {
 
 InputTypeCheckbox::InputTypeCheckbox(ElementFormControlInput* element) : InputType(element) {}
 
@@ -55,4 +55,4 @@ bool InputTypeCheckbox::GetIntrinsicDimensions(Vector2f& dimensions, float& rati
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

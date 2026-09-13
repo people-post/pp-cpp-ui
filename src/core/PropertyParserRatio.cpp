@@ -1,6 +1,6 @@
 #include "PropertyParserRatio.h"
 
-namespace Rml {
+namespace ui {
 
 PropertyParserRatio::PropertyParserRatio() {}
 
@@ -36,4 +36,4 @@ bool PropertyParserRatio::ParseValue(Property& property, const String& value, co
 	return true;
 }
 
-} // namespace Rml
+} // namespace ui

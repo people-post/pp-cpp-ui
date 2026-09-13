@@ -3,7 +3,7 @@
 #include <ui/Core/ElementUtilities.h>
 #include <ui/Core/Elements/ElementFormControl.h>
 
-namespace Rml {
+namespace ui {
 
 ElementForm::ElementForm(const String& tag) : Element(tag) {}
 
@@ -24,7 +24,7 @@ void ElementForm::Submit(const String& name, const String& submit_value)
 
 	for (size_t i = 0; i < form_controls.size(); i++)
 	{
-		ElementFormControl* control = rmlui_dynamic_cast<ElementFormControl*>(form_controls[i]);
+		ElementFormControl* control = ui_dynamic_cast<ElementFormControl*>(form_controls[i]);
 		if (!control)
 			continue;
 
@@ -54,4 +54,4 @@ void ElementForm::Submit(const String& name, const String& submit_value)
 	DispatchEvent(EventId::Submit, values);
 }
 
-} // namespace Rml
+} // namespace ui

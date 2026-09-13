@@ -2,7 +2,7 @@
 
 #include "Header.h"
 
-namespace Rml {
+namespace ui {
 
 struct FontMetrics {
 	int size;                  // Specified font size [px].
@@ -19,4 +19,4 @@ struct FontMetrics {
 	bool has_ellipsis;         // True if the ellipsis character (U+2026) is available in this font.
 };
 
-} // namespace Rml
+} // namespace ui

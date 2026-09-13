@@ -3,7 +3,7 @@
 #include <ui/Core/EventListener.h>
 #include <ui/Core/Plugin.h>
 
-namespace Rml {
+namespace ui {
 
 class ElementDocument;
 class SystemInterface;
@@ -17,10 +17,10 @@ class ElementDataModels;
 class DebuggerSystemInterface;
 
 /**
-    RmlUi plugin interface for the debugger.
+    pp-cpp-ui plugin interface for the debugger.
  */
 
-class DebuggerPlugin : public Rml::Plugin, public Rml::EventListener {
+class DebuggerPlugin : public ui::Plugin, public ui::EventListener {
 public:
 	DebuggerPlugin();
 	~DebuggerPlugin();
@@ -45,10 +45,10 @@ public:
 	/// Renders any debug elements in the debug context.
 	void Render();
 
-	/// Called when RmlUi shuts down.
+	/// Called when pp-cpp-ui shuts down.
 	void OnShutdown() override;
 
-	/// Called whenever a RmlUi context is destroyed.
+	/// Called whenever a pp-cpp-ui context is destroyed.
 	/// @param[in] context The destroyed context.
 	void OnContextDestroy(Context* context) override;
 
@@ -71,7 +71,7 @@ private:
 	bool LoadLogElement();
 	bool LoadDataExplorerElement();
 
-	void SetupInfoListeners(Rml::Context* new_context);
+	void SetupInfoListeners(ui::Context* new_context);
 
 	// Release all loaded elements
 	void ReleaseElements();
@@ -88,7 +88,7 @@ private:
 	ElementDataModels* data_explorer_element;
 	ElementContextHook* hook_element;
 
-	Rml::SystemInterface* application_interface;
+	ui::SystemInterface* application_interface;
 	UniquePtr<DebuggerSystemInterface> log_interface;
 
 	UniquePtr<ElementInstancer> hook_element_instancer, debug_document_instancer, info_element_instancer, log_element_instancer,
@@ -101,4 +101,4 @@ private:
 };
 
 } // namespace Debugger
-} // namespace Rml
+} // namespace ui

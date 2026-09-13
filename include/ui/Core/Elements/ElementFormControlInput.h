@@ -3,7 +3,7 @@
 #include "../Header.h"
 #include "ElementFormControl.h"
 
-namespace Rml {
+namespace ui {
 
 class InputType;
 
@@ -11,9 +11,9 @@ class InputType;
     A form control for the generic input element. All functionality is handled through an input type interface.
  */
 
-class RMLUICORE_API ElementFormControlInput : public ElementFormControl {
+class UI_CORE_API ElementFormControlInput : public ElementFormControl {
 public:
-	RMLUI_RTTI_DefineWithParent(ElementFormControlInput, ElementFormControl)
+	UI_RTTI_DefineWithParent(ElementFormControlInput, ElementFormControl)
 
 	/// Constructs a new ElementFormControlInput. This should not be called directly; use the
 	/// Factory instead.
@@ -91,4 +91,4 @@ private:
 	String type_name;
 };
 
-} // namespace Rml
+} // namespace ui

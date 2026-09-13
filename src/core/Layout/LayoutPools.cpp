@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <cstddef>
 
-namespace Rml {
+namespace ui {
 
 template <size_t Size>
 struct LayoutChunk {
@@ -54,7 +54,7 @@ void* LayoutPools::AllocateLayoutChunk(size_t size)
 	else if (size <= ChunkSizeBig)
 		return layout_pools_data->layout_chunk_pool_big.AllocateAndConstruct();
 
-	RMLUI_ERROR;
+	UI_ERROR;
 	return nullptr;
 }
 
@@ -69,8 +69,8 @@ void LayoutPools::DeallocateLayoutChunk(void* chunk, size_t size)
 		layout_pools_data->layout_chunk_pool_big.DestroyAndDeallocate((LayoutChunk<ChunkSizeBig>*)chunk);
 	else
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 	}
 }
 
-} // namespace Rml
+} // namespace ui

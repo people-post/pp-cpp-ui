@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     Helper functions for string manipulation.
@@ -12,10 +12,10 @@ namespace Rml {
 class StringView;
 
 /// Construct a string using sprintf-style syntax.
-RMLUICORE_API String CreateString(const char* format, ...) RMLUI_ATTRIBUTE_FORMAT_PRINTF(1, 2);
+UI_CORE_API String CreateString(const char* format, ...) UI_ATTRIBUTE_FORMAT_PRINTF(1, 2);
 
 /// Format to a string using sprintf-style syntax.
-RMLUICORE_API int FormatString(String& string, const char* format, ...) RMLUI_ATTRIBUTE_FORMAT_PRINTF(2, 3);
+UI_CORE_API int FormatString(String& string, const char* format, ...) UI_ATTRIBUTE_FORMAT_PRINTF(2, 3);
 
 namespace StringUtilities {
 	/// Expands character-delimited list of values in a single string to a whitespace-trimmed list
@@ -24,7 +24,7 @@ namespace StringUtilities {
 	/// @param[in] string String to expand.
 	/// @param[in] delimiter Delimiter found between entries in the string list.
 	/// @param[in] ignore_repeated_delimiters If true, repeated values of the delimiter will not add additional entries to the list.
-	RMLUICORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter = ',',
+	UI_CORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter = ',',
 		bool ignore_repeated_delimiters = false);
 	/// Expands character-delimited list of values with custom quote characters.
 	/// @param[out] string_list Resulting list of values.
@@ -33,29 +33,29 @@ namespace StringUtilities {
 	/// @param[in] quote_character Begin quote
 	/// @param[in] unquote_character End quote
 	/// @param[in] ignore_repeated_delimiters If true, repeated values of the delimiter will not add additional entries to the list.
-	RMLUICORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter, char quote_character, char unquote_character,
+	UI_CORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter, char quote_character, char unquote_character,
 		bool ignore_repeated_delimiters = false);
 	/// Joins a list of string values into a single string separated by a character delimiter.
 	/// @param[out] string Resulting concatenated string.
 	/// @param[in] string_list Input list of string values.
 	/// @param[in] delimiter Delimiter to insert between the individual values.
-	RMLUICORE_API void JoinString(String& string, const StringList& string_list, const char delimiter = ',');
+	UI_CORE_API void JoinString(String& string, const StringList& string_list, const char delimiter = ',');
 
 	/// Converts upper-case characters in string to lower-case.
-	RMLUICORE_API String ToLower(String string);
+	UI_CORE_API String ToLower(String string);
 	/// Converts lower-case characters in string to upper-case.
-	RMLUICORE_API String ToUpper(String string);
+	UI_CORE_API String ToUpper(String string);
 
 	/// Encode RML characters, eg. '<' to '&lt;'
-	RMLUICORE_API String EncodeRml(const String& string);
+	UI_CORE_API String EncodeRml(const String& string);
 
 	/// Decode RML characters, eg. '&lt;' to '<'
-	RMLUICORE_API String DecodeRml(const String& string);
+	UI_CORE_API String DecodeRml(const String& string);
 
 	// Replaces all occurrences of 'search' in 'subject' with 'replace'.
-	RMLUICORE_API String Replace(String subject, const String& search, const String& replace);
+	UI_CORE_API String Replace(String subject, const String& search, const String& replace);
 	// Replaces all occurrences of 'search' in 'subject' with 'replace'.
-	RMLUICORE_API String Replace(String subject, char search, char replace);
+	UI_CORE_API String Replace(String subject, char search, char replace);
 
 	/// Checks if a given value is a whitespace character.
 	inline bool IsWhitespace(const char x)
@@ -64,37 +64,37 @@ namespace StringUtilities {
 	}
 
 	/// Strip whitespace characters from the beginning and end of a string.
-	RMLUICORE_API String StripWhitespace(const String& string);
+	UI_CORE_API String StripWhitespace(const String& string);
 
 	/// Strip whitespace characters from the beginning and end of a string.
-	RMLUICORE_API String StripWhitespace(StringView string);
+	UI_CORE_API String StripWhitespace(StringView string);
 
 	/// Trim trailing zeros and the dot from a string-representation of a number with a decimal point.
 	/// @warning If the string does not represent a number _with_ a decimal point, the result is ill-defined.
-	RMLUICORE_API void TrimTrailingDotZeros(String& string);
+	UI_CORE_API void TrimTrailingDotZeros(String& string);
 
 	/// Returns true if the string starts with the given value.
-	RMLUICORE_API bool StartsWith(StringView string, StringView start);
+	UI_CORE_API bool StartsWith(StringView string, StringView start);
 	/// Returns true if the string ends with the given value.
-	RMLUICORE_API bool EndsWith(StringView string, StringView end);
+	UI_CORE_API bool EndsWith(StringView string, StringView end);
 
 	/// Case insensitive string comparison. Returns true if they compare equal.
-	RMLUICORE_API bool StringCompareCaseInsensitive(StringView lhs, StringView rhs);
+	UI_CORE_API bool StringCompareCaseInsensitive(StringView lhs, StringView rhs);
 
 	// Decode the first code point in a zero-terminated UTF-8 string.
-	RMLUICORE_API Character ToCharacter(const char* p, const char* p_end);
+	UI_CORE_API Character ToCharacter(const char* p, const char* p_end);
 
 	/// Returns number of bytes in a UTF-8 character.
-	RMLUICORE_API size_t BytesUTF8(Character character);
+	UI_CORE_API size_t BytesUTF8(Character character);
 
 	// Encode a single code point as a UTF-8 string.
-	RMLUICORE_API String ToUTF8(Character character);
+	UI_CORE_API String ToUTF8(Character character);
 
 	// Encode an array of code points as a UTF-8 string.
-	RMLUICORE_API String ToUTF8(const Character* characters, int num_characters);
+	UI_CORE_API String ToUTF8(const Character* characters, int num_characters);
 
 	/// Returns number of characters in a UTF-8 string.
-	RMLUICORE_API size_t LengthUTF8(StringView string_view);
+	UI_CORE_API size_t LengthUTF8(StringView string_view);
 
 	// Seek forward in a UTF-8 string, skipping continuation bytes.
 	inline const char* SeekForwardUTF8(const char* p, const char* p_end)
@@ -113,15 +113,15 @@ namespace StringUtilities {
 
 	/// Seek forward one extended grapheme cluster (emoji ZWJ / skin tone / VS16 / flags).
 	/// `p` must point at a code-point boundary (or end).
-	RMLUICORE_API const char* SeekForwardGraphemeCluster(const char* p, const char* p_end);
+	UI_CORE_API const char* SeekForwardGraphemeCluster(const char* p, const char* p_end);
 	/// Seek backward one extended grapheme cluster. `p` is a boundary (or begin).
-	RMLUICORE_API const char* SeekBackwardGraphemeCluster(const char* p, const char* p_begin);
+	UI_CORE_API const char* SeekBackwardGraphemeCluster(const char* p, const char* p_begin);
 
 	/// Converts a character position in a UTF-8 string to a byte offset.
-	RMLUICORE_API int ConvertCharacterOffsetToByteOffset(StringView string, int character_offset);
+	UI_CORE_API int ConvertCharacterOffsetToByteOffset(StringView string, int character_offset);
 
 	/// Converts a byte offset of a UTF-8 string to a character position.
-	RMLUICORE_API int ConvertByteOffsetToCharacterOffset(StringView string, int byte_offset);
+	UI_CORE_API int ConvertByteOffsetToCharacterOffset(StringView string, int byte_offset);
 } // namespace StringUtilities
 
 /*
@@ -130,7 +130,7 @@ namespace StringUtilities {
     The string view is agnostic to the underlying encoding, any operation will strictly operate on bytes.
 */
 
-class RMLUICORE_API StringView {
+class UI_CORE_API StringView {
 public:
 	StringView();
 	StringView(const char* p_begin, const char* p_end);
@@ -170,7 +170,7 @@ private:
 
 */
 
-class RMLUICORE_API StringIteratorU8 {
+class UI_CORE_API StringIteratorU8 {
 public:
 	StringIteratorU8(const char* p_begin, const char* p, const char* p_end);
 	StringIteratorU8(StringView string);
@@ -207,4 +207,4 @@ private:
 	inline void SeekBack();
 };
 
-} // namespace Rml
+} // namespace ui

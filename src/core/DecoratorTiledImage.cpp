@@ -4,7 +4,7 @@
 #include <ui/Core/MeshUtilities.h>
 #include <ui/Core/RenderManager.h>
 
-namespace Rml {
+namespace ui {
 
 DecoratorTiledImage::DecoratorTiledImage() {}
 
@@ -73,4 +73,4 @@ SharedPtr<Decorator> DecoratorTiledImageInstancer::InstanceDecorator(const Strin
 	return decorator;
 }
 
-} // namespace Rml
+} // namespace ui

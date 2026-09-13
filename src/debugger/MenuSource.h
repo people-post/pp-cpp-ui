@@ -56,7 +56,7 @@ span#version-number
 )RCSS";
 
 static const char* menu_rml = R"RML(
-<div id="version-info">RmlUi <span id="version-number"></span></div>
+<div id="version-info">pp-cpp-ui <span id="version-number"></span></div>
 <div id="button-group">
 	<button id="event-log-button">Event Log</button>
 	<button id="debug-info-button">Element Info</button>

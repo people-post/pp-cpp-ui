@@ -10,7 +10,7 @@
 #include <limits.h>
 #include <stdint.h>
 
-namespace Rml {
+namespace ui {
 
 PropertySpecification::PropertySpecification(size_t reserve_num_properties, size_t reserve_num_shorthands) :
 	// Increment reserve numbers by one because the 'invalid' property occupies the first element
@@ -35,7 +35,7 @@ PropertyDefinition& PropertySpecification::RegisterProperty(const String& proper
 		Log::Message(Log::LT_ERROR,
 			"Fatal error while registering property '%s': Maximum number of allowed properties exceeded. Continuing execution may lead to crash.",
 			property_name.c_str());
-		RMLUI_ERROR;
+		UI_ERROR;
 		return *properties[0];
 	}
 
@@ -197,7 +197,7 @@ const ShorthandDefinition* PropertySpecification::GetShorthand(const String& sho
 
 bool PropertySpecification::ParsePropertyDeclaration(PropertyDictionary& dictionary, const String& property_name, const String& property_value) const
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// Try as a property first
 	PropertyId property_id = property_map->GetId(property_name);
@@ -249,7 +249,7 @@ bool PropertySpecification::ParseShorthandDeclaration(PropertyDictionary& dictio
 	// Handle the special behavior of the flex shorthand first, otherwise it acts like 'FallThrough'.
 	if (shorthand_definition->type == ShorthandType::Flex && !property_values.empty())
 	{
-		RMLUI_ASSERT(shorthand_definition->items.size() == 3);
+		UI_ASSERT(shorthand_definition->items.size() == 3);
 		if (property_values[0] == "none")
 		{
 			property_values = {"0", "0", "auto"};
@@ -268,7 +268,7 @@ bool PropertySpecification::ParseShorthandDeclaration(PropertyDictionary& dictio
 				dictionary.SetProperty(item.property_id, new_property);
 			}
 			(void)result;
-			RMLUI_ASSERT(result);
+			UI_ASSERT(result);
 		}
 	}
 
@@ -293,12 +293,12 @@ bool PropertySpecification::ParseShorthandDeclaration(PropertyDictionary& dictio
 			// right, and the third onto the bottom.
 			box_side_to_value_index = {0, 1, 2, 1};
 			break;
-		default: RMLUI_ERROR; break;
+		default: UI_ERROR; break;
 		}
 
 		for (int i = 0; i < 4; i++)
 		{
-			RMLUI_ASSERT(shorthand_definition->items[i].type == ShorthandItemType::Property);
+			UI_ASSERT(shorthand_definition->items[i].type == ShorthandItemType::Property);
 			Property new_property;
 			int value_index = box_side_to_value_index[i];
 			if (!shorthand_definition->items[i].property_definition->ParseValue(new_property, property_values[value_index]))
@@ -371,7 +371,7 @@ bool PropertySpecification::ParseShorthandDeclaration(PropertyDictionary& dictio
 	}
 	else
 	{
-		RMLUI_ASSERT(shorthand_definition->type == ShorthandType::Box || shorthand_definition->type == ShorthandType::FallThrough ||
+		UI_ASSERT(shorthand_definition->type == ShorthandType::Box || shorthand_definition->type == ShorthandType::FallThrough ||
 			shorthand_definition->type == ShorthandType::Replicate || shorthand_definition->type == ShorthandType::Flex);
 
 		// Abort over-specified shorthand values.
@@ -451,7 +451,7 @@ String PropertySpecification::PropertiesToString(const PropertyDictionary& dicti
 
 void PropertySpecification::ParsePropertyValues(StringList& values_list, const String& values, const SplitOption split_option) const
 {
-	RMLUI_ASSERT(values_list.empty());
+	UI_ASSERT(values_list.empty());
 
 	const bool split_values = (split_option != SplitOption::None);
 	const bool split_by_comma = (split_option == SplitOption::Comma);
@@ -599,4 +599,4 @@ void PropertySpecification::ParsePropertyValues(StringList& values_list, const S
 		return Error();
 }
 
-} // namespace Rml
+} // namespace ui

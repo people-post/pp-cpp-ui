@@ -7,44 +7,29 @@
 ## Tree
 
 ```text
-include/
-  ui/                    # Public API (engine + owned host glue)
-    Core/ Config/ SVG/ Debugger/
-    platform/ render/    # SDL / GL3 backend headers
-  RmlUi/                 # Compatibility shims → #include <ui/…>
+include/ui/          Public API
+  Core/ Config/ SVG/ Debugger/
+  platform/ render/  Owned SDL / GL3 backend headers
 src/
-  core/ svg/ debugger/   # Engine implementation
-  platform/ render/      # Owned SDL/GL backend
+  core/ svg/ debugger/
+  platform/ render/
 third_party/
 cmake/
 docs/
 tests/
-  engine/                # Unit tests
-  support/               # Shell + SDL_GL3 reference backend only
-  Tests -> engine        # Shim for legacy fixture virtual paths
+  engine/            Unit tests
+  support/           Shell + SDL_GL3 reference backend only
 ```
 
-## Include rules
+## Include & namespace
 
-| Consumer code | Preferred | Still works (shim) |
-|---------------|-----------|--------------------|
-| Engine types | `#include <ui/Core/…>` | `#include <RmlUi/Core/…>` |
-| Owned backend | `#include <ui/platform/…>` | flat `RmlUi_Platform_SDL.h` shims |
+```cpp
+#include <ui/Core/Element.h>
+ui::Element* el = ...;
+```
 
-Namespace remains `Rml::` for now (no consumer churn). C++ namespace brand rename is a later step.
-
-## CMake targets
-
-| Target | Alias | Role |
-|--------|-------|------|
-| `rmlui_core` | `RmlUi::Core` | Engine core (+ SVG / HarfBuzz) |
-| `rmlui_debugger` | `RmlUi::Debugger` | Debugger |
-| `pp_ui_rml` | `pp::ui_rml` | INTERFACE → core + `include/` |
-| `pp_ui_backend` | `pp::ui_backend` | STATIC SDL/GL3 |
-| `pp_ui` | `pp::ui` | Umbrella |
+CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`, `pp::ui_backend`, `pp::ui`.
 
 ## Test data path shim
 
-Unit tests still reference virtual paths under `../Tests/Data/...` relative to the
-samples root (`tests/support/`). `tests/Tests` is a symlink to `tests/engine` so
-those paths resolve without rewriting every fixture reference.
+`tests/Tests` → `tests/engine` so legacy fixture virtual paths under `../Tests/Data/...` still resolve.

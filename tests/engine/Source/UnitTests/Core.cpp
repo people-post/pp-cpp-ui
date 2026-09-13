@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String document_textures_rml = R"(
 <rml>
@@ -92,7 +92,7 @@ static const String document_basic_rml = R"(
 
 static inline StringList GetSortedTextureSourceList()
 {
-	StringList list = Rml::GetTextureSourceList();
+	StringList list = ui::GetTextureSourceList();
 	std::sort(list.begin(), list.end());
 	return list;
 }
@@ -247,7 +247,7 @@ TEST_CASE("core.release_resources")
 		REQUIRE(counters.release_texture == 0);
 
 		// Release all textures and verify that the render interface received the release call.
-		Rml::ReleaseTextures();
+		ui::ReleaseTextures();
 		CHECK(counters.load_texture == startup_counters.load_texture);
 		CHECK(counters.generate_texture == startup_counters.generate_texture);
 		CHECK(counters.release_texture == startup_counters.generate_texture + startup_counters.load_texture);
@@ -269,7 +269,7 @@ TEST_CASE("core.release_resources")
 	SUBCASE("ReleaseTexture")
 	{
 		const auto startup_counters = counters;
-		Rml::ReleaseTexture("assets/invader.tga");
+		ui::ReleaseTexture("assets/invader.tga");
 		CHECK(counters.release_texture == startup_counters.release_texture + 1);
 
 		TestsShell::RenderLoop();
@@ -281,7 +281,7 @@ TEST_CASE("core.release_resources")
 		const auto counter_generate_before = counters.generate_texture;
 		const auto counter_release_before = counters.release_texture;
 
-		Rml::ReleaseFontResources();
+		ui::ReleaseFontResources();
 		CHECK(counters.generate_texture == counter_generate_before);
 		CHECK(counters.release_texture > counter_release_before);
 
@@ -313,7 +313,7 @@ TEST_CASE("core.release_resources")
 		CHECK(counters.compile_geometry > 0);
 		CHECK(counters.release_geometry == 0);
 
-		Rml::ReleaseCompiledGeometry();
+		ui::ReleaseCompiledGeometry();
 		CHECK(counters.compile_geometry == counters.release_geometry);
 
 		TestsShell::RenderLoop();
@@ -345,23 +345,23 @@ TEST_CASE("core.initialize")
 
 	SUBCASE("GlobalRenderInterface")
 	{
-		Rml::SetRenderInterface(render_interface);
-		REQUIRE(Rml::CreateContext("invalid_before_initialise", window_size) == nullptr);
-		REQUIRE(Rml::Initialise());
-		REQUIRE(Rml::CreateContext("main", window_size) != nullptr);
+		ui::SetRenderInterface(render_interface);
+		REQUIRE(ui::CreateContext("invalid_before_initialise", window_size) == nullptr);
+		REQUIRE(ui::Initialise());
+		REQUIRE(ui::CreateContext("main", window_size) != nullptr);
 	}
 
 	SUBCASE("ContextRenderInterface")
 	{
-		REQUIRE(Rml::CreateContext("invalid_before_initialise", window_size) == nullptr);
+		REQUIRE(ui::CreateContext("invalid_before_initialise", window_size) == nullptr);
 		// We should be able to initialize without setting any interfaces.
-		REQUIRE(Rml::Initialise());
+		REQUIRE(ui::Initialise());
 		// But then we must pass a render interface to new contexts (this will emit a warning).
-		REQUIRE(Rml::CreateContext("invalid_no_render_interface", window_size) == nullptr);
-		REQUIRE(Rml::CreateContext("main", window_size, render_interface) != nullptr);
+		REQUIRE(ui::CreateContext("invalid_no_render_interface", window_size) == nullptr);
+		REQUIRE(ui::CreateContext("main", window_size, render_interface) != nullptr);
 	}
 
-	Rml::Shutdown();
+	ui::Shutdown();
 }
 
 TEST_CASE("core.observer_ptr")
@@ -393,12 +393,12 @@ TEST_CASE("core.RemoveContext")
 	const Vector2i window_size = {1280, 720};
 
 	Shell::Initialize();
-	Rml::SetSystemInterface(system_interface);
-	REQUIRE(Rml::GetRenderInterface() == nullptr);
-	REQUIRE(Rml::Initialise());
+	ui::SetSystemInterface(system_interface);
+	REQUIRE(ui::GetRenderInterface() == nullptr);
+	REQUIRE(ui::Initialise());
 	Shell::LoadFonts();
 
-	Context* context = Rml::CreateContext("main", window_size, render_interface);
+	Context* context = ui::CreateContext("main", window_size, render_interface);
 	REQUIRE(context);
 
 	ElementDocument* document = context->LoadDocumentFromMemory(document_basic_rml);
@@ -407,11 +407,11 @@ TEST_CASE("core.RemoveContext")
 	context->Update();
 	context->Render();
 
-	REQUIRE(Rml::RemoveContext(context->GetName()));
+	REQUIRE(ui::RemoveContext(context->GetName()));
 
 	SUBCASE("Normal shutdown")
 	{
-		Rml::Shutdown();
+		ui::Shutdown();
 		TestsShell::ResetTestsRenderInterface();
 	}
 
@@ -425,7 +425,7 @@ TEST_CASE("core.RemoveContext")
 
 		TestsShell::ResetTestsRenderInterface();
 
-		Rml::Shutdown();
+		ui::Shutdown();
 	}
 
 	Shell::Shutdown();

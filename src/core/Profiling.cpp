@@ -1,6 +1,6 @@
 #include <ui/Core/Profiling.h>
 
-#ifdef RMLUI_TRACY_MEMORY_PROFILING
+#ifdef UI_TRACY_MEMORY_PROFILING
 	#include <cstdlib>
 	#include <stddef.h>
 

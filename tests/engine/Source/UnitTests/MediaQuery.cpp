@@ -4,7 +4,7 @@
 #include <ui/Core/ElementDocument.h>
 #include <doctest.h>
 
-using namespace Rml;
+using namespace ui;
 
 static const String document_media_query1_rml = R"(
 <rml>

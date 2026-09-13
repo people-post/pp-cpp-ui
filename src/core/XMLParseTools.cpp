@@ -8,7 +8,7 @@
 #include <ctype.h>
 #include <string.h>
 
-namespace Rml {
+namespace ui {
 
 const char* XMLParseTools::FindTag(const char* tag, const char* string, bool closing_tag)
 {
@@ -162,4 +162,4 @@ const char* XMLParseTools::ParseDataBrackets(bool& inside_brackets, bool& inside
 	return nullptr;
 }
 
-} // namespace Rml
+} // namespace ui

@@ -4,7 +4,7 @@
 #include "Types.h"
 #include "UniqueRenderResource.h"
 
-namespace Rml {
+namespace ui {
 
 class RenderInterface;
 class RenderManager;
@@ -23,7 +23,7 @@ using CallbackTextureFunction = Function<bool(const CallbackTextureInterface& te
 
     Can be constructed through the render manager.
  */
-class RMLUICORE_API CallbackTexture final : public UniqueRenderResource<CallbackTexture, StableVectorIndex, StableVectorIndex::Invalid> {
+class UI_CORE_API CallbackTexture final : public UniqueRenderResource<CallbackTexture, StableVectorIndex, StableVectorIndex::Invalid> {
 public:
 	CallbackTexture() = default;
 
@@ -41,7 +41,7 @@ private:
 
     The client should submit a texture using one of the Generate/Save/Set functions exactly once during the callback.
  */
-class RMLUICORE_API CallbackTextureInterface {
+class UI_CORE_API CallbackTextureInterface {
 public:
 	CallbackTextureInterface(RenderManager& render_manager, RenderInterface& render_interface, TextureHandle& texture_handle, Vector2i& dimensions);
 
@@ -74,7 +74,7 @@ private:
 
     Used to generate and cache callback textures for one or more render managers.
  */
-class RMLUICORE_API CallbackTextureSource {
+class UI_CORE_API CallbackTextureSource {
 public:
 	CallbackTextureSource() = default;
 	CallbackTextureSource(CallbackTextureFunction&& callback);
@@ -93,4 +93,4 @@ private:
 	mutable SmallUnorderedMap<RenderManager*, CallbackTexture> textures;
 };
 
-} // namespace Rml
+} // namespace ui

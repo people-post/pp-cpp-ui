@@ -4,7 +4,7 @@
 	<link type="text/rcss" href="../style.rcss"/>
 	<link rel="help (css2)" href="https://drafts.csswg.org/css2/#white-space-prop" />
 	<link rel="help (css3)" href="https://www.w3.org/TR/css-text-3/#white-space-rules" />
-	<link rel="Issue #383" href="https://github.com/mikke89/RmlUi/issues/383" />
+	<link rel="Issue #383" href="https://github.com/mikke89/pp-cpp-ui/issues/383" />
 	<meta name="Assert" content="The 'I' and 'ABC' lines should be horizontally centered, intersecting the vertical guideline." />
 	<meta name="Assert" content="Each 'hello world' text should have the same spacing." />
 	<meta name="Assert" content="Each 'duck' should have spacing to the next one." />

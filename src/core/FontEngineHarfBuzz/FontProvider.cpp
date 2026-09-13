@@ -10,18 +10,18 @@ static FontProvider* g_font_provider = nullptr;
 
 FontProvider::FontProvider()
 {
-	RMLUI_ASSERT(!g_font_provider);
+	UI_ASSERT(!g_font_provider);
 }
 
 FontProvider::~FontProvider()
 {
-	RMLUI_ASSERT(g_font_provider == this);
+	UI_ASSERT(g_font_provider == this);
 }
 
 bool FontProvider::Initialise()
 {
-	RMLUI_ASSERT(!g_font_provider);
-	if (!Rml::FreeType::Initialise())
+	UI_ASSERT(!g_font_provider);
+	if (!ui::FreeType::Initialise())
 		return false;
 	g_font_provider = new FontProvider;
 	return true;
@@ -29,21 +29,21 @@ bool FontProvider::Initialise()
 
 void FontProvider::Shutdown()
 {
-	RMLUI_ASSERT(g_font_provider);
+	UI_ASSERT(g_font_provider);
 	delete g_font_provider;
 	g_font_provider = nullptr;
-	Rml::FreeType::Shutdown();
+	ui::FreeType::Shutdown();
 }
 
 FontProvider& FontProvider::Get()
 {
-	RMLUI_ASSERT(g_font_provider);
+	UI_ASSERT(g_font_provider);
 	return *g_font_provider;
 }
 
 FontFaceHandleHarfBuzz* FontProvider::GetFontFaceHandle(const String& family, Style::FontStyle style, Style::FontWeight weight, int size)
 {
-	RMLUI_ASSERTMSG(family == Rml::StringUtilities::ToLower(family), "Font family name must be converted to lowercase before entering here.");
+	UI_ASSERTMSG(family == ui::StringUtilities::ToLower(family), "Font family name must be converted to lowercase before entering here.");
 
 	FontFamilyMap& families = Get().font_families;
 
@@ -71,19 +71,19 @@ FontFaceHandleHarfBuzz* FontProvider::GetFallbackFontFace(int index, int font_si
 
 void FontProvider::ReleaseFontResources()
 {
-	RMLUI_ASSERT(g_font_provider);
+	UI_ASSERT(g_font_provider);
 	for (auto& name_family : g_font_provider->font_families)
 		name_family.second->ReleaseFontResources();
 }
 
 bool FontProvider::LoadFontFace(const String& file_name, int face_index, bool fallback_face, Style::FontWeight weight)
 {
-	Rml::FileInterface* file_interface = Rml::GetFileInterface();
-	Rml::FileHandle handle = file_interface->Open(file_name);
+	ui::FileInterface* file_interface = ui::GetFileInterface();
+	ui::FileHandle handle = file_interface->Open(file_name);
 
 	if (!handle)
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to load font face from %s, could not open file.", file_name.c_str());
+		ui::Log::Message(ui::Log::LT_ERROR, "Failed to load font face from %s, could not open file.", file_name.c_str());
 		return false;
 	}
 
@@ -114,17 +114,17 @@ bool FontProvider::LoadFontFace(Span<const byte> data, int face_index, bool fall
 {
 	using Style::FontWeight;
 
-	Vector<Rml::FaceVariation> face_variations;
-	if (!Rml::FreeType::GetFaceVariations(data, face_variations, face_index))
+	Vector<ui::FaceVariation> face_variations;
+	if (!ui::FreeType::GetFaceVariations(data, face_variations, face_index))
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to load font face from '%s': Invalid or unsupported font face file format.", source.c_str());
+		ui::Log::Message(ui::Log::LT_ERROR, "Failed to load font face from '%s': Invalid or unsupported font face file format.", source.c_str());
 		return false;
 	}
 
-	Vector<Rml::FaceVariation> load_variations;
+	Vector<ui::FaceVariation> load_variations;
 	if (face_variations.empty())
 	{
-		load_variations.push_back(Rml::FaceVariation{Style::FontWeight::Auto, 0, 0});
+		load_variations.push_back(ui::FaceVariation{Style::FontWeight::Auto, 0, 0});
 	}
 	else
 	{
@@ -142,7 +142,7 @@ bool FontProvider::LoadFontFace(Span<const byte> data, int face_index, bool fall
 			constexpr int search_width = 100;
 			const FontWeight current_weight = it->weight;
 
-			int best_width_distance = Rml::Math::Absolute((int)it->width - search_width);
+			int best_width_distance = ui::Math::Absolute((int)it->width - search_width);
 			auto it_best_width = it;
 
 			// Search forward to find the best 'width' with the same weight.
@@ -151,7 +151,7 @@ bool FontProvider::LoadFontFace(Span<const byte> data, int face_index, bool fall
 				if (it->weight != current_weight)
 					break;
 
-				const int width_distance = Rml::Math::Absolute((int)it->width - search_width);
+				const int width_distance = ui::Math::Absolute((int)it->width - search_width);
 				if (width_distance < best_width_distance)
 				{
 					best_width_distance = width_distance;
@@ -165,32 +165,32 @@ bool FontProvider::LoadFontFace(Span<const byte> data, int face_index, bool fall
 
 	if (load_variations.empty())
 	{
-		Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to load font face from '%s': Could not locate face with weight %d.", source.c_str(),
+		ui::Log::Message(ui::Log::LT_ERROR, "Failed to load font face from '%s': Could not locate face with weight %d.", source.c_str(),
 			(int)weight);
 		return false;
 	}
 
-	for (const Rml::FaceVariation& variation : load_variations)
+	for (const ui::FaceVariation& variation : load_variations)
 	{
-		FontFaceHandleFreetype ft_face = Rml::FreeType::LoadFace(data, source, face_index, variation.named_instance_index);
+		FontFaceHandleFreetype ft_face = ui::FreeType::LoadFace(data, source, face_index, variation.named_instance_index);
 		if (!ft_face)
 			return false;
 
 		if (font_family.empty())
-			Rml::FreeType::GetFaceStyle(ft_face, &font_family, &style, nullptr);
+			ui::FreeType::GetFaceStyle(ft_face, &font_family, &style, nullptr);
 		if (weight == FontWeight::Auto)
-			Rml::FreeType::GetFaceStyle(ft_face, nullptr, nullptr, &weight);
+			ui::FreeType::GetFaceStyle(ft_face, nullptr, nullptr, &weight);
 
 		const FontWeight variation_weight = (variation.weight == FontWeight::Auto ? weight : variation.weight);
-		const String font_face_description = Rml::GetFontFaceDescription(font_family, style, variation_weight);
+		const String font_face_description = ui::GetFontFaceDescription(font_family, style, variation_weight);
 
 		if (!AddFace(ft_face, font_family, style, variation_weight, fallback_face, std::move(face_memory)))
 		{
-			Rml::Log::Message(Rml::Log::LT_ERROR, "Failed to load font face %s from '%s'.", font_face_description.c_str(), source.c_str());
+			ui::Log::Message(ui::Log::LT_ERROR, "Failed to load font face %s from '%s'.", font_face_description.c_str(), source.c_str());
 			return false;
 		}
 
-		Rml::Log::Message(Rml::Log::LT_INFO, "Loaded font face %s from '%s'.", font_face_description.c_str(), source.c_str());
+		ui::Log::Message(ui::Log::LT_INFO, "Loaded font face %s from '%s'.", font_face_description.c_str(), source.c_str());
 	}
 
 	return true;
@@ -202,7 +202,7 @@ bool FontProvider::AddFace(FontFaceHandleFreetype face, const String& family, St
 	if (family.empty() || weight == Style::FontWeight::Auto)
 		return false;
 
-	String family_lower = Rml::StringUtilities::ToLower(family);
+	String family_lower = ui::StringUtilities::ToLower(family);
 	FontFamily* font_family = nullptr;
 	auto it = font_families.find(family_lower);
 	if (it != font_families.end())
@@ -211,7 +211,7 @@ bool FontProvider::AddFace(FontFaceHandleFreetype face, const String& family, St
 	}
 	else
 	{
-		auto font_family_ptr = Rml::MakeUnique<FontFamily>(family_lower);
+		auto font_family_ptr = ui::MakeUnique<FontFamily>(family_lower);
 		font_family = font_family_ptr.get();
 		font_families[family_lower] = std::move(font_family_ptr);
 	}

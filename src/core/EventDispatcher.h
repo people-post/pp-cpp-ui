@@ -3,7 +3,7 @@
 #include <ui/Core/Event.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class Element;
 class EventListener;
@@ -76,4 +76,4 @@ private:
 	void CollectListeners(int dom_distance_from_target, EventId event_id, EventPhase phases_to_execute, Vector<CollectedListener>& collect_listeners);
 };
 
-} // namespace Rml
+} // namespace ui

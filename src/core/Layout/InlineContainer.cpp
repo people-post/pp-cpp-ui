@@ -12,12 +12,12 @@
 #include "LayoutDetails.h"
 #include "LineBox.h"
 
-namespace Rml {
+namespace ui {
 
 InlineContainer::InlineContainer(BlockContainer* _parent, float _available_width) :
 	LayoutBox(Type::InlineContainer), parent(_parent), root_inline_box(_parent->GetElement())
 {
-	RMLUI_ASSERT(_parent);
+	UI_ASSERT(_parent);
 
 	box_size = {_available_width, -1.f};
 	position = parent->NextBoxPosition();
@@ -32,13 +32,13 @@ InlineContainer::~InlineContainer() {}
 
 InlineBox* InlineContainer::AddInlineElement(Element* element, const Box& box)
 {
-	RMLUI_ASSERT(element);
+	UI_ASSERT(element);
 
 	InlineBox* inline_box = nullptr;
 	InlineLevelBox* inline_level_box = nullptr;
 	InlineBoxBase* parent_box = GetOpenInlineBox();
 
-	if (auto text_element = rmlui_dynamic_cast<ElementText*>(element))
+	if (auto text_element = ui_dynamic_cast<ElementText*>(element))
 	{
 		inline_level_box = parent_box->AddChild(MakeUnique<InlineLevelBox_Text>(text_element));
 	}
@@ -94,7 +94,7 @@ void InlineContainer::CloseInlineElement(InlineBox* inline_box)
 	}
 	else
 	{
-		RMLUI_ERROR;
+		UI_ERROR;
 	}
 }
 
@@ -109,14 +109,14 @@ void InlineContainer::AddBreak(float line_height)
 
 void InlineContainer::AddChainedBox(UniquePtr<LineBox> open_line_box)
 {
-	RMLUI_ASSERT(line_boxes.empty());
-	RMLUI_ASSERT(open_line_box && !open_line_box->IsClosed());
+	UI_ASSERT(line_boxes.empty());
+	UI_ASSERT(open_line_box && !open_line_box->IsClosed());
 	line_boxes.push_back(std::move(open_line_box));
 }
 
 void InlineContainer::Close(UniquePtr<LineBox>* out_open_line_box, Vector2f& out_position, float& out_height)
 {
-	RMLUI_ZoneScoped;
+	UI_ZoneScoped;
 
 	// The parent container may need the open line box to be split and resumed.
 	CloseOpenLineBox(true, out_open_line_box);
@@ -194,7 +194,7 @@ void InlineContainer::UpdateOpenLineBoxPlacement()
 
 void InlineContainer::UpdateLineBoxPlacement(LineBox* line_box, float minimum_width, float minimum_height)
 {
-	RMLUI_ASSERT(line_box);
+	UI_ASSERT(line_box);
 
 	Vector2f minimum_dimensions = {
 		Math::Max(minimum_width, line_box->GetBoxCursor()),
@@ -285,4 +285,4 @@ String InlineContainer::DebugDumpTree(int depth) const
 	return value;
 }
 
-} // namespace Rml
+} // namespace ui

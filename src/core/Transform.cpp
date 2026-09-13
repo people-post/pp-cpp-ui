@@ -3,7 +3,7 @@
 #include <ui/Core/StyleSheetSpecification.h>
 #include <ui/Core/TransformPrimitive.h>
 
-namespace Rml {
+namespace ui {
 
 Transform::Transform() {}
 
@@ -36,4 +36,4 @@ const TransformPrimitive& Transform::GetPrimitive(int i) const noexcept
 	return primitives[i];
 }
 
-} // namespace Rml
+} // namespace ui

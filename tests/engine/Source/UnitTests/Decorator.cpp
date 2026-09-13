@@ -9,9 +9,9 @@
 #include <doctest.h>
 #include <float.h>
 
-using namespace Rml;
+using namespace ui;
 
-static bool DictionaryApproximateMatch(const Rml::Dictionary& dict, const Rml::Dictionary& dict_expected)
+static bool DictionaryApproximateMatch(const ui::Dictionary& dict, const ui::Dictionary& dict_expected)
 {
 	for (auto& pair : dict)
 	{
@@ -30,18 +30,18 @@ static bool DictionaryApproximateMatch(const Rml::Dictionary& dict, const Rml::D
 		CAPTURE(name);
 		REQUIRE(value.GetType() == value_expected.GetType());
 
-		if (value.GetType() == Rml::Variant::Type::FLOAT)
+		if (value.GetType() == ui::Variant::Type::FLOAT)
 		{
 			REQUIRE(value.Get<float>() == doctest::Approx(value_expected.Get<float>()));
 		}
-		else if (value_expected.GetType() == Rml::Variant::Type::VECTOR2)
+		else if (value_expected.GetType() == ui::Variant::Type::VECTOR2)
 		{
 			auto a = value.Get<Vector2f>();
 			auto b = value_expected.Get<Vector2f>();
 			REQUIRE(a.x == doctest::Approx(b.x));
 			REQUIRE(a.y == doctest::Approx(b.y));
 		}
-		else if (value_expected.GetType() == Rml::Variant::Type::COLORSTOPLIST)
+		else if (value_expected.GetType() == ui::Variant::Type::COLORSTOPLIST)
 		{
 			const auto& a = value.GetReference<ColorStopList>();
 			const auto& b = value_expected.GetReference<ColorStopList>();

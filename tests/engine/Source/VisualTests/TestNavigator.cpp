@@ -15,18 +15,18 @@
 // render to be read back out. If we don't wait, we end up saving a screenshot of the previous test.
 constexpr int iteration_wait_frame_count = 2;
 
-TestNavigator::TestNavigator(Rml::RenderInterface* render_interface, Rml::Context* context, TestViewer* viewer, TestSuiteList _test_suites,
+TestNavigator::TestNavigator(ui::RenderInterface* render_interface, ui::Context* context, TestViewer* viewer, TestSuiteList _test_suites,
 	int start_suite, int start_case) : render_interface(render_interface), context(context), viewer(viewer), test_suites(std::move(_test_suites))
 {
-	RMLUI_ASSERT(context);
-	RMLUI_ASSERTMSG(!test_suites.empty(), "At least one test suite is required.");
-	context->GetRootElement()->AddEventListener(Rml::EventId::Keydown, this, true);
-	context->GetRootElement()->AddEventListener(Rml::EventId::Keyup, this, true);
-	context->GetRootElement()->AddEventListener(Rml::EventId::Keydown, this);
-	context->GetRootElement()->AddEventListener(Rml::EventId::Textinput, this);
-	context->GetRootElement()->AddEventListener(Rml::EventId::Change, this);
+	UI_ASSERT(context);
+	UI_ASSERTMSG(!test_suites.empty(), "At least one test suite is required.");
+	context->GetRootElement()->AddEventListener(ui::EventId::Keydown, this, true);
+	context->GetRootElement()->AddEventListener(ui::EventId::Keyup, this, true);
+	context->GetRootElement()->AddEventListener(ui::EventId::Keydown, this);
+	context->GetRootElement()->AddEventListener(ui::EventId::Textinput, this);
+	context->GetRootElement()->AddEventListener(ui::EventId::Change, this);
 
-	suite_index = Rml::Math::Clamp(start_suite, 0, (int)test_suites.size() - 1);
+	suite_index = ui::Math::Clamp(start_suite, 0, (int)test_suites.size() - 1);
 
 	if (start_case > 0)
 		CurrentSuite().SetIndex(start_case);
@@ -35,11 +35,11 @@ TestNavigator::TestNavigator(Rml::RenderInterface* render_interface, Rml::Contex
 
 TestNavigator::~TestNavigator()
 {
-	context->GetRootElement()->RemoveEventListener(Rml::EventId::Keydown, this, true);
-	context->GetRootElement()->RemoveEventListener(Rml::EventId::Keyup, this, true);
-	context->GetRootElement()->RemoveEventListener(Rml::EventId::Keydown, this);
-	context->GetRootElement()->RemoveEventListener(Rml::EventId::Textinput, this);
-	context->GetRootElement()->RemoveEventListener(Rml::EventId::Change, this);
+	context->GetRootElement()->RemoveEventListener(ui::EventId::Keydown, this, true);
+	context->GetRootElement()->RemoveEventListener(ui::EventId::Keyup, this, true);
+	context->GetRootElement()->RemoveEventListener(ui::EventId::Keydown, this);
+	context->GetRootElement()->RemoveEventListener(ui::EventId::Textinput, this);
+	context->GetRootElement()->RemoveEventListener(ui::EventId::Change, this);
 	ReleaseTextureGeometry(render_interface, reference_geometry);
 	ReleaseTextureGeometry(render_interface, reference_highlight_geometry);
 }
@@ -48,7 +48,7 @@ void TestNavigator::Update()
 {
 	if (iteration_state != IterationState::None)
 	{
-		RMLUI_ASSERT(iteration_index >= 0);
+		UI_ASSERT(iteration_index >= 0);
 
 		// Capture test document screenshots iteratively every nth frame.
 		if (iteration_wait_frames > 0)
@@ -57,7 +57,7 @@ void TestNavigator::Update()
 		}
 		else
 		{
-			RMLUI_ASSERT(iteration_index < CurrentSuite().GetNumTests());
+			UI_ASSERT(iteration_index < CurrentSuite().GetNumTests());
 			iteration_wait_frames = iteration_wait_frame_count;
 
 			if (iteration_state == IterationState::Capture)
@@ -70,7 +70,7 @@ void TestNavigator::Update()
 			}
 			else if (iteration_state == IterationState::Comparison)
 			{
-				RMLUI_ASSERT((int)comparison_results.size() == CurrentSuite().GetNumTests());
+				UI_ASSERT((int)comparison_results.size() == CurrentSuite().GetNumTests());
 				int test_index = CurrentSuite().GetIndex();
 				comparison_results[test_index] = CompareCurrentView();
 			}
@@ -92,58 +92,58 @@ void TestNavigator::Render()
 		const TextureGeometry& geometry =
 			(reference_state == ReferenceState::ShowReferenceHighlight ? reference_highlight_geometry : reference_geometry);
 
-		if (const Rml::CompiledGeometryHandle handle = render_interface->CompileGeometry(geometry.mesh.vertices, geometry.mesh.indices))
+		if (const ui::CompiledGeometryHandle handle = render_interface->CompileGeometry(geometry.mesh.vertices, geometry.mesh.indices))
 		{
-			render_interface->RenderGeometry(handle, Rml::Vector2f(0, 0), geometry.texture_handle);
+			render_interface->RenderGeometry(handle, ui::Vector2f(0, 0), geometry.texture_handle);
 			render_interface->ReleaseGeometry(handle);
 		}
 	}
 }
 
-void TestNavigator::ProcessEvent(Rml::Event& event)
+void TestNavigator::ProcessEvent(ui::Event& event)
 {
 	// Keydown events in capture phase to override text input
-	if (event == Rml::EventId::Keydown && event.GetPhase() == Rml::EventPhase::Capture)
+	if (event == ui::EventId::Keydown && event.GetPhase() == ui::EventPhase::Capture)
 	{
-		const auto key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
+		const auto key_identifier = (ui::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 		const bool key_ctrl = event.GetParameter<bool>("ctrl_key", false);
 		const bool key_shift = event.GetParameter<bool>("shift_key", false);
 
-		Rml::Element* element_filter_input = event.GetCurrentElement()->GetElementById("filterinput");
-		RMLUI_ASSERT(element_filter_input);
+		ui::Element* element_filter_input = event.GetCurrentElement()->GetElementById("filterinput");
+		UI_ASSERT(element_filter_input);
 
-		if (key_identifier == Rml::Input::KI_F5)
+		if (key_identifier == ui::Input::KI_F5)
 		{
 			if (key_ctrl && key_shift)
 				StartTestSuiteIteration(IterationState::Comparison);
 			else
 			{
 				ComparisonResult result = CompareCurrentView();
-				const Rml::String compare_path = GetCompareInputDirectory() + '/' + GetImageFilenameFromCurrentTest();
+				const ui::String compare_path = GetCompareInputDirectory() + '/' + GetImageFilenameFromCurrentTest();
 				if (result.success)
 				{
 					if (result.is_equal)
 					{
-						Rml::Log::Message(Rml::Log::LT_INFO, "%s compares EQUAL to the reference image %s.", CurrentSuite().GetFilename().c_str(),
+						ui::Log::Message(ui::Log::LT_INFO, "%s compares EQUAL to the reference image %s.", CurrentSuite().GetFilename().c_str(),
 							compare_path.c_str());
 					}
 					else
 					{
-						Rml::Log::Message(Rml::Log::LT_INFO, "%s compares NOT EQUAL to the reference image %s.\nSee diff image written to %s.",
+						ui::Log::Message(ui::Log::LT_INFO, "%s compares NOT EQUAL to the reference image %s.\nSee diff image written to %s.",
 							CurrentSuite().GetFilename().c_str(), compare_path.c_str(), GetCaptureOutputDirectory().c_str());
 					}
 
 					if (!result.error_msg.empty())
-						Rml::Log::Message(Rml::Log::LT_ERROR, "%s", result.error_msg.c_str());
+						ui::Log::Message(ui::Log::LT_ERROR, "%s", result.error_msg.c_str());
 				}
 				else
 				{
-					Rml::Log::Message(Rml::Log::LT_ERROR, "Comparison of %s failed.\n%s", CurrentSuite().GetFilename().c_str(),
+					ui::Log::Message(ui::Log::LT_ERROR, "Comparison of %s failed.\n%s", CurrentSuite().GetFilename().c_str(),
 						result.error_msg.c_str());
 				}
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_F7)
+		else if (key_identifier == ui::Input::KI_F7)
 		{
 			if (key_ctrl && key_shift)
 			{
@@ -151,29 +151,29 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 			}
 			else
 			{
-				const Rml::String filepath = GetCaptureOutputDirectory() + '/' + GetImageFilenameFromCurrentTest();
+				const ui::String filepath = GetCaptureOutputDirectory() + '/' + GetImageFilenameFromCurrentTest();
 				if (CaptureCurrentView())
-					Rml::Log::Message(Rml::Log::LT_INFO, "Succesfully captured and saved screenshot to %s", filepath.c_str());
+					ui::Log::Message(ui::Log::LT_INFO, "Succesfully captured and saved screenshot to %s", filepath.c_str());
 				else
-					Rml::Log::Message(Rml::Log::LT_ERROR, "Could not capture screenshot to %s", filepath.c_str());
+					ui::Log::Message(ui::Log::LT_ERROR, "Could not capture screenshot to %s", filepath.c_str());
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_F1)
+		else if (key_identifier == ui::Input::KI_F1)
 		{
 			ShowReference(ReferenceState::None);
 			viewer->ShowHelp(!viewer->IsHelpVisible());
 		}
-		else if (key_identifier == Rml::Input::KI_F && key_ctrl)
+		else if (key_identifier == ui::Input::KI_F && key_ctrl)
 		{
 			element_filter_input->Focus();
-			context->ProcessKeyDown(Rml::Input::KI_A, Rml::Input::KeyModifier::KM_CTRL);
-			context->ProcessKeyUp(Rml::Input::KI_A, Rml::Input::KeyModifier::KM_CTRL);
+			context->ProcessKeyDown(ui::Input::KI_A, ui::Input::KeyModifier::KM_CTRL);
+			context->ProcessKeyUp(ui::Input::KI_A, ui::Input::KeyModifier::KM_CTRL);
 		}
-		else if (key_identifier == Rml::Input::KI_R && key_ctrl)
+		else if (key_identifier == ui::Input::KI_R && key_ctrl)
 		{
 			LoadActiveTest(true);
 		}
-		else if (key_identifier == Rml::Input::KI_S && key_ctrl)
+		else if (key_identifier == ui::Input::KI_S && key_ctrl)
 		{
 			if (source_state == SourceType::None)
 			{
@@ -189,19 +189,19 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 			viewer->ShowSource(source_state);
 			ShowReference(ReferenceState::None);
 		}
-		else if (key_identifier == Rml::Input::KI_Q && key_ctrl)
+		else if (key_identifier == ui::Input::KI_Q && key_ctrl)
 		{
 			if (reference_state != ReferenceState::None)
 				ShowReference(ReferenceState::None);
 			else
 				ShowReference(key_shift ? ReferenceState::ShowReferenceHighlight : ReferenceState::ShowReference);
 		}
-		else if (key_identifier == Rml::Input::KI_LSHIFT || key_identifier == Rml::Input::KI_RSHIFT)
+		else if (key_identifier == ui::Input::KI_LSHIFT || key_identifier == ui::Input::KI_RSHIFT)
 		{
 			if (reference_state == ReferenceState::ShowReference)
 				ShowReference(ReferenceState::ShowReferenceHighlight);
 		}
-		else if (key_identifier == Rml::Input::KI_ESCAPE)
+		else if (key_identifier == ui::Input::KI_ESCAPE)
 		{
 			if (iteration_state != IterationState::None)
 			{
@@ -234,11 +234,11 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 				UpdateGoToText();
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_RETURN || key_identifier == Rml::Input::KI_NUMPADENTER)
+		else if (key_identifier == ui::Input::KI_RETURN || key_identifier == ui::Input::KI_NUMPADENTER)
 		{
 			element_filter_input->Blur();
 		}
-		else if (key_identifier == Rml::Input::KI_G && key_ctrl)
+		else if (key_identifier == ui::Input::KI_G && key_ctrl)
 		{
 			if (goto_index < 0)
 			{
@@ -249,10 +249,10 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 		}
 	}
 
-	if (event == Rml::EventId::Keyup && event.GetPhase() == Rml::EventPhase::Capture)
+	if (event == ui::EventId::Keyup && event.GetPhase() == ui::EventPhase::Capture)
 	{
-		const auto key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
-		if (key_identifier == Rml::Input::KI_LSHIFT || key_identifier == Rml::Input::KI_RSHIFT)
+		const auto key_identifier = (ui::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
+		if (key_identifier == ui::Input::KI_LSHIFT || key_identifier == ui::Input::KI_RSHIFT)
 		{
 			if (reference_state == ReferenceState::ShowReferenceHighlight)
 				ShowReference(ReferenceState::ShowReference);
@@ -260,27 +260,27 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 	}
 
 	// Keydown events in target/bubble phase ignored when focusing on input.
-	if (event == Rml::EventId::Keydown && event.GetPhase() != Rml::EventPhase::Capture && !viewer->IsNavigationLocked())
+	if (event == ui::EventId::Keydown && event.GetPhase() != ui::EventPhase::Capture && !viewer->IsNavigationLocked())
 	{
-		const auto key_identifier = (Rml::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
+		const auto key_identifier = (ui::Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 
-		if (key_identifier == Rml::Input::KI_LEFT)
+		if (key_identifier == ui::Input::KI_LEFT)
 		{
 			if (CurrentSuite().Previous())
 			{
 				LoadActiveTest();
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_RIGHT)
+		else if (key_identifier == ui::Input::KI_RIGHT)
 		{
 			if (CurrentSuite().Next())
 			{
 				LoadActiveTest();
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_UP)
+		else if (key_identifier == ui::Input::KI_UP)
 		{
-			const Rml::String& filter = CurrentSuite().GetFilter();
+			const ui::String& filter = CurrentSuite().GetFilter();
 			int new_index = std::max(0, suite_index - 1);
 			if (new_index != suite_index)
 			{
@@ -289,9 +289,9 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 				LoadActiveTest();
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_DOWN)
+		else if (key_identifier == ui::Input::KI_DOWN)
 		{
-			const Rml::String& filter = CurrentSuite().GetFilter();
+			const ui::String& filter = CurrentSuite().GetFilter();
 			int new_index = std::min((int)test_suites.size() - 1, suite_index + 1);
 			if (new_index != suite_index)
 			{
@@ -300,17 +300,17 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 				LoadActiveTest();
 			}
 		}
-		else if (key_identifier == Rml::Input::KI_HOME)
+		else if (key_identifier == ui::Input::KI_HOME)
 		{
 			CurrentSuite().SetIndex(0, TestSuite::Direction::Forward);
 			LoadActiveTest();
 		}
-		else if (key_identifier == Rml::Input::KI_END)
+		else if (key_identifier == ui::Input::KI_END)
 		{
 			CurrentSuite().SetIndex(CurrentSuite().GetNumTests() - 1, TestSuite::Direction::Backward);
 			LoadActiveTest();
 		}
-		else if (goto_index >= 0 && key_identifier == Rml::Input::KI_BACK)
+		else if (goto_index >= 0 && key_identifier == ui::Input::KI_BACK)
 		{
 			if (goto_index <= 0)
 				CancelGoTo();
@@ -321,9 +321,9 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 		}
 	}
 
-	if (event == Rml::EventId::Textinput && goto_index >= 0)
+	if (event == ui::EventId::Textinput && goto_index >= 0)
 	{
-		const Rml::String text = event.GetParameter<Rml::String>("text", "");
+		const ui::String text = event.GetParameter<ui::String>("text", "");
 
 		for (const char c : text)
 		{
@@ -350,12 +350,12 @@ void TestNavigator::ProcessEvent(Rml::Event& event)
 		}
 	}
 
-	if (event == Rml::EventId::Change)
+	if (event == ui::EventId::Change)
 	{
-		Rml::Element* element = event.GetTargetElement();
+		ui::Element* element = event.GetTargetElement();
 		if (element->GetId() == "filterinput")
 		{
-			CurrentSuite().SetFilter(event.GetParameter<Rml::String>("value", ""));
+			CurrentSuite().SetFilter(event.GetParameter<ui::String>("value", ""));
 			LoadActiveTest();
 		}
 	}
@@ -371,15 +371,15 @@ void TestNavigator::LoadActiveTest(bool keep_scroll_position)
 	UpdateGoToText();
 }
 
-Rml::String TestNavigator::GetImageFilenameFromCurrentTest()
+ui::String TestNavigator::GetImageFilenameFromCurrentTest()
 {
-	const Rml::String& filename = CurrentSuite().GetFilename();
+	const ui::String& filename = CurrentSuite().GetFilename();
 	return filename.substr(0, filename.rfind('.')) + ".png";
 }
 
 ComparisonResult TestNavigator::CompareCurrentView()
 {
-	const Rml::String filename = GetImageFilenameFromCurrentTest();
+	const ui::String filename = GetImageFilenameFromCurrentTest();
 
 	ComparisonResult result = CompareScreenToPreviousCapture(render_interface, filename, nullptr, nullptr);
 
@@ -388,7 +388,7 @@ ComparisonResult TestNavigator::CompareCurrentView()
 
 bool TestNavigator::CaptureCurrentView()
 {
-	const Rml::String filename = GetImageFilenameFromCurrentTest();
+	const ui::String filename = GetImageFilenameFromCurrentTest();
 
 	bool result = CaptureScreenshot(filename, 1060);
 
@@ -419,7 +419,7 @@ void TestNavigator::StartTestSuiteIteration(IterationState new_iteration_state)
 	LoadActiveTest();
 }
 
-static bool SaveFile(const Rml::String& file_path, const Rml::String& contents)
+static bool SaveFile(const ui::String& file_path, const ui::String& contents)
 {
 	std::FILE* file = std::fopen(file_path.c_str(), "wt");
 	if (!file)
@@ -436,7 +436,7 @@ void TestNavigator::StopTestSuiteIteration()
 	if (iteration_state == IterationState::None)
 		return;
 
-	const Rml::String output_directory = GetCaptureOutputDirectory();
+	const ui::String output_directory = GetCaptureOutputDirectory();
 	TestSuite& suite = CurrentSuite();
 	const int num_tests = suite.GetNumTests();
 	const int num_filtered_tests = suite.GetNumFilteredTests();
@@ -445,29 +445,29 @@ void TestNavigator::StopTestSuiteIteration()
 	{
 		if (iteration_index == num_tests)
 		{
-			Rml::Log::Message(Rml::Log::LT_INFO, "Successfully captured %d document screenshots to directory: %s", iteration_index,
+			ui::Log::Message(ui::Log::LT_INFO, "Successfully captured %d document screenshots to directory: %s", iteration_index,
 				output_directory.c_str());
 		}
 		else if (iteration_index == num_filtered_tests)
 		{
-			Rml::Log::Message(Rml::Log::LT_INFO, "Successfully captured %d document screenshots (filtered out of %d total tests) to directory: %s",
+			ui::Log::Message(ui::Log::LT_INFO, "Successfully captured %d document screenshots (filtered out of %d total tests) to directory: %s",
 				iteration_index, num_tests, output_directory.c_str());
 		}
 		else
 		{
-			Rml::Log::Message(Rml::Log::LT_ERROR, "Test suite capture aborted after %d of %d test(s). Output directory: %s", iteration_index,
+			ui::Log::Message(ui::Log::LT_ERROR, "Test suite capture aborted after %d of %d test(s). Output directory: %s", iteration_index,
 				num_tests, output_directory.c_str());
 		}
 	}
 	else if (iteration_state == IterationState::Comparison)
 	{
-		RMLUI_ASSERT(num_tests == (int)comparison_results.size());
+		UI_ASSERT(num_tests == (int)comparison_results.size());
 
 		// Indices
-		Rml::Vector<int> equal;
-		Rml::Vector<int> not_equal;
-		Rml::Vector<int> failed;
-		Rml::Vector<int> skipped;
+		ui::Vector<int> equal;
+		ui::Vector<int> not_equal;
+		ui::Vector<int> failed;
+		ui::Vector<int> skipped;
 
 		for (int i = 0; i < (int)comparison_results.size(); i++)
 		{
@@ -483,7 +483,7 @@ void TestNavigator::StopTestSuiteIteration()
 				not_equal.push_back(i);
 		}
 
-		Rml::String summary = Rml::CreateString("  Total tests: %d\n  Not equal: %d\n  Failed: %d\n  Skipped: %d\n  Equal: %d", num_tests,
+		ui::String summary = ui::CreateString("  Total tests: %d\n  Not equal: %d\n  Failed: %d\n  Skipped: %d\n  Equal: %d", num_tests,
 			(int)not_equal.size(), (int)failed.size(), (int)skipped.size(), (int)equal.size());
 
 		if (!suite.GetFilter().empty())
@@ -491,22 +491,22 @@ void TestNavigator::StopTestSuiteIteration()
 
 		if (iteration_index == num_tests)
 		{
-			Rml::Log::Message(Rml::Log::LT_INFO, "Compared all test documents to their screenshot captures.\n%s", summary.c_str());
+			ui::Log::Message(ui::Log::LT_INFO, "Compared all test documents to their screenshot captures.\n%s", summary.c_str());
 		}
 		else if (iteration_index == num_filtered_tests)
 		{
-			Rml::Log::Message(Rml::Log::LT_INFO, "Compared all filtered test documents to their screenshot captures.\n%s", summary.c_str());
+			ui::Log::Message(ui::Log::LT_INFO, "Compared all filtered test documents to their screenshot captures.\n%s", summary.c_str());
 		}
 		else
 		{
-			Rml::Log::Message(Rml::Log::LT_ERROR, "Test suite comparison aborted after %d of %d test(s).\n%s", iteration_index, num_tests,
+			ui::Log::Message(ui::Log::LT_ERROR, "Test suite comparison aborted after %d of %d test(s).\n%s", iteration_index, num_tests,
 				summary.c_str());
 		}
 
-		Rml::String log;
+		ui::String log;
 		log.reserve(comparison_results.size() * 100);
 
-		log += "RmlUi VisualTests comparison log output\n---------------------------------------\n\n" + summary;
+		log += "pp-cpp-ui VisualTests comparison log output\n---------------------------------------\n\n" + summary;
 		log += "\n\nNot Equal:\n";
 
 		if (!not_equal.empty())
@@ -514,7 +514,7 @@ void TestNavigator::StopTestSuiteIteration()
 		for (int i : not_equal)
 		{
 			suite.SetIndex(i);
-			log += Rml::CreateString("%5d   %5.1f%%  %4d   %s\n", i + 1, comparison_results[i].similarity_score * 100.0,
+			log += ui::CreateString("%5d   %5.1f%%  %4d   %s\n", i + 1, comparison_results[i].similarity_score * 100.0,
 				(int)comparison_results[i].max_absolute_difference_single_pixel, suite.GetFilename().c_str());
 			if (!comparison_results[i].error_msg.empty())
 				log += "          " + comparison_results[i].error_msg + "\n";
@@ -523,31 +523,31 @@ void TestNavigator::StopTestSuiteIteration()
 		for (int i : failed)
 		{
 			suite.SetIndex(i);
-			log += Rml::CreateString("%5d   %s\n", i + 1, suite.GetFilename().c_str());
+			log += ui::CreateString("%5d   %s\n", i + 1, suite.GetFilename().c_str());
 			log += "          " + comparison_results[i].error_msg + "\n";
 		}
 		log += "\nSkipped:\n";
 		for (int i : skipped)
 		{
 			suite.SetIndex(i);
-			log += Rml::CreateString("%5d   %s\n", i + 1, suite.GetFilename().c_str());
+			log += ui::CreateString("%5d   %s\n", i + 1, suite.GetFilename().c_str());
 		}
 		log += "\nEqual:\n";
 		for (int i : equal)
 		{
 			suite.SetIndex(i);
-			log += Rml::CreateString("%5d   %s\n", i + 1, suite.GetFilename().c_str());
+			log += ui::CreateString("%5d   %s\n", i + 1, suite.GetFilename().c_str());
 		}
 
-		const Rml::String log_path = GetCaptureOutputDirectory() + "/comparison.log";
+		const ui::String log_path = GetCaptureOutputDirectory() + "/comparison.log";
 		bool save_result = SaveFile(log_path, log);
 		if (save_result && failed.empty())
-			Rml::Log::Message(Rml::Log::LT_INFO, "Comparison log output written to %s", log_path.c_str());
+			ui::Log::Message(ui::Log::LT_INFO, "Comparison log output written to %s", log_path.c_str());
 		else if (save_result && !failed.empty())
-			Rml::Log::Message(Rml::Log::LT_ERROR, "Comparison log output written to %s.\nSome comparisons failed, see log output for details.",
+			ui::Log::Message(ui::Log::LT_ERROR, "Comparison log output written to %s.\nSome comparisons failed, see log output for details.",
 				log_path.c_str());
 		else
-			Rml::Log::Message(Rml::Log::LT_ERROR, "Failed writing comparison log output to file %s", log_path.c_str());
+			ui::Log::Message(ui::Log::LT_ERROR, "Failed writing comparison log output to file %s", log_path.c_str());
 	}
 
 	iteration_index = -1;
@@ -562,13 +562,13 @@ void TestNavigator::StopTestSuiteIteration()
 void TestNavigator::StartGoTo()
 {
 	goto_index = 0;
-	const Rml::Rectanglef area = viewer->GetGoToArea();
-	Rml::GetSystemInterface()->ActivateKeyboard(area.TopLeft(), area.Height());
+	const ui::Rectanglef area = viewer->GetGoToArea();
+	ui::GetSystemInterface()->ActivateKeyboard(area.TopLeft(), area.Height());
 }
 
 void TestNavigator::CancelGoTo()
 {
-	Rml::GetSystemInterface()->DeactivateKeyboard();
+	ui::GetSystemInterface()->DeactivateKeyboard();
 	goto_index = -1;
 }
 
@@ -577,7 +577,7 @@ void TestNavigator::UpdateGoToText(bool out_of_bounds)
 	if (out_of_bounds)
 		viewer->SetGoToText("Go To out of bounds");
 	else if (goto_index > 0)
-		viewer->SetGoToText(Rml::CreateString("Go To: %d", goto_index));
+		viewer->SetGoToText(ui::CreateString("Go To: %d", goto_index));
 	else if (goto_index == 0)
 		viewer->SetGoToText("Go To:");
 	else if (iteration_state == IterationState::Capture)
@@ -585,7 +585,7 @@ void TestNavigator::UpdateGoToText(bool out_of_bounds)
 	else if (iteration_state == IterationState::Comparison)
 		viewer->SetGoToText("Comparing all tests");
 	else if (reference_state == ReferenceState::ShowReference)
-		viewer->SetGoToText(Rml::CreateString("Showing reference capture (%.1f%% similar)", reference_comparison.similarity_score * 100.));
+		viewer->SetGoToText(ui::CreateString("Showing reference capture (%.1f%% similar)", reference_comparison.similarity_score * 100.));
 	else if (reference_state == ReferenceState::ShowReferenceHighlight)
 		viewer->SetGoToText("Showing reference capture (highlight differences)");
 	else
@@ -597,7 +597,7 @@ void TestNavigator::ShowReference(ReferenceState new_reference_state)
 	if (new_reference_state == reference_state || viewer->IsHelpVisible())
 		return;
 
-	Rml::String error_msg;
+	ui::String error_msg;
 
 	if (reference_state == ReferenceState::None)
 	{

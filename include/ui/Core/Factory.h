@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "XMLParser.h"
 
-namespace Rml {
+namespace ui {
 
 class Context;
 class ContextInstancer;
@@ -34,7 +34,7 @@ enum class EventId : uint16_t;
     The Factory contains a registry of instancers for different types.
  */
 
-class RMLUICORE_API Factory {
+class UI_CORE_API Factory {
 public:
 	/// Initialise the element factory
 	static void Initialise();
@@ -43,7 +43,7 @@ public:
 
 	/// Registers a non-owning pointer to the instancer used to instance contexts.
 	/// @param[in] instancer The new context instancer.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterContextInstancer(ContextInstancer* instancer);
 	/// Instances a new context.
 	/// @param[in] name The name of the new context.
@@ -55,7 +55,7 @@ public:
 	/// Registers a non-owning pointer to the element instancer that will be used to instance an element when the specified tag is encountered.
 	/// @param[in] name Name of the instancer; elements with this as their tag will use this instancer.
 	/// @param[in] instancer The instancer to call when the tag is encountered.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterElementInstancer(const String& name, ElementInstancer* instancer);
 	/// Returns the element instancer for the specified tag.
 	/// @param[in] tag Name of the tag to get the instancer for.
@@ -90,7 +90,7 @@ public:
 	/// Registers a non-owning pointer to an instancer that will be used to instance decorators.
 	/// @param[in] name The name of the decorator the instancer will be called for.
 	/// @param[in] instancer The instancer to call when the decorator name is encountered.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterDecoratorInstancer(const String& name, DecoratorInstancer* instancer);
 	/// Retrieves a decorator instancer registered with the factory.
 	/// @param[in] name The name of the desired decorator type.
@@ -100,7 +100,7 @@ public:
 	/// Registers a non-owning pointer to an instancer that will be used to instance filters.
 	/// @param[in] name The name of the filter the instancer will be called for.
 	/// @param[in] instancer The instancer to call when the filter name is encountered.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterFilterInstancer(const String& name, FilterInstancer* instancer);
 	/// Retrieves a filter instancer registered with the factory.
 	/// @param[in] name The name of the desired filter type.
@@ -110,7 +110,7 @@ public:
 	/// Registers a non-owning pointer to an instancer that will be used to instance font effects.
 	/// @param[in] name The name of the font effect the instancer will be called for.
 	/// @param[in] instancer The instancer to call when the font effect name is encountered.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterFontEffectInstancer(const String& name, FontEffectInstancer* instancer);
 	/// Retrieves a font-effect instancer registered with the factory.
 	/// @param[in] name The name of the desired font-effect type.
@@ -136,7 +136,7 @@ public:
 
 	/// Registers an instancer for all events.
 	/// @param[in] instancer The instancer to be called.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterEventInstancer(EventInstancer* instancer);
 	/// Instance an event object
 	/// @param[in] target Target element of this event.
@@ -148,7 +148,7 @@ public:
 	static EventPtr InstanceEvent(Element* target, EventId id, const String& type, const Dictionary& parameters, bool interruptible);
 
 	/// Register the instancer to be used for all event listeners, or nullptr to clear an existing instancer.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown, or until a new instancer is set.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown, or until a new instancer is set.
 	static void RegisterEventListenerInstancer(EventListenerInstancer* instancer);
 	/// Instance an event listener with the given string. This is used for instancing listeners for the on* events from RML.
 	/// @param[in] value The parameters to the event listener.
@@ -162,13 +162,13 @@ public:
 	/// @param[in] instancer The instancer to be called.
 	/// @param[in] type_name The type name of the view, determines the element attribute used to initialize it.
 	/// @param[in] is_structural_view  Set true if the view should be parsed as a structural view.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterDataViewInstancer(DataViewInstancer* instancer, const String& type_name, bool is_structural_view = false);
 
 	/// Register an instancer for data controllers.
 	/// @param[in] instancer The instancer to be called.
 	/// @param[in] type_name The type name of the controller, determines the element attribute used to initialize it.
-	/// @lifetime The instancer must be kept alive until after the call to Rml::Shutdown.
+	/// @lifetime The instancer must be kept alive until after the call to ui::Shutdown.
 	static void RegisterDataControllerInstancer(DataControllerInstancer* instancer, const String& type_name);
 
 	/// Instance the data view with the given type name.
@@ -188,4 +188,4 @@ private:
 	~Factory();
 };
 
-} // namespace Rml
+} // namespace ui

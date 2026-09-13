@@ -6,7 +6,7 @@
 #include <ui/Core/Traits.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class DataViews;
 class DataControllers;
@@ -72,4 +72,4 @@ private:
 	SmallUnorderedSet<Element*> attached_elements;
 };
 
-} // namespace Rml
+} // namespace ui

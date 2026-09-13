@@ -2,7 +2,7 @@
 
 #include "../XMLNodeHandlerDefault.h"
 
-namespace Rml {
+namespace ui {
 
 /**
     XML node handler for processing the select and option tags.
@@ -17,4 +17,4 @@ public:
 	Element* ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes) override;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -10,7 +10,7 @@
 
 #include <functional>
 
-namespace Rml {
+namespace ui {
 
 class Stream;
 class ContextInstancer;
@@ -29,7 +29,7 @@ enum class EventId : uint16_t;
     A context for storing, rendering, and processing RML documents. Multiple contexts can exist simultaneously.
  */
 
-class RMLUICORE_API Context : public ScriptInterface {
+class UI_CORE_API Context : public ScriptInterface {
 public:
 	/// Constructs a new, uninitialised context. This should not be called directly, use CreateContext() instead.
 	/// @param[in] name The name of the context.
@@ -510,7 +510,7 @@ private:
 	// Sends the specified event to all elements in new_items that don't appear in old_items.
 	static void SendEvents(const ElementSet& old_items, const ElementSet& new_items, EventId id, const Dictionary& parameters);
 
-	friend class Rml::Element;
+	friend class ui::Element;
 };
 
-} // namespace Rml
+} // namespace ui

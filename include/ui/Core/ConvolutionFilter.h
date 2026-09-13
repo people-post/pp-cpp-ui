@@ -3,7 +3,7 @@
 #include "Header.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 enum class FilterOperation {
 	// The result is the sum of all the filtered pixels.
@@ -17,7 +17,7 @@ enum class FilterOperation {
     FontEffect types.
  */
 
-class RMLUICORE_API ConvolutionFilter {
+class UI_CORE_API ConvolutionFilter {
 public:
 	ConvolutionFilter();
 	~ConvolutionFilter();
@@ -58,4 +58,4 @@ private:
 	FilterOperation operation = FilterOperation::Sum;
 };
 
-} // namespace Rml
+} // namespace ui

@@ -7,18 +7,18 @@
 #include <ui/Core/Input.h>
 #include <ui/Debugger.h>
 
-static Rml::UniquePtr<ShellFileInterface> file_interface;
+static ui::UniquePtr<ShellFileInterface> file_interface;
 
 bool Shell::Initialize()
 {
 	// Find the path to the 'Samples' directory.
-	Rml::String root = PlatformExtensions::FindSamplesRoot();
+	ui::String root = PlatformExtensions::FindSamplesRoot();
 	if (root.empty())
 		return false;
 
 	// The shell overrides the default file interface so that absolute paths in RML/RCSS-documents are relative to the 'Samples' directory.
-	file_interface = Rml::MakeUnique<ShellFileInterface>(root);
-	Rml::SetFileInterface(file_interface.get());
+	file_interface = ui::MakeUnique<ShellFileInterface>(root);
+	ui::SetFileInterface(file_interface.get());
 
 	return true;
 }
@@ -30,7 +30,7 @@ void Shell::Shutdown()
 
 void Shell::LoadFonts()
 {
-	const Rml::String directory = "assets/";
+	const ui::String directory = "assets/";
 
 	struct FontFace {
 		const char* filename;
@@ -45,10 +45,10 @@ void Shell::LoadFonts()
 	};
 
 	for (const FontFace& face : font_faces)
-		Rml::LoadFontFace(directory + face.filename, face.fallback_face);
+		ui::LoadFontFace(directory + face.filename, face.fallback_face);
 }
 
-bool Shell::ProcessKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority)
+bool Shell::ProcessKeyDownShortcuts(ui::Context* context, ui::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority)
 {
 	if (!context)
 		return true;
@@ -64,26 +64,26 @@ bool Shell::ProcessKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdenti
 		// Priority shortcuts are handled before submitting the key to the context.
 
 		// Toggle debugger and set dp-ratio using Ctrl +/-/0 keys.
-		if (key == Rml::Input::KI_F8)
+		if (key == ui::Input::KI_F8)
 		{
-			Rml::Debugger::SetVisible(!Rml::Debugger::IsVisible());
+			ui::Debugger::SetVisible(!ui::Debugger::IsVisible());
 		}
-		else if (key == Rml::Input::KI_0 && key_modifier & Rml::Input::KM_CTRL)
+		else if (key == ui::Input::KI_0 && key_modifier & ui::Input::KM_CTRL)
 		{
 			context->SetDensityIndependentPixelRatio(native_dp_ratio);
 		}
-		else if (key == Rml::Input::KI_1 && key_modifier & Rml::Input::KM_CTRL)
+		else if (key == ui::Input::KI_1 && key_modifier & ui::Input::KM_CTRL)
 		{
 			context->SetDensityIndependentPixelRatio(1.f);
 		}
-		else if ((key == Rml::Input::KI_OEM_MINUS || key == Rml::Input::KI_SUBTRACT) && key_modifier & Rml::Input::KM_CTRL)
+		else if ((key == ui::Input::KI_OEM_MINUS || key == ui::Input::KI_SUBTRACT) && key_modifier & ui::Input::KM_CTRL)
 		{
-			const float new_dp_ratio = Rml::Math::Max(context->GetDensityIndependentPixelRatio() / 1.2f, 0.5f);
+			const float new_dp_ratio = ui::Math::Max(context->GetDensityIndependentPixelRatio() / 1.2f, 0.5f);
 			context->SetDensityIndependentPixelRatio(new_dp_ratio);
 		}
-		else if ((key == Rml::Input::KI_OEM_PLUS || key == Rml::Input::KI_ADD) && key_modifier & Rml::Input::KM_CTRL)
+		else if ((key == ui::Input::KI_OEM_PLUS || key == ui::Input::KI_ADD) && key_modifier & ui::Input::KM_CTRL)
 		{
-			const float new_dp_ratio = Rml::Math::Min(context->GetDensityIndependentPixelRatio() * 1.2f, 2.5f);
+			const float new_dp_ratio = ui::Math::Min(context->GetDensityIndependentPixelRatio() * 1.2f, 2.5f);
 			context->SetDensityIndependentPixelRatio(new_dp_ratio);
 		}
 		else
@@ -95,12 +95,12 @@ bool Shell::ProcessKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdenti
 	else
 	{
 		// We arrive here when no priority keys are detected and the key was not consumed by the context. Check for shortcuts of lower priority.
-		if (key == Rml::Input::KI_R && key_modifier & Rml::Input::KM_CTRL)
+		if (key == ui::Input::KI_R && key_modifier & ui::Input::KM_CTRL)
 		{
 			for (int i = 0; i < context->GetNumDocuments(); i++)
 			{
-				Rml::ElementDocument* document = context->GetDocument(i);
-				const Rml::String& src = document->GetSourceURL();
+				ui::ElementDocument* document = context->GetDocument(i);
+				const ui::String& src = document->GetSourceURL();
 				if (src.size() > 4 && src.substr(src.size() - 4) == ".rml")
 				{
 					document->ReloadStyleSheet();

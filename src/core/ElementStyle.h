@@ -5,7 +5,7 @@
 #include <ui/Core/PropertyIdSet.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 
 class ElementDefinition;
 class PropertiesIterator;
@@ -139,4 +139,4 @@ private:
 	PropertyIdSet dirty_properties;
 };
 
-} // namespace Rml
+} // namespace ui

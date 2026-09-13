@@ -4,7 +4,7 @@
 #include <ui/Core/RenderBox.h>
 #include <ui/Core/Types.h>
 
-namespace Rml {
+namespace ui {
 using RenderBoxList = Vector<RenderBox>;
 struct BoxShadowGeometryInfo {
 	ColourbPremultiplied background_color;
@@ -54,4 +54,4 @@ public:
 		const BoxShadowGeometryInfo& shadow_geometry_info);
 };
 
-} // namespace Rml
+} // namespace ui

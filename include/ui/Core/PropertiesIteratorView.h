@@ -3,7 +3,7 @@
 #include "Property.h"
 #include "Types.h"
 
-namespace Rml {
+namespace ui {
 
 class PropertiesIterator;
 
@@ -19,7 +19,7 @@ class PropertiesIterator;
     iterator to avoid exposing internal headers to the user.
  */
 
-class RMLUICORE_API PropertiesIteratorView {
+class UI_CORE_API PropertiesIteratorView {
 public:
 	PropertiesIteratorView(UniquePtr<PropertiesIterator> ptr);
 	PropertiesIteratorView(PropertiesIteratorView&& other) noexcept;
@@ -42,4 +42,4 @@ private:
 	UniquePtr<PropertiesIterator> ptr;
 };
 
-} // namespace Rml
+} // namespace ui
