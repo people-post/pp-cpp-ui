@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/CallbackTexture.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Types.h>
-
+#include <ui/paint/CallbackTexture.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Types.h>
 namespace ui {
 namespace Style {
 	class ComputedValues;

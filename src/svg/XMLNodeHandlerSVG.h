@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/Core/XMLParser.h>
+#include <ui/xml/XMLParser.h>
 #include <ui/SVG/ElementSVG.h>
 #include "XMLNodeHandlerDefault.h"
 

@@ -1,15 +1,15 @@
 #include "WidgetDropDown.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Elements/ElementFormControl.h>
-#include <ui/Core/Event.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Input.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/Property.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/widgets/ElementFormControl.h>
+#include <ui/dom/Event.h>
+#include <ui/dom/Factory.h>
+#include <ui/dom/Input.h>
+#include <ui/base/Math.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/Property.h>
 #include "DataModel.h"
 
 namespace ui {

@@ -1,8 +1,8 @@
 #include "XMLParseTools.h"
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/StreamMemory.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/Types.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/xml/StreamMemory.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/base/Types.h>
 #include "Template.h"
 #include "TemplateCache.h"
 #include <ctype.h>

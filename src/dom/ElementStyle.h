@@ -1,10 +1,9 @@
 #pragma once
 
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/Types.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class ElementDefinition;

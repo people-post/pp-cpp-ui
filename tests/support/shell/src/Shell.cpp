@@ -1,10 +1,10 @@
 #include "../include/Shell.h"
 #include "../include/PlatformExtensions.h"
 #include "../include/ShellFileInterface.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/Input.h>
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/Input.h>
 #include <ui/Debugger.h>
 
 static ui::UniquePtr<ShellFileInterface> file_interface;

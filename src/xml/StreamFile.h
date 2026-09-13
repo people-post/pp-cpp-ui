@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Stream.h>
-#include <ui/Core/Types.h>
-
+#include <ui/xml/Stream.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class StreamFile final : public Stream {

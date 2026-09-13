@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Traits.h>
-#include <ui/Core/Types.h>
-
+#include <ui/base/Traits.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 namespace Detail {

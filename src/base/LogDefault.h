@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Log.h>
-#include <ui/Core/Types.h>
-
+#include <ui/base/Log.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 /**

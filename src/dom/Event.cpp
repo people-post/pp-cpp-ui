@@ -1,7 +1,6 @@
-#include <ui/Core/Event.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/EventInstancer.h>
-
+#include <ui/dom/Event.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/EventInstancer.h>
 namespace ui {
 
 Event::Event() {}

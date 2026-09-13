@@ -1,10 +1,10 @@
 #include "PropertyParserFontEffect.h"
-#include <ui/Core/Factory.h>
-#include <ui/Core/FontEffect.h>
-#include <ui/Core/FontEffectInstancer.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertySpecification.h>
-#include <ui/Core/Utilities.h>
+#include <ui/dom/Factory.h>
+#include <ui/text/FontEffect.h>
+#include <ui/text/FontEffectInstancer.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertySpecification.h>
+#include <ui/base/Utilities.h>
 #include <algorithm>
 
 namespace ui {

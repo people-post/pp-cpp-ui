@@ -8,7 +8,7 @@ FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md).
 
 ```text
-include/ui/        Engine + backend public API (`#include <ui/…>`, `namespace ui`)
+include/ui/        Engine + backend public API (`#include <ui/dom/…>`, `namespace ui`)
 src/
   base style layout dom text xml data paint widgets core
   svg debugger platform render
@@ -64,8 +64,7 @@ target_link_libraries(your_target PUBLIC pp_ui)
 ```
 
 ```cpp
-#include <ui/Core/Core.h>
-using namespace ui;  // or qualify ui::
+#include <ui/core/Core.h>using namespace ui;  // or qualify ui::
 ```
 
 For a local sibling checkout (`../pp-cpp-ui`), pass `-DPP_CPP_UI_SOURCE_DIR=...`.

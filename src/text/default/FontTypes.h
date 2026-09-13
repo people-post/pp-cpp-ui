@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/FontGlyph.h>
-#include <ui/Core/StyleTypes.h>
-#include <ui/Core/Types.h>
-
+#include <ui/text/FontGlyph.h>
+#include <ui/style/StyleTypes.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 using FontFaceHandleFreetype = uintptr_t;

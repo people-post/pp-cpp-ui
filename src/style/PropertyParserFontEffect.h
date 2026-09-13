@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ui/Core/PropertyParser.h>
-
+#include <ui/style/PropertyParser.h>
 namespace ui {
 
 /**

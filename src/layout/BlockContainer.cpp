@@ -1,8 +1,8 @@
 #include "BlockContainer.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementScroll.h>
-#include <ui/Core/Profiling.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementScroll.h>
+#include <ui/base/Profiling.h>
 #include "FloatedBoxSpace.h"
 #include "InlineContainer.h"
 #include "LayoutDetails.h"

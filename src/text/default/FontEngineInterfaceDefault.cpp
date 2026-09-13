@@ -1,5 +1,5 @@
 #include "FontEngineInterfaceDefault.h"
-#include <ui/Core/StringUtilities.h>
+#include <ui/base/StringUtilities.h>
 #include "FontFaceHandleDefault.h"
 #include "FontProvider.h"
 

@@ -1,5 +1,4 @@
-#include <ui/Core/DataVariable.h>
-
+#include <ui/data/DataVariable.h>
 namespace ui {
 
 bool DataVariable::Get(Variant& variant) const

@@ -1,9 +1,8 @@
 #include "UserAgentStyleSheet.h"
 
-#include <ui/Core/Log.h>
-#include <ui/Core/StreamMemory.h>
-#include <ui/Core/StyleSheetContainer.h>
-
+#include <ui/base/Log.h>
+#include <ui/xml/StreamMemory.h>
+#include <ui/style/StyleSheetContainer.h>
 #include <cstring>
 
 namespace ui {

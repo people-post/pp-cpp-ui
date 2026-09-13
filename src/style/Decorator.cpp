@@ -1,8 +1,8 @@
-#include <ui/Core/Decorator.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/RenderManager.h>
-#include <ui/Core/StyleSheet.h>
-#include <ui/Core/Texture.h>
+#include <ui/style/Decorator.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/paint/RenderManager.h>
+#include <ui/style/StyleSheet.h>
+#include <ui/paint/Texture.h>
 #include <algorithm>
 
 namespace ui {

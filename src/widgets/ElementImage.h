@@ -1,11 +1,10 @@
 #pragma once
 
-#include <ui/Core/Element.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Header.h>
-#include <ui/Core/Spritesheet.h>
-#include <ui/Core/Texture.h>
-
+#include <ui/dom/Element.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Header.h>
+#include <ui/style/Spritesheet.h>
+#include <ui/paint/Texture.h>
 namespace ui {
 
 /**

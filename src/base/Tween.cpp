@@ -1,5 +1,5 @@
-#include <ui/Core/Tween.h>
-#include <ui/Core/Math.h>
+#include <ui/base/Tween.h>
+#include <ui/base/Math.h>
 #include <utility>
 
 namespace ui {

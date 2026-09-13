@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Texture.h>
-#include <ui/Core/Types.h>
-
+#include <ui/paint/Texture.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class Element;

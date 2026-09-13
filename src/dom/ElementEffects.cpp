@@ -1,13 +1,12 @@
 #include "ElementEffects.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Decorator.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Filter.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/StyleSheet.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/style/Decorator.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/style/Filter.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/StyleSheet.h>
 namespace ui {
 
 ElementEffects::ElementEffects(Element* _element) : element(_element) {}

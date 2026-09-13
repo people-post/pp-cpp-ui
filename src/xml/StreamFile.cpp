@@ -1,8 +1,7 @@
 #include "StreamFile.h"
-#include <ui/Core/Core.h>
-#include <ui/Core/FileInterface.h>
-#include <ui/Core/StringUtilities.h>
-
+#include <ui/core/Core.h>
+#include <ui/core/FileInterface.h>
+#include <ui/base/StringUtilities.h>
 namespace ui {
 
 StreamFile::StreamFile()

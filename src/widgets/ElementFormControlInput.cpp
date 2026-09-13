@@ -1,5 +1,5 @@
-#include <ui/Core/Elements/ElementFormControlInput.h>
-#include <ui/Core/Event.h>
+#include <ui/widgets/ElementFormControlInput.h>
+#include <ui/dom/Event.h>
 #include "InputTypeButton.h"
 #include "InputTypeCheckbox.h"
 #include "InputTypeRadio.h"

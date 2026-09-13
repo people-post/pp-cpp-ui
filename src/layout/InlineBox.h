@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/Core/Box.h>
+#include <ui/layout/Box.h>
 #include "InlineLevelBox.h"
 
 namespace ui {

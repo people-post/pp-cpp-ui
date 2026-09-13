@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Types.h>
-#include <ui/Core/Vertex.h>
-
+#include <ui/base/Types.h>
+#include <ui/paint/Vertex.h>
 namespace ui {
 
 class Box;

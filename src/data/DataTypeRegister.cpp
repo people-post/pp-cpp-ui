@@ -1,7 +1,6 @@
-#include <ui/Core/DataTypeRegister.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/Variant.h>
-
+#include <ui/data/DataTypeRegister.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/base/Variant.h>
 namespace ui {
 
 DataTypeRegister::DataTypeRegister()

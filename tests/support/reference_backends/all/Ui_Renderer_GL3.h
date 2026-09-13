@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/RenderInterface.h>
-#include <ui/Core/Types.h>
+#include <ui/paint/RenderInterface.h>
+#include <ui/base/Types.h>
 #include <bitset>
 
 enum class ProgramId;

@@ -1,5 +1,5 @@
 #include "DataController.h"
-#include <ui/Core/Element.h>
+#include <ui/dom/Element.h>
 #include "EventSpecification.h"
 
 namespace ui {

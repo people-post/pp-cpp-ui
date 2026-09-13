@@ -1,6 +1,5 @@
-#include <ui/Core/FileInterface.h>
-#include <ui/Core/Log.h>
-
+#include <ui/core/FileInterface.h>
+#include <ui/base/Log.h>
 namespace ui {
 
 FileInterface::FileInterface() {}

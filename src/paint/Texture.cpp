@@ -1,4 +1,4 @@
-#include <ui/Core/Texture.h>
+#include <ui/paint/Texture.h>
 #include "RenderManagerAccess.h"
 
 namespace ui {

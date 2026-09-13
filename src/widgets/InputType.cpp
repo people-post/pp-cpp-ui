@@ -1,6 +1,5 @@
 #include "InputType.h"
-#include <ui/Core/Elements/ElementFormControlInput.h>
-
+#include <ui/widgets/ElementFormControlInput.h>
 namespace ui {
 
 InputType::InputType(ElementFormControlInput* element) : element(element) {}

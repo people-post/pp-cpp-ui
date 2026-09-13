@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/Mesh.h>
-#include <ui/Core/RenderInterface.h>
-#include <ui/Core/SystemInterface.h>
+#include <ui/paint/Mesh.h>
+#include <ui/paint/RenderInterface.h>
+#include <ui/core/SystemInterface.h>
 #include <Shell.h>
 
 class TestsSystemInterface : public ui::SystemInterface {

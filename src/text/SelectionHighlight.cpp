@@ -1,13 +1,12 @@
 #include "SelectionHighlight.h"
 
-#include <ui/Core/ElementText.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/FontEngineInterface.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/Property.h>
-#include <ui/Core/RenderManager.h>
-
+#include <ui/text/ElementText.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/text/FontEngineInterface.h>
+#include <ui/base/Math.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/style/Property.h>
+#include <ui/paint/RenderManager.h>
 namespace ui {
 
 namespace {

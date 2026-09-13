@@ -1,8 +1,7 @@
 #include "InputTypeButton.h"
-#include <ui/Core/Elements/ElementForm.h>
-#include <ui/Core/Elements/ElementFormControlInput.h>
-#include <ui/Core/Factory.h>
-
+#include <ui/widgets/ElementForm.h>
+#include <ui/widgets/ElementFormControlInput.h>
+#include <ui/dom/Factory.h>
 namespace ui {
 
 InputTypeButton::InputTypeButton(ElementFormControlInput* element) : InputType(element) {}

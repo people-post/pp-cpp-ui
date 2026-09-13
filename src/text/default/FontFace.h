@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/Core/StyleTypes.h>
+#include <ui/style/StyleTypes.h>
 #include "FontTypes.h"
 
 namespace ui {

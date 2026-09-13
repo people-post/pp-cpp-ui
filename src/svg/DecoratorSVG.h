@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ui/Core/Decorator.h>
-
+#include <ui/style/Decorator.h>
 namespace ui {
 namespace SVG {
 

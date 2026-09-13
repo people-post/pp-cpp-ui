@@ -1,12 +1,12 @@
 #pragma once
 
-#include <ui/Core/FontEffect.h>
-#include <ui/Core/FontGlyph.h>
-#include <ui/Core/FontMetrics.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/TextShapingContext.h>
-#include <ui/Core/Texture.h>
-#include <ui/Core/Traits.h>
+#include <ui/text/FontEffect.h>
+#include <ui/text/FontGlyph.h>
+#include <ui/text/FontMetrics.h>
+#include <ui/paint/Geometry.h>
+#include <ui/text/TextShapingContext.h>
+#include <ui/paint/Texture.h>
+#include <ui/base/Traits.h>
 #include "FontTypes.h"
 
 namespace ui {

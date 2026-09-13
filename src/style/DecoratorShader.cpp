@@ -1,11 +1,10 @@
 #include "DecoratorShader.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/RenderManager.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/paint/Geometry.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/paint/RenderManager.h>
 namespace ui {
 
 Pool<ShaderElementData>& GetShaderElementDataPool()

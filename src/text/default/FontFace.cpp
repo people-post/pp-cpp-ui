@@ -1,5 +1,5 @@
 #include "FontFace.h"
-#include <ui/Core/Log.h>
+#include <ui/base/Log.h>
 #include "FontFaceHandleDefault.h"
 #include "FreeTypeInterface.h"
 

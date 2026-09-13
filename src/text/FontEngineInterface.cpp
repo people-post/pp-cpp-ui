@@ -1,6 +1,5 @@
-#include <ui/Core/FontEngineInterface.h>
-#include <ui/Core/StringUtilities.h>
-
+#include <ui/text/FontEngineInterface.h>
+#include <ui/base/StringUtilities.h>
 namespace ui {
 
 FontEngineInterface::FontEngineInterface() {}

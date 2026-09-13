@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/EventInstancer.h>
-#include <ui/Core/Types.h>
-
+#include <ui/dom/EventInstancer.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 /**

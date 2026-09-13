@@ -1,11 +1,11 @@
 #include "DecoratorGradient.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/PropertyDefinition.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Math.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/style/PropertyDefinition.h>
 #include "ComputeProperty.h"
 #include "DecoratorShader.h"
 

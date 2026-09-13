@@ -1,7 +1,7 @@
 #include "WidgetTextInputSingleLine.h"
-#include <ui/Core/Dictionary.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/Elements/ElementFormControl.h>
+#include <ui/base/Dictionary.h>
+#include <ui/text/ElementText.h>
+#include <ui/widgets/ElementFormControl.h>
 #include <algorithm>
 
 namespace ui {

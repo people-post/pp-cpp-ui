@@ -1,7 +1,7 @@
 #include <ui/SVG/ElementSVG.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/PropertyIdSet.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/paint/Geometry.h>
+#include <ui/style/PropertyIdSet.h>
 #include "SVGCache.h"
 
 namespace ui {

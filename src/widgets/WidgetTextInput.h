@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Vertex.h>
+#include <ui/dom/EventListener.h>
+#include <ui/paint/Geometry.h>
+#include <ui/paint/Vertex.h>
 #include "ElementTextSelection.h"
 #include <float.h>
 

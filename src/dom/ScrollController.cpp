@@ -1,10 +1,9 @@
 #include "ScrollController.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/SystemInterface.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/core/Core.h>
+#include <ui/dom/Element.h>
+#include <ui/base/Math.h>
+#include <ui/core/SystemInterface.h>
 namespace ui {
 
 static constexpr float AUTOSCROLL_SPEED_FACTOR = 0.09f;

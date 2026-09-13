@@ -1,6 +1,6 @@
 #include "TableFormattingDetails.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
 #include <algorithm>

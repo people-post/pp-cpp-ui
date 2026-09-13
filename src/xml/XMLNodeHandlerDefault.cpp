@@ -1,10 +1,10 @@
 #include "XMLNodeHandlerDefault.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/XMLParser.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Log.h>
+#include <ui/base/Profiling.h>
+#include <ui/xml/XMLParser.h>
 #include "XMLParseTools.h"
 
 namespace ui {

@@ -1,10 +1,9 @@
 #include "DecoratorNinePatch.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/PropertyDefinition.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/paint/Geometry.h>
+#include <ui/style/PropertyDefinition.h>
 namespace ui {
 
 DecoratorNinePatch::DecoratorNinePatch() {}

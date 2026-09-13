@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/StyleTypes.h>
-#include <ui/Core/Types.h>
+#include <ui/style/StyleTypes.h>
+#include <ui/base/Types.h>
 #include "FontTypes.h"
 
 namespace ui {

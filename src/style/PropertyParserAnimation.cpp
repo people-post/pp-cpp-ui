@@ -1,8 +1,8 @@
 #include "PropertyParserAnimation.h"
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/style/StyleSheetSpecification.h>
 #include "PropertyShorthandDefinition.h"
 
 namespace ui {

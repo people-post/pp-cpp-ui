@@ -1,6 +1,5 @@
-#include <ui/Core/Filter.h>
-#include <ui/Core/RenderManager.h>
-
+#include <ui/style/Filter.h>
+#include <ui/paint/RenderManager.h>
 namespace ui {
 
 Filter::Filter() {}

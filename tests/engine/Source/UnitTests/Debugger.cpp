@@ -1,8 +1,8 @@
 #include "../../../../src/debugger/ElementInfo.h"
 #include "../Common/TestsShell.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/ElementDocument.h>
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/dom/ElementDocument.h>
 #include <ui/Debugger.h>
 #include <algorithm>
 #include <doctest.h>

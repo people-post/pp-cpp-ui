@@ -1,10 +1,9 @@
 #include "PropertyParserFilter.h"
-#include <ui/Core/Factory.h>
-#include <ui/Core/Filter.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertySpecification.h>
-#include <ui/Core/StyleSheetTypes.h>
-
+#include <ui/dom/Factory.h>
+#include <ui/style/Filter.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertySpecification.h>
+#include <ui/style/StyleSheetTypes.h>
 namespace ui {
 
 PropertyParserFilter::PropertyParserFilter() {}

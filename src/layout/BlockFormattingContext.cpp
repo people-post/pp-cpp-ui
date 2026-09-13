@@ -1,10 +1,10 @@
 #include "BlockFormattingContext.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/StyleSheetSpecification.h>
-#include <ui/Core/SystemInterface.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/StyleSheetSpecification.h>
+#include <ui/core/SystemInterface.h>
 #include "BlockContainer.h"
 #include "FloatedBoxSpace.h"
 #include "LayoutDetails.h"

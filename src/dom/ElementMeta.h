@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementScroll.h>
-#include <ui/Core/Traits.h>
-#include <ui/Core/Types.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementScroll.h>
+#include <ui/base/Traits.h>
+#include <ui/base/Types.h>
 #include "ControlledLifetimeResource.h"
 #include "ElementBackgroundBorder.h"
 #include "ElementEffects.h"

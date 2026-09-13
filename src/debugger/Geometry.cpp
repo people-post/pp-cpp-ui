@@ -1,9 +1,9 @@
 #include "Geometry.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/RenderManager.h>
+#include <ui/paint/Geometry.h>
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/paint/RenderManager.h>
 
 namespace ui {
 namespace Debugger {

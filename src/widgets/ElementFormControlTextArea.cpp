@@ -1,9 +1,9 @@
-#include <ui/Core/Elements/ElementFormControlTextArea.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/widgets/ElementFormControlTextArea.h>
+#include <ui/text/ElementText.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/base/Math.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/style/StyleSheetSpecification.h>
 #include "WidgetTextInputMultiLine.h"
 
 namespace ui {

@@ -1,7 +1,7 @@
 #include "XMLNodeHandlerBody.h"
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/XMLParser.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/Factory.h>
+#include <ui/xml/XMLParser.h>
 #include "XMLParseTools.h"
 
 namespace ui {

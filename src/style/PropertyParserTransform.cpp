@@ -1,7 +1,7 @@
 #include "PropertyParserTransform.h"
-#include <ui/Core/NumericValue.h>
-#include <ui/Core/Transform.h>
-#include <ui/Core/TransformPrimitive.h>
+#include <ui/base/NumericValue.h>
+#include <ui/style/Transform.h>
+#include <ui/style/TransformPrimitive.h>
 #include <string.h>
 
 namespace ui {

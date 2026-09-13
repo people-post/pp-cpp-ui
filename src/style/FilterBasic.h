@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Filter.h>
-#include <ui/Core/ID.h>
-
+#include <ui/style/Filter.h>
+#include <ui/base/ID.h>
 namespace ui {
 
 class FilterBasic : public Filter {

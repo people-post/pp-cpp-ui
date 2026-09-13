@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ui/Core/Input.h>
-#include <ui/Core/SelectionTypes.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/Vector2.h>
+#include <ui/dom/Input.h>
+#include <ui/text/SelectionTypes.h>
+#include <ui/base/Types.h>
+#include <ui/base/Vector2.h>
 
 namespace ui {
 

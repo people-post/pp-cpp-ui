@@ -1,10 +1,9 @@
 #include "DecoratorTiledVertical.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/RenderManager.h>
-#include <ui/Core/Texture.h>
-
+#include <ui/dom/Element.h>
+#include <ui/paint/Geometry.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/paint/RenderManager.h>
+#include <ui/paint/Texture.h>
 namespace ui {
 
 struct DecoratorTiledVerticalData {

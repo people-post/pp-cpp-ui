@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ui/Core/Element.h>
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Input.h>
-#include <ui/Core/SelectionTypes.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/EventListener.h>
+#include <ui/paint/Geometry.h>
+#include <ui/dom/Input.h>
+#include <ui/text/SelectionTypes.h>
 #include "ElementTextSelection.h"
 
 namespace ui {

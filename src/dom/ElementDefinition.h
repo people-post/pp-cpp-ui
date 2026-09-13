@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/Traits.h>
-
+#include <ui/style/PropertyDictionary.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/base/Traits.h>
 namespace ui {
 
 class StyleSheetNode;

@@ -1,5 +1,5 @@
 #include "RenderManagerAccess.h"
-#include <ui/Core/Texture.h>
+#include <ui/paint/Texture.h>
 #include "TextureDatabase.h"
 
 namespace ui {

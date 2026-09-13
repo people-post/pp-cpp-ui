@@ -1,6 +1,5 @@
 #include "LogDefault.h"
-#include <ui/Core/StringUtilities.h>
-
+#include <ui/base/StringUtilities.h>
 #ifdef UI_PLATFORM_WIN32_NATIVE
 	#include <windows.h>
 #else

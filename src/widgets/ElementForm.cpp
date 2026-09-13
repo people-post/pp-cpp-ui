@@ -1,8 +1,7 @@
-#include <ui/Core/Elements/ElementForm.h>
-#include <ui/Core/Dictionary.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Elements/ElementFormControl.h>
-
+#include <ui/widgets/ElementForm.h>
+#include <ui/base/Dictionary.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/widgets/ElementFormControl.h>
 namespace ui {
 
 ElementForm::ElementForm(const String& tag) : Element(tag) {}

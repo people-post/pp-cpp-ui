@@ -1,6 +1,5 @@
-#include <ui/Core/RenderInterfaceCompatibility.h>
-#include <ui/Core/Math.h>
-
+#include <ui/paint/RenderInterfaceCompatibility.h>
+#include <ui/base/Math.h>
 namespace ui {
 
 static void UnPremultiplyAlpha(const byte* source, byte* destination)

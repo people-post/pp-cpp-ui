@@ -1,6 +1,5 @@
 #include "InputTypeCheckbox.h"
-#include <ui/Core/Elements/ElementFormControlInput.h>
-
+#include <ui/widgets/ElementFormControlInput.h>
 namespace ui {
 
 InputTypeCheckbox::InputTypeCheckbox(ElementFormControlInput* element) : InputType(element) {}

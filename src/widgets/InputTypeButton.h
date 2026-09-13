@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/EventListener.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/text/ElementText.h>
+#include <ui/dom/EventListener.h>
 #include "InputType.h"
 
 namespace ui {

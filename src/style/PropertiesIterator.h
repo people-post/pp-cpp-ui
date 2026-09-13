@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/Types.h>
-
+#include <ui/style/PropertyIdSet.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 // An iterator for local properties defined on an element.

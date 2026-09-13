@@ -1,9 +1,8 @@
 #include "InputTypeRadio.h"
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Elements/ElementForm.h>
-#include <ui/Core/Elements/ElementFormControlInput.h>
-
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/widgets/ElementForm.h>
+#include <ui/widgets/ElementFormControlInput.h>
 namespace ui {
 
 InputTypeRadio::InputTypeRadio(ElementFormControlInput* element) : InputType(element)

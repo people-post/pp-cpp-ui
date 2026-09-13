@@ -1,7 +1,6 @@
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/StyleSheetSpecification.h>
-
+#include <ui/style/PropertyDefinition.h>
+#include <ui/base/Log.h>
+#include <ui/style/StyleSheetSpecification.h>
 namespace ui {
 
 PropertyDefinition::PropertyDefinition(PropertyId id, const String& _default_value, bool _inherited, bool _forces_layout) :

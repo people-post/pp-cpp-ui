@@ -1,8 +1,7 @@
 #pragma once
 
 #include "LanguageData.h"
-#include <ui/Core/FontEngineInterface.h>
-
+#include <ui/text/FontEngineInterface.h>
 using ui::byte;
 using ui::Character;
 using ui::ColourbPremultiplied;

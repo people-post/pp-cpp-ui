@@ -1,6 +1,5 @@
 #include "WidgetTextInputSingleLinePassword.h"
-#include <ui/Core/ElementText.h>
-
+#include <ui/text/ElementText.h>
 namespace ui {
 
 WidgetTextInputSingleLinePassword::WidgetTextInputSingleLinePassword(ElementFormControl* parent) : WidgetTextInputSingleLine(parent) {}

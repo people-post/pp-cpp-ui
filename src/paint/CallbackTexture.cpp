@@ -1,5 +1,5 @@
-#include <ui/Core/CallbackTexture.h>
-#include <ui/Core/Texture.h>
+#include <ui/paint/CallbackTexture.h>
+#include <ui/paint/Texture.h>
 #include "RenderManagerAccess.h"
 
 namespace ui {

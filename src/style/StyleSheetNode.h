@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/Types.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/base/Types.h>
 #include "StyleSheetSelector.h"
 
 namespace ui {

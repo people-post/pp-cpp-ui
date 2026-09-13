@@ -1,6 +1,6 @@
-#include <ui/Core/StyleSheetSpecification.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/PropertyIdSet.h>
+#include <ui/style/StyleSheetSpecification.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/PropertyIdSet.h>
 #include "IdNameMap.h"
 #include "PropertyParserAnimation.h"
 #include "PropertyParserBoxShadow.h"

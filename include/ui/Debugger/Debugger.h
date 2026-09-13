@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Header.h"
+#include <ui/Debugger/Header.h>
 
 namespace ui {
 

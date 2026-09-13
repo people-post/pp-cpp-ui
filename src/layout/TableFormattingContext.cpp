@@ -1,7 +1,7 @@
 #include "TableFormattingContext.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Types.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/base/Types.h>
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
 #include "LayoutEngine.h"

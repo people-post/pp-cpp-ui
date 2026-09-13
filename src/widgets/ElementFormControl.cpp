@@ -1,5 +1,5 @@
-#include <ui/Core/Elements/ElementFormControl.h>
-#include <ui/Core/ComputedValues.h>
+#include <ui/widgets/ElementFormControl.h>
+#include <ui/style/ComputedValues.h>
 #include "SelectionContentBuilder.h"
 
 namespace ui {

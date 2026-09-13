@@ -1,10 +1,10 @@
 #include "LayoutDetails.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementScroll.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/Profiling.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementScroll.h>
+#include <ui/text/ElementText.h>
+#include <ui/base/Math.h>
+#include <ui/base/Profiling.h>
 #include "ContainerBox.h"
 #include "FormattingContext.h"
 #include "LayoutEngine.h"

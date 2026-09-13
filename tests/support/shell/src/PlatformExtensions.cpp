@@ -1,7 +1,6 @@
 #include "../include/PlatformExtensions.h"
-#include <ui/Core/Log.h>
-#include <ui/Core/Platform.h>
-
+#include <ui/base/Log.h>
+#include <ui/base/Platform.h>
 #if defined UI_PLATFORM_WIN32
 
 	#include <windows.h>

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Element.h>
-#include <ui/Core/Header.h>
-
+#include <ui/dom/Element.h>
+#include <ui/base/Header.h>
 namespace ui {
 
 /**

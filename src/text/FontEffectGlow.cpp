@@ -1,5 +1,5 @@
 #include "FontEffectGlow.h"
-#include <ui/Core/PropertyDefinition.h>
+#include <ui/style/PropertyDefinition.h>
 #include "Memory.h"
 
 namespace ui {

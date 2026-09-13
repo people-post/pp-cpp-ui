@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Header.h>
-#include <ui/Core/Property.h>
-#include <ui/Core/Tween.h>
-
+#include <ui/base/Header.h>
+#include <ui/style/Property.h>
+#include <ui/base/Tween.h>
 namespace ui {
 
 struct AnimationKey {

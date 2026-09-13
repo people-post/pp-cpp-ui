@@ -1,9 +1,8 @@
 #include "XMLNodeHandlerTabSet.h"
-#include <ui/Core/Elements/ElementTabSet.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/XMLParser.h>
-
+#include <ui/widgets/ElementTabSet.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Log.h>
+#include <ui/xml/XMLParser.h>
 namespace ui {
 
 XMLNodeHandlerTabSet::XMLNodeHandlerTabSet() {}

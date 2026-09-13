@@ -1,5 +1,5 @@
 #include "StyleSheetSelector.h"
-#include <ui/Core/Element.h>
+#include <ui/dom/Element.h>
 #include "StyleSheetNode.h"
 #include <tuple>
 

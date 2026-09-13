@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/FontEffect.h>
-#include <ui/Core/FontEffectInstancer.h>
-
+#include <ui/text/FontEffect.h>
+#include <ui/text/FontEffectInstancer.h>
 namespace ui {
 
 /**

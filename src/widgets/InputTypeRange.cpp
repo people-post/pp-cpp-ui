@@ -1,5 +1,5 @@
 #include "InputTypeRange.h"
-#include <ui/Core/Elements/ElementFormControlInput.h>
+#include <ui/widgets/ElementFormControlInput.h>
 #include "WidgetSlider.h"
 
 namespace ui {

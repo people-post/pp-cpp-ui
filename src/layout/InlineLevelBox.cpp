@@ -1,9 +1,9 @@
 #include "InlineLevelBox.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/FontEngineInterface.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/core/Core.h>
+#include <ui/text/ElementText.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/text/FontEngineInterface.h>
 #include "ListMarker.h"
 #include "LayoutDetails.h"
 #include "LayoutPools.h"

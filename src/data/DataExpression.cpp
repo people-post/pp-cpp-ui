@@ -1,7 +1,7 @@
 #include "DataExpression.h"
-#include <ui/Core/DataModelHandle.h>
-#include <ui/Core/Event.h>
-#include <ui/Core/Variant.h>
+#include <ui/data/DataModelHandle.h>
+#include <ui/dom/Event.h>
+#include <ui/base/Variant.h>
 #include "DataModel.h"
 #include <stack>
 

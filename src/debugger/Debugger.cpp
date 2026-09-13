@@ -1,5 +1,5 @@
 #include <ui/Debugger/Debugger.h>
-#include <ui/Core/Core.h>
+#include <ui/core/Core.h>
 #include "DebuggerPlugin.h"
 
 namespace ui {

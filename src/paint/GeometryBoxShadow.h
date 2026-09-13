@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/DecorationTypes.h>
-#include <ui/Core/RenderBox.h>
-#include <ui/Core/Types.h>
-
+#include <ui/style/DecorationTypes.h>
+#include <ui/paint/RenderBox.h>
+#include <ui/base/Types.h>
 namespace ui {
 using RenderBoxList = Vector<RenderBox>;
 struct BoxShadowGeometryInfo {

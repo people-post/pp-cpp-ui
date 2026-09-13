@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/CompiledFilterShader.h>
-#include <ui/Core/Types.h>
-
+#include <ui/paint/CompiledFilterShader.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class Decorator;

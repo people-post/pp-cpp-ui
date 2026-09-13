@@ -1,8 +1,8 @@
 #include "EventDispatcher.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/Event.h>
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Factory.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/Event.h>
+#include <ui/dom/EventListener.h>
+#include <ui/dom/Factory.h>
 #include "EventSpecification.h"
 #include <algorithm>
 #include <limits>

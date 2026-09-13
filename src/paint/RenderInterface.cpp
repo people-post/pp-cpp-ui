@@ -1,5 +1,4 @@
-#include <ui/Core/RenderInterface.h>
-
+#include <ui/paint/RenderInterface.h>
 namespace ui {
 
 namespace CoreInternal {

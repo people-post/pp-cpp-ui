@@ -1,8 +1,7 @@
 #include "InlineBox.h"
-#include <ui/Core/Box.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/FontMetrics.h>
-
+#include <ui/layout/Box.h>
+#include <ui/dom/Element.h>
+#include <ui/text/FontMetrics.h>
 namespace ui {
 
 static void ZeroBoxEdge(Box& box, BoxEdge edge)

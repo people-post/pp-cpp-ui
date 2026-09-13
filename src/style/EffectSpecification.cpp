@@ -1,6 +1,5 @@
-#include <ui/Core/EffectSpecification.h>
-#include <ui/Core/PropertyDefinition.h>
-
+#include <ui/style/EffectSpecification.h>
+#include <ui/style/PropertyDefinition.h>
 namespace ui {
 
 EffectSpecification::EffectSpecification() : properties(10, 10) {}

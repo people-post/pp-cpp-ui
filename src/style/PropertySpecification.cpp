@@ -1,9 +1,9 @@
-#include <ui/Core/PropertySpecification.h>
-#include <ui/Core/Debug.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/PropertyDictionary.h>
+#include <ui/style/PropertySpecification.h>
+#include <ui/base/Debug.h>
+#include <ui/base/Log.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/PropertyDictionary.h>
 #include "IdNameMap.h"
 #include "PropertyShorthandDefinition.h"
 #include <algorithm>

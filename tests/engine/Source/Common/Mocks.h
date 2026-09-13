@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/EventListener.h>
-#include <ui/Core/EventListenerInstancer.h>
-#include <ui/Core/RenderInterface.h>
+#include <ui/dom/EventListener.h>
+#include <ui/dom/EventListenerInstancer.h>
+#include <ui/paint/RenderInterface.h>
 #include <doctest.h>
 #include <doctest/trompeloeil.hpp>
 

@@ -1,7 +1,7 @@
-#include <ui/Core/Elements/ElementFormControlSelect.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Event.h>
+#include <ui/widgets/ElementFormControlSelect.h>
+#include <ui/text/ElementText.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Event.h>
 #include "WidgetDropDown.h"
 
 namespace ui {

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Mesh.h>
-#include <ui/Core/RenderInterface.h>
-#include <ui/Core/Types.h>
-
+#include <ui/paint/Mesh.h>
+#include <ui/paint/RenderInterface.h>
+#include <ui/base/Types.h>
 struct ComparisonResult {
 	bool skipped = true;
 	bool success = false;

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/DataTypes.h>
-#include <ui/Core/Header.h>
-#include <ui/Core/Types.h>
-
+#include <ui/data/DataTypes.h>
+#include <ui/base/Header.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class Element;

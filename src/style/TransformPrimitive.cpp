@@ -1,7 +1,6 @@
-#include <ui/Core/TransformPrimitive.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/TypeConverter.h>
-
+#include <ui/style/TransformPrimitive.h>
+#include <ui/dom/Element.h>
+#include <ui/base/TypeConverter.h>
 namespace ui {
 namespace Transforms {
 

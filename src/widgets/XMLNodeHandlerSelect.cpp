@@ -1,9 +1,8 @@
 #include "XMLNodeHandlerSelect.h"
-#include <ui/Core/Elements/ElementFormControlSelect.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/XMLParser.h>
-
+#include <ui/widgets/ElementFormControlSelect.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Log.h>
+#include <ui/xml/XMLParser.h>
 namespace ui {
 
 XMLNodeHandlerSelect::XMLNodeHandlerSelect() {}

@@ -1,4 +1,4 @@
-#include <ui/Core/StreamMemory.h>
+#include <ui/xml/StreamMemory.h>
 #include <stdio.h>
 #include <string.h>
 

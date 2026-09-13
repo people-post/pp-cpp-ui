@@ -1,6 +1,5 @@
-#include <ui/Core/FontEffectInstancer.h>
-#include <ui/Core/PropertyDefinition.h>
-
+#include <ui/text/FontEffectInstancer.h>
+#include <ui/style/PropertyDefinition.h>
 namespace ui {
 
 FontEffectInstancer::FontEffectInstancer() : properties(10, 10) {}

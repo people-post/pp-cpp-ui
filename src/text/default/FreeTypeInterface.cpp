@@ -1,7 +1,7 @@
 #include "FreeTypeInterface.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/FontMetrics.h>
-#include <ui/Core/Log.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/text/FontMetrics.h>
+#include <ui/base/Log.h>
 #include <algorithm>
 #include <ft2build.h>
 #include <limits.h>

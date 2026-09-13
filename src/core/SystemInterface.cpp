@@ -1,7 +1,7 @@
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/URL.h>
+#include <ui/core/SystemInterface.h>
+#include <ui/base/Log.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/base/URL.h>
 #include "LogDefault.h"
 #include <chrono>
 

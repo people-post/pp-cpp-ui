@@ -1,11 +1,11 @@
 #include "XMLNodeHandlerHead.h"
-#include <ui/Core/Core.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/URL.h>
-#include <ui/Core/XMLParser.h>
+#include <ui/core/Core.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/core/SystemInterface.h>
+#include <ui/base/URL.h>
+#include <ui/xml/XMLParser.h>
 #include "DocumentHeader.h"
 #include "TemplateCache.h"
 

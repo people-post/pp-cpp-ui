@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/SelectionTypes.h>
-#include <ui/Core/Types.h>
-
+#include <ui/text/SelectionTypes.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class Element;

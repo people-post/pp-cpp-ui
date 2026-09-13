@@ -1,6 +1,5 @@
 #include "FontEffectShadow.h"
-#include <ui/Core/PropertyDefinition.h>
-
+#include <ui/style/PropertyDefinition.h>
 namespace ui {
 
 FontEffectShadow::FontEffectShadow() : offset(0, 0)

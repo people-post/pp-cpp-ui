@@ -1,5 +1,4 @@
-#include <ui/Core/XMLNodeHandler.h>
-
+#include <ui/xml/XMLNodeHandler.h>
 namespace ui {
 
 XMLNodeHandler::~XMLNodeHandler() {}

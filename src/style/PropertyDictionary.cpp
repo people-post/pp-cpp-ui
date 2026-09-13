@@ -1,6 +1,5 @@
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/ID.h>
-
+#include <ui/style/PropertyDictionary.h>
+#include <ui/base/ID.h>
 namespace ui {
 
 PropertyDictionary::PropertyDictionary() {}

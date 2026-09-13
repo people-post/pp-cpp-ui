@@ -1,8 +1,8 @@
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/Box.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/FontEngineInterface.h>
-#include <ui/Core/Types.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/layout/Box.h>
+#include <ui/core/Core.h>
+#include <ui/text/FontEngineInterface.h>
+#include <ui/base/Types.h>
 #include "GeometryBackgroundBorder.h"
 
 namespace ui {

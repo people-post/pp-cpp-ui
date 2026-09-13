@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Types.h>
-
+#include <ui/dom/EventListener.h>
+#include <ui/base/Types.h>
 namespace ui {
 class Context;
 class ElementDocument;

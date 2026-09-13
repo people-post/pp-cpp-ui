@@ -1,13 +1,13 @@
-#include <ui/Core/Elements/ElementProgress.h>
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/StyleSheet.h>
-#include <ui/Core/URL.h>
+#include <ui/widgets/ElementProgress.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Math.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/style/StyleSheet.h>
+#include <ui/base/URL.h>
 #include <algorithm>
 
 namespace ui {

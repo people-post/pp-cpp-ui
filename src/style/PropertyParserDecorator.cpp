@@ -1,10 +1,9 @@
 #include "PropertyParserDecorator.h"
-#include <ui/Core/Decorator.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertySpecification.h>
-#include <ui/Core/StyleSheetTypes.h>
-
+#include <ui/style/Decorator.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertySpecification.h>
+#include <ui/style/StyleSheetTypes.h>
 namespace ui {
 
 struct PropertyParserDecoratorData {

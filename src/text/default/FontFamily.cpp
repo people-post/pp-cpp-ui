@@ -1,6 +1,6 @@
 #include "FontFamily.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Math.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/base/Math.h>
 #include "FontFace.h"
 #include <limits.h>
 

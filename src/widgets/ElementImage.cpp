@@ -1,12 +1,12 @@
 #include "ElementImage.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/StyleSheet.h>
-#include <ui/Core/Texture.h>
-#include <ui/Core/URL.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/style/StyleSheet.h>
+#include <ui/paint/Texture.h>
+#include <ui/base/URL.h>
 #include "TextureDatabase.h"
 
 namespace ui {

@@ -1,14 +1,13 @@
 #include "ElementHandle.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Event.h>
-#include <ui/Core/Property.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/PropertySpecification.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Event.h>
+#include <ui/style/Property.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/style/PropertySpecification.h>
 namespace ui {
 
 class ElementHandleTargetData {

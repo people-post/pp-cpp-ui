@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ui/Core/CallbackTexture.h>
-#include <ui/Core/FontGlyph.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/MeshUtilities.h>
+#include <ui/paint/CallbackTexture.h>
+#include <ui/text/FontGlyph.h>
+#include <ui/paint/Geometry.h>
+#include <ui/paint/MeshUtilities.h>
 #include "TextureLayout.h"
 
 namespace ui {

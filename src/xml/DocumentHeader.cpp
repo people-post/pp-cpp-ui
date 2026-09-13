@@ -1,7 +1,7 @@
 #include "DocumentHeader.h"
-#include <ui/Core/Core.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/SystemInterface.h>
+#include <ui/core/Core.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/core/SystemInterface.h>
 #include "XMLParseTools.h"
 
 namespace ui {

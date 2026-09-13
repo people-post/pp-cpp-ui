@@ -1,7 +1,6 @@
 #include "TransformUtilities.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/TransformPrimitive.h>
-
+#include <ui/dom/Element.h>
+#include <ui/style/TransformPrimitive.h>
 namespace ui {
 
 using namespace Transforms;

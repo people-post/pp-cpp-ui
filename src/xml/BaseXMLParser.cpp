@@ -1,6 +1,6 @@
-#include <ui/Core/BaseXMLParser.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/Stream.h>
+#include <ui/xml/BaseXMLParser.h>
+#include <ui/base/Profiling.h>
+#include <ui/xml/Stream.h>
 #include "XMLParseTools.h"
 #include <string.h>
 

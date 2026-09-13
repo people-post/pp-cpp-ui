@@ -1,10 +1,9 @@
 #include "XMLNodeHandlerTextArea.h"
-#include <ui/Core/Core.h>
-#include <ui/Core/Elements/ElementFormControlTextArea.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/XMLParser.h>
-
+#include <ui/core/Core.h>
+#include <ui/widgets/ElementFormControlTextArea.h>
+#include <ui/dom/Factory.h>
+#include <ui/core/SystemInterface.h>
+#include <ui/xml/XMLParser.h>
 namespace ui {
 
 XMLNodeHandlerTextArea::XMLNodeHandlerTextArea() {}

@@ -1,7 +1,7 @@
 #include "Template.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/XMLParser.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/xml/XMLParser.h>
 #include "XMLParseTools.h"
 #include <string.h>
 

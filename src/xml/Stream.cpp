@@ -1,4 +1,4 @@
-#include <ui/Core/Stream.h>
+#include <ui/xml/Stream.h>
 #include <stdio.h>
 #include <string.h>
 

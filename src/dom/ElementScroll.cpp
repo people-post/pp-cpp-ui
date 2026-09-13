@@ -1,10 +1,10 @@
-#include <ui/Core/ElementScroll.h>
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Event.h>
-#include <ui/Core/Factory.h>
+#include <ui/dom/ElementScroll.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Event.h>
+#include <ui/dom/Factory.h>
 #include "LayoutDetails.h"
 #include "WidgetScroll.h"
 

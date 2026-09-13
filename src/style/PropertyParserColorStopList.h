@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/PropertyParser.h>
-#include <ui/Core/Types.h>
+#include <ui/style/PropertyParser.h>
+#include <ui/base/Types.h>
 #include "PropertyParserNumber.h"
 
 namespace ui {

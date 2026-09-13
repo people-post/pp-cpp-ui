@@ -1,12 +1,12 @@
-#include <ui/Core/XMLParser.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/Stream.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/URL.h>
-#include <ui/Core/XMLNodeHandler.h>
+#include <ui/xml/XMLParser.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Log.h>
+#include <ui/base/Profiling.h>
+#include <ui/xml/Stream.h>
+#include <ui/base/Types.h>
+#include <ui/base/URL.h>
+#include <ui/xml/XMLNodeHandler.h>
 #include "ControlledLifetimeResource.h"
 #include "DocumentHeader.h"
 

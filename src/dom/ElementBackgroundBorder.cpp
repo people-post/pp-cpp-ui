@@ -1,12 +1,12 @@
 #include "ElementBackgroundBorder.h"
-#include <ui/Core/Box.h>
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/DecorationTypes.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/RenderManager.h>
+#include <ui/layout/Box.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Context.h>
+#include <ui/style/DecorationTypes.h>
+#include <ui/dom/Element.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/base/Profiling.h>
+#include <ui/paint/RenderManager.h>
 #include "BoxShadowCache.h"
 #include "GeometryBoxShadow.h"
 

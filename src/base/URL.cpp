@@ -1,6 +1,6 @@
-#include <ui/Core/URL.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/StringUtilities.h>
+#include <ui/base/URL.h>
+#include <ui/base/Log.h>
+#include <ui/base/StringUtilities.h>
 #include <stdio.h>
 #include <string.h>
 

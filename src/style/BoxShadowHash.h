@@ -1,11 +1,11 @@
 #pragma once
 
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/NumericValue.h>
-#include <ui/Core/RenderBox.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/Unit.h>
-#include <ui/Core/Utilities.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/base/NumericValue.h>
+#include <ui/paint/RenderBox.h>
+#include <ui/base/Types.h>
+#include <ui/style/Unit.h>
+#include <ui/base/Utilities.h>
 #include "BoxShadowCache.h"
 #include "GeometryBoxShadow.h"
 

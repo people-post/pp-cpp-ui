@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Event.h>
-#include <ui/Core/Types.h>
-
+#include <ui/dom/Event.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class ElementFormControlInput;

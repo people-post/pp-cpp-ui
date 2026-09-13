@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ui/Core/ElementDocument.h>
-
+#include <ui/dom/ElementDocument.h>
 namespace ui {
 namespace Debugger {
 

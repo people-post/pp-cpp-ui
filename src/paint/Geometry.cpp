@@ -1,4 +1,4 @@
-#include <ui/Core/Geometry.h>
+#include <ui/paint/Geometry.h>
 #include "RenderManagerAccess.h"
 
 namespace ui {

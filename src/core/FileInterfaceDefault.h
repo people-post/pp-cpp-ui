@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ui/Core/FileInterface.h>
-
+#include <ui/core/FileInterface.h>
 #ifndef UI_NO_FILE_INTERFACE_DEFAULT
 
 namespace ui {

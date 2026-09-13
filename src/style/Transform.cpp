@@ -1,8 +1,7 @@
-#include <ui/Core/Transform.h>
-#include <ui/Core/Property.h>
-#include <ui/Core/StyleSheetSpecification.h>
-#include <ui/Core/TransformPrimitive.h>
-
+#include <ui/style/Transform.h>
+#include <ui/style/Property.h>
+#include <ui/style/StyleSheetSpecification.h>
+#include <ui/style/TransformPrimitive.h>
 namespace ui {
 
 Transform::Transform() {}

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Core/Element.h"
-#include "../Core/Header.h"
+#include <ui/dom/Element.h>
+#include <ui/base/Header.h>
 
 namespace ui {
 namespace SVG {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/Platform.h"
+#include <ui/base/Platform.h>
 
 #if !defined UI_STATIC_LIB
 	#ifdef UI_PLATFORM_WIN32

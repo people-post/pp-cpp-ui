@@ -1,7 +1,6 @@
 #include "TextureDatabase.h"
-#include <ui/Core/Log.h>
-#include <ui/Core/RenderInterface.h>
-
+#include <ui/base/Log.h>
+#include <ui/paint/RenderInterface.h>
 namespace ui {
 
 CallbackTextureDatabase::CallbackTextureDatabase()

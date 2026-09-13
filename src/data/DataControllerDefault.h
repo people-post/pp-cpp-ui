@@ -1,9 +1,9 @@
 #pragma once
 
-#include <ui/Core/DataVariable.h>
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Header.h>
-#include <ui/Core/Types.h>
+#include <ui/data/DataVariable.h>
+#include <ui/dom/EventListener.h>
+#include <ui/base/Header.h>
+#include <ui/base/Types.h>
 #include "DataController.h"
 
 namespace ui {

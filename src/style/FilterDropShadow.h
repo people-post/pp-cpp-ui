@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Filter.h>
-#include <ui/Core/ID.h>
-#include <ui/Core/NumericValue.h>
-
+#include <ui/style/Filter.h>
+#include <ui/base/ID.h>
+#include <ui/base/NumericValue.h>
 namespace ui {
 
 class FilterDropShadow : public Filter {

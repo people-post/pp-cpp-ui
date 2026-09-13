@@ -1,12 +1,12 @@
 #include "ElementSelectableText.h"
 
-#include <ui/Core/Context.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/ElementText.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/FontEngineInterface.h>
-#include <ui/Core/RenderManager.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/text/ElementText.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Factory.h>
+#include <ui/text/FontEngineInterface.h>
+#include <ui/paint/RenderManager.h>
 #include "SelectionContentBuilder.h"
 #include "SelectionController.h"
 #include "SelectionHighlight.h"

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Context.h>
-#include <ui/Core/Input.h>
-#include <ui/Core/Types.h>
-
+#include <ui/dom/Context.h>
+#include <ui/dom/Input.h>
+#include <ui/base/Types.h>
 /**
     Provides common functionality required for the built-in pp-cpp-ui samples.
  */

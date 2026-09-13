@@ -1,11 +1,10 @@
 #pragma once
 
-#include <ui/Core/Colour.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Header.h>
-#include <ui/Core/Mesh.h>
-#include <ui/Core/Types.h>
-
+#include <ui/base/Colour.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Header.h>
+#include <ui/paint/Mesh.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class Element;

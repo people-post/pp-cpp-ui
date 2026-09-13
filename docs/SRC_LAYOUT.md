@@ -3,28 +3,31 @@
 **Tier:** architecture
 
 `pp-cpp-ui` is a shared C++ UI library. Dependencies flow downward only.
-The engine is one link target (`ui_core` / `ui::core`); sources are split by module.
+The engine is one link target (`ui_core` / `ui::core`); sources and public headers
+are split by module.
 
 ## Tree
 
 ```text
-include/ui/          Public API (still under Core/ Config/ SVG/ Debugger/ …)
-  platform/ render/  Owned SDL / GL3 backend headers
-src/
-  base/              Math, memory, log, strings, pools, clocks
-  style/             Properties, stylesheets, decorators, filters, transforms
-  layout/            Formatting contexts / boxes
+include/ui/
+  Config/            Build-time config
+  base/              Types, math, containers, utilities
+  style/             Properties, stylesheets, decorators, filters
+  layout/            Box model
   dom/               Element, document, context, events, factory
-  text/              Text, selection, font effects
-    default/         FreeType font engine
-    harfbuzz/        HarfBuzz shaping (uses default FreeType helpers)
-  xml/               RML/XML parse, streams, templates
-  data/              Data model / views / controllers
-  paint/             Geometry, textures, render manager
-  widgets/           Forms, inputs, tabset, images, …
+  text/              Text, fonts, selection
+  xml/               RML/XML streams & parsers
+  data/              Data model
+  paint/             Geometry, textures, render interfaces
+  widgets/           Forms, inputs, tabset, progress
   core/              Bootstrap (Core, plugins, system/file interfaces)
-  svg/ debugger/
-  platform/ render/  Product SDL / GL3 backend
+  SVG/ Debugger/     Optional plugins
+  platform/ render/  Owned SDL / GL3 backend headers
+  Core.h Debugger.h  Convenience umbrellas
+src/
+  base style layout dom text xml data paint widgets core
+  text/default text/harfbuzz
+  svg debugger platform render
 third_party/
 cmake/
 docs/
@@ -36,20 +39,17 @@ tests/
 ## Include & namespace
 
 ```cpp
-#include <ui/Core/Element.h>
+#include <ui/dom/Element.h>
+// or umbrella:
+#include <ui/Core.h>
 ui::Element* el = ...;
 ```
 
-Private engine headers use unqualified includes (`"LayoutEngine.h"`) with all
-module roots on `ui_core`'s private include path.
+Private engine headers use unqualified includes (`"LayoutEngine.h"`) with module
+roots on `ui_core`'s private include path.
 
 CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`, `pp::ui_backend`, `pp::ui`.
 
 ## Test data path
 
 `tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...` still resolve.
-
-## Follow-ups
-
-Mirror public headers from `include/ui/Core/` into module folders (`include/ui/dom/`, …)
-once consumers are ready for another include-path break.

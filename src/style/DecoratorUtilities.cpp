@@ -1,6 +1,5 @@
 #include "DecoratorUtilities.h"
-#include <ui/Core/Property.h>
-
+#include <ui/style/Property.h>
 namespace ui {
 
 Vector2Numeric ComputePosition(Array<const Property*, 2> p_position)

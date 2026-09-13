@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/CallbackTexture.h>
-#include <ui/Core/StableVector.h>
-#include <ui/Core/Types.h>
-
+#include <ui/paint/CallbackTexture.h>
+#include <ui/base/StableVector.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class RenderInterface;

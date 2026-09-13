@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ui/Core/Types.h>
-
+#include <ui/base/Types.h>
 ui::String GetCompareInputDirectory();
 ui::String GetCaptureOutputDirectory();
 ui::StringList GetTestInputDirectories();

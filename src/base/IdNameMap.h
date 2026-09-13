@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/Header.h>
-#include <ui/Core/Types.h>
+#include <ui/base/Header.h>
+#include <ui/base/Types.h>
 #include <algorithm>
 
 namespace ui {

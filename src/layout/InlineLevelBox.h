@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/Box.h>
-#include <ui/Core/StyleTypes.h>
+#include <ui/layout/Box.h>
+#include <ui/style/StyleTypes.h>
 #include "InlineTypes.h"
 
 namespace ui {

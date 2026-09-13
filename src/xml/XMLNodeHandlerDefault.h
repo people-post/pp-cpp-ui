@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Types.h>
-#include <ui/Core/XMLNodeHandler.h>
-
+#include <ui/base/Types.h>
+#include <ui/xml/XMLNodeHandler.h>
 namespace ui {
 
 /**

@@ -1,5 +1,5 @@
 #include "FontFaceLayer.h"
-#include <ui/Core/RenderManager.h>
+#include <ui/paint/RenderManager.h>
 #include "FontFaceHandleDefault.h"
 #include <string.h>
 #include <type_traits>

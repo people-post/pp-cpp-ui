@@ -1,7 +1,6 @@
 #include "ListMarker.h"
 
-#include <ui/Core/Element.h>
-
+#include <ui/dom/Element.h>
 // FORK_WORKAROUND — see ListMarker.h and docs/architecture/UI_UPSTREAM.md.
 
 namespace ui {

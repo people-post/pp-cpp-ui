@@ -1,8 +1,7 @@
 #include "DecoratorTiledBox.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/RenderManager.h>
-
+#include <ui/dom/Element.h>
+#include <ui/paint/Geometry.h>
+#include <ui/paint/RenderManager.h>
 namespace ui {
 
 struct DecoratorTiledBoxData {

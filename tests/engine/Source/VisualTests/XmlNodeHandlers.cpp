@@ -1,8 +1,7 @@
 #include "XmlNodeHandlers.h"
-#include <ui/Core/Types.h>
-#include <ui/Core/XMLNodeHandler.h>
-#include <ui/Core/XMLParser.h>
-
+#include <ui/base/Types.h>
+#include <ui/xml/XMLNodeHandler.h>
+#include <ui/xml/XMLParser.h>
 using namespace ui;
 
 XMLNodeHandlerMeta::XMLNodeHandlerMeta() {}

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/Debug.h>
-#include <ui/Core/Traits.h>
-
+#include <ui/base/Debug.h>
+#include <ui/base/Traits.h>
 namespace ui {
 
 template <typename T>

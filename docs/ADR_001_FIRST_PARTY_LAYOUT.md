@@ -26,14 +26,17 @@ Sibling libs (`pp-cpp-common`, `pp-cpp-crypto`, `pp-cpp-amp`) use `include/<pkg>
 
 ## Amendment — public include & namespace brand
 
-Public engine headers live under `include/ui/` (`#include <ui/Core/…>`).
+Public engine headers live under `include/ui/<module>/` (`#include <ui/dom/Element.h>`, etc.).
 C++ API uses `namespace ui` (macros `UI_*`). Former `include/RmlUi/` shims and `Rml::` are removed.
 
-## Amendment — engine source modules
+## Amendment — engine source & public header modules
 
-`src/core` was split into focused modules while keeping a single `ui_core` link target:
+Sources and public headers are split into focused modules while keeping a single
+`ui_core` link target:
 
-`base`, `style`, `layout`, `dom`, `text` (+ `default` / `harfbuzz`), `xml`, `data`, `paint`, `widgets`, thin `core` bootstrap.
+`base`, `style`, `layout`, `dom`, `text` (+ `default` / `harfbuzz`), `xml`, `data`,
+`paint`, `widgets`, thin `core` bootstrap.
 
-Public headers remain under `include/ui/Core/` for now; mirroring into module folders is a follow-up.
+Public includes: `#include <ui/dom/Element.h>` (no `ui/Core/` prefix). Convenience
+umbrella `#include <ui/Core.h>` remains.
 

@@ -1,7 +1,6 @@
 #include "PropertyParserBoxShadow.h"
-#include <ui/Core/DecorationTypes.h>
-#include <ui/Core/StringUtilities.h>
-
+#include <ui/style/DecorationTypes.h>
+#include <ui/base/StringUtilities.h>
 namespace ui {
 
 PropertyParserBoxShadow::PropertyParserBoxShadow(PropertyParser* parser_color, PropertyParser* parser_length) :

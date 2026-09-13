@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/XMLNodeHandler.h>
-
+#include <ui/dom/EventListener.h>
+#include <ui/base/Types.h>
+#include <ui/xml/XMLNodeHandler.h>
 struct MetaItem {
 	ui::String name;
 	ui::String content;

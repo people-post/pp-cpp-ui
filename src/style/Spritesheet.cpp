@@ -1,6 +1,5 @@
-#include <ui/Core/Spritesheet.h>
-#include <ui/Core/Log.h>
-
+#include <ui/style/Spritesheet.h>
+#include <ui/base/Log.h>
 namespace ui {
 
 Spritesheet::Spritesheet(const String& name, const String& source, const String& document_path, int definition_line_number, float display_scale) :

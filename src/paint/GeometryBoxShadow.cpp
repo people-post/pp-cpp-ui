@@ -1,14 +1,13 @@
 #include "GeometryBoxShadow.h"
-#include <ui/Core/Box.h>
-#include <ui/Core/CompiledFilterShader.h>
-#include <ui/Core/DecorationTypes.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Math.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/RenderManager.h>
-
+#include <ui/layout/Box.h>
+#include <ui/paint/CompiledFilterShader.h>
+#include <ui/style/DecorationTypes.h>
+#include <ui/dom/Element.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Math.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/base/Profiling.h>
+#include <ui/paint/RenderManager.h>
 namespace ui {
 
 BoxShadowGeometryInfo GeometryBoxShadow::Resolve(Element* element, const CornerSizes& border_radius, ColourbPremultiplied background_color,

@@ -1,6 +1,5 @@
 #include "ElementTextSelection.h"
-#include <ui/Core/PropertyIdSet.h>
-
+#include <ui/style/PropertyIdSet.h>
 namespace ui {
 
 ElementTextSelection::ElementTextSelection(const String& tag) : Element(tag)

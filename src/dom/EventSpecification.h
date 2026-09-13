@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Event.h>
-#include <ui/Core/Header.h>
-#include <ui/Core/ID.h>
-
+#include <ui/dom/Event.h>
+#include <ui/base/Header.h>
+#include <ui/base/ID.h>
 namespace ui {
 
 struct EventSpecification {

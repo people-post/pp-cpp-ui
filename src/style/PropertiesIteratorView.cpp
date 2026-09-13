@@ -1,5 +1,5 @@
-#include <ui/Core/PropertiesIteratorView.h>
-#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/style/PropertiesIteratorView.h>
+#include <ui/style/StyleSheetSpecification.h>
 #include "PropertiesIterator.h"
 
 namespace ui {

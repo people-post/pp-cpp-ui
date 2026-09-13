@@ -1,7 +1,7 @@
 #include "StyleSheetNode.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/StyleSheet.h>
+#include <ui/dom/Element.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/StyleSheet.h>
 #include "StyleSheetFactory.h"
 #include "StyleSheetSelector.h"
 #include <algorithm>

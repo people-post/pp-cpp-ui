@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/NumericValue.h>
-#include <ui/Core/StyleTypes.h>
-
+#include <ui/base/NumericValue.h>
+#include <ui/style/StyleTypes.h>
 namespace ui {
 
 class Property;

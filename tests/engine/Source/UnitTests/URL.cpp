@@ -1,8 +1,8 @@
-#include <ui/Core/Core.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/URL.h>
+#include <ui/core/Core.h>
+#include <ui/base/Log.h>
+#include <ui/core/SystemInterface.h>
+#include <ui/base/Types.h>
+#include <ui/base/URL.h>
 #include <algorithm>
 #include <doctest.h>
 

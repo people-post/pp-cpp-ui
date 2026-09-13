@@ -1,4 +1,4 @@
-#include <ui/Core/DataModelHandle.h>
+#include <ui/data/DataModelHandle.h>
 #include "DataModel.h"
 
 namespace ui {

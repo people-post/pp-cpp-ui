@@ -1,5 +1,5 @@
-#include <ui/Core/Variant.h>
-#include <ui/Core/DecorationTypes.h>
+#include <ui/base/Variant.h>
+#include <ui/style/DecorationTypes.h>
 #include <string.h>
 
 namespace ui {

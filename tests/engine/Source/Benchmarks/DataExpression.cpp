@@ -1,5 +1,5 @@
 #include "../../../../src/data/DataExpression.cpp"
-#include <ui/Core/DataModelHandle.h>
+#include <ui/data/DataModelHandle.h>
 #include <doctest.h>
 #include <nanobench.h>
 

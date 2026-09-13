@@ -1,7 +1,7 @@
 #include "LayoutEngine.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/Profiling.h>
+#include <ui/dom/Element.h>
+#include <ui/base/Log.h>
+#include <ui/base/Profiling.h>
 #include "ContainerBox.h"
 #include "FormattingContext.h"
 

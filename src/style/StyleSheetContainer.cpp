@@ -1,10 +1,10 @@
-#include <ui/Core/StyleSheetContainer.h>
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/StyleSheet.h>
-#include <ui/Core/Utilities.h>
+#include <ui/style/StyleSheetContainer.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Context.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/style/StyleSheet.h>
+#include <ui/base/Utilities.h>
 #include "ComputeProperty.h"
 #include "StyleSheetParser.h"
 

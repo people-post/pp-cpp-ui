@@ -1,9 +1,9 @@
-#include <ui/Core/StyleSheet.h>
-#include <ui/Core/Decorator.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/style/StyleSheet.h>
+#include <ui/style/Decorator.h>
+#include <ui/dom/Element.h>
+#include <ui/base/Profiling.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/StyleSheetSpecification.h>
 #include "ElementDefinition.h"
 #include "ElementStyle.h"
 #include "StyleSheetNode.h"

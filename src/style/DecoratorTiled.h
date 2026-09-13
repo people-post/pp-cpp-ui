@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Decorator.h>
-#include <ui/Core/Vertex.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/style/Decorator.h>
+#include <ui/paint/Vertex.h>
 namespace ui {
 
 class Texture;

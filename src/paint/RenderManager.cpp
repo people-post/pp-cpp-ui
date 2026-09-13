@@ -1,9 +1,9 @@
-#include <ui/Core/RenderManager.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/Profiling.h>
-#include <ui/Core/RenderInterface.h>
-#include <ui/Core/SystemInterface.h>
+#include <ui/paint/RenderManager.h>
+#include <ui/core/Core.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Profiling.h>
+#include <ui/paint/RenderInterface.h>
+#include <ui/core/SystemInterface.h>
 #include "TextureDatabase.h"
 
 namespace ui {

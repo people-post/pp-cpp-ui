@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/Decorator.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/ID.h>
+#include <ui/style/Decorator.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/ID.h>
 #include "DecoratorUtilities.h"
 
 namespace ui {

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/StyleSheetTypes.h>
-#include <ui/Core/Types.h>
-
+#include <ui/style/StyleSheetTypes.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class PropertyDictionary;

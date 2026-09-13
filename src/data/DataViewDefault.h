@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/Header.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/Variant.h>
+#include <ui/base/Header.h>
+#include <ui/base/Types.h>
+#include <ui/base/Variant.h>
 #include "DataView.h"
 
 namespace ui {

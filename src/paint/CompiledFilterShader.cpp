@@ -1,4 +1,4 @@
-#include <ui/Core/CompiledFilterShader.h>
+#include <ui/paint/CompiledFilterShader.h>
 #include "RenderManagerAccess.h"
 
 namespace ui {

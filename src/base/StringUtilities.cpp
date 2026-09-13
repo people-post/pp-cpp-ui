@@ -1,5 +1,5 @@
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/Log.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/base/Log.h>
 #include <algorithm>
 #include <limits.h>
 #include <sstream>

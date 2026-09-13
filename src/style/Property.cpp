@@ -1,6 +1,5 @@
-#include <ui/Core/Property.h>
-#include <ui/Core/PropertyDefinition.h>
-
+#include <ui/style/Property.h>
+#include <ui/style/PropertyDefinition.h>
 namespace ui {
 
 Property::Property() : unit(Unit::UNKNOWN), specificity(-1)

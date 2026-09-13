@@ -1,7 +1,7 @@
 #include "ComputeProperty.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Property.h>
-#include <ui/Core/StringUtilities.h>
+#include <ui/style/ComputedValues.h>
+#include <ui/style/Property.h>
+#include <ui/base/StringUtilities.h>
 #include "ControlledLifetimeResource.h"
 
 namespace ui {

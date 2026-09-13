@@ -1,13 +1,12 @@
 #include "DecoratorText.h"
-#include <ui/Core/ComputedValues.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/FontEngineInterface.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/RenderManager.h>
-#include <ui/Core/TextShapingContext.h>
-
+#include <ui/style/ComputedValues.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/Element.h>
+#include <ui/text/FontEngineInterface.h>
+#include <ui/paint/Geometry.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/paint/RenderManager.h>
+#include <ui/text/TextShapingContext.h>
 namespace ui {
 
 DecoratorText::DecoratorText() {}

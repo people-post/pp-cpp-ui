@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/Box.h>
-#include <ui/Core/Types.h>
+#include <ui/layout/Box.h>
+#include <ui/base/Types.h>
 #include "InlineBox.h"
 #include "LayoutBox.h"
 

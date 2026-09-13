@@ -1,11 +1,10 @@
 #pragma once
 
-#include <ui/Core/DataModelHandle.h>
-#include <ui/Core/DataTypes.h>
-#include <ui/Core/Header.h>
-#include <ui/Core/Traits.h>
-#include <ui/Core/Types.h>
-
+#include <ui/data/DataModelHandle.h>
+#include <ui/data/DataTypes.h>
+#include <ui/base/Header.h>
+#include <ui/base/Traits.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class DataViews;

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/NumericValue.h>
-#include <ui/Core/Types.h>
-
+#include <ui/base/NumericValue.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 using Vector2Numeric = Vector2<NumericValue>;

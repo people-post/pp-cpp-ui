@@ -1,5 +1,5 @@
 #include "TemplateCache.h"
-#include <ui/Core/Log.h>
+#include <ui/base/Log.h>
 #include "StreamFile.h"
 #include "Template.h"
 

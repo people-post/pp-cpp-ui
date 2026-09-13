@@ -1,7 +1,6 @@
 #pragma once
 
-#include <ui/Core/Element.h>
-
+#include <ui/dom/Element.h>
 namespace ui {
 
 class SelectionStyleClient {

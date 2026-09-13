@@ -1,8 +1,8 @@
 #include "InputTypeText.h"
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Elements/ElementFormControlInput.h>
-#include <ui/Core/PropertyIdSet.h>
-#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/widgets/ElementFormControlInput.h>
+#include <ui/style/PropertyIdSet.h>
+#include <ui/style/StyleSheetSpecification.h>
 #include "WidgetTextInputSingleLine.h"
 #include "WidgetTextInputSingleLinePassword.h"
 

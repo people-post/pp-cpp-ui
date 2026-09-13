@@ -1,5 +1,4 @@
-#include <ui/Core/Traits.h>
-
+#include <ui/base/Traits.h>
 namespace ui {
 
 int FamilyBase::GetNewId()

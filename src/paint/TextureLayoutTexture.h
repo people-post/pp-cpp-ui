@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/Core/Texture.h>
+#include <ui/paint/Texture.h>
 #include "TextureLayoutRow.h"
 
 namespace ui {

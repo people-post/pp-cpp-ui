@@ -1,6 +1,6 @@
 #include "StyleSheetFactory.h"
-#include <ui/Core/Log.h>
-#include <ui/Core/StyleSheetContainer.h>
+#include <ui/base/Log.h>
+#include <ui/style/StyleSheetContainer.h>
 #include "StreamFile.h"
 #include "StyleSheetNode.h"
 #include "StyleSheetParser.h"

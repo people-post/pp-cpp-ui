@@ -1,5 +1,4 @@
-#include <ui/Core/Profiling.h>
-
+#include <ui/base/Profiling.h>
 #ifdef UI_TRACY_MEMORY_PROFILING
 	#include <cstdlib>
 	#include <stddef.h>

@@ -1,7 +1,7 @@
 #include "FontFaceHandleDefault.h"
-#include <ui/Core/Profiling.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/StyleTypes.h>
+#include <ui/base/Profiling.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/style/StyleTypes.h>
 #include "TextureLayout.h"
 #include "FontFaceLayer.h"
 #include "FontProvider.h"

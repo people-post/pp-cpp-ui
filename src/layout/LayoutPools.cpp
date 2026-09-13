@@ -1,5 +1,5 @@
 #include "LayoutPools.h"
-#include <ui/Core/Element.h>
+#include <ui/dom/Element.h>
 #include "ControlledLifetimeResource.h"
 #include "Pool.h"
 #include "BlockContainer.h"

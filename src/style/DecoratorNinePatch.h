@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Decorator.h>
-#include <ui/Core/ID.h>
-#include <ui/Core/Spritesheet.h>
-
+#include <ui/style/Decorator.h>
+#include <ui/base/ID.h>
+#include <ui/style/Spritesheet.h>
 namespace ui {
 
 class DecoratorNinePatch : public Decorator {

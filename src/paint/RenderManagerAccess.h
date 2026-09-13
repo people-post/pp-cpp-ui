@@ -1,9 +1,8 @@
 #pragma once
 
-#include <ui/Core/Core.h>
-#include <ui/Core/RenderManager.h>
-#include <ui/Core/Types.h>
-
+#include <ui/core/Core.h>
+#include <ui/paint/RenderManager.h>
+#include <ui/base/Types.h>
 namespace ui {
 
 class CompiledFilter;

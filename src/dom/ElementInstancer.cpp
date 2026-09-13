@@ -1,5 +1,5 @@
-#include <ui/Core/ElementInstancer.h>
-#include <ui/Core/ElementText.h>
+#include <ui/dom/ElementInstancer.h>
+#include <ui/text/ElementText.h>
 #include "ControlledLifetimeResource.h"
 #include "ElementSelectableText.h"
 #include "Pool.h"
