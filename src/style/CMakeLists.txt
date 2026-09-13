@@ -47,3 +47,7 @@ target_sources(ui_style PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/TransformUtilities.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TypeConverterStyle.cpp"
 )
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

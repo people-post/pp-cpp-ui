@@ -139,6 +139,10 @@ sources from `tests/engine/Source/UnitTests/CMakeLists.txt`.
 Prefer public seams over white-box `#include` of `.cpp` sources. The doctest
 `main` links `ui_tests_common` and must not compile harness `.cpp` files again.
 
+Each module owns its test source list in `src/<module>/tests/CMakeLists.txt`
+via `ui_add_module_tests()`; the shared `ui_unit_tests` executable under
+`tests/engine` only provides `main.cpp`, linking, and discovery.
+
 Harness headers (`TestsShell.h`, …) come from `ui_tests_common`’s INTERFACE
 include path — tests `#include "TestsShell.h"` (not a relative `../Common/`).
 

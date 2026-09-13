@@ -112,3 +112,7 @@ target_sources(ui_dom PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/UserAgentStyleSheet.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/UserAgentStyleSheet.h"
 )
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

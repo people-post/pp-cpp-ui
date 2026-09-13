@@ -1,0 +1,18 @@
+ui_add_module_tests(dom
+	Animation_test.cpp
+	ClickRouting_test.cpp
+	Decorator_test.cpp
+	Element_test.cpp
+	ElementBackgroundBorder_test.cpp
+	ElementDocument_test.cpp
+	ElementHandle_test.cpp
+	ElementStyle_test.cpp
+	EventListener_test.cpp
+	Filter_test.cpp
+	Localization_test.cpp
+	MediaQuery_test.cpp
+	Selectors_test.cpp
+	Specificity_Basic_test.cpp
+	Specificity_MediaQuery_test.cpp
+	Template_test.cpp
+)

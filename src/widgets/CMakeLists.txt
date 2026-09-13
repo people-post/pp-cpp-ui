@@ -47,3 +47,7 @@ target_sources(ui_widgets PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLNodeHandlerTextArea.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLNodeHandlerTextArea.h"
 )
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

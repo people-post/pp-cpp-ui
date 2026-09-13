@@ -18,8 +18,9 @@ The following environment variables can be used to configure the directories use
 #### Unit tests: `ui_unit_tests`
 
 Sources live next to their module under `src/<module>/tests/*_test.cpp`.
-This directory only holds the doctest runner (`main.cpp`) and CMake that
-aggregates those files into one executable. Shared harness code stays in
+Each module lists its tests in `src/<module>/tests/CMakeLists.txt` via
+`ui_add_module_tests()`. This directory only holds the doctest runner
+(`main.cpp`) and CMake that links/discovers the shared `ui_unit_tests` binary. Shared harness code stays in
 `Source/Common/`; fixtures remain under `Data/`.
 
 Not every file under `src/*/tests/` is a pure unit test:

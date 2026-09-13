@@ -23,3 +23,7 @@ target_sources(ui_data PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/DataViewDefault.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DataViewDefault.h"
 )
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()
