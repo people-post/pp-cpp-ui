@@ -61,7 +61,6 @@ LAYER = {
 
 # Explicit upward edges permitted by ADR 002.
 ALLOWED_BRIDGES = {
-    ("layout", "dom"),
     ("text", "dom"),
     # Composition root may register plugins.
     ("core", "svg"),

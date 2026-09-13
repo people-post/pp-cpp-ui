@@ -81,8 +81,9 @@ L12  platform | render    owned backends
 
 | Edge | Why |
 |------|-----|
-| `layout → dom` | Box queries / element layout façade (narrowing: [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)) |
 | `text → dom` | `ElementText`, selection participation |
+
+`layout → dom` was cleared: layout uses `LayoutElement` (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
 
 ### Enforcement
 
@@ -91,7 +92,7 @@ python3 scripts/check_module_deps.py
 ```
 
 Forbidden edges fail the check. The allowlist is empty after clearing ADR 002
-tracked debt; named bridges (`layout → dom`, `text → dom`) remain allowed.
+tracked debt; the remaining named DOM bridge is `text → dom`.
 Do not grow a new allowlist without updating the ADR.
 
 ## Include & namespace

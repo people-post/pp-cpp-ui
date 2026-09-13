@@ -26,6 +26,7 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/DecoratorTiledVertical.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DecoratorTiledVertical.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Element.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutElement.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementAnimation.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementAnimation.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementBackgroundBorder.cpp"

@@ -14,10 +14,11 @@ class LayoutTextElement;
 enum class LayoutScrollbarAxis { Vertical = 0, Horizontal = 1 };
 
 /**
-    Layout-owned façade for Element operations that would otherwise pull DOM
-    headers into every layout TU.
+    Layout-owned façade for Element operations used by layout.
 
-    Concrete DOM includes stay in LayoutElement.cpp — see docs/LAYOUT_DOM_BRIDGE.md.
+    The API lives in `layout` (forward-declares Element only). The implementation
+    lives in `src/dom/LayoutElement.cpp` so layout TUs never include ui/dom headers.
+    See docs/LAYOUT_DOM_BRIDGE.md.
  */
 namespace LayoutElement {
 
