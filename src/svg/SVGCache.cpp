@@ -11,7 +11,7 @@
 #include <ui/Core/SystemInterface.h>
 #include <ui/Core/Texture.h>
 #include <ui/Core/Utilities.h>
-#include "../core/ControlledLifetimeResource.h"
+#include "ControlledLifetimeResource.h"
 #include <algorithm>
 #include <lunasvg.h>
 

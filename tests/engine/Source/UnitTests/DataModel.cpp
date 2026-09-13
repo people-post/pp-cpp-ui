@@ -1,4 +1,4 @@
-#include "../../../../src/core/DataModel.cpp"
+#include "../../../../src/data/DataModel.cpp"
 #include <ui/Core/DataModelHandle.h>
 #include <ui/Core/Types.h>
 #include <doctest.h>

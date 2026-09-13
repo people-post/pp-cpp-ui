@@ -2,7 +2,7 @@
 
 #include <ui/Core/XMLParser.h>
 #include <ui/SVG/ElementSVG.h>
-#include "../core/XMLNodeHandlerDefault.h"
+#include "XMLNodeHandlerDefault.h"
 
 namespace ui {
 namespace SVG {

@@ -18,7 +18,7 @@
 #include "ElementMeta.h"
 #include "EventSpecification.h"
 #include "FileInterfaceDefault.h"
-#include "Layout/LayoutPools.h"
+#include "../layout/LayoutPools.h"
 #include "PluginRegistry.h"
 #include "RenderManagerAccess.h"
 #include "StyleSheetFactory.h"
@@ -27,11 +27,11 @@
 #include "TemplateCache.h"
 
 #ifdef UI_FONT_ENGINE_FREETYPE
-	#include "FontEngineDefault/FontEngineInterfaceDefault.h"
+	#include "../text/default/FontEngineInterfaceDefault.h"
 #endif
 
 #ifdef UI_SVG_PLUGIN
-	#include "../svg/SVGPlugin.h"
+	#include "SVGPlugin.h"
 #endif
 
 #include <algorithm>

@@ -9,7 +9,9 @@ See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOU
 
 ```text
 include/ui/        Engine + backend public API (`#include <ui/…>`, `namespace ui`)
-src/core|svg|debugger|platform|render
+src/
+  base style layout dom text xml data paint widgets core
+  svg debugger platform render
 third_party/       freetype, harfbuzz, lunasvg, zlib, libpng, sdl3, sdl3_image
 tests/             Engine unit tests + support harness
 ```
