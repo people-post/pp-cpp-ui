@@ -40,7 +40,9 @@ add_executable(${TARGET_NAME}
 
 set_common_target_options(${TARGET_NAME})
 
-target_include_directories(${TARGET_NAME} PRIVATE "${CMAKE_SOURCE_DIR}/src/core")
+target_include_directories(${TARGET_NAME} PRIVATE
+	"${CMAKE_SOURCE_DIR}/src"
+)
 
 target_link_libraries(${TARGET_NAME} PRIVATE
 	ui_tests_common

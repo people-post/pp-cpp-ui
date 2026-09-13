@@ -3,9 +3,8 @@
 #include "CaptureScreen.h"
 #include "TestSuite.h"
 #include "TestViewer.h"
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Types.h>
-
+#include <ui/dom/EventListener.h>
+#include <ui/base/Types.h>
 class TestNavigator : public ui::EventListener {
 public:
 	TestNavigator(ui::RenderInterface* render_interface, ui::Context* context, TestViewer* viewer, TestSuiteList test_suites, int start_suite,

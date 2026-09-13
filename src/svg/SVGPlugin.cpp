@@ -1,9 +1,9 @@
-#include <ui/Core/Core.h>
-#include <ui/Core/ElementInstancer.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/Plugin.h>
-#include <ui/SVG/ElementSVG.h>
+#include <ui/core/Core.h>
+#include <ui/dom/ElementInstancer.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Log.h>
+#include <ui/dom/Plugin.h>
+#include <ui/svg/ElementSVG.h>
 #include "DecoratorSVG.h"
 #include "SVGCache.h"
 #include "XMLNodeHandlerSVG.h"

@@ -1,10 +1,9 @@
 #pragma once
 
-#include <ui/Core/Input.h>
-#include <ui/Core/RenderInterface.h>
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/Types.h>
-
+#include <ui/base/Input.h>
+#include <ui/paint/RenderInterface.h>
+#include <ui/base/SystemInterface.h>
+#include <ui/base/Types.h>
 #ifndef UI_SDL_VERSION_MAJOR
 #define UI_SDL_VERSION_MAJOR 2
 #endif

@@ -1,8 +1,7 @@
 #pragma once
 
-#include <ui/Core/EventListener.h>
-#include <ui/Core/Plugin.h>
-
+#include <ui/dom/EventListener.h>
+#include <ui/dom/Plugin.h>
 namespace ui {
 
 class ElementDocument;

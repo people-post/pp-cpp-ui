@@ -3,9 +3,9 @@
 #include "TestNavigator.h"
 #include "TestSuite.h"
 #include "TestViewer.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/Element.h>
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/dom/Element.h>
 #include <ui/Debugger.h>
 #include <PlatformExtensions.h>
 #include <Ui_Backend.h>

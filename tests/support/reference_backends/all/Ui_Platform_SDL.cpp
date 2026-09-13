@@ -1,9 +1,8 @@
 #include "Ui_Platform_SDL.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Input.h>
-#include <ui/Core/StringUtilities.h>
-#include <ui/Core/SystemInterface.h>
-
+#include <ui/dom/Context.h>
+#include <ui/base/Input.h>
+#include <ui/base/StringUtilities.h>
+#include <ui/base/SystemInterface.h>
 static ui::TouchList TouchEventToTouchList(SDL_Event& ev, ui::Context* context, SDL_FingerID finger_id)
 {
 	const ui::Vector2f position = ui::Vector2f{ev.tfinger.x, ev.tfinger.y} * ui::Vector2f{context->GetDimensions()};

@@ -1,0 +1,162 @@
+#include "GeometryBoxShadow.h"
+#include <ui/paint/CompiledFilterShader.h>
+#include <ui/base/DecorationTypes.h>
+#include <ui/paint/Geometry.h>
+#include <ui/base/Math.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/base/Profiling.h>
+#include <ui/paint/RenderManager.h>
+namespace ui {
+
+void GeometryBoxShadow::GenerateTexture(CallbackTexture& out_shadow_texture, Geometry& out_background_border_geometry, RenderManager& render_manager,
+	const BoxShadowGeometryInfo& info)
+{
+	UI_ZoneScoped;
+
+	Mesh mesh = out_background_border_geometry.Release(Geometry::ReleaseMode::ClearMesh);
+	for (size_t i = 0; i < info.padding_render_boxes.size(); i++)
+		MeshUtilities::GenerateBackgroundBorder(mesh, info.padding_render_boxes[i], info.background_color, info.border_colors.data());
+	out_background_border_geometry = render_manager.MakeGeometry(std::move(mesh));
+
+	// Callback for generating the box-shadow texture. Using a callback ensures that the texture can be regenerated at any time, for example if the
+	// device loses its GPU context and the client calls ui::ReleaseTextures().
+	auto texture_callback = [&info, &out_background_border_geometry](const CallbackTextureInterface& texture_interface) -> bool {
+		UI_ASSERT(info.border_render_boxes.size() == info.padding_render_boxes.size());
+		UI_ZoneScopedN("BoxShadow::GenerateTexture::Callback");
+		size_t num_boxes = info.border_render_boxes.size();
+
+		RenderManager& render_manager = texture_interface.GetRenderManager();
+
+		Mesh mesh_padding;        // Render geometry for inner box-shadow.
+		Mesh mesh_padding_border; // Clipping mask for outer box-shadow.
+
+		bool has_inner_shadow = false;
+		bool has_outer_shadow = false;
+		for (const BoxShadow& shadow : info.shadow_list)
+		{
+			if (shadow.inset)
+				has_inner_shadow = true;
+			else
+				has_outer_shadow = true;
+		}
+
+		// Generate the geometry for all the element's boxes and extend the render-texture further to cover all of them.
+		for (size_t i = 0; i < num_boxes; i++)
+		{
+			ColourbPremultiplied white(255);
+			if (has_inner_shadow)
+				MeshUtilities::GenerateBackground(mesh_padding, info.padding_render_boxes[i], white);
+			if (has_outer_shadow)
+				MeshUtilities::GenerateBackground(mesh_padding_border, info.border_render_boxes[i], white);
+		}
+
+		const RenderState initial_render_state = render_manager.GetState();
+		render_manager.ResetState();
+		render_manager.SetScissorRegion(Rectanglei::FromSize(info.texture_dimensions));
+
+		// The scissor region will be clamped to the current window size, check the resulting scissor region.
+		const Rectanglei scissor_region = render_manager.GetScissorRegion();
+		if (scissor_region.Width() <= 0 || scissor_region.Height() <= 0)
+		{
+			// The window may become zero-sized for example when minimized. Just skip the texture generation for now, we
+			// expect to be called again later when the window is restored.
+			render_manager.SetState(initial_render_state);
+			return false;
+		}
+		if (scissor_region != Rectanglei::FromSize(info.texture_dimensions))
+		{
+			Log::Message(Log::LT_INFO,
+				"The desired box-shadow texture dimensions (%d, %d) are larger than the current window region (%d, %d). "
+				"Results may be clipped.",
+				info.texture_dimensions.x, info.texture_dimensions.y, scissor_region.Width(), scissor_region.Height());
+		}
+
+		render_manager.PushLayer();
+		out_background_border_geometry.Render(info.element_offset_in_texture);
+
+		for (int shadow_index = (int)info.shadow_list.size() - 1; shadow_index >= 0; shadow_index--)
+		{
+			const BoxShadow& shadow = info.shadow_list[shadow_index];
+			const Vector2f shadow_offset = {shadow.offset_x.number, shadow.offset_y.number};
+			const bool inset = shadow.inset;
+			const float spread_distance = shadow.spread_distance.number;
+			const float blur_radius = shadow.blur_radius.number;
+
+			CornerSizes spread_radii = info.border_radius;
+			for (int i = 0; i < 4; i++)
+			{
+				float& radius = spread_radii[i];
+				float spread_factor = (inset ? -1.f : 1.f);
+				if (radius < spread_distance)
+				{
+					const float ratio_minus_one = (radius / spread_distance) - 1.f;
+					spread_factor *= 1.f + ratio_minus_one * ratio_minus_one * ratio_minus_one;
+				}
+				radius = Math::Max(radius + spread_factor * spread_distance, 0.f);
+			}
+
+			Mesh mesh_shadow;
+
+			// Generate the shadow geometry. For outer box-shadows it is rendered normally, while for inset box-shadows it is used as a clipping mask.
+			for (size_t i = 0; i < num_boxes; i++)
+			{
+				const float signed_spread_distance = (inset ? -spread_distance : spread_distance);
+				RenderBox render_box = (inset ? info.padding_render_boxes : info.border_render_boxes)[i];
+				render_box.SetFillSize(Math::Max(render_box.GetFillSize() + Vector2f(2.f * signed_spread_distance), Vector2f{0.001f}));
+				render_box.SetBorderRadius(spread_radii);
+				render_box.SetBorderOffset(render_box.GetBorderOffset() - Vector2f(signed_spread_distance));
+				MeshUtilities::GenerateBackground(mesh_shadow, render_box, shadow.color);
+			}
+
+			CompiledFilter blur;
+			if (blur_radius >= 0.5f)
+			{
+				blur = render_manager.CompileFilter("blur", Dictionary{{"sigma", Variant(0.5f * blur_radius)}});
+				if (blur)
+					render_manager.PushLayer();
+			}
+
+			Geometry geometry_shadow = render_manager.MakeGeometry(std::move(mesh_shadow));
+
+			if (inset)
+			{
+				render_manager.SetClipMask(ClipMaskOperation::SetInverse, &geometry_shadow, shadow_offset + info.element_offset_in_texture);
+
+				for (ui::Vertex& vertex : mesh_padding.vertices)
+					vertex.colour = shadow.color;
+
+				// @performance: Don't need to copy the mesh if this is the last use of it.
+				Geometry geometry_padding = render_manager.MakeGeometry(Mesh(mesh_padding));
+				geometry_padding.Render(info.element_offset_in_texture);
+
+				render_manager.SetClipMask(ClipMaskOperation::Set, &geometry_padding, info.element_offset_in_texture);
+			}
+			else
+			{
+				Mesh mesh = mesh_padding_border;
+				Geometry geometry_padding_border = render_manager.MakeGeometry(std::move(mesh));
+				render_manager.SetClipMask(ClipMaskOperation::SetInverse, &geometry_padding_border, info.element_offset_in_texture);
+				geometry_shadow.Render(shadow_offset + info.element_offset_in_texture);
+			}
+
+			if (blur)
+			{
+				FilterHandleList filters;
+				blur.AddHandleTo(filters);
+				render_manager.CompositeLayers(render_manager.GetTopLayer(), render_manager.GetNextLayer(), BlendMode::Blend, filters);
+				render_manager.PopLayer();
+				blur.Release();
+			}
+		}
+
+		texture_interface.SaveLayerAsTexture();
+
+		render_manager.PopLayer();
+		render_manager.SetState(initial_render_state);
+
+		return true;
+	};
+
+	out_shadow_texture = render_manager.MakeCallbackTexture(std::move(texture_callback));
+}
+} // namespace ui

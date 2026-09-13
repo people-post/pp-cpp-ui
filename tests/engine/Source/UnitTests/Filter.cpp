@@ -1,14 +1,14 @@
 #include "../Common/TestsInterface.h"
 #include "../Common/TestsShell.h"
-#include <ui/Core/CompiledFilterShader.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Filter.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/RenderManager.h>
+#include <ui/paint/CompiledFilterShader.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/Factory.h>
+#include <ui/style/Filter.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/paint/RenderManager.h>
 #include <algorithm>
 #include <doctest.h>
 

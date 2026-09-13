@@ -1,7 +1,7 @@
 #pragma once
 
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/EventListener.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/dom/EventListener.h>
 #include "ElementDebugDocument.h"
 
 namespace ui {

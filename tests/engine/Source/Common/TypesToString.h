@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ui/Core/Mesh.h>
-#include <ui/Core/TypeConverter.h>
-#include <ui/Core/Types.h>
-#include <ui/Core/Variant.h>
-#include <ui/Core/Vertex.h>
+#include <ui/paint/Mesh.h>
+#include <ui/base/TypeConverter.h>
+#include <ui/base/Types.h>
+#include <ui/base/Variant.h>
+#include <ui/paint/Vertex.h>
 #include <doctest.h>
 #include <ostream>
 

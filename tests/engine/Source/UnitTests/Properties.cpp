@@ -1,12 +1,12 @@
 #include "../Common/TestsInterface.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/DecorationTypes.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/StyleSheetSpecification.h>
-#include <ui/Core/StyleSheetTypes.h>
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/base/DecorationTypes.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/style/StyleSheetSpecification.h>
+#include <ui/style/StyleSheetTypes.h>
 #include <doctest.h>
 
 using namespace ui;

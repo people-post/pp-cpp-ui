@@ -1,12 +1,11 @@
 #include "Ui_Backend.h"
 #include "Ui_Platform_SDL.h"
 #include "Ui_Renderer_GL3.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/FileInterface.h>
-#include <ui/Core/Log.h>
-#include <ui/Core/Profiling.h>
-
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/base/FileInterface.h>
+#include <ui/base/Log.h>
+#include <ui/base/Profiling.h>
 #if SDL_MAJOR_VERSION >= 3
 	#include <SDL3_image/SDL_image.h>
 #else

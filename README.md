@@ -5,11 +5,14 @@ FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 
 ## Layout
 
-See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md).
+See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md), [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md),
+and [docs/ADR_002_MODULE_DEPENDENCIES.md](docs/ADR_002_MODULE_DEPENDENCIES.md).
 
 ```text
-include/ui/        Engine + backend public API (`#include <ui/…>`, `namespace ui`)
-src/core|svg|debugger|platform|render
+include/ui/        Engine + backend public API (`#include <ui/dom/…>`, `namespace ui`)
+src/
+  base style layout dom text xml data paint widgets core
+  svg debugger platform render
 third_party/       freetype, harfbuzz, lunasvg, zlib, libpng, sdl3, sdl3_image
 tests/             Engine unit tests + support harness
 ```
@@ -62,7 +65,7 @@ target_link_libraries(your_target PUBLIC pp_ui)
 ```
 
 ```cpp
-#include <ui/Core/Core.h>
+#include <ui/core/Core.h>
 using namespace ui;  // or qualify ui::
 ```
 

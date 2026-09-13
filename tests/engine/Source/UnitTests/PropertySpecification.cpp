@@ -1,11 +1,11 @@
 #include "../Common/TestsInterface.h"
-#include <ui/Core/Core.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/PropertyDefinition.h>
-#include <ui/Core/PropertyDictionary.h>
-#include <ui/Core/PropertySpecification.h>
-#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/core/Core.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/Factory.h>
+#include <ui/style/PropertyDefinition.h>
+#include <ui/style/PropertyDictionary.h>
+#include <ui/style/PropertySpecification.h>
+#include <ui/style/StyleSheetSpecification.h>
 #include <doctest.h>
 #include <limits.h>
 

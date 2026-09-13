@@ -1,5 +1,5 @@
-#include <ui/Core/Math.h>
-#include <ui/Core/Types.h>
+#include <ui/base/Math.h>
+#include <ui/base/Types.h>
 #include <doctest.h>
 
 using namespace ui;

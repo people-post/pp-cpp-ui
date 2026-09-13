@@ -26,5 +26,54 @@ Sibling libs (`pp-cpp-common`, `pp-cpp-crypto`, `pp-cpp-amp`) use `include/<pkg>
 
 ## Amendment — public include & namespace brand
 
-Public engine headers live under `include/ui/` (`#include <ui/Core/…>`).
+Public engine headers live under `include/ui/<module>/` (`#include <ui/dom/Element.h>`, etc.).
 C++ API uses `namespace ui` (macros `UI_*`). Former `include/RmlUi/` shims and `Rml::` are removed.
+
+## Amendment — engine source & public header modules
+
+Sources and public headers are split into focused modules while keeping a single
+`ui_core` link target:
+
+`base`, `style`, `layout`, `dom`, `font` (+ `default` / `harfbuzz`), `xml`, `data`,
+`paint`, `widgets`, thin `core` bootstrap.
+
+Public includes: `#include <ui/dom/Element.h>` (no `ui/Core/` prefix). Convenience
+umbrella `#include <ui/Core.h>` remains.
+
+## Amendment — private include root
+
+Private engine includes use a single `-I src` root with module-qualified paths
+(`#include "layout/LayoutEngine.h"`). Same-folder includes stay bare.
+`SelectionController`’s full API is public under `include/ui/dom/`; the private
+header is a one-line redirect. This removes basename collisions from stacking
+every `src/<module>` on the include path.
+
+## Amendment — lowercase public folders
+
+Public include directories use lowercase names (`config/`, `debugger/`, `svg/`,
+`base/containers/`), matching `src/`. Umbrella headers `Core.h` / `Debugger.h` remain
+at `include/ui/` for convenience.
+
+## Amendment — module dependency North Star
+
+Module include edges follow the DAG in [ADR 002](ADR_002_MODULE_DEPENDENCIES.md)
+(`scripts/check_module_deps.py`).
+
+## Amendment — style value types in base
+
+`Unit`, `Animation` / `TransitionList`, and `DecorationTypes` (`ColorStop`,
+`BoxShadow`) live under `include/ui/base/` so `base` does not include `style`.
+Style-only `TypeConverter` specializations are implemented in
+`src/style/TypeConverterStyle.cpp`.
+
+## Amendment — style vs dom ownership
+
+Element-bound style *application* (stylesheets against elements, decorator/filter
+rendering, transform resolution, element animation, UA sheet load) lives under
+`src/dom/`. The `style` module keeps property definitions, parsers, and
+specifications without including `dom` / `font` / `xml`.
+
+
+## Amendment — host interfaces in base/text
+
+Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` getters live in `font`; `TextInputHandler` getters live in `base`. Cleared `base|data|layout|paint|font|widgets|xml → core`.

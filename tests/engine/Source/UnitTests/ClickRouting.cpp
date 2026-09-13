@@ -1,11 +1,10 @@
-#include "ClickRouting.h"
+#include "dom/ClickRouting.h"
 
-#include <ui/Core/Core.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/Types.h>
-
+#include <ui/core/Core.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/SystemInterface.h>
+#include <ui/base/Types.h>
 #include <doctest.h>
 
 #include <unordered_map>
@@ -14,17 +13,15 @@ namespace {
 
 ui::SystemInterface g_system_interface;
 std::unordered_map<ui::Element*, bool> g_contains_point;
-bool g_ui_initialized = false;
-
-void EnsureRmlUiInitialized()
-{
-	if (!g_ui_initialized)
+// Initialise Core without TestsShell; shut down on scope exit so later tests can re-init.
+struct UiCoreGuard {
+	UiCoreGuard()
 	{
 		ui::SetSystemInterface(&g_system_interface);
 		REQUIRE(ui::Initialise());
-		g_ui_initialized = true;
 	}
-}
+	~UiCoreGuard() { ui::Shutdown(); }
+};
 
 ui::ElementPtr MakeElement(const char* tag)
 {
@@ -67,7 +64,7 @@ ui::Element* Resolve(ui::Element* press_hover, ui::Element* release_hover, ui::V
 
 TEST_CASE("ClickRouting.TreeHelpers")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr root_ptr = MakeElement("div");
@@ -93,7 +90,7 @@ TEST_CASE("ClickRouting.TreeHelpers")
 
 TEST_CASE("ClickRouting.FindInteractiveElement")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr div_ptr = MakeElement("div");
@@ -115,7 +112,7 @@ TEST_CASE("ClickRouting.FindInteractiveElement")
 
 TEST_CASE("ClickRouting.ResolveClickTargetTier1Option")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr select_ptr = MakeElement("select");
@@ -132,7 +129,7 @@ TEST_CASE("ClickRouting.ResolveClickTargetTier1Option")
 
 TEST_CASE("ClickRouting.ResolveClickTargetTier1ButtonChild")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr button_ptr = MakeElement("button");
@@ -147,7 +144,7 @@ TEST_CASE("ClickRouting.ResolveClickTargetTier1ButtonChild")
 
 TEST_CASE("ClickRouting.ResolveClickTargetTier2SiblingChildren")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr button_ptr = MakeElement("button");
@@ -168,7 +165,7 @@ TEST_CASE("ClickRouting.ResolveClickTargetTier2SiblingChildren")
 
 TEST_CASE("ClickRouting.ResolveClickTargetUnrelated")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr press_ptr = MakeElement("div");
@@ -186,7 +183,7 @@ TEST_CASE("ClickRouting.ResolveClickTargetUnrelated")
 
 TEST_CASE("ClickRouting.ResolveClickTargetTier3Geometry")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr press_ptr = MakeElement("div");
@@ -200,7 +197,7 @@ TEST_CASE("ClickRouting.ResolveClickTargetTier3Geometry")
 
 TEST_CASE("ClickRouting.ResolveClickTargetTier3Focus")
 {
-	EnsureRmlUiInitialized();
+	UiCoreGuard ui_core_guard;
 	g_contains_point.clear();
 
 	ui::ElementPtr press_ptr = MakeElement("div");

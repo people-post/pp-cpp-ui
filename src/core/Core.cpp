@@ -1,37 +1,38 @@
-#include <ui/Core/Core.h>
-#include <ui/Core/Context.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementInstancer.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/FileInterface.h>
-#include <ui/Core/FontEngineInterface.h>
-#include <ui/Core/Plugin.h>
-#include <ui/Core/RenderInterface.h>
-#include <ui/Core/RenderManager.h>
-#include <ui/Core/StyleSheetSpecification.h>
-#include <ui/Core/SystemInterface.h>
-#include <ui/Core/TextInputHandler.h>
-#include <ui/Core/Types.h>
-#include "BoxShadowCache.h"
-#include "ComputeProperty.h"
-#include "ControlledLifetimeResource.h"
-#include "ElementMeta.h"
-#include "EventSpecification.h"
+#include <ui/core/Core.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementInstancer.h>
+#include <ui/dom/Factory.h>
+#include "RegisterDefaultFactories.h"
+#include <ui/base/FileInterface.h>
+#include <ui/font/FontEngineInterface.h>
+#include <ui/dom/Plugin.h>
+#include <ui/paint/RenderInterface.h>
+#include <ui/paint/RenderManager.h>
+#include <ui/style/StyleSheetSpecification.h>
+#include <ui/base/SystemInterface.h>
+#include <ui/base/TextInputHandler.h>
+#include <ui/base/Types.h>
+#include "dom/BoxShadowCache.h"
+#include "style/ComputeProperty.h"
+#include "base/ControlledLifetimeResource.h"
+#include "dom/ElementMeta.h"
+#include "dom/EventSpecification.h"
 #include "FileInterfaceDefault.h"
-#include "Layout/LayoutPools.h"
-#include "PluginRegistry.h"
-#include "RenderManagerAccess.h"
-#include "StyleSheetFactory.h"
-#include "UserAgentStyleSheet.h"
-#include "StyleSheetParser.h"
-#include "TemplateCache.h"
+#include "layout/LayoutPools.h"
+#include "dom/PluginRegistry.h"
+#include "paint/RenderManagerAccess.h"
+#include "dom/StyleSheetFactory.h"
+#include "dom/UserAgentStyleSheet.h"
+#include "dom/StyleSheetParser.h"
+#include "dom/TemplateCache.h"
 
 #ifdef UI_FONT_ENGINE_FREETYPE
-	#include "FontEngineDefault/FontEngineInterfaceDefault.h"
+	#include "font/default/FontEngineInterfaceDefault.h"
 #endif
 
 #ifdef UI_SVG_PLUGIN
-	#include "../svg/SVGPlugin.h"
+	#include "svg/SVGPlugin.h"
 #endif
 
 #include <algorithm>
@@ -39,10 +40,6 @@
 namespace ui {
 
 static RenderInterface* render_interface = nullptr;
-static SystemInterface* system_interface = nullptr;
-static FileInterface* file_interface = nullptr;
-static FontEngineInterface* font_interface = nullptr;
-static TextInputHandler* text_input_handler = nullptr;
 
 struct CoreData {
 	// Default interfaces should be created and destroyed on Initialise and Shutdown, respectively.
@@ -86,38 +83,38 @@ bool Initialise()
 	core_data.Initialize();
 
 	// Install default interfaces as appropriate.
-	if (!system_interface)
+	if (!GetSystemInterface())
 	{
 		core_data->default_system_interface = MakeUnique<SystemInterface>();
-		system_interface = core_data->default_system_interface.get();
+		SetSystemInterface(core_data->default_system_interface.get());
 	}
 
-	if (!file_interface)
+	if (!GetFileInterface())
 	{
 #ifndef UI_NO_FILE_INTERFACE_DEFAULT
 		core_data->default_file_interface = MakeUnique<FileInterfaceDefault>();
-		file_interface = core_data->default_file_interface.get();
+		SetFileInterface(core_data->default_file_interface.get());
 #else
 		Log::Message(Log::LT_ERROR, "No file interface set!");
 		return false;
 #endif
 	}
 
-	if (!font_interface)
+	if (!GetFontEngineInterface())
 	{
 #ifdef UI_FONT_ENGINE_FREETYPE
 		core_data->default_font_interface = MakeUnique<FontEngineInterfaceDefault>();
-		font_interface = core_data->default_font_interface.get();
+		SetFontEngineInterface(core_data->default_font_interface.get());
 #else
 		Log::Message(Log::LT_ERROR, "No font engine interface set!");
 		return false;
 #endif
 	}
 
-	if (!text_input_handler)
+	if (!GetTextInputHandler())
 	{
 		core_data->default_text_input_handler = MakeUnique<TextInputHandler>();
-		text_input_handler = core_data->default_text_input_handler.get();
+		SetTextInputHandler(core_data->default_text_input_handler.get());
 	}
 
 	EventSpecificationInterface::Initialize();
@@ -127,7 +124,7 @@ bool Initialise()
 	if (render_interface)
 		core_data->render_managers[render_interface] = MakeUnique<RenderManager>(render_interface);
 
-	font_interface->Initialize();
+	GetFontEngineInterface()->Initialize();
 
 	StyleSheetSpecification::Initialise();
 	StyleSheetParser::Initialise();
@@ -139,6 +136,7 @@ bool Initialise()
 	TemplateCache::Initialise();
 
 	Factory::Initialise();
+	RegisterDefaultFactories::Initialise();
 
 	// Initialise plugins integrated with Core.
 #ifdef UI_LOTTIE_PLUGIN
@@ -169,6 +167,7 @@ void Shutdown()
 
 	BoxShadowCache::Shutdown();
 
+	RegisterDefaultFactories::Shutdown();
 	Factory::Shutdown();
 	TemplateCache::Shutdown();
 	UserAgentStyleSheet::Shutdown();
@@ -176,7 +175,7 @@ void Shutdown()
 	StyleSheetParser::Shutdown();
 	StyleSheetSpecification::Shutdown();
 
-	font_interface->Shutdown();
+	GetFontEngineInterface()->Shutdown();
 
 	core_data->render_managers.clear();
 
@@ -184,11 +183,11 @@ void Shutdown()
 
 	initialised = false;
 
-	text_input_handler = nullptr;
-	font_interface = nullptr;
+	SetTextInputHandler(nullptr);
+	SetFontEngineInterface(nullptr);
 	render_interface = nullptr;
-	file_interface = nullptr;
-	system_interface = nullptr;
+	SetFileInterface(nullptr);
+	SetSystemInterface(nullptr);
 
 	core_data.Shutdown();
 
@@ -203,15 +202,6 @@ String GetVersion()
 	return UI_VERSION;
 }
 
-void SetSystemInterface(SystemInterface* _system_interface)
-{
-	system_interface = _system_interface;
-}
-
-SystemInterface* GetSystemInterface()
-{
-	return system_interface;
-}
 
 void SetRenderInterface(RenderInterface* _render_interface)
 {
@@ -223,35 +213,8 @@ RenderInterface* GetRenderInterface()
 	return render_interface;
 }
 
-void SetFileInterface(FileInterface* _file_interface)
-{
-	file_interface = _file_interface;
-}
 
-FileInterface* GetFileInterface()
-{
-	return file_interface;
-}
 
-void SetFontEngineInterface(FontEngineInterface* _font_interface)
-{
-	font_interface = _font_interface;
-}
-
-FontEngineInterface* GetFontEngineInterface()
-{
-	return font_interface;
-}
-
-void SetTextInputHandler(TextInputHandler* _text_input_handler)
-{
-	text_input_handler = _text_input_handler;
-}
-
-TextInputHandler* GetTextInputHandler()
-{
-	return text_input_handler;
-}
 
 Context* CreateContext(const String& name, const Vector2i dimensions, RenderInterface* render_interface_for_context,
 	TextInputHandler* text_input_handler_for_context)
@@ -263,7 +226,7 @@ Context* CreateContext(const String& name, const Vector2i dimensions, RenderInte
 		render_interface_for_context = render_interface;
 
 	if (!text_input_handler_for_context)
-		text_input_handler_for_context = text_input_handler;
+		text_input_handler_for_context = GetTextInputHandler();
 
 	if (!render_interface_for_context)
 	{
@@ -335,12 +298,12 @@ int GetNumContexts()
 
 bool LoadFontFace(const String& file_path, bool fallback_face, Style::FontWeight weight, int face_index)
 {
-	return font_interface->LoadFontFace(file_path, face_index, fallback_face, weight);
+	return GetFontEngineInterface()->LoadFontFace(file_path, face_index, fallback_face, weight);
 }
 
 bool LoadFontFace(Span<const byte> data, const String& family, Style::FontStyle style, Style::FontWeight weight, bool fallback_face, int face_index)
 {
-	return font_interface->LoadFontFace(data, face_index, family, style, weight, fallback_face);
+	return GetFontEngineInterface()->LoadFontFace(data, face_index, family, style, weight, fallback_face);
 }
 
 void RegisterPlugin(Plugin* plugin)
@@ -416,13 +379,13 @@ void ReleaseCompiledGeometry(RenderInterface* match_render_interface)
 
 void ReleaseFontResources()
 {
-	if (!font_interface)
+	if (!GetFontEngineInterface())
 		return;
 
 	for (const auto& name_context : core_data->contexts)
 		name_context.second->GetRootElement()->DirtyFontFaceRecursive();
 
-	font_interface->ReleaseFontResources();
+	GetFontEngineInterface()->ReleaseFontResources();
 
 	for (const auto& name_context : core_data->contexts)
 		name_context.second->Update();

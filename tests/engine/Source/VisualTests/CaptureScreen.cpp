@@ -1,8 +1,8 @@
 #include "CaptureScreen.h"
 #include "TestConfig.h"
-#include <ui/Core/Log.h>
-#include <ui/Core/MeshUtilities.h>
-#include <ui/Core/StringUtilities.h>
+#include <ui/base/Log.h>
+#include <ui/paint/MeshUtilities.h>
+#include <ui/base/StringUtilities.h>
 #include <RendererExtensions.h>
 #include <Shell.h>
 #include <cmath>

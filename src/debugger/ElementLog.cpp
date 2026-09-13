@@ -1,6 +1,6 @@
 #include "ElementLog.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Factory.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/Factory.h>
 #include "BeaconSource.h"
 #include "CommonSource.h"
 #include "LogSource.h"

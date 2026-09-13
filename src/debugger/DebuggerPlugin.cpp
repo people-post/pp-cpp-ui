@@ -1,10 +1,10 @@
 #include "DebuggerPlugin.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Core.h>
-#include <ui/Core/ElementInstancer.h>
-#include <ui/Core/ElementUtilities.h>
-#include <ui/Core/Factory.h>
-#include <ui/Core/Types.h>
+#include <ui/dom/Context.h>
+#include <ui/core/Core.h>
+#include <ui/dom/ElementInstancer.h>
+#include <ui/dom/ElementUtilities.h>
+#include <ui/dom/Factory.h>
+#include <ui/base/Types.h>
 #include "DebuggerSystemInterface.h"
 #include "ElementContextHook.h"
 #include "ElementDataModels.h"

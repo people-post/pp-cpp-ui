@@ -1,9 +1,9 @@
 #include "../Common/TestsInterface.h"
 #include "../Common/TestsShell.h"
-#include <ui/Core/Context.h>
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/Types.h>
+#include <ui/dom/Context.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/base/Types.h>
 #include <doctest.h>
 #include <float.h>
 

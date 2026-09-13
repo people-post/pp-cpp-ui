@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/Core/Types.h>
+#include <ui/base/Types.h>
 #include <algorithm>
 
 class TestSuite {

@@ -1,6 +1,6 @@
-#include "../../../../src/core/DataModel.cpp"
-#include <ui/Core/DataModelHandle.h>
-#include <ui/Core/Types.h>
+#include "../../../../src/data/DataModel.cpp"
+#include <ui/data/DataModelHandle.h>
+#include <ui/base/Types.h>
 #include <doctest.h>
 
 using namespace ui;

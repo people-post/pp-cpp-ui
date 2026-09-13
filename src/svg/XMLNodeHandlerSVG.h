@@ -1,8 +1,8 @@
 #pragma once
 
-#include <ui/Core/XMLParser.h>
-#include <ui/SVG/ElementSVG.h>
-#include "../core/XMLNodeHandlerDefault.h"
+#include <ui/xml/XMLParser.h>
+#include <ui/svg/ElementSVG.h>
+#include "xml/XMLNodeHandlerDefault.h"
 
 namespace ui {
 namespace SVG {

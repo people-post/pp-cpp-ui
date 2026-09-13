@@ -1,8 +1,8 @@
 #include "DecoratorSVG.h"
-#include <ui/Core/Element.h>
-#include <ui/Core/ElementDocument.h>
-#include <ui/Core/Geometry.h>
-#include <ui/Core/PropertyDefinition.h>
+#include <ui/dom/Element.h>
+#include <ui/dom/ElementDocument.h>
+#include <ui/paint/Geometry.h>
+#include <ui/style/PropertyDefinition.h>
 #include "SVGCache.h"
 
 namespace ui {
