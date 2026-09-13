@@ -13,7 +13,7 @@ include/ui/
   config/            Build-time config
   base/              Types, math, containers, utilities, Unit/Animation/decoration values
   style/             Properties, stylesheets, decorators, filters
-  layout/            Box model
+  layout/            Box model, LayoutTextElement seam
   dom/               Element, document, context, events, factory
   text/              Fonts, shaping, selection, ElementText
   xml/               RML/XML streams & parsers
@@ -90,9 +90,9 @@ L12  platform | render    owned backends
 python3 scripts/check_module_deps.py
 ```
 
-Forbidden edges fail unless listed in the script’s allowlist (tracked debt).
-Clear debt in the order in ADR 002; do not grow the allowlist without updating
-the ADR.
+Forbidden edges fail the check. The allowlist is empty after clearing ADR 002
+tracked debt; named bridges (`layout → dom`, `text → dom`) remain allowed.
+Do not grow a new allowlist without updating the ADR.
 
 ## Include & namespace
 
