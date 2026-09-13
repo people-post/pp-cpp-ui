@@ -1,12 +1,9 @@
 # Auto-maintained module sources for ui_core.
 target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/BaseXMLParser.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/FactoryXML.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DocumentHeader.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/DocumentHeader.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Template.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/Template.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/TemplateCache.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/TemplateCache.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLNodeHandler.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLNodeHandlerBody.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/XMLNodeHandlerBody.h"

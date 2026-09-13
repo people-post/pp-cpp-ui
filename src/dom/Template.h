@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/base/StreamMemory.h>
-#include "DocumentHeader.h"
+#include "dom/DocumentHeader.h"
 
 namespace ui {
 

@@ -5,8 +5,8 @@
 #include <ui/base/SystemInterface.h>
 #include <ui/base/URL.h>
 #include <ui/xml/XMLParser.h>
-#include "DocumentHeader.h"
-#include "TemplateCache.h"
+#include "dom/DocumentHeader.h"
+#include "dom/TemplateCache.h"
 
 namespace ui {
 

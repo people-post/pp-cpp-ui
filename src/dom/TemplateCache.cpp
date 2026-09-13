@@ -1,7 +1,7 @@
-#include "TemplateCache.h"
+#include "dom/TemplateCache.h"
 #include <ui/base/Log.h>
 #include "base/StreamFile.h"
-#include "Template.h"
+#include "dom/Template.h"
 
 namespace ui {
 

@@ -66,10 +66,10 @@ without defining layers, allowed bridges, or enforcement.
      `Element.h` no longer includes `Core.h`.
   5. ~~`dom → widgets`~~ — default widget/data/XML control registration lives in
      `src/core/RegisterDefaultFactories.cpp`; `WidgetScroll` moved into `dom`.
-  6. ~~most `dom → xml` via Stream*~~ — `Stream` / `StreamMemory` / `StreamFile` live in
-     `base`; `ParseDataBrackets` lives in `base/DataExpressionTools`. Remaining: ElementDocument
-     templates + Factory `XMLParser`.
-  7. Remaining upward: residual `dom → xml`, `dom → data`; then tighten paint/layout/text bridges
+  6. ~~`dom → xml`~~ — Stream* and `ParseDataBrackets` in `base`; document template types
+     (`DocumentHeader` / `Template*` headers, `TemplateCache`) in `dom`; XMLParser-using
+     `Template`/`DocumentHeader`/`Factory` stream impls live under `src/xml/`.
+  7. Remaining upward: `dom → data`; then tighten paint/layout/text bridges
      (`paint → style` also cleared with DecorationTypes move)
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up

@@ -8,7 +8,7 @@
 #include <ui/base/URL.h>
 #include <ui/xml/XMLNodeHandler.h>
 #include "base/ControlledLifetimeResource.h"
-#include "DocumentHeader.h"
+#include "dom/DocumentHeader.h"
 
 namespace ui {
 

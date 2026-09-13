@@ -1,8 +1,8 @@
-#include "Template.h"
+#include "dom/Template.h"
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/xml/XMLParser.h>
-#include "XMLParseTools.h"
+#include "xml/XMLParseTools.h"
 #include <string.h>
 
 namespace ui {

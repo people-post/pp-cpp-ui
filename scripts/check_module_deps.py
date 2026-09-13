@@ -79,7 +79,6 @@ DEBT_ALLOWLIST: dict[tuple[str, str], str] = {
     ("paint", "dom"): "GeometryBoxShadow uses Element",
     ("layout", "text"): "inline layout uses ElementText / fonts",
     ("text", "widgets"): "ElementText/SelectionController ↔ ElementSelectableText",
-    ("dom", "xml"): "ElementDocument templates / Factory XMLParser",
     ("dom", "data"): "Context/Element hold DataModel",
 }
 

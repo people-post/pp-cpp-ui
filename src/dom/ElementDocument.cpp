@@ -6,16 +6,16 @@
 #include <ui/base/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
-#include "xml/DocumentHeader.h"
+#include "dom/DocumentHeader.h"
 #include "ElementStyle.h"
 #include "EventDispatcher.h"
 #include "layout/LayoutDetails.h"
 #include "layout/LayoutEngine.h"
 #include "base/StreamFile.h"
 #include "StyleSheetFactory.h"
-#include "xml/Template.h"
+#include "dom/Template.h"
 #include "UserAgentStyleSheet.h"
-#include "xml/TemplateCache.h"
+#include "dom/TemplateCache.h"
 #include <limits.h>
 
 namespace ui {

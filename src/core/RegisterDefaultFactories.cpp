@@ -9,7 +9,7 @@
 #include <ui/widgets/ElementProgress.h>
 #include <ui/widgets/ElementTabSet.h>
 #include <ui/xml/XMLParser.h>
-#include "xml/TemplateCache.h"
+#include "dom/TemplateCache.h"
 
 #include "base/ControlledLifetimeResource.h"
 #include "data/DataController.h"

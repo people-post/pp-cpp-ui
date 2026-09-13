@@ -4,8 +4,8 @@
 #include <ui/base/StreamMemory.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/base/Types.h>
-#include "Template.h"
-#include "TemplateCache.h"
+#include "dom/Template.h"
+#include "dom/TemplateCache.h"
 #include <ctype.h>
 #include <string.h>
 

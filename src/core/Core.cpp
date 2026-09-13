@@ -25,7 +25,7 @@
 #include "dom/StyleSheetFactory.h"
 #include "dom/UserAgentStyleSheet.h"
 #include "dom/StyleSheetParser.h"
-#include "xml/TemplateCache.h"
+#include "dom/TemplateCache.h"
 
 #ifdef UI_FONT_ENGINE_FREETYPE
 	#include "text/default/FontEngineInterfaceDefault.h"

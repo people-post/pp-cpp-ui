@@ -3,8 +3,8 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/Factory.h>
 #include <ui/xml/XMLParser.h>
-#include "Template.h"
-#include "TemplateCache.h"
+#include "dom/Template.h"
+#include "dom/TemplateCache.h"
 #include "XMLParseTools.h"
 
 namespace ui {
