@@ -1,10 +1,10 @@
-#include "SelectionController.h"
+#include <ui/dom/SelectionController.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/base/SystemInterface.h>
 #include "SelectionHighlight.h"
-#include "text/ElementSelectableText.h"
+#include "ElementSelectableText.h"
 
 #include <algorithm>
 #include <limits>

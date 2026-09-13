@@ -1,7 +1,7 @@
 #include "ElementInfo.h"
 #include <ui/dom/Context.h>
 #include <ui/core/Core.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Factory.h>
 #include <ui/style/PropertiesIteratorView.h>

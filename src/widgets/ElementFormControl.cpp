@@ -1,6 +1,6 @@
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/style/ComputedValues.h>
-#include "text/SelectionContentBuilder.h"
+#include "dom/SelectionContentBuilder.h"
 
 namespace ui {
 

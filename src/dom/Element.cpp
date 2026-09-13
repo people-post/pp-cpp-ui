@@ -29,7 +29,7 @@
 #include "dom/PluginRegistry.h"
 #include "base/Pool.h"
 #include "style/PropertiesIterator.h"
-#include "text/SelectionContentBuilder.h"
+#include "SelectionContentBuilder.h"
 #include "StyleSheetNode.h"
 #include "StyleSheetParser.h"
 #include "style/TransformState.h"

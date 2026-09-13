@@ -43,11 +43,13 @@ Moved the façade implementation to `src/dom/LayoutElement.cpp` (dom may depend
 on layout). Layout keeps only the header + `Element` forward declaration.
 
 **Result:** no `src/layout/**` file includes `ui/dom/*`. Removed
-`("layout", "dom")` from `ALLOWED_BRIDGES`. Remaining named bridge involving
-DOM is `text → dom` only.
+`("layout", "dom")` from `ALLOWED_BRIDGES`.
+
+**Follow-up (done):** `text → dom` cleared by moving `ElementText` and selection
+UI into `dom/`; `text/` is font/shaping only. No upward bridges into `dom` remain.
 
 ## Non-goals
 
 - Splitting CMake targets (still one `ui_core`)
-- Removing `text → dom` (separate named bridge)
+- Renaming module `text` → `font` (optional later)
 - Rewriting the layout algorithm itself

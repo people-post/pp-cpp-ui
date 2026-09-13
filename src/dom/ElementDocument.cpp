@@ -1,6 +1,6 @@
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/Context.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/Factory.h>
 #include <ui/base/Profiling.h>
 #include <ui/base/StreamMemory.h>

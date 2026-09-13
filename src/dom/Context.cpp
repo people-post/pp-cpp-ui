@@ -13,8 +13,8 @@
 #include "ClickRouting.h"
 #include "EventDispatcher.h"
 #include "dom/PluginRegistry.h"
-#include "text/SelectionContentBuilder.h"
-#include "text/SelectionController.h"
+#include "SelectionContentBuilder.h"
+#include <ui/dom/SelectionController.h>
 #include "ScrollController.h"
 #include "base/StreamFile.h"
 #include <algorithm>

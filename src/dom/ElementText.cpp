@@ -1,4 +1,4 @@
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementUtilities.h>
@@ -15,7 +15,7 @@
 #include "style/TransformState.h"
 #include "SelectionContentBuilder.h"
 #include "SelectionHighlight.h"
-#include "text/ElementSelectableText.h"
+#include "ElementSelectableText.h"
 #include <limits>
 
 namespace ui {

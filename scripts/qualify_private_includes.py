@@ -39,7 +39,7 @@ def main() -> None:
         pub = pub.replace("#pragma once", "#pragma once\n\n#include <ui/base/Header.h>", 1)
     (ROOT / "include" / "ui" / "text" / "SelectionController.h").write_text(pub, encoding="utf-8")
     (SRC / "text" / "SelectionController.h").write_text(
-        "#pragma once\n\n#include <ui/text/SelectionController.h>\n", encoding="utf-8"
+        "#pragma once\n\n#include <ui/dom/SelectionController.h>\n", encoding="utf-8"
     )
     print("promoted SelectionController to public header")
 
@@ -240,7 +240,7 @@ target_include_directories(ui_core PRIVATE
 Cross-module engine headers use a single `-I src` root and qualified paths:
 
 ```cpp
-#include "text/SelectionController.h"
+#include "dom/SelectionController.h"
 #include "debugger/Geometry.h"
 #include "layout/LayoutEngine.h"
 ```

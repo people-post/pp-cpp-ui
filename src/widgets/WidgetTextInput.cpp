@@ -2,7 +2,7 @@
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/ElementScroll.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/dom/Factory.h>
@@ -16,8 +16,8 @@
 #include <ui/text/TextInputHandler.h>
 #include "base/Clock.h"
 #include <ui/paint/RenderManager.h>
-#include "text/SelectionHighlight.h"
-#include "text/ElementTextSelection.h"
+#include "dom/SelectionHighlight.h"
+#include "dom/ElementTextSelection.h"
 #include <algorithm>
 #include <limits.h>
 

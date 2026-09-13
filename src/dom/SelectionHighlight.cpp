@@ -1,6 +1,6 @@
 #include "SelectionHighlight.h"
 
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/text/FontEngineInterface.h>
 #include <ui/base/Math.h>

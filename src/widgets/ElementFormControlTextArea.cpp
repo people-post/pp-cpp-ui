@@ -1,5 +1,5 @@
 #include <ui/widgets/ElementFormControlTextArea.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/base/Math.h>
 #include <ui/style/PropertyIdSet.h>

@@ -20,7 +20,7 @@
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementInstancer.h>
 #include <ui/dom/ElementScroll.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Event.h>
 #include <ui/dom/EventInstancer.h>

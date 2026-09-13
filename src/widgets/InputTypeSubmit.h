@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include "InputType.h"
 
 namespace ui {

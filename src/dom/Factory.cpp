@@ -3,7 +3,7 @@
 #include <ui/dom/ContextInstancer.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementInstancer.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/EventListenerInstancer.h>
 #include <ui/base/StreamMemory.h>

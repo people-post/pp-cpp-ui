@@ -1,7 +1,7 @@
 #include "DataViewDefault.h"
 #include <ui/data/DataVariable.h>
 #include <ui/dom/Element.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/Factory.h>
 #include <ui/base/SystemInterface.h>
 #include <ui/base/Variant.h>

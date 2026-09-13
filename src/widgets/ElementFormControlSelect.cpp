@@ -1,5 +1,5 @@
 #include <ui/widgets/ElementFormControlSelect.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Event.h>
 #include "WidgetDropDown.h"

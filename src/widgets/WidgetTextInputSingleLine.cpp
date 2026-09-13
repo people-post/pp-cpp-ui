@@ -1,6 +1,6 @@
 #include "WidgetTextInputSingleLine.h"
 #include <ui/base/Dictionary.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/widgets/ElementFormControl.h>
 #include <algorithm>
 

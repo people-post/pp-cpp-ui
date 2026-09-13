@@ -1,6 +1,6 @@
 #include "SelectionContentBuilder.h"
 
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 namespace ui {
 
 void SelectionContentBuilder::BeginContainer(Element* new_container)

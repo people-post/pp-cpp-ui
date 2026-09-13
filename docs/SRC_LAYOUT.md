@@ -14,8 +14,8 @@ include/ui/
   base/              Types, math, containers, utilities, Unit/Animation/decoration values, Input enums
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model, LayoutTextElement seam
-  dom/               Element, document, context, events, factory
-  text/              Fonts, shaping, selection, ElementText
+  dom/               Element, document, context, events, factory, ElementText, selection
+  text/              Fonts, shaping, font effects (ElementText lives in dom)
   xml/               RML/XML streams & parsers
   data/              Data model
   paint/             Geometry, textures, render interfaces
@@ -81,9 +81,10 @@ L12  platform | render    owned backends
 
 | Edge | Why |
 |------|-----|
-| `text → dom` | `ElementText`, selection participation |
+(none into `dom`)
 
-`layout → dom` was cleared: layout uses `LayoutElement` (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
+`layout → dom` and `text → dom` cleared: layout uses `LayoutElement`; `ElementText` /
+selection live in `dom`. The `text` module is the font/shaping layer (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
 
 ### Enforcement
 
@@ -92,7 +93,7 @@ python3 scripts/check_module_deps.py
 ```
 
 Forbidden edges fail the check. The allowlist is empty after clearing ADR 002
-tracked debt; the remaining named DOM bridge is `text → dom`.
+tracked debt; no upward bridges into `dom` remain (`core → svg|debugger` only at the composition root).
 Do not grow a new allowlist without updating the ADR.
 
 ## Include & namespace
@@ -112,9 +113,9 @@ CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`,
 Cross-module engine headers use a single `-I src` root and qualified paths:
 
 ```cpp
-#include "text/SelectionController.h"
 #include "debugger/Geometry.h"
 #include "layout/LayoutEngine.h"
+#include <ui/dom/SelectionController.h>  // public headers use <ui/…>
 ```
 
 Same-folder includes (`#include "LayoutEngine.h"` from `layout/LayoutEngine.cpp`)

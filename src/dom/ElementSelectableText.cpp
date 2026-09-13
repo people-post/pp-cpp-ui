@@ -2,14 +2,14 @@
 
 #include <ui/dom/Context.h>
 #include <ui/dom/ElementDocument.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Factory.h>
 #include <ui/text/FontEngineInterface.h>
 #include <ui/paint/RenderManager.h>
-#include "text/SelectionContentBuilder.h"
-#include "text/SelectionController.h"
-#include "text/SelectionHighlight.h"
+#include "SelectionContentBuilder.h"
+#include <ui/dom/SelectionController.h>
+#include "SelectionHighlight.h"
 
 #include <algorithm>
 #include <limits>

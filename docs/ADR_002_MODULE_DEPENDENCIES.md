@@ -21,7 +21,12 @@ without defining layers, allowed bridges, or enforcement.
 2. **Strict layer stack** (higher may depend on lower; never reverse), documented
    in [SRC_LAYOUT.md](SRC_LAYOUT.md):
 
-   `config → base → paint → style → layout → text → dom → xml → data → widgets → core → (svg|debugger) → (platform|render)`
+   `config → base → paint → style → layout → text(font) → dom → xml → data → widgets → core → (svg|debugger) → (platform|render)`
+
+   **Revised intent (post-cleanup):** `text` is the **font/shaping** layer (pending optional
+   rename to `font`). `ElementText` and selection Element subclasses live in **`dom`**.
+   `layout` never includes `dom` (`LayoutElement` façade; impl in `dom`). `paint` is a
+   **render-primitives toolkit**, not a CSS paint stage. Prefer **no upward DOM bridges**.
 
 3. **Hard rules**
    - **No cycles.** Break with a lower seam (interface, opaque handle, callback,
@@ -37,10 +42,11 @@ without defining layers, allowed bridges, or enforcement.
      `svg` / `debugger` / `platform` / `render` except `core` registering plugins.
 
 4. **Named bridges (allowed upward)**
-   - `text → dom` — `ElementText` and selection participation.
-     (`layout → dom` cleared: layout uses `LayoutElement` façade; impl in `dom`.)
+   - ~~`layout → dom`~~ / ~~`text → dom`~~ — cleared (see Consequences).
+   - `core → svg` / `core → debugger` — composition root registers plugins.
 
-   These are explicit exceptions, not a license for other upward edges.
+   Prefer **no** upward engine bridges into `dom`. Dom may depend downward on
+   `layout` / `text`(font) / `style` / `paint` / `base`.
 
 5. **Public and private includes obey the same DAG.**
    - Public: `#include <ui/module/Name.h>`
@@ -73,16 +79,17 @@ without defining layers, allowed bridges, or enforcement.
      `src/data/` (`FactoryData`, `ContextData`, `ElementData`, `ElementUtilitiesData`).
   8. ~~`paint → layout` / `paint → text` / `paint → dom`~~ — unused paint includes
      removed; box-shadow cache/hash live in `dom`; `GeometryBoxShadow` keeps texture gen.
-  9. ~~`text → widgets`~~ — `ElementSelectableText` / `ElementTextSelection` live in `text`.
+  9. ~~`text → widgets`~~ — selectable/selection Element subclasses moved with ElementText into `dom`.
   10. ~~`layout → text`~~ — `FontMetrics` in `base`; layout uses `LayoutTextElement` +
       `Element::GetFontMetrics()` / `GetAsLayoutTextElement()` instead of `ElementText`.
-   11. Remaining named bridge involving DOM: `text → dom` only
-     (`paint → style` also cleared with DecorationsTypes move).
+   11. ~~`text → dom`~~ — cleared: `ElementText` / selectable text / selection controller
+      moved into `dom`; `text` retains font engine, font effects, text input handler.
   12. ~~`layout → dom`~~ — cleared: layout-owned `LayoutElement` API with
       implementation in `src/dom/LayoutElement.cpp` (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
-  13. Host input enums (`Input.h`) moved `dom` → `base` so non-DOM modules
-      (text selection, platforms, widgets) need not take a `* → dom` edge for keys/buttons.
-      Remaining `text → dom` is intentional: `ElementText` / selection Element subclasses.
+  13. Host input enums (`Input.h`) moved `dom` → `base`.
+  14. **Revised North Star:** treat `text` as font/shaping (optional rename `font`);
+      Element text nodes belong in `dom`; layout stays Element-free; paint = primitives toolkit.
+      Optional later: rename module `text` → `font`; introduce `LayoutNode` handle only if needed.
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

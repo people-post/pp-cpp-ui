@@ -1,6 +1,6 @@
 #include "WidgetTextInputMultiLine.h"
 #include <ui/base/Dictionary.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <algorithm>
 
 namespace ui {

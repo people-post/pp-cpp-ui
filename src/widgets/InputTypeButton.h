@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/dom/ElementDocument.h>
-#include <ui/text/ElementText.h>
+#include <ui/dom/ElementText.h>
 #include <ui/dom/EventListener.h>
 #include "InputType.h"
 
