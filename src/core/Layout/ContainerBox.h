@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Box.h>
-#include <RmlUi/Core/StyleTypes.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Box.h>
+#include <ui/Core/StyleTypes.h>
+#include <ui/Core/Types.h>
 #include "LayoutBox.h"
 
 namespace Rml {

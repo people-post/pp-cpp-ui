@@ -1,9 +1,9 @@
-#include <RmlUi/Core/RenderManager.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/RenderInterface.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/RenderManager.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/RenderInterface.h>
+#include <ui/Core/SystemInterface.h>
 #include "TextureDatabase.h"
 
 namespace Rml {

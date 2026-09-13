@@ -1,5 +1,5 @@
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/ID.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/ID.h>
 
 namespace Rml {
 

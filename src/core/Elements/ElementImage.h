@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/Spritesheet.h>
-#include <RmlUi/Core/Texture.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/Spritesheet.h>
+#include <ui/Core/Texture.h>
 
 namespace Rml {
 

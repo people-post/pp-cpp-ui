@@ -1,10 +1,10 @@
 #include "BlockFormattingContext.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/Core/SystemInterface.h>
 #include "BlockContainer.h"
 #include "FloatedBoxSpace.h"
 #include "LayoutDetails.h"

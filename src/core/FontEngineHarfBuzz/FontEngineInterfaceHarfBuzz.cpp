@@ -1,7 +1,7 @@
 #include "FontEngineInterfaceHarfBuzz.h"
 #include "FontFaceHandleHarfBuzz.h"
 #include "FontProvider.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 void FontEngineInterfaceHarfBuzz::Initialize()
 {

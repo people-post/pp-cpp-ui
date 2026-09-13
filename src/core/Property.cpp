@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Property.h>
-#include <RmlUi/Core/PropertyDefinition.h>
+#include <ui/Core/Property.h>
+#include <ui/Core/PropertyDefinition.h>
 
 namespace Rml {
 

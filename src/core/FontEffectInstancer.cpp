@@ -1,5 +1,5 @@
-#include <RmlUi/Core/FontEffectInstancer.h>
-#include <RmlUi/Core/PropertyDefinition.h>
+#include <ui/Core/FontEffectInstancer.h>
+#include <ui/Core/PropertyDefinition.h>
 
 namespace Rml {
 

@@ -1,9 +1,9 @@
 #include "FilterBasic.h"
-#include <RmlUi/Core/CompiledFilterShader.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/CompiledFilterShader.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/RenderManager.h>
 
 namespace Rml {
 

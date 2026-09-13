@@ -1,5 +1,5 @@
-#include <RmlUi/Core/ElementInstancer.h>
-#include <RmlUi/Core/ElementText.h>
+#include <ui/Core/ElementInstancer.h>
+#include <ui/Core/ElementText.h>
 #include "ControlledLifetimeResource.h"
 #include "Elements/ElementSelectableText.h"
 #include "Pool.h"

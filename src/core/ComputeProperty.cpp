@@ -1,7 +1,7 @@
 #include "ComputeProperty.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Property.h>
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Property.h>
+#include <ui/Core/StringUtilities.h>
 #include "ControlledLifetimeResource.h"
 
 namespace Rml {

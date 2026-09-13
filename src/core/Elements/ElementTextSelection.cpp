@@ -1,5 +1,5 @@
 #include "ElementTextSelection.h"
-#include <RmlUi/Core/PropertyIdSet.h>
+#include <ui/Core/PropertyIdSet.h>
 
 namespace Rml {
 

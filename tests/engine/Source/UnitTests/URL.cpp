@@ -1,8 +1,8 @@
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/SystemInterface.h>
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/URL.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/SystemInterface.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/URL.h>
 #include <algorithm>
 #include <doctest.h>
 

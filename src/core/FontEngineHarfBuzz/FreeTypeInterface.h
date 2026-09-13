@@ -1,6 +1,6 @@
 #include "FontEngineDefault/FontTypes.h"
 #include "FontGlyph.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 using Rml::Character;
 using Rml::FontFaceHandleFreetype;

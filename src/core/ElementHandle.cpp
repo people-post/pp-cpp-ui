@@ -1,13 +1,13 @@
 #include "ElementHandle.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Event.h>
-#include <RmlUi/Core/Property.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/PropertySpecification.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Event.h>
+#include <ui/Core/Property.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/PropertySpecification.h>
 
 namespace Rml {
 

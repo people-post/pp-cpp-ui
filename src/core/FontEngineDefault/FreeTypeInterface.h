@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/FontMetrics.h>
+#include <ui/Core/FontMetrics.h>
 #include "FontTypes.h"
 
 namespace Rml {

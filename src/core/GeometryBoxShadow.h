@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/DecorationTypes.h>
-#include <RmlUi/Core/RenderBox.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/DecorationTypes.h>
+#include <ui/Core/RenderBox.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 using RenderBoxList = Vector<RenderBox>;

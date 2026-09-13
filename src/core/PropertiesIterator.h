@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/PropertyIdSet.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/PropertyIdSet.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

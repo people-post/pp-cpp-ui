@@ -2,14 +2,14 @@
 #include "../Common/TestsShell.h"
 #include "TestConfig.h"
 #include "XmlNodeHandlers.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/SystemInterface.h>
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/FileInterface.h>
+#include <ui/Core/SystemInterface.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/XMLParser.h>
 #include <Shell.h>
 
 using namespace Rml;

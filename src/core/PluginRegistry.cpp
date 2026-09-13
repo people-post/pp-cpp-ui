@@ -1,5 +1,5 @@
 #include "PluginRegistry.h"
-#include <RmlUi/Core/Plugin.h>
+#include <ui/Core/Plugin.h>
 #include "ControlledLifetimeResource.h"
 #include <algorithm>
 

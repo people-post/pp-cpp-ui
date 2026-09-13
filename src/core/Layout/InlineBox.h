@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/Box.h>
+#include <ui/Core/Box.h>
 #include "InlineLevelBox.h"
 
 namespace Rml {

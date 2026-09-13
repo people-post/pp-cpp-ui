@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Decorator.h>
-#include <RmlUi/Core/Vertex.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Decorator.h>
+#include <ui/Core/Vertex.h>
 
 namespace Rml {
 

@@ -1,8 +1,8 @@
 #include "PropertyParserAnimation.h"
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyIdSet.h>
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyIdSet.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/StyleSheetSpecification.h>
 #include "PropertyShorthandDefinition.h"
 
 namespace Rml {

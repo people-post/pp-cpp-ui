@@ -1,14 +1,14 @@
 #include "../Common/TestsInterface.h"
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/CompiledFilterShader.h>
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Filter.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/CompiledFilterShader.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Filter.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/RenderManager.h>
 #include <algorithm>
 #include <doctest.h>
 

@@ -1,5 +1,5 @@
 #include "FontEffectOutline.h"
-#include <RmlUi/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDefinition.h>
 
 namespace Rml {
 

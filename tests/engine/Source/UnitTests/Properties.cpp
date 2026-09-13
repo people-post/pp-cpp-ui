@@ -1,12 +1,12 @@
 #include "../Common/TestsInterface.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/DecorationTypes.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
-#include <RmlUi/Core/StyleSheetTypes.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/DecorationTypes.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/Core/StyleSheetTypes.h>
 #include <doctest.h>
 
 using namespace Rml;

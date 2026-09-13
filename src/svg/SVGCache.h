@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Texture.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Texture.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

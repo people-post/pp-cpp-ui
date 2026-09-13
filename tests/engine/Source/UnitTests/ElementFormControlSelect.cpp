@@ -1,10 +1,10 @@
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/DataModelHandle.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Elements/ElementFormControlSelect.h>
-#include <RmlUi/Core/EventListener.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/DataModelHandle.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Elements/ElementFormControlSelect.h>
+#include <ui/Core/EventListener.h>
 #include <doctest.h>
 
 using namespace Rml;

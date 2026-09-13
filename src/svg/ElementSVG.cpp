@@ -1,7 +1,7 @@
-#include <RmlUi/SVG/ElementSVG.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/PropertyIdSet.h>
+#include <ui/SVG/ElementSVG.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/PropertyIdSet.h>
 #include "SVGCache.h"
 
 namespace Rml {

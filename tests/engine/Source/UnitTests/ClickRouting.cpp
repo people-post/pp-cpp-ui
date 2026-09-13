@@ -1,10 +1,10 @@
 #include "ClickRouting.h"
 
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/SystemInterface.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/SystemInterface.h>
+#include <ui/Core/Types.h>
 
 #include <doctest.h>
 

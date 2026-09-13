@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Stream.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Stream.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

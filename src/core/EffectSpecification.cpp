@@ -1,5 +1,5 @@
-#include <RmlUi/Core/EffectSpecification.h>
-#include <RmlUi/Core/PropertyDefinition.h>
+#include <ui/Core/EffectSpecification.h>
+#include <ui/Core/PropertyDefinition.h>
 
 namespace Rml {
 

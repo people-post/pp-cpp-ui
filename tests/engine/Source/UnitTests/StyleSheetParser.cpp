@@ -1,9 +1,9 @@
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Spritesheet.h>
-#include <RmlUi/Core/StreamMemory.h>
-#include <RmlUi/Core/StyleSheet.h>
-#include <RmlUi/Core/StyleSheetContainer.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Spritesheet.h>
+#include <ui/Core/StreamMemory.h>
+#include <ui/Core/StyleSheet.h>
+#include <ui/Core/StyleSheetContainer.h>
 #include <doctest.h>
 
 static const char spritesheet[] = R"(

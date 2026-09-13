@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/Decorator.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/ID.h>
-#include <RmlUi/Core/Spritesheet.h>
+#include <ui/Core/Decorator.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/ID.h>
+#include <ui/Core/Spritesheet.h>
 #include "Pool.h"
 
 namespace Rml {

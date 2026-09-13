@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RmlUi/Core/Mesh.h>
-#include <RmlUi/Core/TypeConverter.h>
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/Variant.h>
-#include <RmlUi/Core/Vertex.h>
+#include <ui/Core/Mesh.h>
+#include <ui/Core/TypeConverter.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/Variant.h>
+#include <ui/Core/Vertex.h>
 #include <doctest.h>
 #include <ostream>
 

@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementScroll.h>
-#include <RmlUi/Core/Traits.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementScroll.h>
+#include <ui/Core/Traits.h>
+#include <ui/Core/Types.h>
 #include "ControlledLifetimeResource.h"
 #include "ElementBackgroundBorder.h"
 #include "ElementEffects.h"

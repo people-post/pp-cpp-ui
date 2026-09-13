@@ -1,5 +1,5 @@
-#include <RmlUi/Core/RenderInterfaceCompatibility.h>
-#include <RmlUi/Core/Math.h>
+#include <ui/Core/RenderInterfaceCompatibility.h>
+#include <ui/Core/Math.h>
 
 namespace Rml {
 

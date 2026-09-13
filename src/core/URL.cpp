@@ -1,6 +1,6 @@
-#include <RmlUi/Core/URL.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/URL.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/StringUtilities.h>
 #include <stdio.h>
 #include <string.h>
 

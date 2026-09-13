@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Variant.h>
-#include <RmlUi/Core/DecorationTypes.h>
+#include <ui/Core/Variant.h>
+#include <ui/Core/DecorationTypes.h>
 #include <string.h>
 
 namespace Rml {

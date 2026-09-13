@@ -1,10 +1,10 @@
 #include "DebuggerPlugin.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/ElementInstancer.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/ElementInstancer.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Types.h>
 #include "DebuggerSystemInterface.h"
 #include "ElementContextHook.h"
 #include "ElementDataModels.h"

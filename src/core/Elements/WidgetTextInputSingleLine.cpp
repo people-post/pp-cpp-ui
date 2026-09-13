@@ -1,7 +1,7 @@
 #include "WidgetTextInputSingleLine.h"
-#include <RmlUi/Core/Dictionary.h>
-#include <RmlUi/Core/ElementText.h>
-#include <RmlUi/Core/Elements/ElementFormControl.h>
+#include <ui/Core/Dictionary.h>
+#include <ui/Core/ElementText.h>
+#include <ui/Core/Elements/ElementFormControl.h>
 #include <algorithm>
 
 namespace Rml {

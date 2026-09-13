@@ -1,5 +1,5 @@
 #include "WidgetTextInputSingleLinePassword.h"
-#include <RmlUi/Core/ElementText.h>
+#include <ui/Core/ElementText.h>
 
 namespace Rml {
 

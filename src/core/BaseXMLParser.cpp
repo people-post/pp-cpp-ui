@@ -1,6 +1,6 @@
-#include <RmlUi/Core/BaseXMLParser.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/Stream.h>
+#include <ui/Core/BaseXMLParser.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/Stream.h>
 #include "XMLParseTools.h"
 #include <string.h>
 

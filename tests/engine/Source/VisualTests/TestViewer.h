@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 class Context;

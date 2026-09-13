@@ -1,5 +1,5 @@
 #include "DecoratorUtilities.h"
-#include <RmlUi/Core/Property.h>
+#include <ui/Core/Property.h>
 
 namespace Rml {
 

@@ -1,6 +1,6 @@
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/StyleSheetSpecification.h>
 
 namespace Rml {
 

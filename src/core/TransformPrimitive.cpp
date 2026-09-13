@@ -1,6 +1,6 @@
-#include <RmlUi/Core/TransformPrimitive.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/TypeConverter.h>
+#include <ui/Core/TransformPrimitive.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/TypeConverter.h>
 
 namespace Rml {
 namespace Transforms {

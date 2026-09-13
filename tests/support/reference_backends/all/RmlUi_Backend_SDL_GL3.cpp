@@ -1,11 +1,11 @@
 #include "RmlUi_Backend.h"
 #include "RmlUi_Platform_SDL.h"
 #include "RmlUi_Renderer_GL3.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Profiling.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/FileInterface.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Profiling.h>
 
 #if SDL_MAJOR_VERSION >= 3
 	#include <SDL3_image/SDL_image.h>

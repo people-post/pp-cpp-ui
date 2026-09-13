@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/NumericValue.h>
-#include <RmlUi/Core/StyleTypes.h>
+#include <ui/Core/NumericValue.h>
+#include <ui/Core/StyleTypes.h>
 
 namespace Rml {
 

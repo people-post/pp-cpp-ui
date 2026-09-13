@@ -1,12 +1,12 @@
 #include "ElementSelectableText.h"
 
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/ElementText.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/FontEngineInterface.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/ElementText.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/FontEngineInterface.h>
+#include <ui/Core/RenderManager.h>
 #include "../SelectionContentBuilder.h"
 #include "../SelectionController.h"
 #include "../SelectionHighlight.h"

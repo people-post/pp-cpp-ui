@@ -1,7 +1,7 @@
 #include "Template.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/XMLParser.h>
 #include "XMLParseTools.h"
 #include <string.h>
 

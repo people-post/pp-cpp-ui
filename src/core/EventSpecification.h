@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Event.h>
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/ID.h>
+#include <ui/Core/Event.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/ID.h>
 
 namespace Rml {
 

@@ -1,6 +1,6 @@
 #include "TestConfig.h"
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/Types.h>
 #include <PlatformExtensions.h>
 #include <Shell.h>
 #include <cstdlib>

@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Filter.h>
-#include <RmlUi/Core/ID.h>
+#include <ui/Core/Filter.h>
+#include <ui/Core/ID.h>
 
 namespace Rml {
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/ConvolutionFilter.h>
-#include <RmlUi/Core/FontEffect.h>
-#include <RmlUi/Core/FontEffectInstancer.h>
+#include <ui/Core/ConvolutionFilter.h>
+#include <ui/Core/FontEffect.h>
+#include <ui/Core/FontEffectInstancer.h>
 
 namespace Rml {
 

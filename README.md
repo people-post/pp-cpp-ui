@@ -8,8 +8,7 @@ FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md).
 
 ```text
-include/RmlUi/     Engine public API (prefix kept for consumers)
-include/ui/        Owned SDL/GL backend public API
+include/ui/        Engine + backend public API (`RmlUi/` shims kept)
 src/core|svg|debugger|platform|render
 third_party/       freetype, harfbuzz, lunasvg, zlib, libpng, sdl3, sdl3_image
 tests/             Engine unit tests + support harness

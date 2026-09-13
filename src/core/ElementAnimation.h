@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/Property.h>
-#include <RmlUi/Core/Tween.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/Property.h>
+#include <ui/Core/Tween.h>
 
 namespace Rml {
 

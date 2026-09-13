@@ -1,7 +1,7 @@
 #include "FloatedBoxSpace.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementScroll.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementScroll.h>
 #include "BlockContainer.h"
 #include "LayoutPools.h"
 #include <float.h>

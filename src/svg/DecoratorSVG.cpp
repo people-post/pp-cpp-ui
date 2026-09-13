@@ -1,8 +1,8 @@
 #include "DecoratorSVG.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/PropertyDefinition.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/PropertyDefinition.h>
 #include "SVGCache.h"
 
 namespace Rml {

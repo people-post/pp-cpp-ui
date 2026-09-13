@@ -1,7 +1,7 @@
 #include "XMLNodeHandlerBody.h"
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/XMLParser.h>
 #include "XMLParseTools.h"
 
 namespace Rml {

@@ -1,6 +1,6 @@
 #include "LineBox.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/StyleTypes.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/StyleTypes.h>
 #include "InlineBox.h"
 #include "InlineLevelBox.h"
 #include "LayoutPools.h"

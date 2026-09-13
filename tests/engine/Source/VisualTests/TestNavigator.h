@@ -3,8 +3,8 @@
 #include "CaptureScreen.h"
 #include "TestSuite.h"
 #include "TestViewer.h"
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Types.h>
 
 class TestNavigator : public Rml::EventListener {
 public:

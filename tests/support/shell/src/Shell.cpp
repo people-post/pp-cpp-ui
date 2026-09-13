@@ -1,11 +1,11 @@
 #include "../include/Shell.h"
 #include "../include/PlatformExtensions.h"
 #include "../include/ShellFileInterface.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Input.h>
-#include <RmlUi/Debugger.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Input.h>
+#include <ui/Debugger.h>
 
 static Rml::UniquePtr<ShellFileInterface> file_interface;
 

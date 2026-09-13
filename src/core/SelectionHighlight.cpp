@@ -1,12 +1,12 @@
 #include "SelectionHighlight.h"
 
-#include <RmlUi/Core/ElementText.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/FontEngineInterface.h>
-#include <RmlUi/Core/Math.h>
-#include <RmlUi/Core/MeshUtilities.h>
-#include <RmlUi/Core/Property.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/ElementText.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/FontEngineInterface.h>
+#include <ui/Core/Math.h>
+#include <ui/Core/MeshUtilities.h>
+#include <ui/Core/Property.h>
+#include <ui/Core/RenderManager.h>
 
 namespace Rml {
 

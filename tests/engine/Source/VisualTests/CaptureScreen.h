@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Mesh.h>
-#include <RmlUi/Core/RenderInterface.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Mesh.h>
+#include <ui/Core/RenderInterface.h>
+#include <ui/Core/Types.h>
 
 struct ComparisonResult {
 	bool skipped = true;

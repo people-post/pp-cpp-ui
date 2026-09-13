@@ -1,7 +1,7 @@
 #include "DocumentHeader.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/SystemInterface.h>
 #include "XMLParseTools.h"
 
 namespace Rml {

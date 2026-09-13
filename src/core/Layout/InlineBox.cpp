@@ -1,7 +1,7 @@
 #include "InlineBox.h"
-#include <RmlUi/Core/Box.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/FontMetrics.h>
+#include <ui/Core/Box.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/FontMetrics.h>
 
 namespace Rml {
 

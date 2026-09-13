@@ -1,9 +1,9 @@
 #include "../Common/Mocks.h"
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Factory.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Factory.h>
 #include <algorithm>
 #include <doctest.h>
 

@@ -1,8 +1,8 @@
 #include "UserAgentStyleSheet.h"
 
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/StreamMemory.h>
-#include <RmlUi/Core/StyleSheetContainer.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/StreamMemory.h>
+#include <ui/Core/StyleSheetContainer.h>
 
 #include <cstring>
 

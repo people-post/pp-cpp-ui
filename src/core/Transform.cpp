@@ -1,7 +1,7 @@
-#include <RmlUi/Core/Transform.h>
-#include <RmlUi/Core/Property.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
-#include <RmlUi/Core/TransformPrimitive.h>
+#include <ui/Core/Transform.h>
+#include <ui/Core/Property.h>
+#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/Core/TransformPrimitive.h>
 
 namespace Rml {
 

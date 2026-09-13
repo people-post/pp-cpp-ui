@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/Variant.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/Variant.h>
 #include <doctest.h>
 
 using namespace Rml;

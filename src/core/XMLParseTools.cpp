@@ -1,8 +1,8 @@
 #include "XMLParseTools.h"
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/StreamMemory.h>
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/StreamMemory.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/Types.h>
 #include "Template.h"
 #include "TemplateCache.h"
 #include <ctype.h>

@@ -1,8 +1,8 @@
 #include "BoxShadowCache.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/MeshUtilities.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/MeshUtilities.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/RenderManager.h>
 #include "ControlledLifetimeResource.h"
 #include "BoxShadowHash.h"
 #include "GeometryBoxShadow.h"

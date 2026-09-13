@@ -1,5 +1,5 @@
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/Log.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/Log.h>
 #include <algorithm>
 #include <limits.h>
 #include <sstream>

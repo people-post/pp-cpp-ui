@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/Input.h>
-#include <RmlUi/Core/SelectionTypes.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/Input.h>
+#include <ui/Core/SelectionTypes.h>
 #include "ElementTextSelection.h"
 
 namespace Rml {

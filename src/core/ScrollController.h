@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/ScrollTypes.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/ScrollTypes.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

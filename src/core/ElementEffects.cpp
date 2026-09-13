@@ -1,12 +1,12 @@
 #include "ElementEffects.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Decorator.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Filter.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/StyleSheet.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Decorator.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Filter.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/StyleSheet.h>
 
 namespace Rml {
 

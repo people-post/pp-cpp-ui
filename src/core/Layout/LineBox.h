@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/StyleTypes.h>
+#include <ui/Core/StyleTypes.h>
 #include "InlineTypes.h"
 
 namespace Rml {

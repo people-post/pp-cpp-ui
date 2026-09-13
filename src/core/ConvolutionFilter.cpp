@@ -1,5 +1,5 @@
-#include <RmlUi/Core/ConvolutionFilter.h>
-#include <RmlUi/Core/Profiling.h>
+#include <ui/Core/ConvolutionFilter.h>
+#include <ui/Core/Profiling.h>
 #include <float.h>
 #include <string.h>
 

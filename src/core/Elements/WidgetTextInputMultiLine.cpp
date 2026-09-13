@@ -1,6 +1,6 @@
 #include "WidgetTextInputMultiLine.h"
-#include <RmlUi/Core/Dictionary.h>
-#include <RmlUi/Core/ElementText.h>
+#include <ui/Core/Dictionary.h>
+#include <ui/Core/ElementText.h>
 #include <algorithm>
 
 namespace Rml {

@@ -1,8 +1,8 @@
 #include "XMLNodeHandlerTemplate.h"
-#include <RmlUi/Core/Dictionary.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Dictionary.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/XMLParser.h>
 #include "Template.h"
 #include "TemplateCache.h"
 #include "XMLParseTools.h"

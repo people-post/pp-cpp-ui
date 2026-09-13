@@ -1,5 +1,5 @@
 #include "FontEngineInterfaceDefault.h"
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/StringUtilities.h>
 #include "FontFaceHandleDefault.h"
 #include "FontProvider.h"
 

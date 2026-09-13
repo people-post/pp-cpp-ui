@@ -2,7 +2,7 @@
 
 #include "TextureLayoutRectangle.h"
 #include "TextureLayoutTexture.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 /**
     A texture layout generates and stores a layout of rectangles within a series of textures. It is

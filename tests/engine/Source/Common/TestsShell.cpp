@@ -1,10 +1,10 @@
 #include "TestsShell.h"
 #include "TestsInterface.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Debugger.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Debugger.h>
 #include <RmlUi_Backend.h>
 #include <Shell.h>
 #include <cstdlib>

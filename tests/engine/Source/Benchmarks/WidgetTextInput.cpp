@@ -1,10 +1,10 @@
 #include "../Common/TestsInterface.h"
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Elements/ElementFormControlTextArea.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Elements/ElementFormControlTextArea.h>
+#include <ui/Core/Types.h>
 #include <doctest.h>
 #include <nanobench.h>
 

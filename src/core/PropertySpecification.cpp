@@ -1,9 +1,9 @@
-#include <RmlUi/Core/PropertySpecification.h>
-#include <RmlUi/Core/Debug.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyDictionary.h>
+#include <ui/Core/PropertySpecification.h>
+#include <ui/Core/Debug.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDictionary.h>
 #include "IdNameMap.h"
 #include "PropertyShorthandDefinition.h"
 #include <algorithm>

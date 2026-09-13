@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Plugin.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Plugin.h>
 
 namespace Rml {
 

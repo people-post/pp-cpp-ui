@@ -1,5 +1,5 @@
-#include <RmlUi/Debugger/Debugger.h>
-#include <RmlUi/Core/Core.h>
+#include <ui/Debugger/Debugger.h>
+#include <ui/Core/Core.h>
 #include "DebuggerPlugin.h"
 
 namespace Rml {

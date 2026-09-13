@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Elements/ElementFormControl.h>
-#include <RmlUi/Core/ComputedValues.h>
+#include <ui/Core/Elements/ElementFormControl.h>
+#include <ui/Core/ComputedValues.h>
 #include "../SelectionContentBuilder.h"
 
 namespace Rml {

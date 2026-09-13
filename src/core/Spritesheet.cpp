@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Spritesheet.h>
-#include <RmlUi/Core/Log.h>
+#include <ui/Core/Spritesheet.h>
+#include <ui/Core/Log.h>
 
 namespace Rml {
 

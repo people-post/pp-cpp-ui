@@ -1,8 +1,8 @@
 #include "RmlUi_Platform_SDL.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Input.h>
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Input.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/SystemInterface.h>
 
 static Rml::TouchList TouchEventToTouchList(SDL_Event& ev, Rml::Context* context, SDL_FingerID finger_id)
 {

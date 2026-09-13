@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/PropertyIdSet.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/PropertyIdSet.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

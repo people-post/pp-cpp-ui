@@ -1,6 +1,6 @@
 #include "PropertyParserColorStopList.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/DecorationTypes.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/DecorationTypes.h>
 #include <string.h>
 
 namespace Rml {

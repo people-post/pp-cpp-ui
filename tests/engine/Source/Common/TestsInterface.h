@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Mesh.h>
-#include <RmlUi/Core/RenderInterface.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Mesh.h>
+#include <ui/Core/RenderInterface.h>
+#include <ui/Core/SystemInterface.h>
 #include <Shell.h>
 
 class TestsSystemInterface : public Rml::SystemInterface {

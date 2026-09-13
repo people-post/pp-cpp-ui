@@ -1,7 +1,7 @@
 #include "StyleSheetNode.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/StyleSheet.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/StyleSheet.h>
 #include "StyleSheetFactory.h"
 #include "StyleSheetSelector.h"
 #include <algorithm>

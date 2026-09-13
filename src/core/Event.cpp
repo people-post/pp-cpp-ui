@@ -1,6 +1,6 @@
-#include <RmlUi/Core/Event.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/EventInstancer.h>
+#include <ui/Core/Event.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/EventInstancer.h>
 
 namespace Rml {
 

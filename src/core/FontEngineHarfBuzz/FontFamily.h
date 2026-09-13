@@ -1,7 +1,7 @@
 #pragma once
 
 #include "FontEngineDefault/FontTypes.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 using Rml::byte;
 using Rml::FontFaceHandleFreetype;

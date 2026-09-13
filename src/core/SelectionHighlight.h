@@ -1,10 +1,10 @@
 #pragma once
 
-#include <RmlUi/Core/Colour.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/Mesh.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Colour.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/Mesh.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

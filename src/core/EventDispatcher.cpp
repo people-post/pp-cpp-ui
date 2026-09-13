@@ -1,8 +1,8 @@
 #include "EventDispatcher.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Event.h>
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Factory.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Event.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Factory.h>
 #include "EventSpecification.h"
 #include <algorithm>
 #include <limits>

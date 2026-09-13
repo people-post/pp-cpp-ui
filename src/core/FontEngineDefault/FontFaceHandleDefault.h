@@ -1,12 +1,12 @@
 #pragma once
 
-#include <RmlUi/Core/FontEffect.h>
-#include <RmlUi/Core/FontGlyph.h>
-#include <RmlUi/Core/FontMetrics.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/TextShapingContext.h>
-#include <RmlUi/Core/Texture.h>
-#include <RmlUi/Core/Traits.h>
+#include <ui/Core/FontEffect.h>
+#include <ui/Core/FontGlyph.h>
+#include <ui/Core/FontMetrics.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/TextShapingContext.h>
+#include <ui/Core/Texture.h>
+#include <ui/Core/Traits.h>
 #include "FontTypes.h"
 
 namespace Rml {

@@ -1,7 +1,7 @@
 #include "TableFormattingContext.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Types.h>
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
 #include "LayoutEngine.h"

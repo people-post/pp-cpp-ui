@@ -1,6 +1,6 @@
 #include "PropertyParserBoxShadow.h"
-#include <RmlUi/Core/DecorationTypes.h>
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/DecorationTypes.h>
+#include <ui/Core/StringUtilities.h>
 
 namespace Rml {
 

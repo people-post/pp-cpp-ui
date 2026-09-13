@@ -1,3 +1,3 @@
 #pragma once
-
-#include "Debugger/Debugger.h"
+// Compatibility shim: prefer #include <ui/Debugger.h>
+#include <ui/Debugger.h>

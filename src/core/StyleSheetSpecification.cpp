@@ -1,6 +1,6 @@
-#include <RmlUi/Core/StyleSheetSpecification.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyIdSet.h>
+#include <ui/Core/StyleSheetSpecification.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyIdSet.h>
 #include "IdNameMap.h"
 #include "PropertyParserAnimation.h"
 #include "PropertyParserBoxShadow.h"

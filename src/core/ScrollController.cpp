@@ -1,9 +1,9 @@
 #include "ScrollController.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Math.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Math.h>
+#include <ui/Core/SystemInterface.h>
 
 namespace Rml {
 

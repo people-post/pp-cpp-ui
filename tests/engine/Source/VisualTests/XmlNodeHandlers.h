@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/XMLNodeHandler.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/XMLNodeHandler.h>
 
 struct MetaItem {
 	Rml::String name;

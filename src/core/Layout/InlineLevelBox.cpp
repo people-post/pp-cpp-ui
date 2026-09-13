@@ -1,9 +1,9 @@
 #include "InlineLevelBox.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/ElementText.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/FontEngineInterface.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/ElementText.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/FontEngineInterface.h>
 #include "../ListMarker.h"
 #include "LayoutDetails.h"
 #include "LayoutPools.h"

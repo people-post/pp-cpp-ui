@@ -1,6 +1,6 @@
 #include "Clock.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/SystemInterface.h>
 
 namespace Rml {
 

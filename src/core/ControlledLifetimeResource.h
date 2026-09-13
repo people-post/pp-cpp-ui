@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Debug.h>
-#include <RmlUi/Core/Traits.h>
+#include <ui/Core/Debug.h>
+#include <ui/Core/Traits.h>
 
 namespace Rml {
 

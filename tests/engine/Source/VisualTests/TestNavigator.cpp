@@ -3,11 +3,11 @@
 #include "TestConfig.h"
 #include "TestSuite.h"
 #include "TestViewer.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/Math.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/Math.h>
+#include <ui/Core/SystemInterface.h>
 #include <Shell.h>
 #include <cstdio>
 

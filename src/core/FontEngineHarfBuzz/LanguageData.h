@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 enum class TextFlowDirection {
 	LeftToRight,

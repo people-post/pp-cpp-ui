@@ -1,8 +1,8 @@
-#include <RmlUi/Core/Decorator.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/RenderManager.h>
-#include <RmlUi/Core/StyleSheet.h>
-#include <RmlUi/Core/Texture.h>
+#include <ui/Core/Decorator.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/RenderManager.h>
+#include <ui/Core/StyleSheet.h>
+#include <ui/Core/Texture.h>
 #include <algorithm>
 
 namespace Rml {

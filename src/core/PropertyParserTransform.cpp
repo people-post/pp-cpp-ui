@@ -1,7 +1,7 @@
 #include "PropertyParserTransform.h"
-#include <RmlUi/Core/NumericValue.h>
-#include <RmlUi/Core/Transform.h>
-#include <RmlUi/Core/TransformPrimitive.h>
+#include <ui/Core/NumericValue.h>
+#include <ui/Core/Transform.h>
+#include <ui/Core/TransformPrimitive.h>
 #include <string.h>
 
 namespace Rml {

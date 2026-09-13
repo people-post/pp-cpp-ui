@@ -1,11 +1,11 @@
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/StyleTypes.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/StyleTypes.h>
 #include <doctest.h>
 
 using namespace Rml;

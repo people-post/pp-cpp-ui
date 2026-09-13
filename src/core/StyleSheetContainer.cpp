@@ -1,10 +1,10 @@
-#include <RmlUi/Core/StyleSheetContainer.h>
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/StyleSheet.h>
-#include <RmlUi/Core/Utilities.h>
+#include <ui/Core/StyleSheetContainer.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/StyleSheet.h>
+#include <ui/Core/Utilities.h>
 #include "ComputeProperty.h"
 #include "StyleSheetParser.h"
 

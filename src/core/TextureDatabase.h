@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/CallbackTexture.h>
-#include <RmlUi/Core/StableVector.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/CallbackTexture.h>
+#include <ui/Core/StableVector.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

@@ -1,10 +1,10 @@
 #include "PropertyParserFontEffect.h"
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/FontEffect.h>
-#include <RmlUi/Core/FontEffectInstancer.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/PropertySpecification.h>
-#include <RmlUi/Core/Utilities.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/FontEffect.h>
+#include <ui/Core/FontEffectInstancer.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/PropertySpecification.h>
+#include <ui/Core/Utilities.h>
 #include <algorithm>
 
 namespace Rml {

@@ -1,9 +1,9 @@
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/ElementInstancer.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Plugin.h>
-#include <RmlUi/SVG/ElementSVG.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/ElementInstancer.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Plugin.h>
+#include <ui/SVG/ElementSVG.h>
 #include "DecoratorSVG.h"
 #include "SVGCache.h"
 #include "XMLNodeHandlerSVG.h"

@@ -1,6 +1,6 @@
 #include "../../../../src/core/DataModel.cpp"
-#include <RmlUi/Core/DataModelHandle.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/DataModelHandle.h>
+#include <ui/Core/Types.h>
 #include <doctest.h>
 
 using namespace Rml;

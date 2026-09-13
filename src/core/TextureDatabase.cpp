@@ -1,6 +1,6 @@
 #include "TextureDatabase.h"
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/RenderInterface.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/RenderInterface.h>
 
 namespace Rml {
 

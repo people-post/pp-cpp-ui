@@ -1,5 +1,5 @@
 #include "InputTypeRange.h"
-#include <RmlUi/Core/Elements/ElementFormControlInput.h>
+#include <ui/Core/Elements/ElementFormControlInput.h>
 #include "WidgetSlider.h"
 
 namespace Rml {

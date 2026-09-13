@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/Debug.h>
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/Traits.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Debug.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/Traits.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

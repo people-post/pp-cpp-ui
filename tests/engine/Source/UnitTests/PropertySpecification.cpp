@@ -1,11 +1,11 @@
 #include "../Common/TestsInterface.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/PropertySpecification.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/PropertySpecification.h>
+#include <ui/Core/StyleSheetSpecification.h>
 #include <doctest.h>
 #include <limits.h>
 

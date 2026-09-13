@@ -3,10 +3,10 @@
 #include "TestNavigator.h"
 #include "TestSuite.h"
 #include "TestViewer.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Debugger.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Element.h>
+#include <ui/Debugger.h>
 #include <PlatformExtensions.h>
 #include <RmlUi_Backend.h>
 #include <Shell.h>

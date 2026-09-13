@@ -1,5 +1,5 @@
-#include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/Log.h>
+#include <ui/Core/FileInterface.h>
+#include <ui/Core/Log.h>
 
 namespace Rml {
 

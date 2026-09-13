@@ -1,6 +1,6 @@
 #include "SelectionContentBuilder.h"
 
-#include <RmlUi/Core/ElementText.h>
+#include <ui/Core/ElementText.h>
 
 namespace Rml {
 

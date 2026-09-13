@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/Vertex.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/Vertex.h>
 #include "ElementTextSelection.h"
 #include <float.h>
 

@@ -3,7 +3,7 @@
 #include "FontGlyph.h"
 #include "TextureLayout.h"
 #include "TextureLayoutRectangle.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 using Rml::byte;
 using Rml::CallbackTextureFunction;

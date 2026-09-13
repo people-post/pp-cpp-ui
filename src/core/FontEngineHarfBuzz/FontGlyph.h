@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 using FontGlyphIndex = uint32_t;
 

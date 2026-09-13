@@ -1,8 +1,8 @@
 #include "BlockContainer.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementScroll.h>
-#include <RmlUi/Core/Profiling.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementScroll.h>
+#include <ui/Core/Profiling.h>
 #include "FloatedBoxSpace.h"
 #include "InlineContainer.h"
 #include "LayoutDetails.h"

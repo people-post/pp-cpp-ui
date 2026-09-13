@@ -2,10 +2,10 @@
 #include "../Common/TestsInterface.h"
 #include "../Common/TestsShell.h"
 #include "../Common/TypesToString.h"
-#include "RmlUi/Core/DecorationTypes.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
+#include <ui/Core/DecorationTypes.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
 #include <doctest.h>
 #include <float.h>
 

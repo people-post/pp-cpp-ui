@@ -4,7 +4,7 @@
 #include "FontFaceLayer.h"
 #include "FontGlyph.h"
 #include "LanguageData.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 using Rml::byte;
 using Rml::Character;

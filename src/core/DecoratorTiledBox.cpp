@@ -1,7 +1,7 @@
 #include "DecoratorTiledBox.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/RenderManager.h>
 
 namespace Rml {
 

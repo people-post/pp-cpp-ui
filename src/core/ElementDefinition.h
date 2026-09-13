@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/PropertyIdSet.h>
-#include <RmlUi/Core/Traits.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/PropertyIdSet.h>
+#include <ui/Core/Traits.h>
 
 namespace Rml {
 

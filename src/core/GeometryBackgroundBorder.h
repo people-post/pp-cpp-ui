@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/Vertex.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/Vertex.h>
 
 namespace Rml {
 

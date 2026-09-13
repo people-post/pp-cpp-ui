@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Input.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Input.h>
+#include <ui/Core/Types.h>
 
 /**
     Provides common functionality required for the built-in RmlUi samples.

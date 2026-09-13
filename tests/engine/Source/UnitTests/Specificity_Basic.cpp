@@ -1,7 +1,7 @@
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementDocument.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementDocument.h>
 #include <doctest.h>
 
 using namespace Rml;

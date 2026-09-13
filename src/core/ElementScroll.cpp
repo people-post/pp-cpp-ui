@@ -1,10 +1,10 @@
-#include <RmlUi/Core/ElementScroll.h>
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Event.h>
-#include <RmlUi/Core/Factory.h>
+#include <ui/Core/ElementScroll.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Event.h>
+#include <ui/Core/Factory.h>
 #include "Layout/LayoutDetails.h"
 #include "WidgetScroll.h"
 

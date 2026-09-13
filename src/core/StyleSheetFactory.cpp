@@ -1,6 +1,6 @@
 #include "StyleSheetFactory.h"
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/StyleSheetContainer.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/StyleSheetContainer.h>
 #include "StreamFile.h"
 #include "StyleSheetNode.h"
 #include "StyleSheetParser.h"

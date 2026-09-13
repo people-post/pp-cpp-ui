@@ -1,9 +1,9 @@
-#include <RmlUi/Core/Elements/ElementFormControlTextArea.h>
-#include <RmlUi/Core/ElementText.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Math.h>
-#include <RmlUi/Core/PropertyIdSet.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/Elements/ElementFormControlTextArea.h>
+#include <ui/Core/ElementText.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Math.h>
+#include <ui/Core/PropertyIdSet.h>
+#include <ui/Core/StyleSheetSpecification.h>
 #include "WidgetTextInputMultiLine.h"
 
 namespace Rml {

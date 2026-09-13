@@ -1,5 +1,5 @@
 #include "FontEffectGlow.h"
-#include <RmlUi/Core/PropertyDefinition.h>
+#include <ui/Core/PropertyDefinition.h>
 #include "Memory.h"
 
 namespace Rml {

@@ -1,7 +1,7 @@
 #include "XmlNodeHandlers.h"
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/XMLNodeHandler.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/XMLNodeHandler.h>
+#include <ui/Core/XMLParser.h>
 
 using namespace Rml;
 

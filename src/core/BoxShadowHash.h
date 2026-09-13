@@ -1,11 +1,11 @@
 #pragma once
 
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/NumericValue.h>
-#include <RmlUi/Core/RenderBox.h>
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/Unit.h>
-#include <RmlUi/Core/Utilities.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/NumericValue.h>
+#include <ui/Core/RenderBox.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/Unit.h>
+#include <ui/Core/Utilities.h>
 #include "BoxShadowCache.h"
 #include "GeometryBoxShadow.h"
 

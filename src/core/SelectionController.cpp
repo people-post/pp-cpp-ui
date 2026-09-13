@@ -1,10 +1,10 @@
 #include "SelectionController.h"
 
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/RenderManager.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/RenderManager.h>
+#include <ui/Core/SystemInterface.h>
 #include "SelectionHighlight.h"
 #include "Elements/ElementSelectableText.h"
 

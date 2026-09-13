@@ -1,6 +1,6 @@
-#include <RmlUi/Core/Elements/ElementTabSet.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Math.h>
+#include <ui/Core/Elements/ElementTabSet.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Math.h>
 
 namespace Rml {
 

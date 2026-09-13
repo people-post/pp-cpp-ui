@@ -1,7 +1,7 @@
 #include "StreamFile.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/FileInterface.h>
+#include <ui/Core/StringUtilities.h>
 
 namespace Rml {
 

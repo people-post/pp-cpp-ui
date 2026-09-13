@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/ElementText.h>
+#include <ui/Core/ElementText.h>
 #include "InputType.h"
 
 namespace Rml {

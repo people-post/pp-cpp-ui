@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/SystemInterface.h>
 
 namespace Rml {
 namespace Debugger {

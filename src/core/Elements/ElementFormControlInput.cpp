@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Elements/ElementFormControlInput.h>
-#include <RmlUi/Core/Event.h>
+#include <ui/Core/Elements/ElementFormControlInput.h>
+#include <ui/Core/Event.h>
 #include "InputTypeButton.h"
 #include "InputTypeCheckbox.h"
 #include "InputTypeRadio.h"

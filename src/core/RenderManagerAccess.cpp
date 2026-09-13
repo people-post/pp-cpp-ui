@@ -1,5 +1,5 @@
 #include "RenderManagerAccess.h"
-#include <RmlUi/Core/Texture.h>
+#include <ui/Core/Texture.h>
 #include "TextureDatabase.h"
 
 namespace Rml {

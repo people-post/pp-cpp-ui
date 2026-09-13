@@ -1,9 +1,9 @@
 #include "XMLNodeHandlerTextArea.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Elements/ElementFormControlTextArea.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/SystemInterface.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Elements/ElementFormControlTextArea.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/SystemInterface.h>
+#include <ui/Core/XMLParser.h>
 
 namespace Rml {
 

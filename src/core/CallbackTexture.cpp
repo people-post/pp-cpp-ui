@@ -1,5 +1,5 @@
-#include <RmlUi/Core/CallbackTexture.h>
-#include <RmlUi/Core/Texture.h>
+#include <ui/Core/CallbackTexture.h>
+#include <ui/Core/Texture.h>
 #include "RenderManagerAccess.h"
 
 namespace Rml {

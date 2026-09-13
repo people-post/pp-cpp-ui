@@ -1,5 +1,5 @@
-#include <RmlUi/Core/PropertiesIteratorView.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/PropertiesIteratorView.h>
+#include <ui/Core/StyleSheetSpecification.h>
 #include "PropertiesIterator.h"
 
 namespace Rml {

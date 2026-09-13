@@ -1,8 +1,8 @@
 #include "XMLNodeHandlerSelect.h"
-#include <RmlUi/Core/Elements/ElementFormControlSelect.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Elements/ElementFormControlSelect.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/XMLParser.h>
 
 namespace Rml {
 

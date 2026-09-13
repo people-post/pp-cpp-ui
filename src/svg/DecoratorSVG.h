@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/Decorator.h>
+#include <ui/Core/Decorator.h>
 
 namespace Rml {
 namespace SVG {

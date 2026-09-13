@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/XMLParser.h>
-#include <RmlUi/SVG/ElementSVG.h>
+#include <ui/Core/XMLParser.h>
+#include <ui/SVG/ElementSVG.h>
 #include "../core/XMLNodeHandlerDefault.h"
 
 namespace Rml {

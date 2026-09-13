@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/DataVariable.h>
-#include <RmlUi/Core/EventListener.h>
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/DataVariable.h>
+#include <ui/Core/EventListener.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/Types.h>
 #include "DataController.h"
 
 namespace Rml {

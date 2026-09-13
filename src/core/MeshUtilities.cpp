@@ -1,8 +1,8 @@
-#include <RmlUi/Core/MeshUtilities.h>
-#include <RmlUi/Core/Box.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/FontEngineInterface.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/MeshUtilities.h>
+#include <ui/Core/Box.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/FontEngineInterface.h>
+#include <ui/Core/Types.h>
 #include "GeometryBackgroundBorder.h"
 
 namespace Rml {

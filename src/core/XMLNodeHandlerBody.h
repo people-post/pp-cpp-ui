@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/XMLNodeHandler.h>
+#include <ui/Core/XMLNodeHandler.h>
 
 namespace Rml {
 

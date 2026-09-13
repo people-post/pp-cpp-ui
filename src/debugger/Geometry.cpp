@@ -1,9 +1,9 @@
 #include "Geometry.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/MeshUtilities.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/MeshUtilities.h>
+#include <ui/Core/RenderManager.h>
 
 namespace Rml {
 namespace Debugger {

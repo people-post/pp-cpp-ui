@@ -23,3 +23,10 @@ Sibling libs (`pp-cpp-common`, `pp-cpp-crypto`, `pp-cpp-amp`) use `include/<pkg>
 - CMake is rewritten around a fixed product profile (SVG + FreeType/HarfBuzz + static lib), not upstream’s option matrix.
 - pp-browser keeps `#include <RmlUi/…>`; only owned backend includes may move to `ui/…`.
 - Re-merging full upstream releases becomes harder — accepted.
+
+## Amendment — public include brand
+
+Public engine headers live under `include/ui/` (`#include <ui/Core/…>`).
+`include/RmlUi/` remains as compatibility shims so existing consumers keep compiling
+without source changes. `namespace Rml` is unchanged in this step.
+

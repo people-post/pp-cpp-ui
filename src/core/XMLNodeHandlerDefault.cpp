@@ -1,10 +1,10 @@
 #include "XMLNodeHandlerDefault.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/XMLParser.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/XMLParser.h>
 #include "XMLParseTools.h"
 
 namespace Rml {

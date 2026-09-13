@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/Input.h>
-#include <RmlUi/Core/SelectionTypes.h>
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/Vector2.h>
+#include <ui/Core/Input.h>
+#include <ui/Core/SelectionTypes.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/Vector2.h>
 
 namespace Rml {
 

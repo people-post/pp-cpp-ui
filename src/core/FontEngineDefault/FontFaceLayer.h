@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/CallbackTexture.h>
-#include <RmlUi/Core/FontGlyph.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/MeshUtilities.h>
+#include <ui/Core/CallbackTexture.h>
+#include <ui/Core/FontGlyph.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/MeshUtilities.h>
 #include "../TextureLayout.h"
 
 namespace Rml {

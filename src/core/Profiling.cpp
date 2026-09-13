@@ -1,4 +1,4 @@
-#include <RmlUi/Core/Profiling.h>
+#include <ui/Core/Profiling.h>
 
 #ifdef RMLUI_TRACY_MEMORY_PROFILING
 	#include <cstdlib>

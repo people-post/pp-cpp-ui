@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/ElementDocument.h>
+#include <ui/Core/ElementDocument.h>
 
 namespace Rml {
 namespace Debugger {

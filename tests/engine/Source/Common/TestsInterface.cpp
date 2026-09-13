@@ -1,7 +1,7 @@
 #include "TestsInterface.h"
 #include "TypesToString.h"
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/StringUtilities.h>
 #include <doctest.h>
 
 TestsSystemInterface::~TestsSystemInterface()

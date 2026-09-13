@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/StyleSheetTypes.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/StyleSheetTypes.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

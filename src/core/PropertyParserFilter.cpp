@@ -1,9 +1,9 @@
 #include "PropertyParserFilter.h"
-#include <RmlUi/Core/Factory.h>
-#include <RmlUi/Core/Filter.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/PropertySpecification.h>
-#include <RmlUi/Core/StyleSheetTypes.h>
+#include <ui/Core/Factory.h>
+#include <ui/Core/Filter.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/PropertySpecification.h>
+#include <ui/Core/StyleSheetTypes.h>
 
 namespace Rml {
 

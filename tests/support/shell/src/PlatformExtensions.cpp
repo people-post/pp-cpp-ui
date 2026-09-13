@@ -1,6 +1,6 @@
 #include "../include/PlatformExtensions.h"
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Platform.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Platform.h>
 
 #if defined RMLUI_PLATFORM_WIN32
 

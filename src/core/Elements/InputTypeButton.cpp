@@ -1,7 +1,7 @@
 #include "InputTypeButton.h"
-#include <RmlUi/Core/Elements/ElementForm.h>
-#include <RmlUi/Core/Elements/ElementFormControlInput.h>
-#include <RmlUi/Core/Factory.h>
+#include <ui/Core/Elements/ElementForm.h>
+#include <ui/Core/Elements/ElementFormControlInput.h>
+#include <ui/Core/Factory.h>
 
 namespace Rml {
 

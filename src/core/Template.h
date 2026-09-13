@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/StreamMemory.h>
+#include <ui/Core/StreamMemory.h>
 #include "DocumentHeader.h"
 
 namespace Rml {

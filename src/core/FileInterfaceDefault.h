@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/FileInterface.h>
+#include <ui/Core/FileInterface.h>
 
 #ifndef RMLUI_NO_FILE_INTERFACE_DEFAULT
 

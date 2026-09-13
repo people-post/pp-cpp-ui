@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Types.h>
-#include <RmlUi/Core/XMLNodeHandler.h>
+#include <ui/Core/Types.h>
+#include <ui/Core/XMLNodeHandler.h>
 
 namespace Rml {
 

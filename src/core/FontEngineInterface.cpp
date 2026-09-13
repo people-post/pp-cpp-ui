@@ -1,5 +1,5 @@
-#include <RmlUi/Core/FontEngineInterface.h>
-#include <RmlUi/Core/StringUtilities.h>
+#include <ui/Core/FontEngineInterface.h>
+#include <ui/Core/StringUtilities.h>
 
 namespace Rml {
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Core/ElementText.h>
-#include <RmlUi/Core/EventListener.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Core/ElementText.h>
+#include <ui/Core/EventListener.h>
 #include "InputType.h"
 
 namespace Rml {

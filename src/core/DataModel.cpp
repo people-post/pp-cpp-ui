@@ -1,6 +1,6 @@
 #include "DataModel.h"
-#include <RmlUi/Core/DataTypeRegister.h>
-#include <RmlUi/Core/Element.h>
+#include <ui/Core/DataTypeRegister.h>
+#include <ui/Core/Element.h>
 #include "DataController.h"
 #include "DataView.h"
 

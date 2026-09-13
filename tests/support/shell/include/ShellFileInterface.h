@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/FileInterface.h>
+#include <ui/Core/Types.h>
 
 /**
     RmlUi file interface for the shell examples.

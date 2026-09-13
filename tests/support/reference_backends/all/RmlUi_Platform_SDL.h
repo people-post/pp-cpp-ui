@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Input.h>
-#include <RmlUi/Core/SystemInterface.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Input.h>
+#include <ui/Core/SystemInterface.h>
+#include <ui/Core/Types.h>
 
 #if RMLUI_SDL_VERSION_MAJOR == 3
 	#include <SDL3/SDL.h>

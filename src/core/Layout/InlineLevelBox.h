@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Box.h>
-#include <RmlUi/Core/StyleTypes.h>
+#include <ui/Core/Box.h>
+#include <ui/Core/StyleTypes.h>
 #include "InlineTypes.h"
 
 namespace Rml {

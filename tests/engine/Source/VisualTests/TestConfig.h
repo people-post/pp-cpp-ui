@@ -1,6 +1,6 @@
 #pragma once
 
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Types.h>
 
 Rml::String GetCompareInputDirectory();
 Rml::String GetCaptureOutputDirectory();

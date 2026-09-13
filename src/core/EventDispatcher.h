@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/Event.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/Event.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

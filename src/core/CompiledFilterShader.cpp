@@ -1,4 +1,4 @@
-#include <RmlUi/Core/CompiledFilterShader.h>
+#include <ui/Core/CompiledFilterShader.h>
 #include "RenderManagerAccess.h"
 
 namespace Rml {

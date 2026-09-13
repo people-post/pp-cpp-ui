@@ -1,9 +1,9 @@
 #pragma once
 
-#include <RmlUi/Core/DataTypes.h>
-#include <RmlUi/Core/Header.h>
-#include <RmlUi/Core/Traits.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/DataTypes.h>
+#include <ui/Core/Header.h>
+#include <ui/Core/Traits.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

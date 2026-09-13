@@ -1,5 +1,5 @@
 #include "ElementDefinition.h"
-#include <RmlUi/Core/PropertyIdSet.h>
+#include <ui/Core/PropertyIdSet.h>
 #include "StyleSheetNode.h"
 
 namespace Rml {

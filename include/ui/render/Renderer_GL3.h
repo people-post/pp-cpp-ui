@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/RenderInterface.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/RenderInterface.h>
+#include <ui/Core/Types.h>
 #include <bitset>
 
 enum class ProgramId;

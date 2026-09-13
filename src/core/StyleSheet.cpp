@@ -1,9 +1,9 @@
-#include <RmlUi/Core/StyleSheet.h>
-#include <RmlUi/Core/Decorator.h>
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Profiling.h>
-#include <RmlUi/Core/PropertyDefinition.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/StyleSheet.h>
+#include <ui/Core/Decorator.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Profiling.h>
+#include <ui/Core/PropertyDefinition.h>
+#include <ui/Core/StyleSheetSpecification.h>
 #include "ElementDefinition.h"
 #include "ElementStyle.h"
 #include "StyleSheetNode.h"

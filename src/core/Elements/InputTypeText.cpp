@@ -1,8 +1,8 @@
 #include "InputTypeText.h"
-#include <RmlUi/Core/ElementUtilities.h>
-#include <RmlUi/Core/Elements/ElementFormControlInput.h>
-#include <RmlUi/Core/PropertyIdSet.h>
-#include <RmlUi/Core/StyleSheetSpecification.h>
+#include <ui/Core/ElementUtilities.h>
+#include <ui/Core/Elements/ElementFormControlInput.h>
+#include <ui/Core/PropertyIdSet.h>
+#include <ui/Core/StyleSheetSpecification.h>
 #include "WidgetTextInputSingleLine.h"
 #include "WidgetTextInputSingleLinePassword.h"
 

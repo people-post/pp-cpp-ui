@@ -1,5 +1,5 @@
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
 #include "ComputeProperty.h"
 
 namespace Rml {

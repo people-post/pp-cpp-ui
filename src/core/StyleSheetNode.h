@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/PropertyDictionary.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/PropertyDictionary.h>
+#include <ui/Core/Types.h>
 #include "StyleSheetSelector.h"
 
 namespace Rml {

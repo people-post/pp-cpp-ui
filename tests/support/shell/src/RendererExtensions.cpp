@@ -1,6 +1,6 @@
 #include "../include/RendererExtensions.h"
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Platform.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Platform.h>
 
 #if defined RMLUI_RENDERER_GL2
 

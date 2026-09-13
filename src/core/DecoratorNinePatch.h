@@ -1,8 +1,8 @@
 #pragma once
 
-#include <RmlUi/Core/Decorator.h>
-#include <RmlUi/Core/ID.h>
-#include <RmlUi/Core/Spritesheet.h>
+#include <ui/Core/Decorator.h>
+#include <ui/Core/ID.h>
+#include <ui/Core/Spritesheet.h>
 
 namespace Rml {
 

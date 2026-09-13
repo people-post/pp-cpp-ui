@@ -1,12 +1,12 @@
 #include "RmlUi_Renderer_GL3.h"
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/DecorationTypes.h>
-#include <RmlUi/Core/FileInterface.h>
-#include <RmlUi/Core/Geometry.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/MeshUtilities.h>
-#include <RmlUi/Core/Platform.h>
-#include <RmlUi/Core/SystemInterface.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/DecorationTypes.h>
+#include <ui/Core/FileInterface.h>
+#include <ui/Core/Geometry.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/MeshUtilities.h>
+#include <ui/Core/Platform.h>
+#include <ui/Core/SystemInterface.h>
 #include <algorithm>
 #include <string.h>
 

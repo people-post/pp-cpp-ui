@@ -1,7 +1,7 @@
 #pragma once
 
-#include <RmlUi/Core/CompiledFilterShader.h>
-#include <RmlUi/Core/Types.h>
+#include <ui/Core/CompiledFilterShader.h>
+#include <ui/Core/Types.h>
 
 namespace Rml {
 

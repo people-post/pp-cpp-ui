@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Tween.h>
-#include <RmlUi/Core/Math.h>
+#include <ui/Core/Tween.h>
+#include <ui/Core/Math.h>
 #include <utility>
 
 namespace Rml {

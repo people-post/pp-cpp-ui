@@ -2,7 +2,7 @@
 
 #include "FontEngineDefault/FontTypes.h"
 #include "FontFaceHandleHarfBuzz.h"
-#include <RmlUi/Core.h>
+#include <ui/Core.h>
 
 using Rml::FontFaceHandleFreetype;
 using Rml::UniquePtr;

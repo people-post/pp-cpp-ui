@@ -1,5 +1,5 @@
-#include <RmlUi/Core/Filter.h>
-#include <RmlUi/Core/RenderManager.h>
+#include <ui/Core/Filter.h>
+#include <ui/Core/RenderManager.h>
 
 namespace Rml {
 

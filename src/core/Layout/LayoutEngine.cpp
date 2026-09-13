@@ -1,7 +1,7 @@
 #include "LayoutEngine.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/Log.h>
-#include <RmlUi/Core/Profiling.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/Log.h>
+#include <ui/Core/Profiling.h>
 #include "ContainerBox.h"
 #include "FormattingContext.h"
 

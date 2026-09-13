@@ -1,6 +1,6 @@
 #include "ReplacedFormattingContext.h"
-#include <RmlUi/Core/ComputedValues.h>
-#include <RmlUi/Core/Element.h>
+#include <ui/Core/ComputedValues.h>
+#include <ui/Core/Element.h>
 #include "BlockFormattingContext.h"
 #include "ContainerBox.h"
 #include "LayoutDetails.h"

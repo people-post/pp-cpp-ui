@@ -1,6 +1,6 @@
 #include "TransformUtilities.h"
-#include <RmlUi/Core/Element.h>
-#include <RmlUi/Core/TransformPrimitive.h>
+#include <ui/Core/Element.h>
+#include <ui/Core/TransformPrimitive.h>
 
 namespace Rml {
 

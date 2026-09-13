@@ -1,6 +1,6 @@
-#include <RmlUi/Core/DataTypeRegister.h>
-#include <RmlUi/Core/StringUtilities.h>
-#include <RmlUi/Core/Variant.h>
+#include <ui/Core/DataTypeRegister.h>
+#include <ui/Core/StringUtilities.h>
+#include <ui/Core/Variant.h>
 
 namespace Rml {
 

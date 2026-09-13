@@ -1,9 +1,9 @@
 #include "../../../../src/debugger/ElementInfo.h"
 #include "../Common/TestsShell.h"
-#include <RmlUi/Core/Context.h>
-#include <RmlUi/Core/Core.h>
-#include <RmlUi/Core/ElementDocument.h>
-#include <RmlUi/Debugger.h>
+#include <ui/Core/Context.h>
+#include <ui/Core/Core.h>
+#include <ui/Core/ElementDocument.h>
+#include <ui/Debugger.h>
 #include <algorithm>
 #include <doctest.h>
 
