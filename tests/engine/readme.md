@@ -17,12 +17,20 @@ The following environment variables can be used to configure the directories use
 
 #### Unit tests: `ui_unit_tests`
 
-Ensures smaller units of the library are working properly.
-
 Sources live next to their module under `src/<module>/tests/*_test.cpp`.
 This directory only holds the doctest runner (`main.cpp`) and CMake that
 aggregates those files into one executable. Shared harness code stays in
 `Source/Common/`; fixtures remain under `Data/`.
+
+Not every file under `src/*/tests/` is a pure unit test:
+
+- **Pure unit** — no `TestsShell` (e.g. `base/`, data expression/model API tests,
+  `PropertySpecification.ParsePropertyValues`).
+- **Shell-backed / document** — need Core+Context via `TestsShell`; treat as
+  integration coverage owned by that module.
+
+Do not `#include` production or harness `.cpp` files into tests; link libraries
+and use public (or intentional test) seams instead.
 
 
 #### Benchmarks: `ui_benchmarks`

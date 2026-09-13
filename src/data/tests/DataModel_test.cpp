@@ -1,4 +1,4 @@
-#include "../DataModel.cpp"
+#include "data/DataModel.h"
 #include <ui/data/DataModelHandle.h>
 #include <ui/base/Types.h>
 #include <doctest.h>
@@ -54,6 +54,8 @@ TEST_CASE("Data variables")
 
 	handle.Bind("data", &data);
 
+	auto AddressOf = [&](const String& str_address) { return model.ResolveAddress(str_address, nullptr); };
+
 	// Test data addresses, setters, and assignments
 	{
 		Vector<String> test_addresses = {"data.more_fun[1].magic[3]", "data.more_fun[1].magic.size", "data.fun.x", "data.valid"};
@@ -64,7 +66,7 @@ TEST_CASE("Data variables")
 
 		for (auto& str_address : test_addresses)
 		{
-			DataAddress address = ParseAddress(str_address);
+			DataAddress address = AddressOf(str_address);
 
 			Variant result;
 			if (model.GetVariableInto(address, result))
@@ -73,7 +75,7 @@ TEST_CASE("Data variables")
 
 		CHECK(results == expected_results);
 
-		REQUIRE(model.GetVariable(ParseAddress("data.more_fun[1].magic[1]")).Set(Variant(String("199"))));
+		REQUIRE(model.GetVariable(AddressOf("data.more_fun[1].magic[1]")).Set(Variant(String("199"))));
 		CHECK(data.more_fun[1].magic[1] == 199);
 
 		data.fun.magic = {99, 190, 55, 2000, 50, 60, 70, 80, 90};
@@ -81,11 +83,11 @@ TEST_CASE("Data variables")
 		Variant get_result;
 
 		const int magic_size = int(data.fun.magic.size());
-		REQUIRE(model.GetVariable(ParseAddress("data.fun.magic.size")).Get(get_result));
+		REQUIRE(model.GetVariable(AddressOf("data.fun.magic.size")).Get(get_result));
 		CHECK(get_result.Get<String>() == ToString(magic_size));
-		CHECK(model.GetVariable(ParseAddress("data.fun.magic")).Size() == magic_size);
+		CHECK(model.GetVariable(AddressOf("data.fun.magic")).Size() == magic_size);
 
-		REQUIRE(model.GetVariable(ParseAddress("data.fun.magic[8]")).Get(get_result));
+		REQUIRE(model.GetVariable(AddressOf("data.fun.magic[8]")).Get(get_result));
 		CHECK(get_result.Get<String>() == "90");
 	}
 }

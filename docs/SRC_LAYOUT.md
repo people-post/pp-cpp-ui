@@ -125,15 +125,19 @@ stay unqualified. Public headers always use `<ui/module/Name.h>`.
 
 ## Unit tests
 
-Colocate module-owned unit tests under `src/<module>/tests/*_test.cpp` (same
-module DAG as production code). Keep shared harness, fixtures, visual tests,
-and benchmarks under `tests/`. One executable `ui_unit_tests` (doctest) lists
-those sources from `tests/engine/Source/UnitTests/CMakeLists.txt`.
+Colocate module-owned tests under `src/<module>/tests/*_test.cpp` (same module
+DAG as production code). Keep shared harness, fixtures, visual tests, and
+benchmarks under `tests/`. One executable `ui_unit_tests` (doctest) lists those
+sources from `tests/engine/Source/UnitTests/CMakeLists.txt`.
 
-| Put next to source | Keep under `tests/` |
-|--------------------|---------------------|
-| Pure / module-primary unit tests | Harness (`Source/Common`), `Data/`, visual, benchmarks, deps |
-| One primary module under test | Cross-cutting runner (`main.cpp`) |
+| Kind | Where | Notes |
+|------|-------|-------|
+| Pure unit | `src/<module>/tests/` | No `TestsShell`; exercise public module APIs only |
+| Shell-backed / document | same folders | Need `TestsShell` / Core+Context; treat as integration |
+| Harness, fixtures, visual, bench | `tests/` | Shared runner support |
+
+Prefer public seams over white-box `#include` of `.cpp` sources. The doctest
+`main` links `ui_tests_common` and must not compile harness `.cpp` files again.
 
 Harness headers (`TestsShell.h`, …) come from `ui_tests_common`’s INTERFACE
 include path — tests `#include "TestsShell.h"` (not a relative `../Common/`).

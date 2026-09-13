@@ -1,66 +1,61 @@
-#include "../DataExpression.cpp"
+#include "data/DataExpression.h"
+#include "data/DataModel.h"
 #include <ui/data/DataModelHandle.h>
+#include <ui/base/StringUtilities.h>
 #include <ui/base/Types.h>
 #include <doctest.h>
 
 using namespace ui;
 
-static DataTypeRegister type_register;
-static DataModel model(&type_register);
-static DataExpressionInterface interface(&model, nullptr);
+namespace {
 
-static String TestExpression(const String& expression)
+String EvalExpression(DataExpressionInterface& expression_interface, const String& expression)
 {
-	String result;
-
-	DataParser parser(expression, interface);
-
-	if (parser.Parse(false))
+	DataExpression data_expression(expression);
+	if (!data_expression.Parse(expression_interface, false))
 	{
-		Program program = parser.ReleaseProgram();
-		AddressList addresses = parser.ReleaseAddresses();
-
-		DataInterpreter interpreter(program, addresses, interface);
-
-		if (interpreter.Run())
-			result = interpreter.Result().Get<String>();
-		else
-			FAIL_CHECK("Could not execute expression: " << expression << "\n\n  Parsed program: \n" << DumpProgram(program));
-	}
-	else
-	{
-		Program program = parser.ReleaseProgram();
-		FAIL_CHECK("Could not parse expression: " << expression << "\n\n  Parsed result: \n" << DumpProgram(program));
+		FAIL_CHECK("Could not parse expression: " << expression);
+		return {};
 	}
 
-	return result;
+	Variant result;
+	if (!data_expression.Run(expression_interface, result))
+	{
+		FAIL_CHECK("Could not execute expression: " << expression);
+		return {};
+	}
+	return result.Get<String>();
 }
 
-static bool TestAssignment(const String& expression)
+bool EvalAssignment(DataExpressionInterface& expression_interface, const String& expression)
 {
-	bool result = false;
-	DataParser parser(expression, interface);
-	if (parser.Parse(true))
+	DataExpression data_expression(expression);
+	if (!data_expression.Parse(expression_interface, true))
 	{
-		Program program = parser.ReleaseProgram();
-		AddressList addresses = parser.ReleaseAddresses();
+		FAIL_CHECK("Could not parse assignment expression: " << expression);
+		return false;
+	}
 
-		DataInterpreter interpreter(program, addresses, interface);
-		if (interpreter.Run())
-			result = true;
-		else
-			FAIL_CHECK("Could not execute assignment expression: " << expression << "\n\n  Parsed program: \n" << DumpProgram(program));
-	}
-	else
+	Variant unused;
+	if (!data_expression.Run(expression_interface, unused))
 	{
-		Program program = parser.ReleaseProgram();
-		FAIL_CHECK("Could not parse assignment expression: " << expression << "\n\n  Parsed result: \n" << DumpProgram(program));
+		FAIL_CHECK("Could not execute assignment expression: " << expression);
+		return false;
 	}
-	return result;
+	return true;
 }
+
+} // namespace
 
 TEST_CASE("Data expressions")
 {
+	DataTypeRegister type_register;
+	DataModel model(&type_register);
+	DataExpressionInterface expression_interface(&model, nullptr);
+
+	auto TestExpression = [&](const String& expression) { return EvalExpression(expression_interface, expression); };
+	auto TestAssignment = [&](const String& expression) { return EvalAssignment(expression_interface, expression); };
+
 	float radius = 8.7f;
 	int num_trolls = 1;
 	String color_name = "color";

@@ -42,14 +42,10 @@ static String Stringify(const StringList& list)
 
 TEST_CASE("PropertySpecification.ParsePropertyValues")
 {
-	TestsSystemInterface system_interface;
-	TestsRenderInterface render_interface;
-	SetRenderInterface(&render_interface);
-	SetSystemInterface(&system_interface);
-	ui::Initialise();
-
+	// Pure unit test: value splitting does not need Core / StyleSheetSpecification.
+	PropertySpecification owned_specification(1, 1);
 	using SplitOption = TestPropertySpecification::SplitOption;
-	const TestPropertySpecification& specification = TestPropertySpecification(StyleSheetSpecification::GetPropertySpecification());
+	const TestPropertySpecification specification(owned_specification);
 
 	struct Expected {
 		Expected(const char* value) : values{String(value)} {}
@@ -189,8 +185,6 @@ TEST_CASE("PropertySpecification.ParsePropertyValues")
 	Parse(R"(' ',' ')", {R"(' ')", R"(' ')"}, SplitOption::Comma);
 	Parse(R"(' ' , ' ')", {R"(' ')", R"(' ')"}, SplitOption::Comma);
 	Parse(R"( ' ' none, yes)", {R"(' ' none)", R"(yes)"}, SplitOption::Comma);
-
-	ui::Shutdown();
 }
 
 TEST_CASE("PropertySpecification.string")
