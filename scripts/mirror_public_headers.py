@@ -71,6 +71,7 @@ PUB: dict[str, str] = {
     "Unit.h": "style",
     # layout
     "Box.h": "layout",
+    "LayoutTextElement.h": "layout",
     # dom
     "Context.h": "dom",
     "ContextInstancer.h": "dom",
