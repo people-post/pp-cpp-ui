@@ -127,6 +127,12 @@ stay unqualified. Public headers always use `<ui/module/Name.h>`.
 `tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...`
 still resolve.
 
+## Element entity + parts
+
+`Element` is evolving toward an entity + parts model (preferred accessors
+`Style()`, `BoxModel()`, `Scroll()`, `Events()`, `Effects()`, `BackgroundBorder()`).
+See [ELEMENT_PARTS.md](ELEMENT_PARTS.md).
+
 ## Owned static bulk (light headers)
 
 Large static payloads stay in-repo without a generator, but out of hot headers:

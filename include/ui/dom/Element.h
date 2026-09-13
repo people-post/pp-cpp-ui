@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ui/layout/Box.h>
+#include <ui/dom/ElementBox.h>
 #include <ui/dom/Event.h>
 #include <ui/base/Header.h>
 #include <ui/base/FontMetrics.h>
@@ -26,6 +27,7 @@ class EventListener;
 class ElementBackgroundBorder;
 class ElementDefinition;
 class ElementDocument;
+class ElementEffects;
 class ElementScroll;
 class ElementStyle;
 class LayoutEngine;
@@ -430,6 +432,7 @@ public:
 
 	/// Gets the object representing the declarations of an element's style attributes.
 	/// @return The element's style.
+	/// @note Prefer Style().
 	ElementStyle* GetStyle() const;
 
 	/// Gets the document this element belongs to.
@@ -590,17 +593,43 @@ public:
 	//@}
 
 	/**
+	    @name Parts
+	    Preferred access to Element collaborators (entity + parts). See docs/ELEMENT_PARTS.md.
+	    Legacy GetStyle / GetEventDispatcher / GetElementScroll / GetElementBackgroundBorder remain as aliases.
+	 */
+	//@{
+	ElementStyle& Style();
+	const ElementStyle& Style() const;
+	/// Box-model part (offsets, clip, laid-out boxes). Named BoxModel to avoid clashing with type ui::Box.
+	ElementBox BoxModel();
+	ElementScroll& Scroll();
+	const ElementScroll& Scroll() const;
+	EventDispatcher& Events();
+	const EventDispatcher& Events() const;
+	ElementEffects& Effects();
+	const ElementEffects& Effects() const;
+	ElementBackgroundBorder& BackgroundBorder();
+	const ElementBackgroundBorder& BackgroundBorder() const;
+	//@}
+
+	/**
 	    @name Internal Functions
 	 */
 	//@{
 	/// Access the event dispatcher for this element.
+	/// @note Prefer Events().
 	EventDispatcher* GetEventDispatcher() const;
 	/// Returns event types with the number of listeners for debugging.
 	String GetEventDispatcherSummary() const;
 	/// Access the element background and border.
+	/// @note Prefer BackgroundBorder().
 	ElementBackgroundBorder* GetElementBackgroundBorder() const;
 	/// Returns the element's scrollbar functionality.
+	/// @note Prefer Scroll().
 	ElementScroll* GetElementScroll() const;
+	/// Returns the element's effects (decorators / filters).
+	/// @note Prefer Effects().
+	ElementEffects* GetElementEffects() const;
 	/// Returns the element's nearest scroll container that can be scrolled, if any.
 	Element* GetClosestScrollableContainer();
 	/// Returns the element's transform state.

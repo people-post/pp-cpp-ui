@@ -235,10 +235,10 @@ ElementPtr Element::Clone() const
 		clone_attributes.erase("class");
 		clone->SetAttributes(clone_attributes);
 
-		for (auto& id_property : GetStyle()->GetLocalStyleProperties())
+		for (auto& id_property : Style().GetLocalStyleProperties())
 			clone->SetProperty(id_property.first, id_property.second);
 
-		clone->GetStyle()->SetClassNames(GetStyle()->GetClassNames());
+		clone->Style().SetClassNames(Style().GetClassNames());
 
 		String inner_rml;
 		GetInnerRML(inner_rml);
@@ -1052,6 +1052,61 @@ ElementStyle* Element::GetStyle() const
 	return &meta->style;
 }
 
+ElementStyle& Element::Style()
+{
+	return meta->style;
+}
+
+const ElementStyle& Element::Style() const
+{
+	return meta->style;
+}
+
+ElementBox Element::BoxModel()
+{
+	return ElementBox(this);
+}
+
+ElementScroll& Element::Scroll()
+{
+	return meta->scroll;
+}
+
+const ElementScroll& Element::Scroll() const
+{
+	return meta->scroll;
+}
+
+EventDispatcher& Element::Events()
+{
+	return meta->event_dispatcher;
+}
+
+const EventDispatcher& Element::Events() const
+{
+	return meta->event_dispatcher;
+}
+
+ElementEffects& Element::Effects()
+{
+	return meta->effects;
+}
+
+const ElementEffects& Element::Effects() const
+{
+	return meta->effects;
+}
+
+ElementBackgroundBorder& Element::BackgroundBorder()
+{
+	return meta->background_border;
+}
+
+const ElementBackgroundBorder& Element::BackgroundBorder() const
+{
+	return meta->background_border;
+}
+
 ElementDocument* Element::GetOwnerDocument() const
 {
 #ifdef UI_DEBUG
@@ -1672,6 +1727,11 @@ ElementBackgroundBorder* Element::GetElementBackgroundBorder() const
 ElementScroll* Element::GetElementScroll() const
 {
 	return &meta->scroll;
+}
+
+ElementEffects* Element::GetElementEffects() const
+{
+	return &meta->effects;
 }
 
 DataModel* Element::GetDataModel() const

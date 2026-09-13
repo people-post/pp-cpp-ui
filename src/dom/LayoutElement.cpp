@@ -30,25 +30,25 @@ ElementScroll::Orientation ToScrollOrientation(LayoutScrollbarAxis axis)
 float GetScrollbarSize(Element* element, LayoutScrollbarAxis axis)
 {
 	UI_ASSERT(element);
-	return element->GetElementScroll()->GetScrollbarSize(ToScrollOrientation(axis));
+	return element->Scroll().GetScrollbarSize(ToScrollOrientation(axis));
 }
 
 void EnableScrollbar(Element* element, LayoutScrollbarAxis axis, float element_width)
 {
 	UI_ASSERT(element);
-	element->GetElementScroll()->EnableScrollbar(ToScrollOrientation(axis), element_width);
+	element->Scroll().EnableScrollbar(ToScrollOrientation(axis), element_width);
 }
 
 void DisableScrollbar(Element* element, LayoutScrollbarAxis axis)
 {
 	UI_ASSERT(element);
-	element->GetElementScroll()->DisableScrollbar(ToScrollOrientation(axis));
+	element->Scroll().DisableScrollbar(ToScrollOrientation(axis));
 }
 
 void FormatScrollbars(Element* element)
 {
 	UI_ASSERT(element);
-	element->GetElementScroll()->FormatScrollbars();
+	element->Scroll().FormatScrollbars();
 }
 
 float GetStringWidth(Element* element, StringView string)

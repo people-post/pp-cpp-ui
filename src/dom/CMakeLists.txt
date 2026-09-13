@@ -29,6 +29,7 @@ target_sources(ui_dom PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/DecoratorTiledVertical.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DecoratorTiledVertical.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Element.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/ElementBox.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutElement.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementText.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementTextSelection.h"
