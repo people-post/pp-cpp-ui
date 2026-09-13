@@ -14,6 +14,7 @@
 #include <ui/dom/EventDispatcher.h>
 #include "dom/PluginRegistry.h"
 #include "SelectionContentBuilder.h"
+#include <ui/dom/FocusController.h>
 #include <ui/dom/SelectionController.h>
 #include "ScrollController.h"
 #include "base/StreamFile.h"
@@ -183,8 +184,6 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	cursor_proxy_document->Style().SetProperty(PropertyId::OverflowX, Property(Style::Overflow::Visible));
 	cursor_proxy_document->Style().SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Visible));
 
-	document_focus_history.push_back(root.get());
-	focus = root.get();
 	hover = nullptr;
 	active = nullptr;
 	drag = nullptr;
@@ -201,6 +200,9 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 	enable_cursor = true;
 
 	scroll_controller = MakeUnique<ScrollController>();
+	focus_controller = MakeUnique<FocusController>(this);
+	focus_controller->PushDocument(root.get());
+	focus_controller->SetFocusElement(root.get());
 	selection_controller = MakeUnique<SelectionController>(this);
 }
 
@@ -461,17 +463,7 @@ void Context::UnloadDocument(ElementDocument* _document)
 		unloaded_documents.push_back(root->RemoveChild(document));
 	}
 
-	// Remove the item from the focus history.
-	ElementList::iterator itr = std::find(document_focus_history.begin(), document_focus_history.end(), document);
-	if (itr != document_focus_history.end())
-		document_focus_history.erase(itr);
-
-	// Focus to the previous document if the old document is the current focus.
-	if (focus && focus->GetOwnerDocument() == document)
-	{
-		focus = nullptr;
-		document_focus_history.back()->GetFocusLeafNode()->Focus();
-	}
+	focus_controller->OnDocumentUnload(document);
 
 	// Clear the active element if the old document is the active element.
 	if (active && active->GetOwnerDocument() == document)
@@ -574,12 +566,17 @@ Element* Context::GetHoverElement()
 
 Element* Context::GetFocusElement()
 {
-	return focus;
+	return focus_controller->GetFocusElement();
 }
 
 Element* Context::GetRootElement()
 {
 	return root.get();
+}
+
+FocusController* Context::GetFocusController()
+{
+	return focus_controller.get();
 }
 
 SelectionController* Context::GetSelectionController()
@@ -737,12 +734,7 @@ void Context::PushDocumentToBack(ElementDocument* document)
 
 void Context::UnfocusDocument(ElementDocument* document)
 {
-	auto it = std::find(document_focus_history.begin(), document_focus_history.end(), document);
-	if (it != document_focus_history.end())
-		document_focus_history.erase(it);
-
-	if (!document_focus_history.empty())
-		document_focus_history.back()->GetFocusLeafNode()->Focus();
+	focus_controller->UnfocusDocument(document);
 }
 
 void Context::AddEventListener(const String& event, EventListener* listener, bool in_capture_phase)
@@ -765,7 +757,7 @@ bool Context::ProcessKeyDown(Input::KeyIdentifier key_identifier, int key_modifi
 	GenerateKeyEventParameters(parameters, key_identifier);
 	GenerateKeyModifierEventParameters(parameters, key_modifier_state);
 
-	if (focus)
+	if (Element* focus = focus_controller->GetFocusElement())
 		return focus->DispatchEvent(EventId::Keydown, parameters);
 	else
 		return root->DispatchEvent(EventId::Keydown, parameters);
@@ -778,7 +770,7 @@ bool Context::ProcessKeyUp(Input::KeyIdentifier key_identifier, int key_modifier
 	GenerateKeyEventParameters(parameters, key_identifier);
 	GenerateKeyModifierEventParameters(parameters, key_modifier_state);
 
-	if (focus)
+	if (Element* focus = focus_controller->GetFocusElement())
 		return focus->DispatchEvent(EventId::Keyup, parameters);
 	else
 		return root->DispatchEvent(EventId::Keyup, parameters);
@@ -801,7 +793,9 @@ bool Context::ProcessTextInput(Character character)
 
 bool Context::ProcessTextInput(const String& string)
 {
-	Element* target = (focus ? focus : root.get());
+	Element* target = focus_controller->GetFocusElement();
+	if (!target)
+		target = root.get();
 
 	Dictionary parameters;
 	parameters["text"] = string;
@@ -898,7 +892,7 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 		if (hover)
 		{
 			new_focus = FindFocusElement(hover);
-			if (new_focus && new_focus != focus && new_focus->GetComputedValues().focus() != Style::Focus::None)
+			if (new_focus && new_focus != focus_controller->GetFocusElement() && new_focus->GetComputedValues().focus() != Style::Focus::None)
 				new_focus->Focus();
 		}
 
@@ -1462,16 +1456,7 @@ void Context::OnElementDetach(Element* element)
 	// Focus normally cleared and set by parent during Element::RemoveChild.
 	// However, there are some exceptions, such as when an there are multiple
 	// ElementDocuments in the hierarchy above the current element.
-	if (element == focus)
-		focus = nullptr;
-
-	// If the element is a document lower down in the hierarchy, we may need to remove it from the focus history.
-	if (element->GetOwnerDocument() == element)
-	{
-		auto it = std::find(document_focus_history.begin(), document_focus_history.end(), element);
-		if (it != document_focus_history.end())
-			document_focus_history.erase(it);
-	}
+	focus_controller->OnElementDetach(element);
 
 	if (scroll_controller->GetTarget() == element)
 		scroll_controller->Reset();
@@ -1495,7 +1480,7 @@ bool Context::OnFocusChange(Element* new_focus, bool focus_visible)
 	ElementSet old_chain;
 	ElementSet new_chain;
 
-	Element* old_focus = focus;
+	Element* old_focus = focus_controller->GetFocusElement();
 	ElementDocument* old_document = old_focus ? old_focus->GetOwnerDocument() : nullptr;
 	ElementDocument* new_document = new_focus->GetOwnerDocument();
 
@@ -1535,10 +1520,10 @@ bool Context::OnFocusChange(Element* new_focus, bool focus_visible)
 
 	SendEvents(new_chain, old_chain, EventId::Focus, parameters);
 
-	focus = new_focus;
+	focus_controller->SetFocusElement(new_focus);
 
 	// Raise the element's document to the front, if desired.
-	ElementDocument* document = focus->GetOwnerDocument();
+	ElementDocument* document = new_focus->GetOwnerDocument();
 	if (document != nullptr)
 	{
 		Style::ZIndex z_index_property = document->GetComputedValues().z_index();
@@ -1547,16 +1532,8 @@ bool Context::OnFocusChange(Element* new_focus, bool focus_visible)
 	}
 
 	// Update the focus history
-	if (old_document != new_document)
-	{
-		// If documents have changed, add the new document to the end of the history
-		ElementList::iterator itr = std::find(document_focus_history.begin(), document_focus_history.end(), new_document);
-		if (itr != document_focus_history.end())
-			document_focus_history.erase(itr);
-
-		if (new_document != nullptr)
-			document_focus_history.push_back(new_document);
-	}
+	if (old_document != new_document && new_document != nullptr)
+		focus_controller->PushDocument(new_document);
 
 	return true;
 }
@@ -1695,11 +1672,14 @@ Element* Context::GetElementAtPoint(Vector2f point, const Element* ignore_elemen
 	ElementDocument* focus_document = nullptr;
 
 	// If we have modal focus, only check down documents that can receive focus from modals.
-	if (element == root.get() && focus)
+	if (element == root.get())
 	{
-		focus_document = focus->GetOwnerDocument();
-		if (focus_document && focus_document->IsModal())
-			is_modal = true;
+		if (Element* focus = focus_controller->GetFocusElement())
+		{
+			focus_document = focus->GetOwnerDocument();
+			if (focus_document && focus_document->IsModal())
+				is_modal = true;
+		}
 	}
 
 	// Check any elements within our stacking context. We want to return the lowest-down element

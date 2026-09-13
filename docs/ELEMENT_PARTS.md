@@ -1,6 +1,6 @@
 # Element as entity + parts
 
-**Status:** in progress (Phases 1–5b landed; controllers / layout port next)  
+**Status:** in progress (Phases 1–5c + 6a landed; full controllers / layout port next)  
 **Related:** [ADR 002](ADR_002_MODULE_DEPENDENCIES.md), [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md), [SRC_LAYOUT.md](SRC_LAYOUT.md)
 
 ## Charter
@@ -29,12 +29,19 @@
 | Box | `ElementBox` (view → later storage) | Mandatory (hot) | `BoxModel()` | `ui/dom/ElementBox.h` |
 | Scroll | `ElementScroll` | Mandatory (Meta) | `Scroll()` | `ui/dom/ElementScroll.h` |
 | Events | `EventDispatcher` | Mandatory (Meta) | `Events()` | `ui/dom/EventDispatcher.h` |
-| Effects | `ElementEffects` | Mandatory (Meta) | `Effects()` | (private for now) |
-| Background/border | `ElementBackgroundBorder` | Mandatory (Meta) | `BackgroundBorder()` | (private for now) |
+| Effects | `ElementEffects` | Mandatory (Meta) | `Effects()` | `ui/dom/ElementEffects.h` |
+| Background/border | `ElementBackgroundBorder` | Mandatory (Meta) | `BackgroundBorder()` | `ui/dom/ElementBackgroundBorder.h` |
 | Transform | `TransformState` | Optional / cold | later `Transform()` | |
 | Animation | animation list | Optional / cold | later `Animation()` | |
 
 Session policy (focus path, selection gestures, animation clock) belongs on Document/Context controllers, not on Element.
+
+## Controllers
+
+| Controller | Owner | Role |
+|------------|-------|------|
+| `SelectionController` | `Context` | Static text selection gestures |
+| `FocusController` | `Context` | Focused element + document focus history (Phase 6a); Context still dispatches blur/focus |
 
 ## Phases
 
@@ -45,7 +52,9 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 5. **Retire flat API** — in progress:
    - **5a** ✓ Scroll offset/overflow on `ElementScroll`; Element façades thin; unused part-pointer aliases removed.
    - **5b** ✓ Publicize `ElementStyle` + `EventDispatcher` under `include/ui/dom/`; `Element.h` includes them so `Style()` / `Events()` are complete types. Engine call sites use `Style().SetProperty(PropertyId…)` / `Events().AttachEvent(EventId…)` where safe. Keep `Element::SetClass` / `SetPseudoClass` / string `SetProperty` / string `AddEventListener` façades (definition dirtying / name→id lookup).
+   - **5c** ✓ Publicize `ElementEffects` + `ElementBackgroundBorder` under `include/ui/dom/`; `Element.h` / `Core.h` include them so `Effects()` / `BackgroundBorder()` are complete types.
 6. **Controllers** — selection/focus/animation ownership on Document/Context.
+   - **6a** ✓ `FocusController` owns focused element + document focus history; `Context::GetFocusController()`; blur/focus event orchestration remains on `Context::OnFocusChange` for now.
 7. **Layout port** — narrow `LayoutElement` toward BoxModel + style queries.
 
 ## Rules for new work
@@ -53,5 +62,5 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 - No new product features as methods on `Element` when they belong on a part or controller.
 - Do not pimpl the whole Element (hot path).
 - Do not reintroduce `layout →` concrete Element includes outside `LayoutElement` / agreed ports.
-- Prefer `Style()` / `Events()` / `Scroll()` / `BoxModel()` over flat Element methods when the part API covers the call.
+- Prefer `Style()` / `Events()` / `Scroll()` / `BoxModel()` / `Effects()` / `BackgroundBorder()` over flat Element methods when the part API covers the call.
 - Prefer `Element::SetClass` / `SetPseudoClass` over `Style().SetClass` when sibling-combinator definition dirtying is required.

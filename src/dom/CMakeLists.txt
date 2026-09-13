@@ -46,6 +46,7 @@ target_sources(ui_dom PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/ElementSelectableText.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionContentBuilder.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionContentBuilder.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/FocusController.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionController.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionHighlight.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionHighlight.h"
