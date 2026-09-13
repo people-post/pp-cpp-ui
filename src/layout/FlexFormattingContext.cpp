@@ -1,7 +1,7 @@
 #include "FlexFormattingContext.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
-#include <ui/dom/ElementScroll.h>
+#include <ui/layout/LayoutElement.h>
 #include <ui/base/Profiling.h>
 #include <ui/base/Types.h>
 #include "ContainerBox.h"
@@ -17,8 +17,7 @@ UniquePtr<LayoutBox> FlexFormattingContext::Format(ContainerBox* parent_containe
 	UI_ZoneScopedC(0xAFAF4F);
 	auto flex_container_box = MakeUnique<FlexContainer>(element, parent_container);
 
-	ElementScroll* element_scroll = element->GetElementScroll();
-	const ComputedValues& computed = element->GetComputedValues();
+		const ComputedValues& computed = element->GetComputedValues();
 
 	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
 	UI_ASSERT(containing_block.x >= 0.f);
@@ -49,8 +48,8 @@ UniquePtr<LayoutBox> FlexFormattingContext::Format(ContainerBox* parent_containe
 	{
 		// One or both scrollbars can be enabled between iterations.
 		const Vector2f scrollbar_size = {
-			element_scroll->GetScrollbarSize(ElementScroll::VERTICAL),
-			element_scroll->GetScrollbarSize(ElementScroll::HORIZONTAL),
+			LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Vertical),
+			LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Horizontal),
 		};
 
 		const Vector2f raw_available_content_size = box_content_size - scrollbar_size;

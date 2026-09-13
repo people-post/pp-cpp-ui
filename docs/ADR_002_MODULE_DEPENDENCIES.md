@@ -76,8 +76,12 @@ without defining layers, allowed bridges, or enforcement.
   9. ~~`text → widgets`~~ — `ElementSelectableText` / `ElementTextSelection` live in `text`.
   10. ~~`layout → text`~~ — `FontMetrics` in `base`; layout uses `LayoutTextElement` +
       `Element::GetFontMetrics()` / `GetAsLayoutTextElement()` instead of `ElementText`.
-  11. Remaining named bridges only: `layout → dom`, `text → dom`
+   11. Remaining named bridges only: `layout → dom`, `text → dom`
      (`paint → style` also cleared with DecorationsTypes move)
+  12. **Narrowing `layout → dom`** (in progress) — see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md).
+      Phase 1 concentrates scroll / string-width / list-marker access in
+      `LayoutElement` so most layout TUs no longer include `ElementScroll` /
+      `ElementUtilities` / private `ListMarker`.
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

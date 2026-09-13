@@ -1,13 +1,13 @@
 #include "ContainerBox.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
-#include <ui/dom/ElementScroll.h>
 #include <ui/base/Profiling.h>
 #include "FlexFormattingContext.h"
 #include "FormattingContext.h"
 #include "LayoutDetails.h"
 #include <algorithm>
 #include <cmath>
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -15,14 +15,14 @@ void ContainerBox::ResetScrollbars(const Box& box)
 {
 	UI_ASSERT(element);
 	if (overflow_x == Style::Overflow::Scroll)
-		element->GetElementScroll()->EnableScrollbar(ElementScroll::HORIZONTAL, box.GetSizeAcross(BoxDirection::Horizontal, BoxArea::Padding));
+		LayoutElement::EnableScrollbar(element, LayoutScrollbarAxis::Horizontal, box.GetSizeAcross(BoxDirection::Horizontal, BoxArea::Padding));
 	else
-		element->GetElementScroll()->DisableScrollbar(ElementScroll::HORIZONTAL);
+		LayoutElement::DisableScrollbar(element, LayoutScrollbarAxis::Horizontal);
 
 	if (overflow_y == Style::Overflow::Scroll)
-		element->GetElementScroll()->EnableScrollbar(ElementScroll::VERTICAL, box.GetSizeAcross(BoxDirection::Horizontal, BoxArea::Padding));
+		LayoutElement::EnableScrollbar(element, LayoutScrollbarAxis::Vertical, box.GetSizeAcross(BoxDirection::Horizontal, BoxArea::Padding));
 	else
-		element->GetElementScroll()->DisableScrollbar(ElementScroll::VERTICAL);
+		LayoutElement::DisableScrollbar(element, LayoutScrollbarAxis::Vertical);
 }
 
 void ContainerBox::AddAbsoluteElement(Element* element, Vector2f static_position, Element* static_relative_offset_parent)
@@ -133,17 +133,16 @@ bool ContainerBox::CatchOverflow(const Vector2f content_overflow_size, const Box
 	// Allow overflow onto the padding area.
 	available_space += padding_bottom_right;
 
-	ElementScroll* element_scroll = element->GetElementScroll();
-	bool scrollbar_size_changed = false;
+		bool scrollbar_size_changed = false;
 
 	// @performance If we have auto-height sizing and the horizontal scrollbar is enabled, then we can in principle
 	// simply add the scrollbar size to the height instead of formatting the element all over again.
 	if (overflow_x == Style::Overflow::Auto && content_overflow_size.x > available_space.x + 0.5f)
 	{
-		if (element_scroll->GetScrollbarSize(ElementScroll::HORIZONTAL) == 0.f)
+		if (LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Horizontal) == 0.f)
 		{
-			element_scroll->EnableScrollbar(ElementScroll::HORIZONTAL, padding_width);
-			const float new_size = element_scroll->GetScrollbarSize(ElementScroll::HORIZONTAL);
+			LayoutElement::EnableScrollbar(element, LayoutScrollbarAxis::Horizontal, padding_width);
+			const float new_size = LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Horizontal);
 			scrollbar_size_changed = (new_size != 0.f);
 			available_space.y -= new_size;
 		}
@@ -152,10 +151,10 @@ bool ContainerBox::CatchOverflow(const Vector2f content_overflow_size, const Box
 	// If we're auto-scrolling and our height is fixed, we have to check if this box has exceeded our client height.
 	if (overflow_y == Style::Overflow::Auto && content_overflow_size.y > available_space.y + 0.5f)
 	{
-		if (element_scroll->GetScrollbarSize(ElementScroll::VERTICAL) == 0.f)
+		if (LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Vertical) == 0.f)
 		{
-			element_scroll->EnableScrollbar(ElementScroll::VERTICAL, padding_width);
-			const float new_size = element_scroll->GetScrollbarSize(ElementScroll::VERTICAL);
+			LayoutElement::EnableScrollbar(element, LayoutScrollbarAxis::Vertical, padding_width);
+			const float new_size = LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Vertical);
 			scrollbar_size_changed |= (new_size != 0.f);
 		}
 	}
@@ -189,8 +188,8 @@ bool ContainerBox::SubmitBox(const Vector2f content_overflow_size, const Box& bo
 
 		const bool is_scroll_container = IsScrollContainer();
 		const Vector2f scrollbar_size = {
-			is_scroll_container ? element->GetElementScroll()->GetScrollbarSize(ElementScroll::VERTICAL) : 0.f,
-			is_scroll_container ? element->GetElementScroll()->GetScrollbarSize(ElementScroll::HORIZONTAL) : 0.f,
+			is_scroll_container ? LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Vertical) : 0.f,
+			is_scroll_container ? LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Horizontal) : 0.f,
 		};
 
 		element->SetBox(box);
@@ -210,7 +209,7 @@ bool ContainerBox::SubmitBox(const Vector2f content_overflow_size, const Box& bo
 			visible_overflow_size = border_size;
 
 			// Format any scrollbars in case they were enabled on this element.
-			element->GetElementScroll()->FormatScrollbars();
+			LayoutElement::FormatScrollbars(element);
 		}
 		else
 		{

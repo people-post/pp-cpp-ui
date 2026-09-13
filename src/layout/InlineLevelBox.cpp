@@ -2,10 +2,9 @@
 #include <ui/base/SystemInterface.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/layout/LayoutTextElement.h>
-#include <ui/dom/ElementUtilities.h>
-#include "dom/ListMarker.h"
 #include "LayoutDetails.h"
 #include "LayoutPools.h"
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -146,9 +145,9 @@ FragmentConstructor InlineLevelBox_Text::CreateFragment(InlineLayoutMode mode, f
 	// FORK_WORKAROUND: prepend list marker — replace with list-style/::marker when available.
 	if (first_box && line_begin == 0 && !line_contents.empty())
 	{
-		if (String marker = GetListItemMarker(layout_element->GetParentNode()); !marker.empty())
+		if (String marker = LayoutElement::GetListItemMarker(layout_element->GetParentNode()); !marker.empty())
 		{
-			line_width += float(ElementUtilities::GetStringWidth(layout_element, marker));
+			line_width += LayoutElement::GetStringWidth(layout_element, marker);
 			line_contents.insert(0, marker);
 		}
 	}

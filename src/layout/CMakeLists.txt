@@ -24,6 +24,7 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutBox.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutDetails.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutDetails.h"
+	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutElement.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutEngine.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutEngine.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/LayoutPools.cpp"

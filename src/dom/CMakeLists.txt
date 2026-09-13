@@ -69,8 +69,6 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FilterBlur.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FilterDropShadow.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FilterDropShadow.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/ListMarker.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/ListMarker.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Plugin.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/PluginRegistry.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/PluginRegistry.h"

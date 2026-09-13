@@ -1,12 +1,12 @@
 #include "BlockContainer.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
-#include <ui/dom/ElementScroll.h>
 #include <ui/base/Profiling.h>
 #include "FloatedBoxSpace.h"
 #include "InlineContainer.h"
 #include "LayoutDetails.h"
 #include "LineBox.h"
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -456,7 +456,7 @@ InlineContainer* BlockContainer::EnsureOpenInlineContainer()
 	// Otherwise, we open a new one.
 	if (!inline_container)
 	{
-		const float scrollbar_width = (IsScrollContainer() ? element->GetElementScroll()->GetScrollbarSize(ElementScroll::VERTICAL) : 0.f);
+		const float scrollbar_width = (IsScrollContainer() ? LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Vertical) : 0.f);
 		const float available_width = box.GetSize().x - scrollbar_width;
 
 		auto inline_container_ptr = MakeUnique<InlineContainer>(this, available_width);

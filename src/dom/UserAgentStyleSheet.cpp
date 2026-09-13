@@ -11,7 +11,7 @@ namespace {
 
 // Based on the pp-cpp-ui-recommended HTML4 style sheet, extended with list elements.
 // Intentionally minimal — not a full browser UA sheet. List bullets are NOT handled here;
-// see ListMarker.cpp (FORK_WORKAROUND: layout-time marker injection).
+// see layout/LayoutElement.cpp (FORK_WORKAROUND: layout-time marker injection).
 constexpr const char* user_agent_rcss = R"rcss(
 body, div,
 h1, h2, h3, h4, h5, h6,

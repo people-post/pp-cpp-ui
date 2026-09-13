@@ -81,7 +81,7 @@ L12  platform | render    owned backends
 
 | Edge | Why |
 |------|-----|
-| `layout → dom` | Box queries / element layout façade |
+| `layout → dom` | Box queries / element layout façade (narrowing: [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)) |
 | `text → dom` | `ElementText`, selection participation |
 
 ### Enforcement

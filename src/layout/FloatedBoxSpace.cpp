@@ -1,10 +1,10 @@
 #include "FloatedBoxSpace.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
-#include <ui/dom/ElementScroll.h>
 #include "BlockContainer.h"
 #include "LayoutPools.h"
 #include <float.h>
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -71,7 +71,7 @@ float FloatedBoxSpace::DetermineClearPosition(float cursor, Style::Clear clear_p
 Vector2f FloatedBoxSpace::NextBoxPosition(const BlockContainer* parent, float& maximum_box_width, const float cursor, const Vector2f dimensions,
 	const bool nowrap, const Style::Float float_property) const
 {
-	const float parent_scrollbar_width = parent->GetElement()->GetElementScroll()->GetScrollbarSize(ElementScroll::VERTICAL);
+	const float parent_scrollbar_width = LayoutElement::GetScrollbarSize(parent->GetElement(), LayoutScrollbarAxis::Vertical);
 	const float parent_edge_left = parent->GetPosition().x + parent->GetBox().GetPosition().x;
 	const float parent_edge_right = parent_edge_left + parent->GetBox().GetSize().x - parent_scrollbar_width;
 

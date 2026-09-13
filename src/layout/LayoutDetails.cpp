@@ -1,7 +1,7 @@
 #include "LayoutDetails.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
-#include <ui/dom/ElementScroll.h>
+#include <ui/layout/LayoutElement.h>
 #include <ui/layout/LayoutTextElement.h>
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>
@@ -179,11 +179,10 @@ ContainingBlock LayoutDetails::GetContainingBlock(ContainerBox* parent_container
 		// ideally also make positioned boxes contribute to the scrollable area.
 		if (Element* element = container->GetElement())
 		{
-			ElementScroll* element_scroll = element->GetElementScroll();
-			if (containing_block.x >= 0.f)
-				containing_block.x = Math::Max(containing_block.x - element_scroll->GetScrollbarSize(ElementScroll::VERTICAL), 0.f);
+						if (containing_block.x >= 0.f)
+				containing_block.x = Math::Max(containing_block.x - LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Vertical), 0.f);
 			if (containing_block.y >= 0.f)
-				containing_block.y = Math::Max(containing_block.y - element_scroll->GetScrollbarSize(ElementScroll::HORIZONTAL), 0.f);
+				containing_block.y = Math::Max(containing_block.y - LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Horizontal), 0.f);
 		}
 	}
 

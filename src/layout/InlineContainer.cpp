@@ -1,9 +1,7 @@
 #include "InlineContainer.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
-#include <ui/dom/ElementScroll.h>
 #include <ui/layout/LayoutTextElement.h>
-#include <ui/dom/ElementUtilities.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/Property.h>
 #include "BlockContainer.h"
