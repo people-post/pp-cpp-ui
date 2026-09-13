@@ -16,7 +16,6 @@
 #include <ui/style/TransformPrimitive.h>
 #include "base/Clock.h"
 #include "style/ComputeProperty.h"
-#include "data/DataModel.h"
 #include "ElementAnimation.h"
 #include "ElementBackgroundBorder.h"
 #include "ElementDefinition.h"
@@ -2208,28 +2207,6 @@ void Element::SetOwnerDocument(ElementDocument* document)
 	}
 }
 
-void Element::SetDataModel(DataModel* new_data_model)
-{
-	UI_ASSERTMSG(!data_model || !new_data_model, "We must either attach a new data model, or detach the old one.");
-
-	if (data_model == new_data_model)
-		return;
-
-	// stop descent if a nested data model is encountered
-	if (data_model && new_data_model && data_model != new_data_model)
-		return;
-
-	if (data_model)
-		data_model->OnElementRemove(this);
-
-	data_model = new_data_model;
-
-	if (data_model)
-		ElementUtilities::ApplyDataViewsControllers(this);
-
-	for (ElementPtr& child : children)
-		child->SetDataModel(new_data_model);
-}
 
 void Element::Release()
 {
@@ -2274,13 +2251,7 @@ void Element::SetParent(Element* _parent)
 		else if (Context* context = GetContext())
 		{
 			String name = it->second.Get<String>();
-
-			if (DataModel* model = context->GetDataModelPtr(name))
-			{
-				model->AttachModelRootElement(this);
-				SetDataModel(model);
-			}
-			else
+			if (!AttachNamedDataModel(name))
 				Log::Message(Log::LT_ERROR, "Could not locate data model '%s' in element %s.", name.c_str(), GetAddress().c_str());
 		}
 	}

@@ -69,8 +69,10 @@ without defining layers, allowed bridges, or enforcement.
   6. ~~`dom → xml`~~ — Stream* and `ParseDataBrackets` in `base`; document template types
      (`DocumentHeader` / `Template*` headers, `TemplateCache`) in `dom`; XMLParser-using
      `Template`/`DocumentHeader`/`Factory` stream impls live under `src/xml/`.
-  7. Remaining upward: `dom → data`; then tighten paint/layout/text bridges
-     (`paint → style` also cleared with DecorationTypes move)
+  7. ~~`dom → data`~~ — Factory/Context/Element data-binding implementations live under
+     `src/data/` (`FactoryData`, `ContextData`, `ElementData`, `ElementUtilitiesData`).
+  8. Remaining upward: paint/layout/text bridges
+     (`paint → style` also cleared with DecorationsTypes move)
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

@@ -1,5 +1,9 @@
 # Auto-maintained module sources for ui_core.
 target_sources(ui_core PRIVATE
+	"${CMAKE_CURRENT_SOURCE_DIR}/ElementData.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/ContextData.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/ElementUtilitiesData.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/FactoryData.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DataController.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DataController.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DataControllerDefault.cpp"

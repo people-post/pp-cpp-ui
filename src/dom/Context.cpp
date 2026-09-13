@@ -2,7 +2,6 @@
 #include <ui/text/TextInputHandler.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/ContextInstancer.h>
-#include <ui/data/DataModelHandle.h>
 #include <ui/base/Debug.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementUtilities.h>
@@ -12,7 +11,6 @@
 #include <ui/base/StreamMemory.h>
 #include <ui/base/SystemInterface.h>
 #include "ClickRouting.h"
-#include "data/DataModel.h"
 #include "EventDispatcher.h"
 #include "dom/PluginRegistry.h"
 #include "text/SelectionContentBuilder.h"
@@ -221,6 +219,8 @@ Context::~Context()
 	instancer = nullptr;
 }
 
+
+
 const String& Context::GetName() const
 {
 	return name;
@@ -295,8 +295,7 @@ bool Context::Update()
 		UpdateHoverChain(mouse_position);
 
 	// Update all the data models before updating properties and layout.
-	for (auto& data_model : data_models)
-		data_model.second->Update(true);
+	UpdateDataModels(true);
 
 	// The style definition of each document should be independent of each other. By manually resetting these flags we avoid unnecessary definition
 	// lookups in unrelated documents, such as when adding a new document. Adding an element dirties the parent definition, which in this case is the
@@ -421,8 +420,7 @@ ElementDocument* Context::LoadDocument(Stream* stream)
 	// Data models are updated after the 'load' event so that the user has a chance to change
 	// any data variables first. We do not clear dirty variables here, since users may need to
 	// retrieve whether or not eg. a data variable has changed in a controller.
-	for (auto& data_model : data_models)
-		data_model.second->Update(false);
+	UpdateDataModels(false);
 
 	document->UpdateDocument();
 
@@ -1405,58 +1403,9 @@ void Context::SetInstancer(ContextInstancer* _instancer)
 	instancer = _instancer;
 }
 
-DataModelConstructor Context::CreateDataModel(const String& name, DataTypeRegister* data_type_register)
-{
-	if (!data_type_register)
-	{
-		if (!default_data_type_register)
-			default_data_type_register = MakeUnique<DataTypeRegister>();
-		data_type_register = default_data_type_register.get();
-	}
 
-	auto result = data_models.emplace(name, MakeUnique<DataModel>(data_type_register));
-	bool inserted = result.second;
-	if (inserted)
-		return DataModelConstructor(result.first->second.get());
 
-	Log::Message(Log::LT_ERROR, "Data model name '%s' already exists.", name.c_str());
-	return DataModelConstructor();
-}
 
-DataModelConstructor Context::GetDataModel(const String& name)
-{
-	if (DataModel* model = GetDataModelPtr(name))
-		return DataModelConstructor(model);
-
-	Log::Message(Log::LT_ERROR, "Data model name '%s' could not be found.", name.c_str());
-	return DataModelConstructor();
-}
-
-UnorderedMap<String, DataModelConstructor> Context::GetDataModels() const
-{
-	UnorderedMap<String, DataModelConstructor> result;
-	result.reserve(data_models.size());
-	for (const auto& pair : data_models)
-		result.emplace(pair.first, DataModelConstructor(pair.second.get()));
-	return result;
-}
-
-bool Context::RemoveDataModel(const String& name)
-{
-	auto it = data_models.find(name);
-	if (it == data_models.end())
-		return false;
-
-	DataModel* model = it->second.get();
-	ElementList elements = model->GetAttachedModelRootElements();
-
-	for (Element* element : elements)
-		element->SetDataModel(nullptr);
-
-	data_models.erase(it);
-
-	return true;
-}
 
 void Context::OnElementDetach(Element* element)
 {
@@ -1872,13 +1821,6 @@ void Context::PerformSmoothscrollOnTarget(Element* target, Vector2f delta_offset
 	scroll_controller->ActivateSmoothscroll(target, delta_offset, scroll_behavior);
 }
 
-DataModel* Context::GetDataModelPtr(const String& name) const
-{
-	auto it = data_models.find(name);
-	if (it != data_models.end())
-		return it->second.get();
-	return nullptr;
-}
 
 void Context::GenerateKeyEventParameters(Dictionary& parameters, Input::KeyIdentifier key_identifier)
 {

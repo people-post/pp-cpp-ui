@@ -12,8 +12,6 @@
 #include <ui/base/SystemInterface.h>
 #include "ContextInstancerDefault.h"
 #include "base/ControlledLifetimeResource.h"
-#include "data/DataController.h"
-#include "data/DataView.h"
 #include "DecoratorGradient.h"
 #include "DecoratorNinePatch.h"
 #include "DecoratorShader.h"
@@ -38,6 +36,9 @@
 #include <algorithm>
 
 namespace ui {
+
+void ShutdownFactoryDataBindings();
+
 
 // Default instancers are constructed and destroyed on Initialise and Shutdown, respectively.
 struct DefaultInstancers {
@@ -83,9 +84,6 @@ struct FactoryData {
 	UnorderedMap<String, DecoratorInstancer*> decorator_instancers;
 	UnorderedMap<String, FilterInstancer*> filter_instancers;
 	UnorderedMap<String, FontEffectInstancer*> font_effect_instancers;
-	UnorderedMap<String, DataViewInstancer*> data_view_instancers;
-	UnorderedMap<String, DataControllerInstancer*> data_controller_instancers;
-	SmallUnorderedSet<String> structural_data_view_attribute_names;
 };
 
 static ControlledLifetimeResource<FactoryData> factory_data;
@@ -176,6 +174,7 @@ void Factory::Shutdown()
 	event_instancer = nullptr;
 
 
+	ShutdownFactoryDataBindings();
 	factory_data.Shutdown();
 }
 
@@ -421,51 +420,5 @@ EventListener* Factory::InstanceEventListener(const String& value, Element* elem
 	return nullptr;
 }
 
-void Factory::RegisterDataViewInstancer(DataViewInstancer* instancer, const String& name, bool is_structural_view)
-{
-	const bool inserted = factory_data->data_view_instancers.emplace(name, instancer).second;
-	if (!inserted)
-	{
-		Log::Message(Log::LT_WARNING, "Could not register data view instancer '%s'. The given name is already registered.", name.c_str());
-		return;
-	}
-	if (is_structural_view)
-		factory_data->structural_data_view_attribute_names.emplace("data-" + name);
-}
-
-void Factory::RegisterDataControllerInstancer(DataControllerInstancer* instancer, const String& name)
-{
-	bool inserted = factory_data->data_controller_instancers.emplace(name, instancer).second;
-	if (!inserted)
-		Log::Message(Log::LT_WARNING, "Could not register data controller instancer '%s'. The given name is already registered.", name.c_str());
-}
-
-DataViewPtr Factory::InstanceDataView(const String& type_name, Element* element)
-{
-	UI_ASSERT(element);
-	const auto it = factory_data->data_view_instancers.find(type_name);
-	if (it != factory_data->data_view_instancers.end())
-		return it->second->InstanceView(element);
-	return nullptr;
-}
-
-DataControllerPtr Factory::InstanceDataController(const String& type_name, Element* element)
-{
-	const auto it = factory_data->data_controller_instancers.find(type_name);
-	if (it != factory_data->data_controller_instancers.end())
-		return it->second->InstanceController(element);
-	return nullptr;
-}
-
-bool Factory::IsStructuralDataView(const String& type_name)
-{
-	const String attribute = "data-" + type_name;
-	return factory_data->structural_data_view_attribute_names.find(attribute) != factory_data->structural_data_view_attribute_names.end();
-}
-
-const SmallUnorderedSet<String>& Factory::GetStructuralDataViewAttributeNames()
-{
-	return factory_data->structural_data_view_attribute_names;
-}
 
 } // namespace ui

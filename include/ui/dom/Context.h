@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ui/base/Header.h>
+#include <memory>
 #include <ui/dom/Input.h>
 #include <ui/base/ScriptInterface.h>
 #include <ui/dom/ScrollTypes.h>
@@ -16,6 +17,9 @@ class ContextInstancer;
 class ElementDocument;
 class EventListener;
 class DataModel;
+struct DataModelDeleter {
+	void operator()(DataModel* model) const;
+};
 class DataModelConstructor;
 class DataTypeRegister;
 class ScrollController;
@@ -438,7 +442,7 @@ private:
 	// itself can't be part of it.
 	ElementSet drag_hover_chain;
 
-	UnorderedMap<String, UniquePtr<DataModel>> data_models;
+	UnorderedMap<String, std::unique_ptr<DataModel, DataModelDeleter>> data_models;
 
 	UniquePtr<DataTypeRegister> default_data_type_register;
 
@@ -472,6 +476,7 @@ private:
 
 	// Returns the data model with the provided name, or nullptr if it does not exist.
 	DataModel* GetDataModelPtr(const String& name) const;
+	void UpdateDataModels(bool clear_dirty_variables);
 
 	// Builds the parameters for a generic key event.
 	void GenerateKeyEventParameters(Dictionary& parameters, Input::KeyIdentifier key_identifier);

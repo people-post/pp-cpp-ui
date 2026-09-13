@@ -681,6 +681,7 @@ private:
 	void SetParent(Element* parent);
 
 	void SetDataModel(DataModel* new_data_model);
+	bool AttachNamedDataModel(const String& name);
 
 	void DirtyAbsoluteOffset();
 	void DirtyAbsoluteOffsetRecursive();
