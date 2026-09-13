@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ui/dom/Factory.h>
 #include <ui/style/PropertyDictionary.h>
 #include <ui/base/Types.h>
 #include <ui/base/Utilities.h>
@@ -9,6 +8,7 @@ namespace ui {
 
 class Decorator;
 class DecoratorInstancer;
+class FilterInstancer;
 class StyleSheet;
 class StyleSheetNode;
 

@@ -1,4 +1,4 @@
-#include "PropertyParserDecorator.h"
+#include "style/PropertyParserDecorator.h"
 #include <ui/style/Decorator.h>
 #include <ui/dom/Factory.h>
 #include <ui/base/Profiling.h>

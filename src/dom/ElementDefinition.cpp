@@ -1,6 +1,6 @@
 #include "ElementDefinition.h"
 #include <ui/style/PropertyIdSet.h>
-#include "style/StyleSheetNode.h"
+#include "StyleSheetNode.h"
 
 namespace ui {
 

@@ -6,7 +6,7 @@
 #include <ui/base/Math.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/style/PropertyDefinition.h>
-#include "ComputeProperty.h"
+#include "style/ComputeProperty.h"
 #include "DecoratorShader.h"
 
 namespace ui {

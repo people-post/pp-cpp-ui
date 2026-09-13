@@ -21,9 +21,9 @@
 #include "layout/LayoutPools.h"
 #include "PluginRegistry.h"
 #include "paint/RenderManagerAccess.h"
-#include "style/StyleSheetFactory.h"
-#include "style/UserAgentStyleSheet.h"
-#include "style/StyleSheetParser.h"
+#include "dom/StyleSheetFactory.h"
+#include "dom/UserAgentStyleSheet.h"
+#include "dom/StyleSheetParser.h"
 #include "xml/TemplateCache.h"
 
 #ifdef UI_FONT_ENGINE_FREETYPE

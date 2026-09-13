@@ -12,9 +12,9 @@
 #include "layout/LayoutDetails.h"
 #include "layout/LayoutEngine.h"
 #include "xml/StreamFile.h"
-#include "style/StyleSheetFactory.h"
+#include "StyleSheetFactory.h"
 #include "xml/Template.h"
-#include "style/UserAgentStyleSheet.h"
+#include "UserAgentStyleSheet.h"
 #include "xml/TemplateCache.h"
 #include "xml/XMLParseTools.h"
 #include <limits.h>

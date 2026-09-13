@@ -10,9 +10,9 @@
 #include <ui/style/StyleSheetTypes.h>
 #include <ui/style/Transform.h>
 #include <ui/style/TransformPrimitive.h>
-#include "ComputeProperty.h"
+#include "style/ComputeProperty.h"
 #include "dom/ElementStyle.h"
-#include "TransformUtilities.h"
+#include "style/TransformUtilities.h"
 
 namespace ui {
 

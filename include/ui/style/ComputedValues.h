@@ -1,13 +1,15 @@
 #pragma once
 
 #include <ui/base/Animation.h>
-#include <ui/dom/Element.h>
 #include <ui/paint/RenderBox.h>
 #include <ui/style/StyleTypes.h>
 #include <ui/base/Types.h>
 #include <cfloat>
 
 namespace ui {
+
+class Element;
+
 namespace Style {
 
 	/*
@@ -259,20 +261,20 @@ namespace Style {
 		float             perspective()                const { return rare.perspective; }
 		PerspectiveOrigin perspective_origin_x()       const { return LengthPercentage(rare.perspective_origin_x_type, rare.perspective_origin_x); }
 		PerspectiveOrigin perspective_origin_y()       const { return LengthPercentage(rare.perspective_origin_y_type, rare.perspective_origin_y); }
-		TransformPtr      transform()                  const { return GetLocalProperty(PropertyId::Transform, TransformPtr()); }
+		TransformPtr      transform()                  const;
 		TransformOrigin   transform_origin_x()         const { return LengthPercentage(rare.transform_origin_x_type, rare.transform_origin_x); }
 		TransformOrigin   transform_origin_y()         const { return LengthPercentage(rare.transform_origin_y_type, rare.transform_origin_y); }
 		float             transform_origin_z()         const { return rare.transform_origin_z; }
 		bool              has_local_transform()        const { return rare.has_local_transform; }
 		bool              has_local_perspective()      const { return rare.has_local_perspective; }
-		AlignContent      align_content()              const { return GetLocalPropertyKeyword(PropertyId::AlignContent, AlignContent::Stretch); }
-		AlignItems        align_items()                const { return GetLocalPropertyKeyword(PropertyId::AlignItems, AlignItems::Stretch); }
-		AlignSelf         align_self()                 const { return GetLocalPropertyKeyword(PropertyId::AlignSelf, AlignSelf::Auto); }
-		FlexDirection     flex_direction()             const { return GetLocalPropertyKeyword(PropertyId::FlexDirection, FlexDirection::Row); }
-		FlexWrap          flex_wrap()                  const { return GetLocalPropertyKeyword(PropertyId::FlexWrap, FlexWrap::Nowrap); }
-		JustifyContent    justify_content()            const { return GetLocalPropertyKeyword(PropertyId::JustifyContent, JustifyContent::FlexStart); }
-		float             flex_grow()                  const { return GetLocalProperty(PropertyId::FlexGrow, 0.f); }
-		float             flex_shrink()                const { return GetLocalProperty(PropertyId::FlexShrink, 1.f); }
+		AlignContent      align_content()              const;
+		AlignItems        align_items()                const;
+		AlignSelf         align_self()                 const;
+		FlexDirection     flex_direction()             const;
+		FlexWrap          flex_wrap()                  const;
+		JustifyContent    justify_content()            const;
+		float             flex_grow()                  const;
+		float             flex_shrink()                const;
 		FlexBasis         flex_basis()                 const { return LengthPercentageAuto(rare.flex_basis_type, rare.flex_basis); }
 		float             border_top_left_radius()     const { return (float)rare.border_top_left_radius; }
 		float             border_top_right_radius()    const { return (float)rare.border_top_right_radius; }
@@ -281,7 +283,7 @@ namespace Style {
 		CornerSizes       border_radius()              const { return {(float)rare.border_top_left_radius,     (float)rare.border_top_right_radius,
 		                                                               (float)rare.border_bottom_right_radius, (float)rare.border_bottom_left_radius}; }
 		TextOverflow      text_overflow()              const { return rare.text_overflow; }
-		String            text_overflow_string()       const { return GetLocalProperty(PropertyId::TextOverflow, String());; }
+		String            text_overflow_string()       const;
 		Clip              clip()                       const { return rare.clip; }
 		Drag              drag()                       const { return rare.drag; }
 		TabIndex          tab_index()                  const { return rare.tab_index; }
@@ -394,21 +396,6 @@ namespace Style {
 		void CopyInherited(const ComputedValues& parent) { inherited = parent.inherited; }
 
 	private:
-		template <typename T>
-		inline T GetLocalPropertyKeyword(PropertyId id, T default_value) const
-		{
-			if (auto p = element->GetLocalProperty(id))
-				return static_cast<T>(p->Get<int>());
-			return default_value;
-		}
-		template <typename T>
-		inline T GetLocalProperty(PropertyId id, T default_value) const
-		{
-			if (auto p = element->GetLocalProperty(id))
-				return p->Get<T>();
-			return default_value;
-		}
-
 		Element* element = nullptr;
 
 		CommonValues common;

@@ -1,4 +1,4 @@
-#include "PropertyParserFontEffect.h"
+#include "style/PropertyParserFontEffect.h"
 #include <ui/dom/Factory.h>
 #include <ui/text/FontEffect.h>
 #include <ui/text/FontEffectInstancer.h>

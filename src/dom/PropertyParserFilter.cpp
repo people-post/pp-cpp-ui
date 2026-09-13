@@ -1,4 +1,4 @@
-#include "PropertyParserFilter.h"
+#include "style/PropertyParserFilter.h"
 #include <ui/dom/Factory.h>
 #include <ui/style/Filter.h>
 #include <ui/base/Profiling.h>

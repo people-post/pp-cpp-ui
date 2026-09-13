@@ -5,7 +5,7 @@
 #include <ui/style/PropertyDictionary.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/base/Utilities.h>
-#include "ComputeProperty.h"
+#include "style/ComputeProperty.h"
 #include "StyleSheetParser.h"
 
 namespace ui {

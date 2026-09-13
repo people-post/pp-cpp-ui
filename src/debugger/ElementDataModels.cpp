@@ -1,5 +1,6 @@
 #include "ElementDataModels.h"
 #include <ui/dom/Context.h>
+#include <ui/dom/Factory.h>
 #include <ui/core/Core.h>
 #include <ui/data/DataModelHandle.h>
 #include <ui/data/DataVariable.h>
