@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_xml
+ui_add_module(xml DEPENDS ui_dom)
+
+# Auto-maintained sources for ui_xml.
+target_sources(ui_xml PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/BaseXMLParser.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FactoryXML.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/DocumentHeader.cpp"

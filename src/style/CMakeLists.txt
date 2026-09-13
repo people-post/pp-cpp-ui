@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_style
+ui_add_module(style DEPENDS ui_paint)
+
+# Auto-maintained sources for ui_style.
+target_sources(ui_style PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/ComputeProperty.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ComputeProperty.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ConvolutionFilter.cpp"

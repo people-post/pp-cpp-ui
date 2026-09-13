@@ -17,6 +17,7 @@ add_library(ui_debugger
 	ElementLog.cpp
 	ElementLog.h
 	FontSource.h
+	FontSource.cpp
 	Geometry.cpp
 	Geometry.h
 	InfoSource.h

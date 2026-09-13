@@ -1,5 +1,5 @@
 # HarfBuzz-backed font engine (ported from upstream pp-cpp-ui Samples/basic/harfbuzz).
-target_sources(ui_core PRIVATE
+target_sources(ui_font PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterfaceHarfBuzz.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterfaceHarfBuzz.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontFace.cpp"
@@ -27,4 +27,4 @@ target_sources(ui_core PRIVATE
 )
 
 
-target_compile_definitions(ui_core PRIVATE UI_FONT_ENGINE_HARFBUZZ)
+target_compile_definitions(ui_font PUBLIC UI_FONT_ENGINE_HARFBUZZ)

@@ -46,6 +46,7 @@ if(NOT TARGET pp_ui_core)
   target_link_libraries(pp_ui_core INTERFACE ui::core)
   target_include_directories(pp_ui_core INTERFACE
     $<BUILD_INTERFACE:${PP_UI_INCLUDE_DIR}>
+      $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/base/containers>
   )
   # MSVC does not reliably resolve PRIVATE static-lib deps (ui_core -> lunasvg).
   if(WIN32 AND TARGET lunasvg::lunasvg)
@@ -59,6 +60,7 @@ if(NOT TARGET pp_ui_backend)
   add_library(pp_ui_backend STATIC
     src/platform/Platform_SDL.cpp
     src/render/Renderer_GL3.cpp
+    src/render/gl/glad.cpp
   )
   add_library(pp::ui_backend ALIAS pp_ui_backend)
 

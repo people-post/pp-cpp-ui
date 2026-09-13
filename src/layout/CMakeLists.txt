@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_layout
+ui_add_module(layout DEPENDS ui_style)
+
+# Auto-maintained sources for ui_layout.
+target_sources(ui_layout PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/BlockContainer.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BlockContainer.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/BlockFormattingContext.cpp"

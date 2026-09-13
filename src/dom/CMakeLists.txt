@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_dom
+ui_add_module(dom DEPENDS ui_font)
+
+# Auto-maintained sources for ui_dom.
+target_sources(ui_dom PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/ClickRouting.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ClickRouting.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ComputedValues.cpp"

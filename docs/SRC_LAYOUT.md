@@ -126,3 +126,21 @@ stay unqualified. Public headers always use `<ui/module/Name.h>`.
 
 `tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...`
 still resolve.
+
+## Owned static bulk (light headers)
+
+Large static payloads stay in-repo without a generator, but out of hot headers:
+
+| Owned artifact | Location | Header strategy |
+|----------------|----------|-----------------|
+| Debugger fonts | `src/debugger/FontSource.cpp` | Light `FontSource.h` (`extern` only) |
+| GLAD GL 3.3 loader | `src/render/gl/Include_GL3.h` + `glad.cpp` | Render-private; impl in its own TU |
+| Hash containers | `src/base/containers/` | Included via `Config.h` aliases; see `OWNERSHIP.md` |
+
+## CMake libraries (one per module folder)
+
+Each `src/<module>/` builds an **OBJECT** library `ui_<module>` (`ui::base`, `ui::dom`, …)
+with PUBLIC usage requirements following the ADR DAG. Objects are folded into the
+umbrella **STATIC** `ui_core` (`ui::core` / `pp_ui_core` / `pp_ui`, optional
+`ui::debugger`) so consumers (pp-browser) keep a single link line and we avoid
+static-archive cycles (e.g. layout↔dom). Compat alias **`RmlUi::Core`** → `ui_core`.

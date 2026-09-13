@@ -1,7 +1,7 @@
 # UI_CMAKE_MINIMUM_VERSION_RAISE_NOTICE:
 # Using absolute paths to prevent improper interpretation of relative paths Relative paths can be used once the minimum
 # CMake version is greater or equal than CMake 3.13
-target_sources(ui_core PRIVATE
+target_sources(ui_font PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterfaceDefault.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterfaceDefault.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontFace.cpp"
@@ -19,4 +19,4 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FreeTypeInterface.h"
 )
 
-target_compile_definitions(ui_core PRIVATE "UI_FONT_ENGINE_FREETYPE")
+target_compile_definitions(ui_font PUBLIC "UI_FONT_ENGINE_FREETYPE")

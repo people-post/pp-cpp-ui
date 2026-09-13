@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_font
+ui_add_module(font DEPENDS ui_layout)
+
+# Auto-maintained sources for ui_font.
+target_sources(ui_font PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffect.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffectBlur.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffectBlur.h"
@@ -17,7 +20,7 @@ if(UI_FONT_ENGINE STREQUAL "freetype")
 	add_subdirectory(default)
 	if(UI_FONT_ENGINE_HARFBUZZ)
 		add_subdirectory(harfbuzz)
-		target_link_libraries(ui_core PRIVATE harfbuzz::harfbuzz)
+		target_link_libraries(ui_font PUBLIC harfbuzz::harfbuzz)
 	endif()
-	target_link_libraries(ui_core PRIVATE Freetype::Freetype)
+	target_link_libraries(ui_font PUBLIC Freetype::Freetype)
 endif()

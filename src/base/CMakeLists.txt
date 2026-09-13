@@ -1,5 +1,8 @@
-# Auto-maintained module sources for ui_core.
-target_sources(ui_core PRIVATE
+# Module library: ui_base
+ui_add_module(base)
+
+# Auto-maintained sources for ui_base.
+target_sources(ui_base PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/DataExpressionTools.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Clock.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Clock.h"

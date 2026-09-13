@@ -10,7 +10,7 @@ function(install_licenses)
 	configure_file("${PROJECT_SOURCE_DIR}/LICENSE.txt"
 		"${bin_licenses_dir}/LICENSE.txt" COPYONLY
 	)
-	configure_file("${PROJECT_SOURCE_DIR}/include/ui/base/containers/LICENSE.txt"
+	configure_file("${PROJECT_SOURCE_DIR}/src/base/containers/LICENSE.txt"
 		"${bin_licenses_dir}/LICENSE.Core.ThirdParty.txt" COPYONLY
 	)
 	configure_file("${PROJECT_SOURCE_DIR}/src/debugger/LICENSE.txt"
