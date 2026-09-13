@@ -28,11 +28,12 @@ src/
   base style layout dom font xml data paint widgets core
   font/default font/harfbuzz
   svg debugger platform render
+  <module>/tests/    Module unit tests (`*_test.cpp`)
 third_party/
 cmake/
 docs/
 tests/
-  engine/            Unit tests
+  engine/            Runner, harness (Common), fixtures, visual/bench
   support/           Shell + SDL_GL3 reference backend only
 ```
 
@@ -121,6 +122,21 @@ Cross-module engine headers use a single `-I src` root and qualified paths:
 
 Same-folder includes (`#include "LayoutEngine.h"` from `layout/LayoutEngine.cpp`)
 stay unqualified. Public headers always use `<ui/module/Name.h>`.
+
+## Unit tests
+
+Colocate module-owned unit tests under `src/<module>/tests/*_test.cpp` (same
+module DAG as production code). Keep shared harness, fixtures, visual tests,
+and benchmarks under `tests/`. One executable `ui_unit_tests` (doctest) lists
+those sources from `tests/engine/Source/UnitTests/CMakeLists.txt`.
+
+| Put next to source | Keep under `tests/` |
+|--------------------|---------------------|
+| Pure / module-primary unit tests | Harness (`Source/Common`), `Data/`, visual, benchmarks, deps |
+| One primary module under test | Cross-cutting runner (`main.cpp`) |
+
+Harness headers (`TestsShell.h`, …) come from `ui_tests_common`’s INTERFACE
+include path — tests `#include "TestsShell.h"` (not a relative `../Common/`).
 
 ## Test data path
 

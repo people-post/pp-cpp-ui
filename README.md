@@ -11,10 +11,11 @@ and [docs/ADR_002_MODULE_DEPENDENCIES.md](docs/ADR_002_MODULE_DEPENDENCIES.md).
 ```text
 include/ui/        Engine + backend public API (`#include <ui/dom/…>`, `namespace ui`)
 src/
-  base style layout dom text xml data paint widgets core
+  base style layout dom font xml data paint widgets core
   svg debugger platform render
+  <module>/tests/  Module unit tests (`*_test.cpp`)
 third_party/       freetype, harfbuzz, lunasvg, zlib, libpng, sdl3, sdl3_image
-tests/             Engine unit tests + support harness
+tests/             Runner + harness, fixtures, visual/bench, support
 ```
 
 ### CMake targets

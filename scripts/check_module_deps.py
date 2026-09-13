@@ -105,7 +105,10 @@ def collect_edges() -> dict[tuple[str, str], list[tuple[str, str]]]:
         root = ROOT / root_name
         if not root.exists():
             continue
-        for dirpath, _, files in os.walk(root):
+        for dirpath, dirnames, files in os.walk(root):
+            # Module unit tests live under src/<module>/tests/; they may include
+            # higher modules via the shared harness and are not production edges.
+            dirnames[:] = [d for d in dirnames if d != "tests"]
             for name in files:
                 if not name.endswith((".h", ".hpp", ".cpp", ".inl")):
                     continue

@@ -19,6 +19,11 @@ The following environment variables can be used to configure the directories use
 
 Ensures smaller units of the library are working properly.
 
+Sources live next to their module under `src/<module>/tests/*_test.cpp`.
+This directory only holds the doctest runner (`main.cpp`) and CMake that
+aggregates those files into one executable. Shared harness code stays in
+`Source/Common/`; fixtures remain under `Data/`.
+
 
 #### Benchmarks: `ui_benchmarks`
 
