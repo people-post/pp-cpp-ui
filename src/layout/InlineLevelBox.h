@@ -6,7 +6,7 @@
 
 namespace ui {
 
-class ElementText;
+class LayoutTextElement;
 struct FontMetrics;
 
 /**
@@ -96,7 +96,7 @@ private:
  */
 class InlineLevelBox_Text final : public InlineLevelBox {
 public:
-	InlineLevelBox_Text(ElementText* element);
+	InlineLevelBox_Text(LayoutTextElement* element);
 
 	FragmentConstructor CreateFragment(InlineLayoutMode mode, float available_width, float right_spacing_width, bool first_box,
 		LayoutOverflowHandle overflow_handle) override;
@@ -106,7 +106,7 @@ public:
 	String DebugDumpNameValue() const override;
 
 private:
-	ElementText* GetTextElement();
+	LayoutTextElement* GetTextElement();
 
 	Vector2f element_offset;
 	StringList fragments;

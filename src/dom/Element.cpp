@@ -8,6 +8,7 @@
 #include <ui/dom/Factory.h>
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>
+#include <ui/text/FontEngineInterface.h>
 #include <ui/style/PropertiesIteratorView.h>
 #include <ui/style/PropertyDefinition.h>
 #include <ui/style/PropertyIdSet.h>
@@ -614,6 +615,16 @@ float Element::GetZIndex() const
 FontFaceHandle Element::GetFontFaceHandle() const
 {
 	return meta->computed_values.font_face_handle();
+}
+
+const FontMetrics& Element::GetFontMetrics() const
+{
+	if (FontFaceHandle handle = GetFontFaceHandle())
+		return GetFontEngineInterface()->GetFontMetrics(handle);
+
+	// Return a default font metrics so layout can still proceed when the font face is missing.
+	static const FontMetrics font_metrics = {};
+	return font_metrics;
 }
 
 bool Element::SetProperty(const String& name, const String& value)

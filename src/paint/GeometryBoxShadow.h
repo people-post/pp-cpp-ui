@@ -34,15 +34,6 @@ class RenderManager;
 
 class GeometryBoxShadow {
 public:
-	/// Resolve the element's properties into its box geometry info.
-	/// @param[in] element The element to resolve.
-	/// @param[in] border_radius The border radius of the element.
-	/// @param[in] background_color The background colour of the element.
-	/// @param[in] border_colors The border colours of the element.
-	/// @param[in] opacity The computed opacity of the element.
-	static BoxShadowGeometryInfo Resolve(Element* element, const CornerSizes& border_radius, ColourbPremultiplied background_color,
-		const Array<ColourbPremultiplied, 4>& border_colors, float opacity);
-
 	/// Generate the texture and geometry for a box shadow and including the element's background and border.
 	/// @param[out] out_shadow_texture The target texture, assumes pointer stability during the lifetime of the shadow geometry.
 	/// @param[out] out_background_border_geometry The generated geometry for the element's background and border.

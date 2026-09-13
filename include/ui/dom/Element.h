@@ -3,6 +3,7 @@
 #include <ui/layout/Box.h>
 #include <ui/dom/Event.h>
 #include <ui/base/Header.h>
+#include <ui/base/FontMetrics.h>
 #include <ui/base/ObserverPtr.h>
 #include <ui/style/Property.h>
 #include <ui/paint/RenderBox.h>
@@ -28,6 +29,7 @@ class ElementDocument;
 class ElementScroll;
 class ElementStyle;
 class LayoutEngine;
+class LayoutTextElement;
 class ContainerBox;
 class InlineLevelBox;
 class ReplacedBox;
@@ -171,6 +173,10 @@ public:
 	/// Returns the element's font face handle.
 	/// @return The element's font face handle.
 	FontFaceHandle GetFontFaceHandle() const;
+	/// Returns font metrics for this element's font face, or a zeroed metrics object if unavailable.
+	const FontMetrics& GetFontMetrics() const;
+	/// Returns a layout text interface when this element is a text node; otherwise nullptr.
+	virtual LayoutTextElement* GetAsLayoutTextElement() { return nullptr; }
 
 	/** @name Properties
 	 */

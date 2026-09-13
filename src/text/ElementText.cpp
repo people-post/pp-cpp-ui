@@ -15,7 +15,7 @@
 #include "style/TransformState.h"
 #include "SelectionContentBuilder.h"
 #include "SelectionHighlight.h"
-#include "widgets/ElementSelectableText.h"
+#include "text/ElementSelectableText.h"
 #include <limits>
 
 namespace ui {
@@ -122,6 +122,12 @@ const String& ElementText::GetText() const
 {
 	return text;
 }
+
+String ElementText::GetDebugText() const
+{
+	return GetText();
+}
+
 
 void ElementText::OnRender()
 {

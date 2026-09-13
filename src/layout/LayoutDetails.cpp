@@ -2,7 +2,7 @@
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementScroll.h>
-#include <ui/text/ElementText.h>
+#include <ui/layout/LayoutTextElement.h>
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>
 #include "ContainerBox.h"
@@ -289,8 +289,8 @@ String LayoutDetails::GetDebugElementName(Element* element)
 		return "nullptr";
 	if (!element->GetId().empty())
 		return '#' + element->GetId();
-	if (auto element_text = ui_dynamic_cast<ElementText*>(element))
-		return '\"' + StringUtilities::StripWhitespace(element_text->GetText()).substr(0, 20) + '\"';
+	if (LayoutTextElement* element_text = element->GetAsLayoutTextElement())
+		return '\"' + StringUtilities::StripWhitespace(element_text->GetDebugText()).substr(0, 20) + '\"';
 	return element->GetAddress(false, false);
 }
 

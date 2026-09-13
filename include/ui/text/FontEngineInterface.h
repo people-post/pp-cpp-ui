@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/text/FontMetrics.h>
+#include <ui/base/FontMetrics.h>
 #include <ui/base/Header.h>
 #include <ui/paint/Mesh.h>
 #include <ui/style/StyleTypes.h>

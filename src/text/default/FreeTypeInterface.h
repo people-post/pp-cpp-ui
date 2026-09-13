@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/text/FontMetrics.h>
+#include <ui/base/FontMetrics.h>
 #include "FontTypes.h"
 
 namespace ui {

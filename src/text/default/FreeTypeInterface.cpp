@@ -1,6 +1,6 @@
 #include "FreeTypeInterface.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/text/FontMetrics.h>
+#include <ui/base/FontMetrics.h>
 #include <ui/base/Log.h>
 #include <algorithm>
 #include <ft2build.h>

@@ -3,7 +3,7 @@
 #include <ui/dom/EventListener.h>
 #include <ui/paint/Geometry.h>
 #include <ui/paint/Vertex.h>
-#include "ElementTextSelection.h"
+#include "text/ElementTextSelection.h"
 #include <float.h>
 
 namespace ui {

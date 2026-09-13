@@ -1,8 +1,5 @@
 # Auto-maintained module sources for ui_core.
 target_sources(ui_core PRIVATE
-	"${CMAKE_CURRENT_SOURCE_DIR}/BoxShadowCache.cpp"
-	"${CMAKE_CURRENT_SOURCE_DIR}/BoxShadowCache.h"
-	"${CMAKE_CURRENT_SOURCE_DIR}/BoxShadowHash.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ComputeProperty.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ComputeProperty.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/ConvolutionFilter.cpp"

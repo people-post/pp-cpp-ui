@@ -1,9 +1,8 @@
 #include "InlineLevelBox.h"
 #include <ui/base/SystemInterface.h>
 #include <ui/style/ComputedValues.h>
-#include <ui/text/ElementText.h>
+#include <ui/layout/LayoutTextElement.h>
 #include <ui/dom/ElementUtilities.h>
-#include <ui/text/FontEngineInterface.h>
 #include "dom/ListMarker.h"
 #include "LayoutDetails.h"
 #include "LayoutPools.h"
@@ -29,20 +28,7 @@ void InlineLevelBox::SubmitElementOnLayout()
 
 const FontMetrics& InlineLevelBox::GetFontMetrics() const
 {
-	if (FontFaceHandle handle = element->GetFontFaceHandle())
-		return GetFontEngineInterface()->GetFontMetrics(handle);
-
-	// If there is no font face defined then we provide zero'd out font metrics. This situation can affect the layout,
-	// in particular in terms of inline box sizing and vertical alignment. Thus, this is potentially a situation where
-	// we might want to log a warning. However, in many cases it will produce the same layout with or without the font,
-	// so in that sense the warnings can produce false positives.
-	//
-	// For now, we wait until we try to actually place text before producing any warnings, since that is a clear
-	// erroneous situation producing no text. See 'LogMissingFontFace' in ElementText.cpp, which also lists some
-	// possible reasons for the missing font face.
-
-	static const FontMetrics font_metrics = {};
-	return font_metrics;
+	return element->GetFontMetrics();
 }
 
 void InlineLevelBox::SetHeightAndVerticalAlignment(float _height_above_baseline, float _depth_below_baseline, const InlineLevelBox* parent)
@@ -139,12 +125,13 @@ void InlineLevelBox_Atomic::Submit(const PlacedFragment& placed_fragment)
 	SubmitElementOnLayout();
 }
 
-InlineLevelBox_Text::InlineLevelBox_Text(ElementText* element) : InlineLevelBox(element) {}
+InlineLevelBox_Text::InlineLevelBox_Text(LayoutTextElement* element) : InlineLevelBox(element->GetLayoutElement()) {}
 
 FragmentConstructor InlineLevelBox_Text::CreateFragment(InlineLayoutMode mode, float available_width, float right_spacing_width, bool first_box,
 	LayoutOverflowHandle in_overflow_handle)
 {
-	ElementText* text_element = GetTextElement();
+	LayoutTextElement* text_element = GetTextElement();
+	Element* layout_element = text_element->GetLayoutElement();
 
 	const bool allow_empty = (mode == InlineLayoutMode::WrapAny);
 	const bool decode_escape_characters = true;
@@ -159,9 +146,9 @@ FragmentConstructor InlineLevelBox_Text::CreateFragment(InlineLayoutMode mode, f
 	// FORK_WORKAROUND: prepend list marker — replace with list-style/::marker when available.
 	if (first_box && line_begin == 0 && !line_contents.empty())
 	{
-		if (String marker = GetListItemMarker(text_element->GetParentNode()); !marker.empty())
+		if (String marker = GetListItemMarker(layout_element->GetParentNode()); !marker.empty())
 		{
-			line_width += float(ElementUtilities::GetStringWidth(text_element, marker));
+			line_width += float(ElementUtilities::GetStringWidth(layout_element, marker));
 			line_contents.insert(0, marker);
 		}
 	}
@@ -187,13 +174,14 @@ void InlineLevelBox_Text::Submit(const PlacedFragment& placed_fragment)
 	const int fragment_index = (int)placed_fragment.handle;
 	const bool principal_box = (fragment_index == 0);
 
-	ElementText* text_element = GetTextElement();
+	LayoutTextElement* text_element = GetTextElement();
+	Element* layout_element = text_element->GetLayoutElement();
 	Vector2f line_offset;
 
 	if (principal_box)
 	{
 		element_offset = placed_fragment.position;
-		text_element->SetOffset(placed_fragment.position, placed_fragment.offset_parent);
+		layout_element->SetOffset(placed_fragment.position, placed_fragment.offset_parent);
 		text_element->ClearLines();
 	}
 	else
@@ -209,8 +197,10 @@ String InlineLevelBox_Text::DebugDumpNameValue() const
 	return "InlineLevelBox_Text";
 }
 
-ElementText* InlineLevelBox_Text::GetTextElement()
+LayoutTextElement* InlineLevelBox_Text::GetTextElement()
 {
-	return ui_static_cast<ElementText*>(GetElement());
+	LayoutTextElement* text = GetElement()->GetAsLayoutTextElement();
+	UI_ASSERT(text);
+	return text;
 }
 } // namespace ui

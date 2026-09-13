@@ -2,7 +2,7 @@
 
 #include <ui/text/FontEffect.h>
 #include <ui/text/FontGlyph.h>
-#include <ui/text/FontMetrics.h>
+#include <ui/base/FontMetrics.h>
 #include <ui/paint/Geometry.h>
 #include <ui/text/TextShapingContext.h>
 #include <ui/paint/Texture.h>

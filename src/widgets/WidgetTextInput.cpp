@@ -17,7 +17,7 @@
 #include "base/Clock.h"
 #include <ui/paint/RenderManager.h>
 #include "text/SelectionHighlight.h"
-#include "ElementTextSelection.h"
+#include "text/ElementTextSelection.h"
 #include <algorithm>
 #include <limits.h>
 

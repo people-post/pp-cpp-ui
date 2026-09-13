@@ -71,7 +71,12 @@ without defining layers, allowed bridges, or enforcement.
      `Template`/`DocumentHeader`/`Factory` stream impls live under `src/xml/`.
   7. ~~`dom → data`~~ — Factory/Context/Element data-binding implementations live under
      `src/data/` (`FactoryData`, `ContextData`, `ElementData`, `ElementUtilitiesData`).
-  8. Remaining upward: paint/layout/text bridges
+  8. ~~`paint → layout` / `paint → text` / `paint → dom`~~ — unused paint includes
+     removed; box-shadow cache/hash live in `dom`; `GeometryBoxShadow` keeps texture gen.
+  9. ~~`text → widgets`~~ — `ElementSelectableText` / `ElementTextSelection` live in `text`.
+  10. ~~`layout → text`~~ — `FontMetrics` in `base`; layout uses `LayoutTextElement` +
+      `Element::GetFontMetrics()` / `GetAsLayoutTextElement()` instead of `ElementText`.
+  11. Remaining named bridges only: `layout → dom`, `text → dom`
      (`paint → style` also cleared with DecorationsTypes move)
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up

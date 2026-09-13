@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ui/dom/Element.h>
+#include <ui/layout/LayoutTextElement.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Header.h>
 #include <ui/text/SelectionTypes.h>
@@ -9,12 +10,16 @@ namespace ui {
 
 class SelectionContentBuilder;
 
-class UI_CORE_API ElementText final : public Element {
+class UI_CORE_API ElementText final : public Element, public LayoutTextElement {
 public:
 	UI_RTTI_DefineWithParent(ElementText, Element)
 
 	ElementText(const String& tag);
 	virtual ~ElementText();
+
+	LayoutTextElement* GetAsLayoutTextElement() override { return this; }
+	Element* GetLayoutElement() override { return this; }
+	String GetDebugText() const override;
 
 	/// Sets the raw string this text element contains. The actual rendered text may be different due to whitespace formatting.
 	void SetText(const String& text);
@@ -36,14 +41,14 @@ public:
 	/// @param[in] allow_empty Allow no tokens to be consumed from the line.
 	/// @return True if the line reached the end of the element's text, false if not.
 	bool GenerateLine(String& line, int& line_length, float& line_width, int line_begin, float maximum_line_width, float right_spacing_width,
-		bool trim_whitespace_prefix, bool decode_escape_characters, bool allow_empty);
+		bool trim_whitespace_prefix, bool decode_escape_characters, bool allow_empty) override;
 
 	/// Clears all lines of generated text and prepares the element for generating new lines.
-	void ClearLines();
+	void ClearLines() override;
 	/// Adds a new line into the text element.
 	/// @param[in] line_position The position of this line, as an offset from the first line.
 	/// @param[in] line The contents of the line.
-	void AddLine(Vector2f line_position, String line);
+	void AddLine(Vector2f line_position, String line) override;
 
 	/// Prevents the element from dirtying its document's layout when its text is changed.
 	void SuppressAutoLayout();

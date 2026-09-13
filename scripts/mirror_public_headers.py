@@ -93,7 +93,7 @@ PUB: dict[str, str] = {
     "FontEffectInstancer.h": "text",
     "FontEngineInterface.h": "text",
     "FontGlyph.h": "text",
-    "FontMetrics.h": "text",
+    "FontMetrics.h": "base",
     "SelectionController.h": "text",
     "SelectionTypes.h": "text",
     "TextInputContext.h": "text",

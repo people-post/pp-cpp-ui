@@ -1,5 +1,4 @@
 #include "GeometryBackgroundBorder.h"
-#include <ui/layout/Box.h>
 #include <ui/base/Math.h>
 #include <algorithm>
 #include <float.h>

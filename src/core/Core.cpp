@@ -13,7 +13,7 @@
 #include <ui/base/SystemInterface.h>
 #include <ui/text/TextInputHandler.h>
 #include <ui/base/Types.h>
-#include "style/BoxShadowCache.h"
+#include "dom/BoxShadowCache.h"
 #include "style/ComputeProperty.h"
 #include "base/ControlledLifetimeResource.h"
 #include "dom/ElementMeta.h"

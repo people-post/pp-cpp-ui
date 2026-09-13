@@ -2,7 +2,7 @@
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementScroll.h>
-#include <ui/text/ElementText.h>
+#include <ui/layout/LayoutTextElement.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/Property.h>
@@ -38,7 +38,7 @@ InlineBox* InlineContainer::AddInlineElement(Element* element, const Box& box)
 	InlineLevelBox* inline_level_box = nullptr;
 	InlineBoxBase* parent_box = GetOpenInlineBox();
 
-	if (auto text_element = ui_dynamic_cast<ElementText*>(element))
+	if (LayoutTextElement* text_element = element->GetAsLayoutTextElement())
 	{
 		inline_level_box = parent_box->AddChild(MakeUnique<InlineLevelBox_Text>(text_element));
 	}
