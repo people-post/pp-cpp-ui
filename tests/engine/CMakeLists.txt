@@ -1,0 +1,13 @@
+# Enable some extra testing code in the core library.
+target_compile_definitions(ui_core PUBLIC UI_TESTS_ENABLED)
+
+include("${CMAKE_SOURCE_DIR}/cmake/engine/DependenciesForTests.cmake")
+
+if(EMSCRIPTEN)
+	# Add data for tests to emscripten targets
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -sLLD_REPORT_UNDEFINED")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --preload-file \"${CMAKE_CURRENT_SOURCE_DIR}/Data/@/Tests/Data/\"")
+	set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --preload-file \"${CMAKE_SOURCE_DIR}/tests/support/basic/demo/data/@/basic/demo/data/\"")
+endif()
+
+add_subdirectory("Source")
