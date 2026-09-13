@@ -73,3 +73,7 @@ rendering, transform resolution, element animation, UA sheet load) lives under
 `src/dom/`. The `style` module keeps property definitions, parsers, and
 specifications without including `dom` / `text` / `xml`.
 
+
+## Amendment — host interfaces in base/text
+
+Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `text`. Cleared `base|data|layout|paint|text|widgets|xml → core`.

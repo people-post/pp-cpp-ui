@@ -4,16 +4,16 @@
 #include <ui/base/Header.h>
 #include <ui/style/StyleTypes.h>
 #include <ui/base/Types.h>
+#include <ui/base/SystemInterface.h>
+#include <ui/base/FileInterface.h>
+#include <ui/text/FontEngineInterface.h>
+#include <ui/text/TextInputHandler.h>
 
 namespace ui {
 
 class Plugin;
 class Context;
-class FileInterface;
-class FontEngineInterface;
 class RenderInterface;
-class SystemInterface;
-class TextInputHandler;
 enum class DefaultActionPhase;
 
 /**
@@ -29,13 +29,6 @@ UI_CORE_API void Shutdown();
 /// @return The version number.
 UI_CORE_API String GetVersion();
 
-/// Sets the interface through which all system requests are made. This is not required to be called, but if it is, it
-/// must be called before Initialise().
-/// @param[in] system_interface A non-owning pointer to the application-specified logging interface.
-/// @lifetime The interface must be kept alive until after the call to ui::Shutdown.
-UI_CORE_API void SetSystemInterface(SystemInterface* system_interface);
-/// Returns pp-cpp-ui's system interface.
-UI_CORE_API SystemInterface* GetSystemInterface();
 
 /// Sets the interface through which all rendering requests are made. This is not required to be called, but if it is,
 /// it must be called before Initialise(). If no render interface is specified, then all contexts must specify a render
@@ -46,29 +39,8 @@ UI_CORE_API void SetRenderInterface(RenderInterface* render_interface);
 /// Returns pp-cpp-ui's default's render interface.
 UI_CORE_API RenderInterface* GetRenderInterface();
 
-/// Sets the interface through which all file I/O requests are made. This is not required to be called, but if it is, it
-/// must be called before Initialise().
-/// @param[in] file_interface A non-owning pointer to the application-specified file interface.
-/// @lifetime The interface must be kept alive until after the call to ui::Shutdown.
-UI_CORE_API void SetFileInterface(FileInterface* file_interface);
-/// Returns pp-cpp-ui's file interface.
-UI_CORE_API FileInterface* GetFileInterface();
 
-/// Sets the interface through which all font requests are made. This is not required to be called, but if it is,
-/// it must be called before Initialise().
-/// @param[in] font_interface A non-owning pointer to the application-specified font engine interface.
-/// @lifetime The interface must be kept alive until after the call to ui::Shutdown.
-UI_CORE_API void SetFontEngineInterface(FontEngineInterface* font_interface);
-/// Returns pp-cpp-ui's font interface.
-UI_CORE_API FontEngineInterface* GetFontEngineInterface();
 
-/// Sets the implementation for handling text input events. This is not required to be called.
-/// @param[in] text_input_handler A non-owning pointer to the application-specified implementation of a text input handler.
-/// @lifetime The instance must be kept alive until after the call to ui::Shutdown.
-/// @note Be aware that you might be overriding a custom backend implementation.
-UI_CORE_API void SetTextInputHandler(TextInputHandler* text_input_handler);
-/// Returns pp-cpp-ui's default implementation of a text input handler.
-UI_CORE_API TextInputHandler* GetTextInputHandler();
 
 /// Creates a new element context.
 /// @param[in] name The new name of the context. This must be unique.

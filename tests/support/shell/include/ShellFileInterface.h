@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/base/Types.h>
 /**
     pp-cpp-ui file interface for the shell examples.

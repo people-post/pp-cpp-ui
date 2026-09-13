@@ -1,5 +1,8 @@
 #pragma once
 
+#include <ui/base/Header.h>
+#include <ui/base/Traits.h>
+
 namespace ui {
 
 class TextInputContext;
@@ -31,5 +34,8 @@ public:
 	/// @param[in] input_context The input context to be destroyed.
 	virtual void OnDestroy(TextInputContext* /*input_context*/) {}
 };
+
+UI_CORE_API void SetTextInputHandler(TextInputHandler* text_input_handler);
+UI_CORE_API TextInputHandler* GetTextInputHandler();
 
 } // namespace ui

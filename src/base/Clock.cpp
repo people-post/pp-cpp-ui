@@ -1,6 +1,5 @@
 #include "Clock.h"
-#include <ui/core/Core.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 namespace ui {
 
 UI_CORE_API double Clock::GetElapsedTime()

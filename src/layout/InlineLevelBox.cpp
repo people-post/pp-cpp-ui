@@ -1,6 +1,6 @@
 #include "InlineLevelBox.h"
+#include <ui/base/SystemInterface.h>
 #include <ui/style/ComputedValues.h>
-#include <ui/core/Core.h>
 #include <ui/text/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/text/FontEngineInterface.h>

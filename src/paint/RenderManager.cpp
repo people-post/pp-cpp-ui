@@ -1,9 +1,8 @@
 #include <ui/paint/RenderManager.h>
-#include <ui/core/Core.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Profiling.h>
 #include <ui/paint/RenderInterface.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include "TextureDatabase.h"
 
 namespace ui {

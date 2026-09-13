@@ -2,7 +2,7 @@
 
 #include <ui/paint/Mesh.h>
 #include <ui/paint/RenderInterface.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <Shell.h>
 
 class TestsSystemInterface : public ui::SystemInterface {

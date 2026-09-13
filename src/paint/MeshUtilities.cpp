@@ -1,6 +1,5 @@
 #include <ui/paint/MeshUtilities.h>
 #include <ui/layout/Box.h>
-#include <ui/core/Core.h>
 #include <ui/text/FontEngineInterface.h>
 #include <ui/base/Types.h>
 #include "GeometryBackgroundBorder.h"

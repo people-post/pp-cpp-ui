@@ -1,8 +1,7 @@
 #include "XMLNodeHandlerTextArea.h"
-#include <ui/core/Core.h>
 #include <ui/widgets/ElementFormControlTextArea.h>
 #include <ui/dom/Factory.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/xml/XMLParser.h>
 namespace ui {
 

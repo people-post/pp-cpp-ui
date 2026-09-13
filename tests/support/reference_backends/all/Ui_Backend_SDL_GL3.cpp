@@ -3,7 +3,7 @@
 #include "Ui_Renderer_GL3.h"
 #include <ui/dom/Context.h>
 #include <ui/core/Core.h>
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/base/Log.h>
 #include <ui/base/Profiling.h>
 #if SDL_MAJOR_VERSION >= 3

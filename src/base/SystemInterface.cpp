@@ -1,11 +1,24 @@
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/base/Log.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/base/URL.h>
-#include "base/LogDefault.h"
+#include "LogDefault.h"
 #include <chrono>
 
 namespace ui {
+
+static SystemInterface* g_system_interface = nullptr;
+
+void SetSystemInterface(SystemInterface* system_interface)
+{
+	g_system_interface = system_interface;
+}
+
+SystemInterface* GetSystemInterface()
+{
+	return g_system_interface;
+}
+
 
 static String& GlobalClipBoardText()
 {

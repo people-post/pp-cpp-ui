@@ -1,6 +1,5 @@
 #pragma once
 
-#include <ui/core/Core.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/base/Types.h>
 namespace ui {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 namespace ui {
 namespace Debugger {
 

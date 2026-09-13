@@ -1,6 +1,5 @@
 #include "FontProvider.h"
-#include <ui/core/Core.h>
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/base/Log.h>
 #include <ui/base/Math.h>
 #include <ui/base/StringUtilities.h>

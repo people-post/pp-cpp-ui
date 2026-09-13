@@ -2,7 +2,7 @@
 #include <ui/dom/Context.h>
 #include <ui/dom/Input.h>
 #include <ui/base/StringUtilities.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 static ui::TouchList TouchEventToTouchList(SDL_Event& ev, ui::Context* context, SDL_FingerID finger_id)
 {
 	const ui::Vector2f position = ui::Vector2f{ev.tfinger.x, ev.tfinger.y} * ui::Vector2f{context->GetDimensions()};

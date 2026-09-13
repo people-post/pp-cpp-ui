@@ -59,7 +59,8 @@ without defining layers, allowed bridges, or enforcement.
      stylesheet/decorator/filter/transform/animation implementations and
      Stream-using loaders live under `src/dom/`; `style` keeps parsers/spec/value
      types. `ComputedValues` holds only an `Element*` and out-of-line accessors.)
-  3. `* → core` singleton use below plugins
+  3. ~~most `* → core` via host getters~~ (Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `text`. Cleared `base|data|layout|paint|text|widgets|xml → core`.) — remaining: `dom → core` (PluginRegistry / Core.h)
+  3b. remaining `dom → core`
   4. `dom → widgets` / `dom → xml` / `dom → data`
   5. Tighten paint/layout/text bridges (`paint → style` also cleared with DecorationTypes move)
 - Optional later: split CMake targets to match layers once the include DAG is clean.

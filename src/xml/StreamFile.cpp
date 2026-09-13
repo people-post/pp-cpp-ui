@@ -1,6 +1,5 @@
 #include "StreamFile.h"
-#include <ui/core/Core.h>
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/base/StringUtilities.h>
 namespace ui {
 

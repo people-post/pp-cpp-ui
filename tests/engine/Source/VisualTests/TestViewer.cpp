@@ -6,8 +6,8 @@
 #include <ui/core/Core.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
-#include <ui/core/FileInterface.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/FileInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/base/Types.h>
 #include <ui/xml/XMLParser.h>
 #include <Shell.h>

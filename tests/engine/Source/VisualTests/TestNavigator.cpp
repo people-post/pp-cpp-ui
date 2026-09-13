@@ -7,7 +7,7 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/base/Math.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <Shell.h>
 #include <cstdio>
 

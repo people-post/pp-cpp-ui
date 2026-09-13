@@ -58,4 +58,10 @@ public:
 	virtual bool LoadFile(const String& path, String& out_data);
 };
 
+/// Sets the interface through which file I/O is performed.
+/// Must outlive ui::Shutdown if set. Optional — a default is installed by Initialise().
+UI_CORE_API void SetFileInterface(FileInterface* file_interface);
+/// Returns the active file interface (may be null before Initialise / after Shutdown).
+UI_CORE_API FileInterface* GetFileInterface();
+
 } // namespace ui

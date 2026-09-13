@@ -6,7 +6,7 @@
 #include <ui/data/DataVariable.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetSpecification.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include "CommonSource.h"
 #include "DataModelsSource.h"
 #include <algorithm>

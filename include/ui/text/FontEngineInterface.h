@@ -101,4 +101,7 @@ public:
 	virtual void ReleaseFontResources();
 };
 
+UI_CORE_API void SetFontEngineInterface(FontEngineInterface* font_interface);
+UI_CORE_API FontEngineInterface* GetFontEngineInterface();
+
 } // namespace ui

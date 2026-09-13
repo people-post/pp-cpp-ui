@@ -27,7 +27,7 @@
 #include <ui/dom/EventListener.h>
 #include <ui/dom/EventListenerInstancer.h>
 #include <ui/dom/Factory.h>
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/style/Filter.h>
 #include <ui/text/FontEffect.h>
 #include <ui/text/FontEffectInstancer.h>
@@ -58,7 +58,7 @@
 #include <ui/style/StyleSheetContainer.h>
 #include <ui/style/StyleSheetSpecification.h>
 #include <ui/style/StyleTypes.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/text/TextShapingContext.h>
 #include <ui/paint/Texture.h>
 #include <ui/style/Transform.h>

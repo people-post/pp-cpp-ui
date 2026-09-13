@@ -1,9 +1,8 @@
 #include "XMLNodeHandlerHead.h"
-#include <ui/core/Core.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/base/StringUtilities.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/base/URL.h>
 #include <ui/xml/XMLParser.h>
 #include "DocumentHeader.h"

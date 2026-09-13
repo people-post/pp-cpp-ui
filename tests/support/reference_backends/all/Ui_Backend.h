@@ -2,7 +2,7 @@
 
 #include <ui/dom/Input.h>
 #include <ui/paint/RenderInterface.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/base/Types.h>
 #ifndef UI_SDL_VERSION_MAJOR
 #define UI_SDL_VERSION_MAJOR 2

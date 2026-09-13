@@ -2,6 +2,18 @@
 #include <ui/base/StringUtilities.h>
 namespace ui {
 
+static FontEngineInterface* g_font_interface = nullptr;
+
+void SetFontEngineInterface(FontEngineInterface* font_interface)
+{
+	g_font_interface = font_interface;
+}
+
+FontEngineInterface* GetFontEngineInterface()
+{
+	return g_font_interface;
+}
+
 FontEngineInterface::FontEngineInterface() {}
 
 FontEngineInterface::~FontEngineInterface() {}

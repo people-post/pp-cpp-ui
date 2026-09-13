@@ -1,7 +1,6 @@
 #include <ui/dom/ElementUtilities.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
-#include <ui/core/Core.h>
 #include <ui/base/DecorationTypes.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementScroll.h>

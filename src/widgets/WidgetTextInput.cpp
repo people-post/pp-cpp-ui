@@ -1,7 +1,6 @@
 #include "WidgetTextInput.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
-#include <ui/core/Core.h>
 #include <ui/dom/ElementScroll.h>
 #include <ui/text/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
@@ -12,7 +11,7 @@
 #include <ui/base/Math.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/StringUtilities.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/text/TextInputContext.h>
 #include <ui/text/TextInputHandler.h>
 #include "base/Clock.h"

@@ -1,6 +1,6 @@
 #include <ui/dom/Element.h>
-#include <ui/dom/Context.h>
 #include <ui/core/Core.h>
+#include <ui/dom/Context.h>
 #include <ui/base/Dictionary.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementInstancer.h>

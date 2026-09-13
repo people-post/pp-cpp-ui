@@ -1,7 +1,6 @@
 #include "ElementStyle.h"
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
-#include <ui/core/Core.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/text/FontEngineInterface.h>

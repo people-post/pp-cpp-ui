@@ -1,7 +1,6 @@
 #include <ui/base/Log.h>
-#include <ui/core/Core.h>
 #include <ui/base/StringUtilities.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include "LogDefault.h"
 #include <stdarg.h>
 #include <stdio.h>

@@ -4,11 +4,11 @@
 #include <ui/core/Core.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/paint/Geometry.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/paint/RenderManager.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/paint/Texture.h>
 #include <ui/base/Utilities.h>
 #include "base/ControlledLifetimeResource.h"

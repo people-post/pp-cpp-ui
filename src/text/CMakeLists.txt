@@ -12,6 +12,7 @@ target_sources(ui_core PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffectShadow.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEffectShadow.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/FontEngineInterface.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TextInputHandler.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionContentBuilder.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionContentBuilder.h"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SelectionController.cpp"

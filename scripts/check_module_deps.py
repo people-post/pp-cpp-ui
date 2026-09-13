@@ -74,22 +74,15 @@ CORE_CONSUMERS = {"core", "svg", "debugger", "platform", "render"}
 # Tracked debt from the first ADR 002 baseline (module pair → reason).
 # Shrink this set; do not grow it without updating ADR 002.
 DEBT_ALLOWLIST: dict[tuple[str, str], str] = {
-    ("base", "core"): "Clock/Log use Core::GetSystemInterface",
     ("paint", "layout"): "Mesh/geometry helpers take Box",
     ("paint", "text"): "MeshUtilities uses FontEngineInterface",
     ("paint", "dom"): "GeometryBoxShadow uses Element",
-    ("paint", "core"): "RenderManager uses Core/SystemInterface",
     ("layout", "text"): "inline layout uses ElementText / fonts",
-    ("layout", "core"): "formatting contexts use SystemInterface/Core",
     ("text", "widgets"): "ElementText/SelectionController ↔ ElementSelectableText",
-    ("text", "core"): "ElementText/SelectionController use Core",
     ("dom", "xml"): "Document/Context load via Stream*",
     ("dom", "data"): "Context/Element hold DataModel",
     ("dom", "widgets"): "Factory/scroll concrete widgets",
     ("dom", "core"): "widespread Core::Get*()",
-    ("xml", "core"): "handlers/StreamFile use Core",
-    ("data", "core"): "DataViewDefault uses Core",
-    ("widgets", "core"): "inputs/textarea use Core",
 }
 
 INC_RE = re.compile(r'#\s*include\s+[<"]([^>"]+)[>"]')

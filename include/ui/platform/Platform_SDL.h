@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ui/dom/Input.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <ui/base/Types.h>
 #if UI_SDL_VERSION_MAJOR == 3
 	#include <SDL3/SDL.h>

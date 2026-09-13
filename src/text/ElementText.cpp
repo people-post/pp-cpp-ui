@@ -1,6 +1,5 @@
 #include <ui/text/ElementText.h>
 #include <ui/dom/Context.h>
-#include <ui/core/Core.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Event.h>

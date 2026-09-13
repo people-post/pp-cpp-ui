@@ -10,7 +10,7 @@
 #include <ui/paint/RenderManager.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetSpecification.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include "CommonSource.h"
 #include "Geometry.h"
 #include "InfoSource.h"

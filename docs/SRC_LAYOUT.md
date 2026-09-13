@@ -62,7 +62,7 @@ L12  platform | render    owned backends
 2. **`core` is the composition root.** Only `core`, plugins (`svg`, `debugger`),
    and backends (`platform`, `render`) may include `core`. Lower modules must
    not call `Core::Get*()`; prefer injection via `Context` / interfaces.
-3. **`base` stays dumb.** No includes of `style` or any higher module.
+3. **`base` stays dumb.** Host `SystemInterface` / `FileInterface` (+ getters) live in `base`. No includes of `style` or any higher module.
    Value types used by `Variant` (`Unit`, `Animation`/`TransitionList`,
    `DecorationTypes`) live in `base`. Style-only `TypeConverter` specializations
    live in `src/style/TypeConverterStyle.cpp`.

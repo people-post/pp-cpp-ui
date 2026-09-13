@@ -62,4 +62,10 @@ public:
 	virtual void DeactivateKeyboard();
 };
 
+/// Sets the interface through which system requests (time, log, clipboard, …) are made.
+/// Must outlive ui::Shutdown if set. Optional — a default is installed by Initialise().
+UI_CORE_API void SetSystemInterface(SystemInterface* system_interface);
+/// Returns the active system interface (may be null before Initialise / after Shutdown).
+UI_CORE_API SystemInterface* GetSystemInterface();
+
 } // namespace ui

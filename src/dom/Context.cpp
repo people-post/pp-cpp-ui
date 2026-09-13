@@ -1,7 +1,7 @@
 #include <ui/dom/Context.h>
+#include <ui/core/Core.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/ContextInstancer.h>
-#include <ui/core/Core.h>
 #include <ui/data/DataModelHandle.h>
 #include <ui/base/Debug.h>
 #include <ui/dom/ElementDocument.h>
@@ -10,7 +10,7 @@
 #include <ui/base/Profiling.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/xml/StreamMemory.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include "ClickRouting.h"
 #include "data/DataModel.h"
 #include "EventDispatcher.h"

@@ -1,6 +1,19 @@
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/base/Log.h>
 namespace ui {
+
+static FileInterface* g_file_interface = nullptr;
+
+void SetFileInterface(FileInterface* file_interface)
+{
+	g_file_interface = file_interface;
+}
+
+FileInterface* GetFileInterface()
+{
+	return g_file_interface;
+}
+
 
 FileInterface::FileInterface() {}
 

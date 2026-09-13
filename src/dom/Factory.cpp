@@ -1,7 +1,7 @@
 #include <ui/dom/Factory.h>
+#include <ui/core/Core.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/ContextInstancer.h>
-#include <ui/core/Core.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementInstancer.h>
 #include <ui/text/ElementText.h>
@@ -16,7 +16,7 @@
 #include <ui/xml/StreamMemory.h>
 #include <ui/style/StyleSheet.h>
 #include <ui/style/StyleSheetContainer.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include "ContextInstancerDefault.h"
 #include "base/ControlledLifetimeResource.h"
 #include "data/DataControllerDefault.h"

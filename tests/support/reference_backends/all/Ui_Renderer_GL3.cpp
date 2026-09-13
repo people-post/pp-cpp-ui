@@ -1,12 +1,12 @@
 #include "Ui_Renderer_GL3.h"
 #include <ui/core/Core.h>
 #include <ui/base/DecorationTypes.h>
-#include <ui/core/FileInterface.h>
+#include <ui/base/FileInterface.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Log.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/Platform.h>
-#include <ui/core/SystemInterface.h>
+#include <ui/base/SystemInterface.h>
 #include <algorithm>
 #include <string.h>
 
