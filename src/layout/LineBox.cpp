@@ -1,5 +1,4 @@
 #include "LineBox.h"
-#include <ui/dom/Element.h>
 #include <ui/style/StyleTypes.h>
 #include "InlineBox.h"
 #include "InlineLevelBox.h"

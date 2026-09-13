@@ -1,9 +1,9 @@
 #include "LayoutEngine.h"
-#include <ui/dom/Element.h>
 #include <ui/base/Log.h>
 #include <ui/base/Profiling.h>
 #include "ContainerBox.h"
 #include "FormattingContext.h"
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -16,7 +16,7 @@ void LayoutEngine::FormatElement(Element* element, Vector2f containing_block)
 	auto layout_box = FormattingContext::FormatIndependent(&root, element, nullptr, FormattingContextType::Block);
 	if (!layout_box)
 	{
-		Log::Message(Log::LT_ERROR, "Error while formatting element: %s", element->GetAddress().c_str());
+		Log::Message(Log::LT_ERROR, "Error while formatting element: %s", LayoutElement::GetAddress(element).c_str());
 	}
 
 	{
@@ -26,7 +26,7 @@ void LayoutEngine::FormatElement(Element* element, Vector2f containing_block)
 		// times, such as after enabling scrollbars. For this reason, we don't clamp the scroll offset during layouting,
 		// as that could inadvertently clamp it to a temporary size. Now that we know the final layout, including the
 		// size of each element's scrollable area, we can finally clamp the scroll offset.
-		element->ClampScrollOffsetRecursive();
+		LayoutElement::ClampScrollOffsetRecursive(element);
 	}
 }
 

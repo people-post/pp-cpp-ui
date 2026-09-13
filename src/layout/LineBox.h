@@ -5,6 +5,8 @@
 
 namespace ui {
 
+class Element;
+
 class InlineBox;
 class InlineBoxRoot;
 class InlineLevelBox;

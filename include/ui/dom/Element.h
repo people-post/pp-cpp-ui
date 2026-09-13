@@ -29,6 +29,10 @@ class ElementDocument;
 class ElementScroll;
 class ElementStyle;
 class LayoutEngine;
+namespace LayoutElement {
+class ElementAccess;
+}
+
 class LayoutTextElement;
 class ContainerBox;
 class InlineLevelBox;
@@ -821,6 +825,7 @@ private:
 	friend class ui::InlineLevelBox;
 	friend class ui::ReplacedBox;
 	friend class ui::LayoutEngine;
+	friend class ui::LayoutElement::ElementAccess;
 	friend class ui::ElementScroll;
 	friend UI_CORE_API void ReleaseFontResources();
 };

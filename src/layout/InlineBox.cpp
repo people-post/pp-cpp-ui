@@ -1,6 +1,6 @@
 #include "InlineBox.h"
 #include <ui/layout/Box.h>
-#include <ui/dom/Element.h>
+#include <ui/layout/LayoutElement.h>
 #include <ui/base/FontMetrics.h>
 namespace ui {
 
@@ -21,7 +21,7 @@ InlineLevelBox* InlineBoxBase::AddChild(UniquePtr<InlineLevelBox> child)
 void InlineBoxBase::GetStrut(float& out_total_height_above, float& out_total_depth_below) const
 {
 	const FontMetrics& font_metrics = GetFontMetrics();
-	const float line_height = GetElement()->GetLineHeight();
+	const float line_height = LayoutElement::GetLineHeight(GetElement());
 
 	const float half_leading = 0.5f * (line_height - (font_metrics.ascent + font_metrics.descent));
 	out_total_height_above = font_metrics.ascent + half_leading;
@@ -116,13 +116,13 @@ void InlineBox::Submit(const PlacedFragment& placed_fragment)
 	if (principal_box)
 	{
 		element_offset = border_position;
-		element->SetOffset(border_position, placed_fragment.offset_parent);
-		element->SetBox(element_box);
+		LayoutElement::SetOffset(element, border_position, placed_fragment.offset_parent);
+		LayoutElement::SetBox(element, element_box);
 		SubmitElementOnLayout();
 	}
 	else
 	{
-		element->AddBox(element_box, border_position - element_offset);
+		LayoutElement::AddBox(element, element_box, border_position - element_offset);
 	}
 }
 

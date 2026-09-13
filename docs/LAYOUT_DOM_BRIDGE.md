@@ -19,7 +19,7 @@ is gone; otherwise keep a documented, minimal façade.
 
 ## Phases
 
-### Phase 1 — Concentrate ancillary DOM helpers (current)
+### Phase 1 — Concentrate ancillary DOM helpers (done)
 
 Introduce `ui/layout/LayoutElement.h` + `src/layout/LayoutElement.cpp` as the
 layout-owned façade for:
@@ -35,12 +35,17 @@ layout sources until Phase 2.
 **Success:** those three include kinds appear only in `LayoutElement.cpp`
 (or not at all).
 
-### Phase 2 — Façade the hot Element ops
+### Phase 2 — Façade the hot Element ops (in progress)
 
 Extend `LayoutElement` with the high-frequency Element operations layout uses
 (`GetComputedValues`, box/offset submit, parent/child walk, replaced/intrinsic,
 font metrics, `OnLayout`, debug name). Convert Inline* / LayoutDetails first,
 then formatting contexts.
+
+**Progress:** `LayoutElement` now covers computed style, box/offset submit, tree walk,
+replaced/intrinsic, attributes/address, and private layout hooks via `ElementAccess`.
+`LayoutEngine`, `FormattingContext`, `InlineBox`, `LayoutPools`, and `LineBox` no longer
+include `Element.h`.
 
 **Success:** most layout `.cpp` files no longer include `Element.h`; they use
 an incomplete `Element*` plus façade calls (or a later `LayoutNode` handle).

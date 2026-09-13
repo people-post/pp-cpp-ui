@@ -1,6 +1,6 @@
 #include "FormattingContext.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
+#include <ui/layout/LayoutElement.h>
 #include <ui/base/Profiling.h>
 #include "BlockFormattingContext.h"
 #include "FlexFormattingContext.h"
@@ -16,12 +16,12 @@ UniquePtr<LayoutBox> FormattingContext::FormatIndependent(ContainerBox* parent_c
 	UI_ZoneScopedC(0xAFAFAF);
 	using namespace Style;
 
-	if (element->IsReplaced())
+	if (LayoutElement::IsReplaced(element))
 		return ReplacedFormattingContext::Format(parent_container, element, override_initial_box);
 
 	FormattingContextType type = backup_context;
 
-	auto& computed = element->GetComputedValues();
+	auto& computed = LayoutElement::GetComputedValues(element);
 	const Display display = computed.display();
 	if (display == Display::Flex || display == Display::InlineFlex)
 	{
@@ -33,7 +33,7 @@ UniquePtr<LayoutBox> FormattingContext::FormatIndependent(ContainerBox* parent_c
 	}
 	else if (display == Display::InlineBlock || display == Display::FlowRoot || display == Display::TableCell || computed.float_() != Float::None ||
 		computed.position() == Position::Absolute || computed.position() == Position::Fixed || computed.overflow_x() != Overflow::Visible ||
-		computed.overflow_y() != Overflow::Visible || !element->GetParentNode() || element->GetParentNode()->GetDisplay() == Display::Flex)
+		computed.overflow_y() != Overflow::Visible || !LayoutElement::GetParentNode(element) || LayoutElement::GetDisplay(LayoutElement::GetParentNode(element)) == Display::Flex)
 	{
 		type = FormattingContextType::Block;
 	}
