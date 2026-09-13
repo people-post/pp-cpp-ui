@@ -1475,67 +1475,7 @@ void Context::OnElementDetach(Element* element)
 
 bool Context::OnFocusChange(Element* new_focus, bool focus_visible)
 {
-	UI_ASSERT(new_focus);
-
-	ElementSet old_chain;
-	ElementSet new_chain;
-
-	Element* old_focus = focus_controller->GetFocusElement();
-	ElementDocument* old_document = old_focus ? old_focus->GetOwnerDocument() : nullptr;
-	ElementDocument* new_document = new_focus->GetOwnerDocument();
-
-	// If the current focus is modal and the new focus is cannot receive focus from modal, deny the request.
-	if (old_document && old_document->IsModal() && (!new_document || !(new_document->IsModal() || new_document->IsFocusableFromModal())))
-		return false;
-
-	// If the document of the new focus has been closed, deny the request.
-	if (std::find_if(unloaded_documents.begin(), unloaded_documents.end(),
-			[&](const auto& unloaded_document) { return unloaded_document.get() == new_document; }) != unloaded_documents.end())
-	{
-		return false;
-	}
-
-	// Build the old chains
-	Element* element = old_focus;
-	while (element)
-	{
-		old_chain.insert(element);
-		element = element->GetParentNode();
-	}
-
-	// Build the new chain
-	element = new_focus;
-	while (element)
-	{
-		new_chain.insert(element);
-		element = element->GetParentNode();
-	}
-
-	// Send out blur/focus events.
-	Dictionary parameters;
-	SendEvents(old_chain, new_chain, EventId::Blur, parameters);
-
-	if (focus_visible)
-		parameters["focus_visible"] = true;
-
-	SendEvents(new_chain, old_chain, EventId::Focus, parameters);
-
-	focus_controller->SetFocusElement(new_focus);
-
-	// Raise the element's document to the front, if desired.
-	ElementDocument* document = new_focus->GetOwnerDocument();
-	if (document != nullptr)
-	{
-		Style::ZIndex z_index_property = document->GetComputedValues().z_index();
-		if (z_index_property.type == Style::ZIndex::Auto)
-			document->PullToFront();
-	}
-
-	// Update the focus history
-	if (old_document != new_document && new_document != nullptr)
-		focus_controller->PushDocument(new_document);
-
-	return true;
+	return focus_controller->OnFocusChange(new_focus, focus_visible);
 }
 
 void Context::GenerateClickEvent(Element* element)

@@ -5,6 +5,7 @@
 namespace ui {
 
 class Context;
+class FocusController;
 class Stream;
 class DocumentHeader;
 class ElementText;
@@ -164,6 +165,7 @@ private:
 	bool position_dirty;
 
 	friend class ui::Context;
+	friend class ui::FocusController;
 	friend class ui::Factory;
 };
 

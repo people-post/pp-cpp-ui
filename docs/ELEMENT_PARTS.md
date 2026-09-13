@@ -1,6 +1,6 @@
 # Element as entity + parts
 
-**Status:** in progress (Phases 1–5c + 6a landed; full controllers / layout port next)  
+**Status:** in progress (Phases 1–5c + 6a–6b landed; animation controller / layout port next)  
 **Related:** [ADR 002](ADR_002_MODULE_DEPENDENCIES.md), [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md), [SRC_LAYOUT.md](SRC_LAYOUT.md)
 
 ## Charter
@@ -41,7 +41,7 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 | Controller | Owner | Role |
 |------------|-------|------|
 | `SelectionController` | `Context` | Static text selection gestures |
-| `FocusController` | `Context` | Focused element + document focus history (Phase 6a); Context still dispatches blur/focus |
+| `FocusController` | `Context` | Focused element + document focus history + blur/focus orchestration (Phase 6b) |
 
 ## Phases
 
@@ -54,7 +54,8 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
    - **5b** ✓ Publicize `ElementStyle` + `EventDispatcher` under `include/ui/dom/`; `Element.h` includes them so `Style()` / `Events()` are complete types. Engine call sites use `Style().SetProperty(PropertyId…)` / `Events().AttachEvent(EventId…)` where safe. Keep `Element::SetClass` / `SetPseudoClass` / string `SetProperty` / string `AddEventListener` façades (definition dirtying / name→id lookup).
    - **5c** ✓ Publicize `ElementEffects` + `ElementBackgroundBorder` under `include/ui/dom/`; `Element.h` / `Core.h` include them so `Effects()` / `BackgroundBorder()` are complete types.
 6. **Controllers** — selection/focus/animation ownership on Document/Context.
-   - **6a** ✓ `FocusController` owns focused element + document focus history; `Context::GetFocusController()`; blur/focus event orchestration remains on `Context::OnFocusChange` for now.
+   - **6a** ✓ `FocusController` owns focused element + document focus history; `Context::GetFocusController()`.
+   - **6b** ✓ `FocusController::OnFocusChange` owns blur/focus event orchestration, modal/unload checks, document z-order, and history updates; `Context::OnFocusChange` is a thin delegate.
 7. **Layout port** — narrow `LayoutElement` toward BoxModel + style queries.
 
 ## Rules for new work

@@ -10,10 +10,10 @@ class Element;
 class ElementDocument;
 
 /**
-    Owns context-level focus state: the focused element and document focus history.
+    Owns context-level focus state and focus-change orchestration.
 
-    Context still orchestrates focus events; this controller holds the state so Element
-    session policy can move off Context fields (Element parts Phase 6a). Prefer
+    Holds the focused element and document focus history, and runs blur/focus
+    event dispatch for focus transitions (Element parts Phase 6b). Prefer
     `context->GetFocusController()` over reaching into Context members.
  */
 
@@ -23,6 +23,10 @@ public:
 
 	Element* GetFocusElement() const { return focus; }
 	void SetFocusElement(Element* element) { focus = element; }
+
+	/// Apply a focus change: modal/unload checks, blur/focus events, history, z-order.
+	/// @return False if the request was denied.
+	bool OnFocusChange(Element* new_focus, bool focus_visible);
 
 	void UnfocusDocument(ElementDocument* document);
 	void OnDocumentUnload(ElementDocument* document);
