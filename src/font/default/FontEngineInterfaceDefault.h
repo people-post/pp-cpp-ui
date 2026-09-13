@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 namespace ui {
 
 class UI_CORE_API FontEngineInterfaceDefault : public FontEngineInterface {

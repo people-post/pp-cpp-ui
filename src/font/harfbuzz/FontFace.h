@@ -1,6 +1,6 @@
 #pragma once
 
-#include "text/default/FontTypes.h"
+#include "font/default/FontTypes.h"
 #include "FontFaceHandleHarfBuzz.h"
 #include <ui/Core.h>
 

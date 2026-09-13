@@ -2,7 +2,7 @@
 #include <ui/base/Profiling.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/style/StyleTypes.h>
-#include "text/harfbuzz/TextureLayout.h"
+#include "font/harfbuzz/TextureLayout.h"
 #include "FontFaceLayer.h"
 #include "FontProvider.h"
 #include "FreeTypeInterface.h"

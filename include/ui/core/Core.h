@@ -6,8 +6,8 @@
 #include <ui/base/Types.h>
 #include <ui/base/SystemInterface.h>
 #include <ui/base/FileInterface.h>
-#include <ui/text/FontEngineInterface.h>
-#include <ui/text/TextInputHandler.h>
+#include <ui/font/FontEngineInterface.h>
+#include <ui/font/TextInputHandler.h>
 
 namespace ui {
 

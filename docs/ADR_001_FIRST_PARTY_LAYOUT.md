@@ -34,7 +34,7 @@ C++ API uses `namespace ui` (macros `UI_*`). Former `include/RmlUi/` shims and `
 Sources and public headers are split into focused modules while keeping a single
 `ui_core` link target:
 
-`base`, `style`, `layout`, `dom`, `text` (+ `default` / `harfbuzz`), `xml`, `data`,
+`base`, `style`, `layout`, `dom`, `font` (+ `default` / `harfbuzz`), `xml`, `data`,
 `paint`, `widgets`, thin `core` bootstrap.
 
 Public includes: `#include <ui/dom/Element.h>` (no `ui/Core/` prefix). Convenience
@@ -44,7 +44,7 @@ umbrella `#include <ui/Core.h>` remains.
 
 Private engine includes use a single `-I src` root with module-qualified paths
 (`#include "layout/LayoutEngine.h"`). Same-folder includes stay bare.
-`SelectionController`’s full API is public under `include/ui/text/`; the private
+`SelectionController`’s full API is public under `include/ui/dom/`; the private
 header is a one-line redirect. This removes basename collisions from stacking
 every `src/<module>` on the include path.
 
@@ -71,9 +71,9 @@ Style-only `TypeConverter` specializations are implemented in
 Element-bound style *application* (stylesheets against elements, decorator/filter
 rendering, transform resolution, element animation, UA sheet load) lives under
 `src/dom/`. The `style` module keeps property definitions, parsers, and
-specifications without including `dom` / `text` / `xml`.
+specifications without including `dom` / `font` / `xml`.
 
 
 ## Amendment — host interfaces in base/text
 
-Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `text`. Cleared `base|data|layout|paint|text|widgets|xml → core`.
+Host interfaces (`SystemInterface`, `FileInterface`) and their getters live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `font`. Cleared `base|data|layout|paint|font|widgets|xml → core`.

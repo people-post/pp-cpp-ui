@@ -29,10 +29,10 @@
 #include <ui/dom/Factory.h>
 #include <ui/base/FileInterface.h>
 #include <ui/style/Filter.h>
-#include <ui/text/FontEffect.h>
-#include <ui/text/FontEffectInstancer.h>
-#include <ui/text/FontEngineInterface.h>
-#include <ui/text/FontGlyph.h>
+#include <ui/font/FontEffect.h>
+#include <ui/font/FontEffectInstancer.h>
+#include <ui/font/FontEngineInterface.h>
+#include <ui/font/FontGlyph.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Header.h>
 #include <ui/base/ID.h>
@@ -62,7 +62,7 @@
 #include <ui/style/StyleTypes.h>
 #include <ui/base/ScriptInterface.h>
 #include <ui/base/SystemInterface.h>
-#include <ui/text/TextShapingContext.h>
+#include <ui/font/TextShapingContext.h>
 #include <ui/paint/Texture.h>
 #include <ui/style/Transform.h>
 #include <ui/style/TransformPrimitive.h>

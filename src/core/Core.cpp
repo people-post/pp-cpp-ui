@@ -5,13 +5,13 @@
 #include <ui/dom/Factory.h>
 #include "RegisterDefaultFactories.h"
 #include <ui/base/FileInterface.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/dom/Plugin.h>
 #include <ui/paint/RenderInterface.h>
 #include <ui/paint/RenderManager.h>
 #include <ui/style/StyleSheetSpecification.h>
 #include <ui/base/SystemInterface.h>
-#include <ui/text/TextInputHandler.h>
+#include <ui/font/TextInputHandler.h>
 #include <ui/base/Types.h>
 #include "dom/BoxShadowCache.h"
 #include "style/ComputeProperty.h"
@@ -28,7 +28,7 @@
 #include "dom/TemplateCache.h"
 
 #ifdef UI_FONT_ENGINE_FREETYPE
-	#include "text/default/FontEngineInterfaceDefault.h"
+	#include "font/default/FontEngineInterfaceDefault.h"
 #endif
 
 #ifdef UI_SVG_PLUGIN

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <ui/paint/CallbackTexture.h>
-#include <ui/text/FontGlyph.h>
+#include <ui/font/FontGlyph.h>
 #include <ui/paint/Geometry.h>
 #include <ui/paint/MeshUtilities.h>
-#include "text/harfbuzz/TextureLayout.h"
+#include "font/harfbuzz/TextureLayout.h"
 
 namespace ui {
 

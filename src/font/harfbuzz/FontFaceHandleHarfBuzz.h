@@ -1,6 +1,6 @@
 #pragma once
 
-#include "text/default/FontTypes.h"
+#include "font/default/FontTypes.h"
 #include "FontFaceLayer.h"
 #include "FontGlyph.h"
 #include "LanguageData.h"

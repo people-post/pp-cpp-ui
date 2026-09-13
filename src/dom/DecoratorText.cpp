@@ -2,11 +2,11 @@
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/Element.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/paint/Geometry.h>
 #include <ui/style/PropertyDefinition.h>
 #include <ui/paint/RenderManager.h>
-#include <ui/text/TextShapingContext.h>
+#include <ui/font/TextShapingContext.h>
 namespace ui {
 
 DecoratorText::DecoratorText() {}

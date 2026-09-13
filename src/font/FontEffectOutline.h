@@ -1,8 +1,8 @@
 #pragma once
 
 #include <ui/style/ConvolutionFilter.h>
-#include <ui/text/FontEffect.h>
-#include <ui/text/FontEffectInstancer.h>
+#include <ui/font/FontEffect.h>
+#include <ui/font/FontEffectInstancer.h>
 namespace ui {
 
 /**

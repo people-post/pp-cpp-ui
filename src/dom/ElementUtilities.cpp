@@ -5,10 +5,10 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementScroll.h>
 #include <ui/dom/Factory.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/base/Math.h>
 #include <ui/paint/RenderManager.h>
-#include <ui/text/TextShapingContext.h>
+#include <ui/font/TextShapingContext.h>
 #include "ElementBackgroundBorder.h"
 #include "layout/LayoutDetails.h"
 #include "layout/LayoutEngine.h"

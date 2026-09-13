@@ -21,12 +21,12 @@ without defining layers, allowed bridges, or enforcement.
 2. **Strict layer stack** (higher may depend on lower; never reverse), documented
    in [SRC_LAYOUT.md](SRC_LAYOUT.md):
 
-   `config → base → paint → style → layout → text(font) → dom → xml → data → widgets → core → (svg|debugger) → (platform|render)`
+   `config → base → paint → style → layout → font → dom → xml → data → widgets → core → (svg|debugger) → (platform|render)`
 
-   **Revised intent (post-cleanup):** `text` is the **font/shaping** layer (pending optional
-   rename to `font`). `ElementText` and selection Element subclasses live in **`dom`**.
-   `layout` never includes `dom` (`LayoutElement` façade; impl in `dom`). `paint` is a
-   **render-primitives toolkit**, not a CSS paint stage. Prefer **no upward DOM bridges**.
+   **`font`** is the font/shaping layer (renamed from `text`). `ElementText` and selection
+   Element subclasses live in **`dom`**. `layout` never includes `dom` (`LayoutElement`
+   façade; impl in `dom`). `paint` is a **render-primitives toolkit**, not a CSS paint stage.
+   Prefer **no upward DOM bridges**.
 
 3. **Hard rules**
    - **No cycles.** Break with a lower seam (interface, opaque handle, callback,
@@ -46,7 +46,7 @@ without defining layers, allowed bridges, or enforcement.
    - `core → svg` / `core → debugger` — composition root registers plugins.
 
    Prefer **no** upward engine bridges into `dom`. Dom may depend downward on
-   `layout` / `text`(font) / `style` / `paint` / `base`.
+   `layout` / `font` / `style` / `paint` / `base`.
 
 5. **Public and private includes obey the same DAG.**
    - Public: `#include <ui/module/Name.h>`
@@ -66,8 +66,8 @@ without defining layers, allowed bridges, or enforcement.
      Stream-using loaders live under `src/dom/`; `style` keeps parsers/spec/value
      types. `ComputedValues` holds only an `Element*` and out-of-line accessors.)
   3. ~~most `* → core` via host getters~~ — `SystemInterface` / `FileInterface` (+ getters)
-     live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `text`.
-     Cleared `base|data|layout|paint|text|widgets|xml → core`.
+     live in `base`; `FontEngineInterface` / `TextInputHandler` getters live in `font`.
+     Cleared `base|data|layout|paint|font|widgets|xml → core`.
   4. ~~`dom → core`~~ — `Plugin` / `PluginRegistry` live in `dom`; `ScriptInterface` in `base`;
      `Element.h` no longer includes `Core.h`.
   5. ~~`dom → widgets`~~ — default widget/data/XML control registration lives in
@@ -83,13 +83,14 @@ without defining layers, allowed bridges, or enforcement.
   10. ~~`layout → text`~~ — `FontMetrics` in `base`; layout uses `LayoutTextElement` +
       `Element::GetFontMetrics()` / `GetAsLayoutTextElement()` instead of `ElementText`.
    11. ~~`text → dom`~~ — cleared: `ElementText` / selectable text / selection controller
-      moved into `dom`; `text` retains font engine, font effects, text input handler.
+      moved into `dom`; font engine / effects / text input handler remain in the font module.
   12. ~~`layout → dom`~~ — cleared: layout-owned `LayoutElement` API with
       implementation in `src/dom/LayoutElement.cpp` (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
   13. Host input enums (`Input.h`) moved `dom` → `base`.
-  14. **Revised North Star:** treat `text` as font/shaping (optional rename `font`);
-      Element text nodes belong in `dom`; layout stays Element-free; paint = primitives toolkit.
-      Optional later: rename module `text` → `font`; introduce `LayoutNode` handle only if needed.
+  14. **Revised North Star:** module renamed `text` → `font`; Element text nodes in `dom`;
+      layout stays Element-free; paint = primitives toolkit.
+      Optional later: introduce `LayoutNode` handle only if needed.
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.
+  15. Renamed module `text` → `font` (`include/ui/font/`, `src/font/`).

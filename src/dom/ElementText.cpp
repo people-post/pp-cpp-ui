@@ -3,12 +3,12 @@
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Event.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/Property.h>
 #include <ui/paint/RenderManager.h>
-#include <ui/text/TextShapingContext.h>
+#include <ui/font/TextShapingContext.h>
 #include "style/ComputeProperty.h"
 #include "dom/ElementDefinition.h"
 #include "dom/ElementStyle.h"

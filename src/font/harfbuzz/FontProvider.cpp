@@ -1,6 +1,6 @@
 #include "FontProvider.h"
 #include "style/ComputeProperty.h"
-#include "text/default/FreeTypeInterface.h"
+#include "font/default/FreeTypeInterface.h"
 #include "FontFace.h"
 #include "FontFaceHandleHarfBuzz.h"
 #include "FontFamily.h"

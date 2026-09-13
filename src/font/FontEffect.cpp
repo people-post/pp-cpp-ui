@@ -1,5 +1,5 @@
-#include <ui/text/FontEffect.h>
-#include <ui/text/FontEffectInstancer.h>
+#include <ui/font/FontEffect.h>
+#include <ui/font/FontEffectInstancer.h>
 namespace ui {
 
 FontEffect::FontEffect() : layer(Layer::Back), colour(255, 255, 255), fingerprint(0) {}

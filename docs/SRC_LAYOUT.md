@@ -15,7 +15,7 @@ include/ui/
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model, LayoutTextElement seam
   dom/               Element, document, context, events, factory, ElementText, selection
-  text/              Fonts, shaping, font effects (ElementText lives in dom)
+  font/              Fonts, shaping, font effects (ElementText lives in dom)
   xml/               RML/XML streams & parsers
   data/              Data model
   paint/             Geometry, textures, render interfaces
@@ -25,8 +25,8 @@ include/ui/
   platform/ render/  Owned SDL / GL3 backend headers
   Core.h Debugger.h  Convenience umbrellas
 src/
-  base style layout dom text xml data paint widgets core
-  text/default text/harfbuzz
+  base style layout dom font xml data paint widgets core
+  font/default font/harfbuzz
   svg debugger platform render
 third_party/
 cmake/
@@ -46,7 +46,7 @@ L1   base
 L2   paint
 L3   style
 L4   layout
-L5   text
+L5   font
 L6   dom
 L7   xml
 L8   data
@@ -66,7 +66,7 @@ L12  platform | render    owned backends
    Value types used by `Variant` (`Unit`, `Animation`/`TransitionList`,
    `DecorationTypes`) live in `base`. Style-only `TypeConverter` specializations
    live in `src/style/TypeConverterStyle.cpp`.
-4. **`style` does not own DOM.** No `style → dom` / `text` / `xml`. Element-bound
+4. **`style` does not own DOM.** No `style → dom` / `font` / `xml`. Element-bound
    stylesheet application, decorators/filters, and transform resolution live in
    `src/dom/`; `style` owns property/spec/parser value machinery.
 5. **`dom` does not know concrete widgets, xml, or data.** Factory registration
@@ -83,8 +83,9 @@ L12  platform | render    owned backends
 |------|-----|
 (none into `dom`)
 
-`layout → dom` and `text → dom` cleared: layout uses `LayoutElement`; `ElementText` /
-selection live in `dom`. The `text` module is the font/shaping layer (see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
+`layout → dom` and former `text → dom` cleared: layout uses `LayoutElement`; `ElementText` /
+selection live in `dom`. Module `font/` (renamed from `text/`) is font/shaping only
+(see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md)).
 
 ### Enforcement
 

@@ -2,7 +2,7 @@
 
 #include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/base/Math.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/style/Property.h>

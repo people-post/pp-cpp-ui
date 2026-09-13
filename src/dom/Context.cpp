@@ -1,5 +1,5 @@
 #include <ui/dom/Context.h>
-#include <ui/text/TextInputHandler.h>
+#include <ui/font/TextInputHandler.h>
 #include <ui/style/ComputedValues.h>
 #include <ui/dom/ContextInstancer.h>
 #include <ui/base/Debug.h>

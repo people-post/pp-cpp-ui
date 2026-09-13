@@ -8,7 +8,7 @@
 #include <ui/dom/Factory.h>
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/style/PropertiesIteratorView.h>
 #include <ui/style/PropertyDefinition.h>
 #include <ui/style/PropertyIdSet.h>

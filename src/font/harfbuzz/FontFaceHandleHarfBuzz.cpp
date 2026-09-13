@@ -1,6 +1,6 @@
 #include "FontFaceHandleHarfBuzz.h"
 #include "FreeTypeInterface.h"
-#include "text/default/FreeTypeInterface.h"
+#include "font/default/FreeTypeInterface.h"
 #include "FontFaceLayer.h"
 #include "FontProvider.h"
 #include <ft2build.h>

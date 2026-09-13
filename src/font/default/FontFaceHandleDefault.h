@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ui/text/FontEffect.h>
-#include <ui/text/FontGlyph.h>
+#include <ui/font/FontEffect.h>
+#include <ui/font/FontGlyph.h>
 #include <ui/base/FontMetrics.h>
 #include <ui/paint/Geometry.h>
-#include <ui/text/TextShapingContext.h>
+#include <ui/font/TextShapingContext.h>
 #include <ui/paint/Texture.h>
 #include <ui/base/Traits.h>
 #include "FontTypes.h"

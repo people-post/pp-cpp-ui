@@ -5,7 +5,7 @@
 #include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/dom/Factory.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/paint/RenderManager.h>
 #include "SelectionContentBuilder.h"
 #include <ui/dom/SelectionController.h>

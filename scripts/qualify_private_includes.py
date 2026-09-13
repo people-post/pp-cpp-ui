@@ -27,21 +27,18 @@ def main() -> None:
     # Also index by unique relative path for existence checks
     all_rels = {rel for rels in by_base.values() for rel in rels}
 
-    # --- Promote SelectionController to public (full API) ---
-    priv = (SRC / "text" / "SelectionController.h").read_text(encoding="utf-8")
-    # Ensure public includes use angle paths
-    pub = priv
-    pub = pub.replace('#include "SelectionTypes.h"', "#include <ui/text/SelectionTypes.h>")
-    # If already angle ui/ paths, keep; ensure UI_CORE_API on class if missing
-    if "UI_CORE_API" not in pub and "class SelectionController" in pub:
-        pub = pub.replace("class SelectionController", "class UI_CORE_API SelectionController")
-    if "#include <ui/base/Header.h>" not in pub:
-        pub = pub.replace("#pragma once", "#pragma once\n\n#include <ui/base/Header.h>", 1)
-    (ROOT / "include" / "ui" / "text" / "SelectionController.h").write_text(pub, encoding="utf-8")
-    (SRC / "text" / "SelectionController.h").write_text(
-        "#pragma once\n\n#include <ui/dom/SelectionController.h>\n", encoding="utf-8"
-    )
-    print("promoted SelectionController to public header")
+    # --- SelectionController: already public under include/ui/dom/ ---
+    sc_priv = SRC / "font" / "SelectionController.h"
+    if sc_priv.is_file():
+        priv = sc_priv.read_text(encoding="utf-8")
+        pub = priv.replace('#include "SelectionTypes.h"', "#include <ui/font/SelectionTypes.h>")
+        if "UI_CORE_API" not in pub and "class SelectionController" in pub:
+            pub = pub.replace("class SelectionController", "class UI_CORE_API SelectionController")
+        if "#include <ui/base/Header.h>" not in pub:
+            pub = pub.replace("#pragma once", "#pragma once\n\n#include <ui/base/Header.h>", 1)
+        (ROOT / "include" / "ui" / "dom" / "SelectionController.h").write_text(pub, encoding="utf-8")
+        sc_priv.write_text("#pragma once\n\n#include <ui/dom/SelectionController.h>\n", encoding="utf-8")
+        print("promoted SelectionController to public header")
 
     include_re = re.compile(r'^(\s*#include\s*)"([^"]+)"(.*)$')
 
@@ -67,8 +64,8 @@ def main() -> None:
                 legacy = {
                     "Layout/": "layout/",
                     "Elements/": "widgets/",
-                    "FontEngineDefault/": "text/default/",
-                    "FontEngineHarfBuzz/": "text/harfbuzz/",
+                    "FontEngineDefault/": "font/default/",
+                    "FontEngineHarfBuzz/": "font/harfbuzz/",
                 }
                 new_inc = inc
                 for old, new in legacy.items():
@@ -122,14 +119,14 @@ def main() -> None:
                 if len(pool) > 1 and score(pool[0]) == score(pool[1]):
                     # For known collisions, prefer explicit rules
                     if inc.startswith("TextureLayout"):
-                        if file_rel_dir.startswith("text/harfbuzz"):
-                            best = next(c for c in candidates if c.startswith("text/harfbuzz/"))
+                        if file_rel_dir.startswith("font/harfbuzz"):
+                            best = next(c for c in candidates if c.startswith("font/harfbuzz/"))
                         else:
                             best = next(c for c in candidates if c.startswith("paint/"))
-                    elif file_rel_dir.startswith("text/harfbuzz"):
-                        best = next((c for c in candidates if c.startswith("text/harfbuzz/")), pool[0])
-                    elif file_rel_dir.startswith("text/default"):
-                        best = next((c for c in candidates if c.startswith("text/default/")), pool[0])
+                    elif file_rel_dir.startswith("font/harfbuzz"):
+                        best = next((c for c in candidates if c.startswith("font/harfbuzz/")), pool[0])
+                    elif file_rel_dir.startswith("font/default"):
+                        best = next((c for c in candidates if c.startswith("font/default/")), pool[0])
                 new_inc = best
 
             changed = True
@@ -157,7 +154,7 @@ target_include_directories(ui_core PRIVATE
 	\"${CMAKE_SOURCE_DIR}/src/style\"
 	\"${CMAKE_SOURCE_DIR}/src/layout\"
 	\"${CMAKE_SOURCE_DIR}/src/dom\"
-	\"${CMAKE_SOURCE_DIR}/src/text\"
+	\"${CMAKE_SOURCE_DIR}/src/font\"
 	\"${CMAKE_SOURCE_DIR}/src/xml\"
 	\"${CMAKE_SOURCE_DIR}/src/data\"
 	\"${CMAKE_SOURCE_DIR}/src/paint\"

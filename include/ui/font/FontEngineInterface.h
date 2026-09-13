@@ -4,7 +4,7 @@
 #include <ui/base/Header.h>
 #include <ui/paint/Mesh.h>
 #include <ui/style/StyleTypes.h>
-#include <ui/text/TextShapingContext.h>
+#include <ui/font/TextShapingContext.h>
 #include <ui/base/Types.h>
 
 namespace ui {

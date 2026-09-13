@@ -5,7 +5,7 @@
 #include <ui/base/Input.h>
 #include <ui/base/ScriptInterface.h>
 #include <ui/dom/ScrollTypes.h>
-#include <ui/text/TextLoupe.h>
+#include <ui/font/TextLoupe.h>
 #include <ui/base/Traits.h>
 #include <ui/base/Types.h>
 #include <functional>

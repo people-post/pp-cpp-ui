@@ -3,7 +3,7 @@
 #include <ui/dom/Context.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementUtilities.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/base/Log.h>
 #include <ui/base/Math.h>
 #include <ui/base/Profiling.h>

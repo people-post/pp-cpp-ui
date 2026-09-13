@@ -51,5 +51,5 @@ UI into `dom/`; `text/` is font/shaping only. No upward bridges into `dom` remai
 ## Non-goals
 
 - Splitting CMake targets (still one `ui_core`)
-- Renaming module `text` → `font` (optional later)
+- Further `LayoutNode` handle churn (still deferred)
 - Rewriting the layout algorithm itself

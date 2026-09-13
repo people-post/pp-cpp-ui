@@ -6,14 +6,14 @@
 #include <ui/dom/ElementUtilities.h>
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/dom/Factory.h>
-#include <ui/text/FontEngineInterface.h>
+#include <ui/font/FontEngineInterface.h>
 #include <ui/base/Input.h>
 #include <ui/base/Math.h>
 #include <ui/paint/MeshUtilities.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/base/SystemInterface.h>
-#include <ui/text/TextInputContext.h>
-#include <ui/text/TextInputHandler.h>
+#include <ui/font/TextInputContext.h>
+#include <ui/font/TextInputHandler.h>
 #include "base/Clock.h"
 #include <ui/paint/RenderManager.h>
 #include "dom/SelectionHighlight.h"

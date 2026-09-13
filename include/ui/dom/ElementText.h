@@ -4,7 +4,7 @@
 #include <ui/layout/LayoutTextElement.h>
 #include <ui/paint/Geometry.h>
 #include <ui/base/Header.h>
-#include <ui/text/SelectionTypes.h>
+#include <ui/font/SelectionTypes.h>
 
 namespace ui {
 

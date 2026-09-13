@@ -1,7 +1,7 @@
 #include "style/PropertyParserFontEffect.h"
 #include <ui/dom/Factory.h>
-#include <ui/text/FontEffect.h>
-#include <ui/text/FontEffectInstancer.h>
+#include <ui/font/FontEffect.h>
+#include <ui/font/FontEffectInstancer.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/PropertySpecification.h>
 #include <ui/base/Utilities.h>

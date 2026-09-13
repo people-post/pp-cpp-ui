@@ -1,4 +1,4 @@
-#include <ui/text/FontEffectInstancer.h>
+#include <ui/font/FontEffectInstancer.h>
 #include <ui/style/PropertyDefinition.h>
 namespace ui {
 
