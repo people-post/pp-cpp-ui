@@ -66,8 +66,9 @@ L12  platform | render    owned backends
    Value types used by `Variant` (`Unit`, `Animation`/`TransitionList`,
    `DecorationTypes`) live in `base`. Style-only `TypeConverter` specializations
    live in `src/style/TypeConverterStyle.cpp`.
-4. **`style` does not own DOM.** No `style → dom` (apply style through DOM-owned
-   APIs or narrow callbacks).
+4. **`style` does not own DOM.** No `style → dom` / `text` / `xml`. Element-bound
+   stylesheet application, decorators/filters, and transform resolution live in
+   `src/dom/`; `style` owns property/spec/parser value machinery.
 5. **`dom` does not know concrete widgets, xml, or data.** Factory registration
    and parse/bind glue belong in `core` or the higher module.
 6. **Plugins and backends are leaves.** Engine modules never include them

@@ -66,3 +66,10 @@ Module include edges follow the DAG in [ADR 002](ADR_002_MODULE_DEPENDENCIES.md)
 Style-only `TypeConverter` specializations are implemented in
 `src/style/TypeConverterStyle.cpp`.
 
+## Amendment — style vs dom ownership
+
+Element-bound style *application* (stylesheets against elements, decorator/filter
+rendering, transform resolution, element animation, UA sheet load) lives under
+`src/dom/`. The `style` module keeps property definitions, parsers, and
+specifications without including `dom` / `text` / `xml`.
+

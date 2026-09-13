@@ -55,7 +55,10 @@ without defining layers, allowed bridges, or enforcement.
 - Refactors prioritize clearing allowlisted debt in this order:
   1. ~~`base → style`~~ (cleared: `Unit` / `Animation` / `DecorationTypes` live in `base`;
      style-only `TypeConverter` specializations live in `src/style/TypeConverterStyle.cpp`)
-  2. `style → dom` (and other `style` upward edges)
+  2. ~~`style → dom` / `style → text` / `style → xml`~~ (cleared: Element-bound
+     stylesheet/decorator/filter/transform/animation implementations and
+     Stream-using loaders live under `src/dom/`; `style` keeps parsers/spec/value
+     types. `ComputedValues` holds only an `Element*` and out-of-line accessors.)
   3. `* → core` singleton use below plugins
   4. `dom → widgets` / `dom → xml` / `dom → data`
   5. Tighten paint/layout/text bridges (`paint → style` also cleared with DecorationTypes move)
