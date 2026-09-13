@@ -17,7 +17,7 @@ public:
 	using SizeData = ElementHandle::SizeData;
 
 	ElementHandleTargetData(Element* target, Context* context, const Array<NumericValue, NUM_EDGES>& edge_margin) :
-		target(target), computed(target->GetComputedValues()), box(target->GetBox()), parent_box(GetParentBox(target, context)),
+		target(target), computed(target->GetComputedValues()), box(target->BoxModel().GetBox()), parent_box(GetParentBox(target, context)),
 		containing_block(target->GetContainingBlock()), position(computed.position()),
 		resolved_edge_margin(ResolveEdgeMargin(target, box, edge_margin))
 	{
@@ -99,7 +99,7 @@ private:
 	{
 		// Set any auto margins to their current value, since auto-margins may affect the size and position of an element.
 		auto SetDefiniteMargin = [](Element* element, PropertyId margin_id, BoxEdge edge) {
-			element->SetProperty(margin_id, Property(Math::Round(element->GetBox().GetEdge(BoxArea::Margin, edge)), Unit::PX));
+			element->SetProperty(margin_id, Property(Math::Round(element->BoxModel().GetBox().GetEdge(BoxArea::Margin, edge)), Unit::PX));
 		};
 		using Style::Margin;
 		if (computed.margin_top().type == Margin::Auto)
@@ -127,7 +127,7 @@ private:
 
 	static const Box& GetParentBox(Element* target, Context* context)
 	{
-		return target->GetOffsetParent() ? target->GetOffsetParent()->GetBox() : context->GetRootElement()->GetBox();
+		return target->GetOffsetParent() ? target->GetOffsetParent()->BoxModel().GetBox() : context->GetRootElement()->BoxModel().GetBox();
 	}
 
 	template <typename Func>
@@ -176,7 +176,7 @@ private:
 	}
 	Vector2f DistanceToBottomRight(Vector2f distance_to_top_left) const
 	{
-		const Vector2f scroll_size = {target->GetParentNode()->GetScrollWidth(), target->GetParentNode()->GetScrollHeight()};
+		const Vector2f scroll_size = {target->GetParentNode()->Scroll().GetScrollWidth(), target->GetParentNode()->Scroll().GetScrollHeight()};
 		return scroll_size - box.GetSize(BoxArea::Border) - distance_to_top_left;
 	}
 

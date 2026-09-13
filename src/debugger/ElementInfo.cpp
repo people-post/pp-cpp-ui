@@ -109,14 +109,14 @@ void ElementInfo::RenderHoverElement()
 	if (hover_element)
 	{
 		ElementUtilities::ApplyTransform(*hover_element);
-		for (int i = 0; i < hover_element->GetNumBoxes(); i++)
+		for (int i = 0; i < hover_element->BoxModel().GetNumBoxes(); i++)
 		{
 			// Render the content area.
 			Vector2f box_offset;
-			const Box& element_box = hover_element->GetBox(i, box_offset);
+			const Box& element_box = hover_element->BoxModel().GetBox(i, box_offset);
 			Vector2f size = element_box.GetSize(BoxArea::Border);
 			size = Vector2f(std::max(size.x, 2.0f), std::max(size.y, 2.0f));
-			Geometry::RenderOutline(hover_element->GetAbsoluteOffset(BoxArea::Border) + box_offset, size, Colourb(255, 0, 0, 255), 1);
+			Geometry::RenderOutline(hover_element->BoxModel().GetAbsoluteOffset(BoxArea::Border) + box_offset, size, Colourb(255, 0, 0, 255), 1);
 		}
 	}
 }
@@ -127,11 +127,11 @@ void ElementInfo::RenderSourceElement()
 	{
 		ElementUtilities::ApplyTransform(*source_element);
 
-		for (int i = 0; i < source_element->GetNumBoxes(); i++)
+		for (int i = 0; i < source_element->BoxModel().GetNumBoxes(); i++)
 		{
 			Vector2f box_offset;
-			const Box& element_box = source_element->GetBox(i, box_offset);
-			const Vector2f border_offset = box_offset + source_element->GetAbsoluteOffset(BoxArea::Border);
+			const Box& element_box = source_element->BoxModel().GetBox(i, box_offset);
+			const Vector2f border_offset = box_offset + source_element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 
 			// Content area:
 			Geometry::RenderBox(border_offset + element_box.GetPosition(BoxArea::Content), element_box.GetSize(), Colourb(158, 214, 237, 128));
@@ -503,10 +503,10 @@ void ElementInfo::UpdateSourceElement()
 
 		if (source_element)
 		{
-			const Vector2f element_offset = source_element->GetRelativeOffset(BoxArea::Border);
-			const auto& box = source_element->GetBox();
+			const Vector2f element_offset = source_element->BoxModel().GetRelativeOffset(BoxArea::Border);
+			const auto& box = source_element->BoxModel().GetBox();
 
-			const Vector2f element_size = source_element->GetBox().GetSize(BoxArea::Border);
+			const Vector2f element_size = source_element->BoxModel().GetBox().GetSize(BoxArea::Border);
 			Element* offset_parent = source_element->GetOffsetParent();
 			const String offset_parent_rml =
 				(offset_parent ? StringUtilities::EncodeRml(offset_parent->GetAddress(false, false)) : String("<em>none</em>"));

@@ -120,8 +120,8 @@ namespace {
 			const CanFocus can_focus = CanFocusElement(child);
 			if (can_focus == CanFocus::Yes)
 			{
-				const Vector2f position = child->GetAbsoluteOffset(BoxArea::Border);
-				const BoundingBox target_box = {position, position + child->GetBox().GetSize(BoxArea::Border)};
+				const Vector2f position = child->BoxModel().GetAbsoluteOffset(BoxArea::Border);
+				const BoundingBox target_box = {position, position + child->BoxModel().GetBox().GetSize(BoxArea::Border)};
 
 				const int heuristic = GetNavigationHeuristic(bounding_box, target_box, direction);
 				if (heuristic < best_result.heuristic)
@@ -413,7 +413,7 @@ void ElementDocument::Show(ModalFlag modal_flag, FocusFlag focus_flag)
 		// Focus the window or element
 		bool focused = focus_element->Focus(true);
 		if (focused && focus_element != this)
-			focus_element->ScrollIntoView(false);
+			focus_element->Scroll().ScrollIntoView(false);
 	}
 
 	DispatchEvent(EventId::Show, Dictionary());
@@ -498,7 +498,7 @@ void ElementDocument::UpdateLayout()
 
 		Vector2f containing_block(0, 0);
 		if (GetParentNode() != nullptr)
-			containing_block = GetParentNode()->GetBox().GetSize();
+			containing_block = GetParentNode()->BoxModel().GetBox().GetSize();
 
 		LayoutEngine::FormatElement(this, containing_block);
 
@@ -524,7 +524,7 @@ void ElementDocument::UpdatePosition()
 			return;
 
 		// Work out our containing block; relative offsets are calculated against it.
-		const Vector2f containing_block = root->GetBox().GetSize();
+		const Vector2f containing_block = root->BoxModel().GetBox().GetSize();
 		auto& computed = GetComputedValues();
 		const Box& box = GetBox();
 
@@ -600,7 +600,7 @@ void ElementDocument::ProcessDefaultAction(Event& event)
 			{
 				if (element->Focus(true))
 				{
-					element->ScrollIntoView(ScrollAlignment::Nearest);
+					element->Scroll().ScrollIntoView(ScrollAlignment::Nearest);
 					event.StopPropagation();
 				}
 			}
@@ -647,7 +647,7 @@ void ElementDocument::ProcessDefaultAction(Event& event)
 				{
 					if (next->Focus(true))
 					{
-						next->ScrollIntoView(ScrollAlignment::Nearest);
+						next->Scroll().ScrollIntoView(ScrollAlignment::Nearest);
 						event.StopPropagation();
 					}
 				}
@@ -820,8 +820,8 @@ Element* ElementDocument::FindNextNavigationElement(Element* current_element, Na
 		return FindNextTabElement(this, direction_is_forward);
 	}
 
-	const Vector2f position = current_element->GetAbsoluteOffset(BoxArea::Border);
-	const BoundingBox bounding_box = {position, position + current_element->GetBox().GetSize(BoxArea::Border)};
+	const Vector2f position = current_element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
+	const BoundingBox bounding_box = {position, position + current_element->BoxModel().GetBox().GetSize(BoxArea::Border)};
 
 	auto GetNearestScrollContainer = [this](Element* element) -> Element* {
 		for (element = element->GetParentNode(); element; element = element->GetParentNode())

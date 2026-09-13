@@ -435,9 +435,9 @@ void WidgetTextInput::OnResize()
 {
 	GenerateCursor();
 
-	Vector2f text_position = parent->GetBox().GetPosition(BoxArea::Content);
-	text_element->SetOffset(text_position, parent);
-	selected_text_element->SetOffset(text_position, parent);
+	Vector2f text_position = parent->BoxModel().GetBox().GetPosition(BoxArea::Content);
+	text_element->BoxModel().SetOffset(text_position, parent);
+	selected_text_element->BoxModel().SetOffset(text_position, parent);
 
 	ForceFormattingOnNextLayout();
 }
@@ -446,7 +446,7 @@ void WidgetTextInput::OnRender()
 {
 	ElementUtilities::SetClippingRegion(text_element);
 
-	Vector2f text_translation = parent->GetAbsoluteOffset() - Vector2f(parent->GetScrollLeft(), parent->GetScrollTop());
+	Vector2f text_translation = parent->BoxModel().GetAbsoluteOffset() - Vector2f(parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop());
 	selection_composition_geometry.Render(text_translation);
 
 	if (cursor_visible && selection_length <= 0 && !parent->IsDisabled())
@@ -495,7 +495,7 @@ void WidgetTextInput::OnLayout()
 {
 	if (force_formatting_on_next_layout)
 	{
-		internal_dimensions = parent->GetBox().GetSize(BoxArea::Content);
+		internal_dimensions = parent->BoxModel().GetBox().GetSize(BoxArea::Content);
 		FormatElement();
 		UpdateCursorPosition(true);
 		force_formatting_on_next_layout = false;
@@ -704,8 +704,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		{
 			Vector2f absolute_mouse_position = Vector2f(event.GetParameter<float>("mouse_x", 0), event.GetParameter<float>("mouse_y", 0));
 			Vector2f mouse_position = absolute_mouse_position;
-			mouse_position -= text_element->GetAbsoluteOffset();
-			mouse_position.y += parent->GetScrollTop();
+			mouse_position -= text_element->BoxModel().GetAbsoluteOffset();
+			mouse_position.y += parent->Scroll().GetScrollTop();
 
 			const int cursor_line_index = CalculateLineIndex(mouse_position.y);
 			const int cursor_character_index = CalculateCharacterIndex(cursor_line_index, mouse_position.x);
@@ -744,8 +744,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 			}
 
 			pointer_selecting = true;
-			mouse_position -= text_element->GetAbsoluteOffset();
-			mouse_position.y += parent->GetScrollTop();
+			mouse_position -= text_element->BoxModel().GetAbsoluteOffset();
+			mouse_position.y += parent->Scroll().GetScrollTop();
 
 			if (event == EventId::Drag || event == EventId::Mousedown)
 				ScrollForPointerDrag(mouse_position.y);
@@ -1147,13 +1147,13 @@ void WidgetTextInput::ScrollForPointerDrag(float content_y)
 	if (Context* context = parent->GetContext())
 		edge_margin *= context->GetDensityIndependentPixelRatio();
 
-	const float scroll_top = parent->GetScrollTop();
-	const float max_scroll = Math::Max(0.f, parent->GetScrollHeight() - available_height);
+	const float scroll_top = parent->Scroll().GetScrollTop();
+	const float max_scroll = Math::Max(0.f, parent->Scroll().GetScrollHeight() - available_height);
 
 	if (content_y < scroll_top + edge_margin)
-		parent->SetScrollTop(Math::Max(0.f, scroll_top - edge_margin));
+		parent->Scroll().SetScrollTop(Math::Max(0.f, scroll_top - edge_margin));
 	else if (content_y > scroll_top + available_height - edge_margin)
-		parent->SetScrollTop(Math::Min(max_scroll, scroll_top + edge_margin));
+		parent->Scroll().SetScrollTop(Math::Min(max_scroll, scroll_top + edge_margin));
 }
 
 const String& WidgetTextInput::GetValue() const
@@ -1309,19 +1309,19 @@ void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor)
 		if (move_to_cursor)
 		{
 			float minimum_scroll_top = Math::Min((cursor_position.y + cursor_size.y) - GetAvailableHeight(), cursor_position.y);
-			if (parent->GetScrollTop() < minimum_scroll_top)
-				parent->SetScrollTop(minimum_scroll_top);
-			else if (parent->GetScrollTop() > cursor_position.y)
-				parent->SetScrollTop(cursor_position.y);
+			if (parent->Scroll().GetScrollTop() < minimum_scroll_top)
+				parent->Scroll().SetScrollTop(minimum_scroll_top);
+			else if (parent->Scroll().GetScrollTop() > cursor_position.y)
+				parent->Scroll().SetScrollTop(cursor_position.y);
 
 			const bool word_wrap = parent->GetComputedValues().white_space() == Style::WhiteSpace::Prewrap;
 			float minimum_scroll_left = Math::Min((cursor_position.x + cursor_size.x) - GetAvailableWidth(), cursor_position.x);
 			if (word_wrap)
-				parent->SetScrollLeft(0.f);
-			else if (parent->GetScrollLeft() < minimum_scroll_left)
-				parent->SetScrollLeft(minimum_scroll_left);
-			else if (parent->GetScrollLeft() > cursor_position.x)
-				parent->SetScrollLeft(cursor_position.x);
+				parent->Scroll().SetScrollLeft(0.f);
+			else if (parent->Scroll().GetScrollLeft() < minimum_scroll_left)
+				parent->Scroll().SetScrollLeft(minimum_scroll_left);
+			else if (parent->Scroll().GetScrollLeft() > cursor_position.x)
+				parent->Scroll().SetScrollLeft(cursor_position.x);
 		}
 
 		SetKeyboardActive(true);
@@ -1344,7 +1344,7 @@ void WidgetTextInput::FormatElement()
 {
 	using namespace Style;
 	ElementScroll& scroll = parent->Scroll();
-	float width = parent->GetBox().GetSize(BoxArea::Padding).x;
+	float width = parent->BoxModel().GetBox().GetSize(BoxArea::Padding).x;
 
 	const Overflow x_overflow_property = parent->GetComputedValues().overflow_x();
 	const Overflow y_overflow_property = parent->GetComputedValues().overflow_y();
@@ -1381,7 +1381,7 @@ void WidgetTextInput::FormatElement()
 	}
 
 	// For text elements, make the content and padding on all sides reachable by scrolling.
-	const Vector2f padding_size = parent->GetBox().GetFrameSize(BoxArea::Padding);
+	const Vector2f padding_size = parent->BoxModel().GetBox().GetFrameSize(BoxArea::Padding);
 	parent->SetScrollableOverflowRectangle(content_area + padding_size, true);
 	scroll.FormatScrollbars();
 }
@@ -1565,7 +1565,7 @@ Vector2f WidgetTextInput::FormatText(float height_constraint)
 	// Instead, we here detect such possible overflow manually and force the element to clip. This will clip any parts
 	// of the selection box that is overflowing. Maybe in the future we'll have a better way to specify ink overflow and
 	// have that automatically clipped.
-	const bool new_ink_overflow = (max_selection_right_edge > available_width + parent->GetBox().GetEdge(BoxArea::Padding, BoxEdge::Right));
+	const bool new_ink_overflow = (max_selection_right_edge > available_width + parent->BoxModel().GetBox().GetEdge(BoxArea::Padding, BoxEdge::Right));
 	if (new_ink_overflow != ink_overflow)
 	{
 		ink_overflow = new_ink_overflow;
@@ -1741,7 +1741,7 @@ void WidgetTextInput::SetKeyboardActive(bool active)
 		if (active)
 		{
 			// Activate the keyboard and submit the cursor position and line height to enable clients to adjust the input method editor (IME).
-			const Vector2f element_offset = parent->GetAbsoluteOffset() - Vector2f{parent->GetScrollLeft(), parent->GetScrollTop()};
+			const Vector2f element_offset = parent->BoxModel().GetAbsoluteOffset() - Vector2f{parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop()};
 			const Vector2f absolute_cursor_position = element_offset + cursor_position;
 			system->ActivateKeyboard(absolute_cursor_position, cursor_size.y);
 		}
@@ -1771,19 +1771,19 @@ float WidgetTextInput::GetTopToBaseline() const
 
 float WidgetTextInput::GetAvailableWidth() const
 {
-	return parent->GetClientWidth() - parent->GetBox().GetFrameSize(BoxArea::Padding).x;
+	return parent->GetClientWidth() - parent->BoxModel().GetBox().GetFrameSize(BoxArea::Padding).x;
 }
 
 float WidgetTextInput::GetAvailableHeight() const
 {
-	return parent->GetClientHeight() - parent->GetBox().GetFrameSize(BoxArea::Padding).y;
+	return parent->GetClientHeight() - parent->BoxModel().GetBox().GetFrameSize(BoxArea::Padding).y;
 }
 
 Vector2f WidgetTextInput::GetAbsolutePositionForByteIndex(int byte_index) const
 {
 	if (lines.empty() || text_element->GetFontFaceHandle() == 0)
 	{
-		Vector2f text_translation = parent->GetAbsoluteOffset() - Vector2f(parent->GetScrollLeft(), parent->GetScrollTop());
+		Vector2f text_translation = parent->BoxModel().GetAbsoluteOffset() - Vector2f(parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop());
 		return text_translation;
 	}
 
@@ -1800,11 +1800,11 @@ Vector2f WidgetTextInput::GetAbsolutePositionForByteIndex(int byte_index) const
 			float(ElementUtilities::GetStringWidth(text_element, StringView(GetValue(), line.value_offset, character_index)));
 		const float alignment_offset = GetAlignmentSpecificTextOffset(line);
 
-		Vector2f text_translation = parent->GetAbsoluteOffset() - Vector2f(parent->GetScrollLeft(), parent->GetScrollTop());
+		Vector2f text_translation = parent->BoxModel().GetAbsoluteOffset() - Vector2f(parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop());
 		return text_translation + Vector2f(string_width + alignment_offset, float(i) * GetLineHeight());
 	}
 
-	Vector2f text_translation = parent->GetAbsoluteOffset() - Vector2f(parent->GetScrollLeft(), parent->GetScrollTop());
+	Vector2f text_translation = parent->BoxModel().GetAbsoluteOffset() - Vector2f(parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop());
 	return text_translation + Vector2f(0.f, float(lines.size() - 1) * GetLineHeight());
 }
 

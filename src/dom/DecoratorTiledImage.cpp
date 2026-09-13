@@ -44,7 +44,7 @@ void DecoratorTiledImage::ReleaseElementData(DecoratorDataHandle element_data) c
 void DecoratorTiledImage::RenderElement(Element* element, DecoratorDataHandle element_data) const
 {
 	Geometry* data = reinterpret_cast<Geometry*>(element_data);
-	data->Render(element->GetAbsoluteOffset(BoxArea::Border), GetTexture());
+	data->Render(element->BoxModel().GetAbsoluteOffset(BoxArea::Border), GetTexture());
 }
 
 DecoratorTiledImageInstancer::DecoratorTiledImageInstancer() : DecoratorTiledInstancer(1)

@@ -141,8 +141,8 @@ bool ElementUtilities::GetClippingRegion(Element* element, Rectanglei& out_clip_
 		{
 			const BoxArea clip_area = (force_clip_current_element ? BoxArea::Border : clipping_element->GetClipArea());
 			const bool has_clipping_content =
-				(clip_always || force_clip_current_element || clipping_element->GetClientWidth() < clipping_element->GetScrollWidth() - 0.5f ||
-					clipping_element->GetClientHeight() < clipping_element->GetScrollHeight() - 0.5f);
+				(clip_always || force_clip_current_element || clipping_element->GetClientWidth() < clipping_element->Scroll().GetScrollWidth() - 0.5f ||
+					clipping_element->GetClientHeight() < clipping_element->Scroll().GetScrollHeight() - 0.5f);
 			bool disable_scissor_clipping = false;
 
 			if (out_clip_mask_list)
@@ -158,7 +158,7 @@ bool ElementUtilities::GetClippingRegion(Element* element, Rectanglei& out_clip_
 				{
 					Geometry* clip_geometry = clipping_element->BackgroundBorder().GetClipGeometry(clipping_element, clip_area);
 					const ClipMaskOperation clip_operation = (out_clip_mask_list->empty() ? ClipMaskOperation::Set : ClipMaskOperation::Intersect);
-					const Vector2f absolute_offset = clipping_element->GetAbsoluteOffset(BoxArea::Border).Round();
+					const Vector2f absolute_offset = clipping_element->BoxModel().GetAbsoluteOffset(BoxArea::Border).Round();
 					out_clip_mask_list->push_back(ClipMaskGeometry{clip_operation, clip_geometry, absolute_offset, transform});
 				}
 
@@ -172,7 +172,7 @@ bool ElementUtilities::GetClippingRegion(Element* element, Rectanglei& out_clip_
 			if (has_clipping_content && !disable_scissor_clipping)
 			{
 				// Shrink the scissor region to the element's client area.
-				Vector2f element_offset = clipping_element->GetAbsoluteOffset(clip_area).Round();
+				Vector2f element_offset = clipping_element->BoxModel().GetAbsoluteOffset(clip_area).Round();
 				Vector2f element_size = clipping_element->GetRenderBox(clip_area).GetFillSize();
 				Rectanglef element_region = Rectanglef::FromPositionSize(element_offset, element_size);
 
@@ -257,7 +257,7 @@ bool ElementUtilities::GetBoundingBox(Rectanglef& out_rectangle, Element* elemen
 	}
 
 	// Element bounds in non-transformed space.
-	Rectanglef bounds = Rectanglef::FromPositionSize(element->GetAbsoluteOffset(box_area), element->GetBox().GetSize(box_area));
+	Rectanglef bounds = Rectanglef::FromPositionSize(element->BoxModel().GetAbsoluteOffset(box_area), element->BoxModel().GetBox().GetSize(box_area));
 	bounds = bounds.Extend(shadow_extent_top_left, shadow_extent_bottom_right);
 
 	const TransformState* transform_state = element->GetTransformState();
@@ -328,7 +328,7 @@ bool ElementUtilities::PositionElement(Element* element, Vector2f offset, Positi
 	if (!parent)
 		return false;
 
-	const Box& parent_box = parent->GetBox();
+	const Box& parent_box = parent->BoxModel().GetBox();
 	Vector2f containing_block = parent_box.GetSize();
 	containing_block.x -= parent->Scroll().GetScrollbarSize(ElementScroll::VERTICAL);
 	containing_block.y -= parent->Scroll().GetScrollbarSize(ElementScroll::HORIZONTAL);
@@ -337,7 +337,7 @@ bool ElementUtilities::PositionElement(Element* element, Vector2f offset, Positi
 	LayoutDetails::BuildBox(box, containing_block, element);
 	if (box.GetSize().y < 0.f)
 		box.SetContent(Vector2f(box.GetSize().x, containing_block.y));
-	element->SetBox(box);
+	element->BoxModel().SetBox(box);
 
 	Vector2f element_block = box.GetSize(BoxArea::Margin);
 	Vector2f resolved_offset = offset;
@@ -353,7 +353,7 @@ bool ElementUtilities::PositionElement(Element* element, Vector2f offset, Positi
 	relative_offset.x += box.GetEdge(BoxArea::Margin, BoxEdge::Left);
 	relative_offset.y += box.GetEdge(BoxArea::Margin, BoxEdge::Top);
 
-	element->SetOffset(relative_offset, parent);
+	element->BoxModel().SetOffset(relative_offset, parent);
 
 	return true;
 }

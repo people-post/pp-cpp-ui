@@ -259,7 +259,7 @@ void ElementLog::ProcessEvent(Event& event)
 	if (event == EventId::Resize && auto_scroll)
 	{
 		if (message_content != nullptr && message_content->HasChildNodes())
-			message_content->GetLastChild()->ScrollIntoView();
+			message_content->GetLastChild()->Scroll().ScrollIntoView();
 	}
 }
 

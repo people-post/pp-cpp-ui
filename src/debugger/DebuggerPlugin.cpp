@@ -142,10 +142,10 @@ void DebuggerPlugin::Render()
 				if (element->IsVisible())
 				{
 					ElementUtilities::ApplyTransform(*element);
-					for (int j = 0; j < element->GetNumBoxes(); ++j)
+					for (int j = 0; j < element->BoxModel().GetNumBoxes(); ++j)
 					{
 						const RenderBox box = element->GetRenderBox(BoxArea::Border, j);
-						Geometry::RenderOutline(element->GetAbsoluteOffset(BoxArea::Border) + box.GetBorderOffset(), box.GetFillSize(),
+						Geometry::RenderOutline(element->BoxModel().GetAbsoluteOffset(BoxArea::Border) + box.GetBorderOffset(), box.GetFillSize(),
 							Colourb(255, 0, 0, 128), 1);
 					}
 

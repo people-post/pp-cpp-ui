@@ -107,7 +107,7 @@ void DecoratorTiledHorizontal::ReleaseElementData(DecoratorDataHandle element_da
 
 void DecoratorTiledHorizontal::RenderElement(Element* element, DecoratorDataHandle element_data) const
 {
-	Vector2f translation = element->GetAbsoluteOffset(BoxArea::Border);
+	Vector2f translation = element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 	DecoratorTiledHorizontalData* data = reinterpret_cast<DecoratorTiledHorizontalData*>(element_data);
 
 	for (int i = 0; i < data->num_textures; i++)

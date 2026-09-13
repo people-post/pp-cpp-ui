@@ -108,7 +108,7 @@ void DecoratorTiledVertical::ReleaseElementData(DecoratorDataHandle element_data
 
 void DecoratorTiledVertical::RenderElement(Element* element, DecoratorDataHandle element_data) const
 {
-	Vector2f translation = element->GetAbsoluteOffset(BoxArea::Padding).Round();
+	Vector2f translation = element->BoxModel().GetAbsoluteOffset(BoxArea::Padding).Round();
 	DecoratorTiledVerticalData* data = reinterpret_cast<DecoratorTiledVerticalData*>(element_data);
 
 	for (int i = 0; i < data->num_textures; i++)

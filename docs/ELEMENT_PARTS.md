@@ -1,6 +1,6 @@
 # Element as entity + parts
 
-**Status:** in progress (Phases 1–4 landed; flat-API retirement / controllers next)  
+**Status:** in progress (Phases 1–5a landed; Style/Events public headers + remaining flat retirement next)  
 **Related:** [ADR 002](ADR_002_MODULE_DEPENDENCIES.md), [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md), [SRC_LAYOUT.md](SRC_LAYOUT.md)
 
 ## Charter
@@ -42,7 +42,9 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 2. **Engine call sites** — migrate `src/` to parts-first. ✓
 3. **Split TUs** — animation, stacking, transform, geometry, tree, style façade, scroll API, events extracted. ✓ (`Element.cpp` ~1k lines; further attribute/lifecycle optional)
 4. **Conservative `sizeof`** — `animations`, `stacking_context`, `additional_boxes` are `UniquePtr` (allocate-on-use); hot BoxModel fields stay in-line. ✓ (`sizeof(Element)` 392 → 344)
-5. **Retire flat API** — remove duplicate Element methods once consumers moved.
+5. **Retire flat API** — in progress:
+   - **5a** ✓ Scroll offset/overflow APIs live on `ElementScroll`; Element methods are thin façades (`Prefer Scroll()`). Engine call sites use `Scroll()` / `BoxModel()` where types are public. Removed unused `GetElementScroll` / `GetElementEffects` / `GetElementBackgroundBorder` / `GetEventDispatcher` aliases.
+   - **5b** (next) Publicize `ElementStyle` (and `EventDispatcher` if needed) under `include/ui/…` so `Style()` / `Events()` are usable outside `src/dom/`, then migrate/remove flat style & event façades.
 6. **Controllers** — selection/focus/animation ownership on Document/Context.
 7. **Layout port** — narrow `LayoutElement` toward BoxModel + style queries.
 
@@ -51,3 +53,4 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 - No new product features as methods on `Element` when they belong on a part or controller.
 - Do not pimpl the whole Element (hot path).
 - Do not reintroduce `layout →` concrete Element includes outside `LayoutElement` / agreed ports.
+- Do not call `Style().…` from TUs that only see a forward-declared `ElementStyle` (incomplete type) until 5b lands — use Element façades or include the style header.

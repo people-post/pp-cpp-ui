@@ -411,23 +411,29 @@ public:
 
 	/// Gets the left scroll offset of the element.
 	/// @return The element's left scroll offset.
+	/// @note Prefer Scroll().GetScrollLeft().
 	float GetScrollLeft();
 	/// Sets the left scroll offset of the element.
 	/// @param[in] scroll_left The element's new left scroll offset.
 	/// @param[in] clamp When true (default), clamps to the valid scroll range; false allows rubber-band overscroll.
+	/// @note Prefer Scroll().SetScrollLeft().
 	void SetScrollLeft(float scroll_left, bool clamp = true);
 	/// Gets the top scroll offset of the element.
 	/// @return The element's top scroll offset.
+	/// @note Prefer Scroll().GetScrollTop().
 	float GetScrollTop();
 	/// Sets the top scroll offset of the element.
 	/// @param[in] scroll_top The element's new top scroll offset.
 	/// @param[in] clamp When true (default), clamps to the valid scroll range; false allows rubber-band overscroll.
+	/// @note Prefer Scroll().SetScrollTop().
 	void SetScrollTop(float scroll_top, bool clamp = true);
 	/// Gets the width of the scrollable content of the element; it includes the element padding but not its margin.
 	/// @return The width (in pixels) of the scrollable content of the element.
+	/// @note Prefer Scroll().GetScrollWidth().
 	float GetScrollWidth();
 	/// Gets the height of the scrollable content of the element; it includes the element padding but not its margin.
 	/// @return The height (in pixels) of the scrollable content of the element.
+	/// @note Prefer Scroll().GetScrollHeight().
 	float GetScrollHeight();
 
 	/// Gets the object representing the declarations of an element's style attributes.
@@ -595,7 +601,7 @@ public:
 	/**
 	    @name Parts
 	    Preferred access to Element collaborators (entity + parts). See docs/ELEMENT_PARTS.md.
-	    Legacy GetStyle / GetEventDispatcher / GetElementScroll / GetElementBackgroundBorder remain as aliases.
+	    Legacy GetStyle remains as an alias; prefer Style() where ElementStyle is complete.
 	 */
 	//@{
 	ElementStyle& Style();
@@ -616,21 +622,10 @@ public:
 	    @name Internal Functions
 	 */
 	//@{
-	/// Access the event dispatcher for this element.
-	/// @note Prefer Events().
-	EventDispatcher* GetEventDispatcher() const;
 	/// Returns event types with the number of listeners for debugging.
 	String GetEventDispatcherSummary() const;
-	/// Access the element background and border.
-	/// @note Prefer BackgroundBorder().
-	ElementBackgroundBorder* GetElementBackgroundBorder() const;
-	/// Returns the element's scrollbar functionality.
-	/// @note Prefer Scroll().
-	ElementScroll* GetElementScroll() const;
-	/// Returns the element's effects (decorators / filters).
-	/// @note Prefer Effects().
-	ElementEffects* GetElementEffects() const;
 	/// Returns the element's nearest scroll container that can be scrolled, if any.
+	/// @note Prefer Scroll().GetClosestScrollableContainer().
 	Element* GetClosestScrollableContainer();
 	/// Returns the element's transform state.
 	const TransformState* GetTransformState() const noexcept;

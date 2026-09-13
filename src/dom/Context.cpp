@@ -163,7 +163,7 @@ Context::Context(const String& name, RenderManager* render_manager, TextInputHan
 
 	root = Factory::InstanceElement(nullptr, "*", "#root", XMLAttributes());
 	root->SetId(name);
-	root->SetOffset(Vector2f(0, 0), nullptr);
+	root->BoxModel().SetOffset(Vector2f(0, 0), nullptr);
 	root->SetProperty(PropertyId::ZIndex, Property(0, Unit::NUMBER));
 
 	cursor_proxy = Factory::InstanceElement(nullptr, documents_base_tag, documents_base_tag, XMLAttributes());
@@ -232,7 +232,7 @@ void Context::SetDimensions(const Vector2i _dimensions)
 	{
 		dimensions = _dimensions;
 		render_manager->SetViewport(dimensions);
-		root->SetBox(Box(Vector2f(dimensions)));
+		root->BoxModel().SetBox(Box(Vector2f(dimensions)));
 		root->DirtyLayout();
 
 		for (int i = 0; i < root->GetNumChildren(); ++i)
@@ -346,7 +346,7 @@ bool Context::Render()
 	if (drag_clone)
 	{
 		static_cast<ElementDocument&>(*cursor_proxy).UpdateDocument();
-		cursor_proxy->SetOffset(
+		cursor_proxy->BoxModel().SetOffset(
 			Vector2f((float)Math::Clamp(mouse_position.x, 0, dimensions.x), (float)Math::Clamp(mouse_position.y, 0, dimensions.y)), nullptr);
 		cursor_proxy->Render();
 	}
@@ -1010,7 +1010,7 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 
 		// Dispatch a mouse scroll event, this gives elements an opportunity to block autoscroll from being initialized.
 		if (hover->DispatchEvent(EventId::Mousescroll, scroll_parameters))
-			scroll_controller->ActivateAutoscroll(hover->GetClosestScrollableContainer(), mouse_position);
+			scroll_controller->ActivateAutoscroll(hover->Scroll().GetClosestScrollableContainer(), mouse_position);
 	}
 
 	return !IsMouseInteracting();
@@ -1137,7 +1137,7 @@ bool Context::ProcessMouseWheel(Vector2f wheel_delta, int key_modifier_state)
 
 	const float unit_scroll_length = UNIT_SCROLL_LENGTH * density_independent_pixel_ratio;
 	const Vector2f scroll_length = wheel_delta * unit_scroll_length;
-	Element* target = hover->GetClosestScrollableContainer();
+	Element* target = hover->Scroll().GetClosestScrollableContainer();
 
 	if (scroll_controller->GetMode() == ScrollController::Mode::Smoothscroll && scroll_controller->GetTarget() == target)
 		scroll_controller->IncrementSmoothscrollTarget(scroll_length);
@@ -1224,7 +1224,7 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 
 	Element* touch_element = GetElementAtPoint(touch.position);
 	state->touch_target = touch_element ? touch_element->GetObserverPtr() : ObserverPtr<Element>{};
-	Element* scrollable = touch_element ? touch_element->GetClosestScrollableContainer() : nullptr;
+	Element* scrollable = touch_element ? touch_element->Scroll().GetClosestScrollableContainer() : nullptr;
 	state->scroll_container = scrollable ? scrollable->GetObserverPtr() : ObserverPtr<Element>{};
 
 	// Interrupt any coast / rubber-band settle when a new touch begins.
@@ -1327,10 +1327,10 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 				velocity = (oldest_in_window->position - newest.position) / dt;
 		}
 
-		const float scroll_top = scroll_container->GetScrollTop();
-		const float scroll_left = scroll_container->GetScrollLeft();
-		const float max_top = Math::Max(0.f, scroll_container->GetScrollHeight() - scroll_container->GetClientHeight());
-		const float max_left = Math::Max(0.f, scroll_container->GetScrollWidth() - scroll_container->GetClientWidth());
+		const float scroll_top = scroll_container->Scroll().GetScrollTop();
+		const float scroll_left = scroll_container->Scroll().GetScrollLeft();
+		const float max_top = Math::Max(0.f, scroll_container->Scroll().GetScrollHeight() - scroll_container->GetClientHeight());
+		const float max_left = Math::Max(0.f, scroll_container->Scroll().GetScrollWidth() - scroll_container->GetClientWidth());
 		constexpr float overscroll_eps = 0.5f;
 		const bool overscrolled = scroll_top < -overscroll_eps || scroll_left < -overscroll_eps || scroll_top > max_top + overscroll_eps ||
 			scroll_left > max_left + overscroll_eps;
@@ -1793,7 +1793,7 @@ void Context::CreateDragClone(Element* element)
 	cursor_proxy->AppendChild(std::move(element_drag_clone));
 
 	// Position the clone. Use projected mouse coordinates to handle any ancestor transforms.
-	const Vector2f absolute_pos = element->GetAbsoluteOffset(BoxArea::Border);
+	const Vector2f absolute_pos = element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 	Vector2f projected_mouse_position = Vector2f(mouse_position);
 	if (Element* parent = element->GetParentNode())
 		parent->Project(projected_mouse_position);

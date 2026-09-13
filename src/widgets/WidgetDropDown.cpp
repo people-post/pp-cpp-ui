@@ -125,8 +125,8 @@ void WidgetDropDown::OnRender()
 		// We try to respect user values of 'height', 'min-height', and 'max-height'. However, when we need to shrink the box
 		// we will override the 'height' property.
 
-		const float initial_used_height = selection_element->GetBox().GetSize().y;
-		const Vector2f initial_scroll_offset = {selection_element->GetScrollLeft(), selection_element->GetScrollTop()};
+		const float initial_used_height = selection_element->BoxModel().GetBox().GetSize().y;
+		const Vector2f initial_scroll_offset = {selection_element->Scroll().GetScrollLeft(), selection_element->Scroll().GetScrollTop()};
 
 		// Previously set 'height' property from this procedure must be removed for the calculations below to work as intended.
 		if (selection_element->GetLocalStyleProperties().count(PropertyId::Height) == 1)
@@ -136,37 +136,37 @@ void WidgetDropDown::OnRender()
 		}
 
 		Box box;
-		ElementUtilities::BuildBox(box, parent_element->GetBox().GetSize(), selection_element);
+		ElementUtilities::BuildBox(box, parent_element->BoxModel().GetBox().GetSize(), selection_element);
 
 		// The user can use 'margin-left/top/bottom' to offset the box away from the 'select' element, respectively
 		// horizontally, vertically when box below, and vertically when box above.
 		const float offset_x = box.GetEdge(BoxArea::Margin, BoxEdge::Left);
-		const float offset_y_below = parent_element->GetBox().GetSize(BoxArea::Border).y + box.GetEdge(BoxArea::Margin, BoxEdge::Top);
+		const float offset_y_below = parent_element->BoxModel().GetBox().GetSize(BoxArea::Border).y + box.GetEdge(BoxArea::Margin, BoxEdge::Top);
 		const float offset_y_above = -box.GetEdge(BoxArea::Margin, BoxEdge::Bottom);
 
 		float window_height = 100'000.f;
 		if (Context* context = parent_element->GetContext())
 			window_height = float(context->GetDimensions().y);
 
-		const float absolute_y = parent_element->GetAbsoluteOffset(BoxArea::Border).y;
+		const float absolute_y = parent_element->BoxModel().GetAbsoluteOffset(BoxArea::Border).y;
 
 		const float height_below = window_height - absolute_y - offset_y_below;
 		const float height_above = absolute_y + offset_y_above;
 
 		// Format the selection box and retrieve the 'native' height occupied by all the options, while respecting
 		// the 'min/max-height' properties.
-		ElementUtilities::FormatElement(selection_element, parent_element->GetBox().GetSize(BoxArea::Border));
+		ElementUtilities::FormatElement(selection_element, parent_element->BoxModel().GetBox().GetSize(BoxArea::Border));
 		const float content_height = selection_element->GetOffsetHeight();
 
 		if (content_height < height_below)
 		{
 			// Position box below
-			selection_element->SetOffset(Vector2f(offset_x, offset_y_below), parent_element);
+			selection_element->BoxModel().SetOffset(Vector2f(offset_x, offset_y_below), parent_element);
 		}
 		else if (content_height < height_above)
 		{
 			// Position box above
-			selection_element->SetOffset(Vector2f(offset_x, -content_height + offset_y_above), parent_element);
+			selection_element->BoxModel().SetOffset(Vector2f(offset_x, -content_height + offset_y_above), parent_element);
 		}
 		else
 		{
@@ -196,16 +196,16 @@ void WidgetDropDown::OnRender()
 			// `UpdateDocument` to update the properties. See also `RemoveProperty` for height above.
 			selection_element->SetProperty(PropertyId::Height, Property(height, Unit::PX));
 			selection_element->GetOwnerDocument()->UpdateDocument();
-			ElementUtilities::FormatElement(selection_element, parent_element->GetBox().GetSize(BoxArea::Border));
+			ElementUtilities::FormatElement(selection_element, parent_element->BoxModel().GetBox().GetSize(BoxArea::Border));
 
 			// Set the scroll offset back, since it may have been clamped during the first element formatting.
-			selection_element->SetScrollLeft(initial_scroll_offset.x);
-			selection_element->SetScrollTop(initial_scroll_offset.y);
+			selection_element->Scroll().SetScrollLeft(initial_scroll_offset.x);
+			selection_element->Scroll().SetScrollTop(initial_scroll_offset.y);
 
-			selection_element->SetOffset(Vector2f(offset_x, offset_y), parent_element);
+			selection_element->BoxModel().SetOffset(Vector2f(offset_x, offset_y), parent_element);
 		}
 
-		const float new_used_height = selection_element->GetBox().GetSize().y;
+		const float new_used_height = selection_element->BoxModel().GetBox().GetSize().y;
 		const bool should_scroll_into_view =
 			(box_opened_since_last_format || value_changed_since_last_box_format || initial_used_height != new_used_height);
 
@@ -219,7 +219,7 @@ void WidgetDropDown::OnRender()
 				ScrollBehavior::Instant,
 				ScrollParentage::Closest,
 			};
-			GetOption(selection)->ScrollIntoView(scroll_options);
+			GetOption(selection)->Scroll().ScrollIntoView(scroll_options);
 		}
 
 		box_opened_since_last_format = false;
@@ -229,8 +229,8 @@ void WidgetDropDown::OnRender()
 
 	if (value_layout_dirty)
 	{
-		ElementUtilities::FormatElement(value_element, parent_element->GetBox().GetSize(BoxArea::Border));
-		value_element->SetOffset(parent_element->GetBox().GetPosition(BoxArea::Content), parent_element);
+		ElementUtilities::FormatElement(value_element, parent_element->BoxModel().GetBox().GetSize(BoxArea::Border));
+		value_element->BoxModel().SetOffset(parent_element->BoxModel().GetBox().GetPosition(BoxArea::Content), parent_element);
 
 		value_layout_dirty = false;
 	}

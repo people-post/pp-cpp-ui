@@ -368,7 +368,7 @@ namespace SVG {
 
 		const ComputedValues& computed = element->GetComputedValues();
 		const ColourbPremultiplied colour = computed.image_color().ToPremultiplied(computed.opacity());
-		Vector2i dimensions(element->GetBox().GetSize(area).Round());
+		Vector2i dimensions(element->BoxModel().GetBox().GetSize(area).Round());
 		if (dimensions.x == 0 || dimensions.y == 0)
 			dimensions = {0, 0};
 

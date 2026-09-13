@@ -45,7 +45,7 @@ void DecoratorText::RenderElement(Element* element, DecoratorDataHandle element_
 	if (!GenerateGeometry(element, *data))
 		return;
 
-	const Vector2f translation = element->GetAbsoluteOffset(BoxArea::Border);
+	const Vector2f translation = element->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 
 	for (size_t i = 0; i < data->textured_geometry.size(); ++i)
 		data->textured_geometry[i].geometry.Render(translation, data->textured_geometry[i].texture);

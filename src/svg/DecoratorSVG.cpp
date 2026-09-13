@@ -39,7 +39,7 @@ namespace SVG {
 	{
 		Data* data = reinterpret_cast<Data*>(element_data);
 		UI_ASSERT(data && data->handle);
-		data->handle->geometry.Render(element->GetAbsoluteOffset(data->paint_area), data->handle->texture);
+		data->handle->geometry.Render(element->BoxModel().GetAbsoluteOffset(data->paint_area), data->handle->texture);
 	}
 
 	DecoratorSVGInstancer::DecoratorSVGInstancer()

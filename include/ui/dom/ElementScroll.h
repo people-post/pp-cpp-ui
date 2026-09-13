@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ui/base/Header.h>
+#include <ui/dom/ScrollTypes.h>
 #include <ui/base/Types.h>
 
 namespace ui {
@@ -9,7 +10,7 @@ class Element;
 class WidgetScroll;
 
 /**
-    Manages an element's scrollbars and scrolling state.
+    Manages an element's scrollbars and scrolling state (offset + chrome).
  */
 
 class UI_CORE_API ElementScroll {
@@ -48,6 +49,20 @@ public:
 
 	/// Updates the scrollbar elements to reflect their current state.
 	void UpdateProperties();
+
+	/// Scroll offset / overflow APIs (preferred via Element::Scroll()).
+	float GetScrollLeft() const;
+	void SetScrollLeft(float scroll_left, bool clamp = true);
+	float GetScrollTop() const;
+	void SetScrollTop(float scroll_top, bool clamp = true);
+	float GetScrollWidth() const;
+	float GetScrollHeight() const;
+	void ScrollIntoView(ScrollIntoViewOptions options);
+	void ScrollIntoView(bool align_with_top = true);
+	void ScrollTo(Vector2f offset, ScrollBehavior behavior = ScrollBehavior::Instant);
+	Element* GetClosestScrollableContainer();
+	void ClampScrollOffset();
+	void ClampScrollOffsetRecursive();
 
 private:
 	struct Scrollbar {

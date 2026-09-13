@@ -498,29 +498,9 @@ const ElementBackgroundBorder& Element::BackgroundBorder() const
 
 
 
-EventDispatcher* Element::GetEventDispatcher() const
-{
-	return &meta->event_dispatcher;
-}
-
 String Element::GetEventDispatcherSummary() const
 {
 	return Events().ToString();
-}
-
-ElementBackgroundBorder* Element::GetElementBackgroundBorder() const
-{
-	return &meta->background_border;
-}
-
-ElementScroll* Element::GetElementScroll() const
-{
-	return &meta->scroll;
-}
-
-ElementEffects* Element::GetElementEffects() const
-{
-	return &meta->effects;
 }
 
 DataModel* Element::GetDataModel() const
@@ -893,7 +873,7 @@ SelectionEndpoint Element::HitTestSelection(Vector2f absolute_position) const
 		if (!hit.IsValid())
 			continue;
 
-		const Vector2f offset = child->GetAbsoluteOffset(BoxArea::Border);
+		const Vector2f offset = child->BoxModel().GetAbsoluteOffset(BoxArea::Border);
 		const float distance = (offset - absolute_position).Magnitude();
 		if (distance < best_distance)
 		{
