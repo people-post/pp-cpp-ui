@@ -2,9 +2,9 @@
 
 **Tier:** architecture
 
-`pp-cpp-ui` is a shared C++ UI library. Dependencies flow downward only.
-The engine is one link target (`ui_core` / `ui::core`); sources and public headers
-are split by module.
+`pp-cpp-ui` is a shared C++ UI library. The engine is one link target
+(`ui_core` / `ui::core`); sources and public headers are split by module.
+**Module dependencies form a DAG** — see [ADR 002](ADR_002_MODULE_DEPENDENCIES.md).
 
 ## Tree
 
@@ -15,7 +15,7 @@ include/ui/
   style/             Properties, stylesheets, decorators, filters
   layout/            Box model
   dom/               Element, document, context, events, factory
-  text/              Text, fonts, selection
+  text/              Fonts, shaping, selection, ElementText
   xml/               RML/XML streams & parsers
   data/              Data model
   paint/             Geometry, textures, render interfaces
@@ -36,6 +36,60 @@ tests/
   support/           Shell + SDL_GL3 reference backend only
 ```
 
+## Module dependency North Star
+
+Layers (top may depend on lower; **never** reverse):
+
+```text
+L0   config
+L1   base
+L2   paint
+L3   style
+L4   layout
+L5   text
+L6   dom
+L7   xml
+L8   data
+L9   widgets
+L10  core                 composition root
+L11  svg | debugger      optional plugins
+L12  platform | render    owned backends
+```
+
+### Hard rules
+
+1. **No cycles.** If A needs B and B needs A, extract a lower seam.
+2. **`core` is the composition root.** Only `core`, plugins (`svg`, `debugger`),
+   and backends (`platform`, `render`) may include `core`. Lower modules must
+   not call `Core::Get*()`; prefer injection via `Context` / interfaces.
+3. **`base` stays dumb.** No includes of `style` or any higher module.
+4. **`style` does not own DOM.** No `style → dom` (apply style through DOM-owned
+   APIs or narrow callbacks).
+5. **`dom` does not know concrete widgets, xml, or data.** Factory registration
+   and parse/bind glue belong in `core` or the higher module.
+6. **Plugins and backends are leaves.** Engine modules never include them
+   except `core` registering plugins.
+7. **Same-layer peers** (`svg`↔`debugger`, `platform`↔`render`) do not include
+   each other unless we document a directed edge.
+8. **Public and private includes obey the same DAG.**
+
+### Named bridges (allowed upward)
+
+| Edge | Why |
+|------|-----|
+| `layout → dom` | Box queries / element layout façade |
+| `text → dom` | `ElementText`, selection participation |
+
+### Enforcement
+
+```bash
+python3 scripts/check_module_deps.py
+```
+
+Forbidden edges fail unless listed in the script’s allowlist (tracked debt).
+Clear debt in the order in ADR 002; do not grow the allowlist without updating
+the ADR.
+
 ## Include & namespace
 
 ```cpp
@@ -45,14 +99,8 @@ tests/
 ui::Element* el = ...;
 ```
 
-Private engine headers use unqualified includes (`"LayoutEngine.h"`) with module
-roots on `ui_core`'s private include path.
-
-CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`, `pp::ui_backend`, `pp::ui`.
-
-## Test data path
-
-`tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...` still resolve.
+CMake targets: `ui::core`, `ui::debugger`, `ui::engine`, `pp::ui_core`,
+`pp::ui_backend`, `pp::ui`.
 
 ## Private includes
 
@@ -64,5 +112,10 @@ Cross-module engine headers use a single `-I src` root and qualified paths:
 #include "layout/LayoutEngine.h"
 ```
 
-Same-folder includes (`#include "LayoutEngine.h"` from `layout/LayoutEngine.cpp`) stay unqualified.
-Public headers always use `<ui/module/Name.h>`.
+Same-folder includes (`#include "LayoutEngine.h"` from `layout/LayoutEngine.cpp`)
+stay unqualified. Public headers always use `<ui/module/Name.h>`.
+
+## Test data path
+
+`tests/Tests` → `tests/engine` so fixture virtual paths under `../Tests/Data/...`
+still resolve.

@@ -54,3 +54,8 @@ Public include directories use lowercase names (`config/`, `debugger/`, `svg/`,
 `base/containers/`), matching `src/`. Umbrella headers `Core.h` / `Debugger.h` remain
 at `include/ui/` for convenience.
 
+## Amendment — module dependency North Star
+
+Module include edges follow the DAG in [ADR 002](ADR_002_MODULE_DEPENDENCIES.md)
+(`scripts/check_module_deps.py`).
+

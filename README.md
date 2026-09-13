@@ -5,7 +5,8 @@ FreeType / HarfBuzz / LunaSVG, and an SDL3 + OpenGL3 backend.
 
 ## Layout
 
-See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md) and [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md).
+See [docs/SRC_LAYOUT.md](docs/SRC_LAYOUT.md), [docs/ADR_001_FIRST_PARTY_LAYOUT.md](docs/ADR_001_FIRST_PARTY_LAYOUT.md),
+and [docs/ADR_002_MODULE_DEPENDENCIES.md](docs/ADR_002_MODULE_DEPENDENCIES.md).
 
 ```text
 include/ui/        Engine + backend public API (`#include <ui/dom/…>`, `namespace ui`)
