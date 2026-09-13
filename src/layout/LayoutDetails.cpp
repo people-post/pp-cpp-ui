@@ -1,6 +1,5 @@
 #include "LayoutDetails.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/layout/LayoutElement.h>
 #include <ui/layout/LayoutTextElement.h>
 #include <ui/base/Math.h>
@@ -29,7 +28,7 @@ void LayoutDetails::BuildBox(Box& box, Vector2f containing_block, Element* eleme
 		return;
 	}
 
-	const ComputedValues& computed = element->GetComputedValues();
+	const ComputedValues& computed = LayoutElement::GetComputedValues(element);
 
 	// Calculate the padding area.
 	box.SetEdge(BoxArea::Padding, BoxEdge::Top, Math::Max(0.0f, ResolveValue(computed.padding_top(), containing_block.x)));
@@ -52,7 +51,7 @@ void LayoutDetails::BuildBox(Box& box, Vector2f containing_block, Element* eleme
 	Vector2f intrinsic_size(-1, -1);
 	float intrinsic_ratio = -1;
 
-	const bool replaced_element = element->GetIntrinsicDimensions(intrinsic_size, intrinsic_ratio);
+	const bool replaced_element = LayoutElement::GetIntrinsicDimensions(element, intrinsic_size, intrinsic_ratio);
 
 	// Calculate the content area and constraints. 'auto' width and height are handled later.
 	// For inline non-replaced elements, width and height are ignored, so we can skip the calculations.
@@ -192,7 +191,7 @@ ContainingBlock LayoutDetails::GetContainingBlock(ContainerBox* parent_container
 void LayoutDetails::BuildBoxSizeAndMargins(Box& box, Vector2f min_size, Vector2f max_size, Vector2f containing_block, Element* element,
 	BuildBoxMode box_context, bool replaced_element)
 {
-	const ComputedValues& computed = element->GetComputedValues();
+	const ComputedValues& computed = LayoutElement::GetComputedValues(element);
 
 	if (box_context == BuildBoxMode::Inline || box_context == BuildBoxMode::UnalignedBlock)
 	{
@@ -221,7 +220,7 @@ float LayoutDetails::GetShrinkToFitWidth(Element* element, Vector2f containing_b
 	Box box;
 	float min_height, max_height;
 	LayoutDetails::BuildBox(box, containing_block, element, BuildBoxMode::UnalignedBlock);
-	LayoutDetails::GetDefiniteMinMaxHeight(min_height, max_height, element->GetComputedValues(), box, containing_block.y);
+	LayoutDetails::GetDefiniteMinMaxHeight(min_height, max_height, LayoutElement::GetComputedValues(element), box, containing_block.y);
 
 	if (box.GetSize().x >= 0.f)
 	{
@@ -229,7 +228,7 @@ float LayoutDetails::GetShrinkToFitWidth(Element* element, Vector2f containing_b
 	}
 
 	// Currently we don't support shrink-to-fit width for tables. Just return a zero-sized width.
-	const Style::Display display = element->GetDisplay();
+	const Style::Display display = LayoutElement::GetDisplay(element);
 	if (display == Style::Display::Table || display == Style::Display::InlineTable)
 	{
 		return 0.f;
@@ -286,11 +285,11 @@ String LayoutDetails::GetDebugElementName(Element* element)
 {
 	if (!element)
 		return "nullptr";
-	if (!element->GetId().empty())
-		return '#' + element->GetId();
-	if (LayoutTextElement* element_text = element->GetAsLayoutTextElement())
+	if (!LayoutElement::GetId(element).empty())
+		return '#' + LayoutElement::GetId(element);
+	if (LayoutTextElement* element_text = LayoutElement::GetAsLayoutTextElement(element))
 		return '\"' + StringUtilities::StripWhitespace(element_text->GetDebugText()).substr(0, 20) + '\"';
-	return element->GetAddress(false, false);
+	return LayoutElement::GetAddress(element, false, false);
 }
 
 Vector2f LayoutDetails::CalculateSizeForReplacedElement(const Vector2f specified_content_size, const Vector2f min_size, const Vector2f max_size,

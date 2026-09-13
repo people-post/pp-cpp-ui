@@ -1,6 +1,5 @@
 #include "BlockFormattingContext.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/PropertyDefinition.h>
 #include <ui/style/StyleSheetSpecification.h>
@@ -8,6 +7,7 @@
 #include "BlockContainer.h"
 #include "FloatedBoxSpace.h"
 #include "LayoutDetails.h"
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -19,7 +19,7 @@ static void LogUnexpectedFlowElement(Element* element, Style::Display display)
 	StyleSheetSpecification::GetPropertySpecification().GetProperty(PropertyId::Display)->GetValue(value, Property(display));
 
 	Log::Message(Log::LT_WARNING, "Element has a display type '%s' which cannot be located in normal flow layout. Element will not be formatted: %s",
-		value.c_str(), element->GetAddress().c_str());
+		value.c_str(), LayoutElement::GetAddress(element).c_str());
 }
 
 #ifdef UI_DEBUG
@@ -33,7 +33,7 @@ struct DebugDumpLayoutTree {
 	{
 		// When an element with this ID is encountered, dump the formatted layout tree (including for all descendant formatting contexts).
 		static const String debug_trigger_id = "rmlui-debug-layout";
-		is_printing_tree_root = element->HasAttribute(debug_trigger_id);
+		is_printing_tree_root = LayoutElement::HasAttribute(element, debug_trigger_id);
 		if (is_printing_tree_root)
 			g_debug_dumping_layout_tree = true;
 	}
@@ -90,11 +90,11 @@ UniquePtr<LayoutBox> BlockFormattingContext::Format(ContainerBox* parent_contain
 
 #ifdef UI_TRACY_PROFILING
 	UI_ZoneScopedC(0xB22222);
-	auto name = CreateString("%s %x", element->GetAddress(false, false).c_str(), element);
+	auto name = CreateString("%s %x", LayoutElement::GetAddress(element, false, false).c_str(), element);
 	UI_ZoneName(name.c_str(), name.size());
 #endif
 
-	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
+	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, LayoutElement::GetPosition(element)).size;
 
 	Box box;
 	if (override_initial_box)
@@ -103,7 +103,7 @@ UniquePtr<LayoutBox> BlockFormattingContext::Format(ContainerBox* parent_contain
 		LayoutDetails::BuildBox(box, containing_block, element);
 
 	float min_height, max_height;
-	LayoutDetails::GetDefiniteMinMaxHeight(min_height, max_height, element->GetComputedValues(), box, containing_block.y);
+	LayoutDetails::GetDefiniteMinMaxHeight(min_height, max_height, LayoutElement::GetComputedValues(element), box, containing_block.y);
 
 	UniquePtr<BlockContainer> container = MakeUnique<BlockContainer>(parent_container, nullptr, element, box, min_height, max_height);
 
@@ -116,9 +116,9 @@ UniquePtr<LayoutBox> BlockFormattingContext::Format(ContainerBox* parent_contain
 	for (int layout_iteration = 0; layout_iteration < 3; layout_iteration++)
 	{
 		bool all_children_formatted = true;
-		for (int i = 0; i < element->GetNumChildren() && all_children_formatted; i++)
+		for (int i = 0; i < LayoutElement::GetNumChildren(element) && all_children_formatted; i++)
 		{
-			if (!FormatBlockContainerChild(container.get(), element->GetChild(i)))
+			if (!FormatBlockContainerChild(container.get(), LayoutElement::GetChild(element, i)))
 				all_children_formatted = false;
 		}
 
@@ -136,12 +136,12 @@ UniquePtr<LayoutBox> BlockFormattingContext::Format(ContainerBox* parent_contain
 bool BlockFormattingContext::FormatBlockBox(BlockContainer* parent_container, Element* element)
 {
 	UI_ZoneScopedC(0x2F4F4F);
-	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
+	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, LayoutElement::GetPosition(element)).size;
 
 	Box box;
 	LayoutDetails::BuildBox(box, containing_block, element);
 	float min_height, max_height;
-	LayoutDetails::GetDefiniteMinMaxHeight(min_height, max_height, element->GetComputedValues(), box, containing_block.y);
+	LayoutDetails::GetDefiniteMinMaxHeight(min_height, max_height, LayoutElement::GetComputedValues(element), box, containing_block.y);
 
 	BlockContainer* container = parent_container->OpenBlockBox(element, box, min_height, max_height);
 	if (!container)
@@ -149,9 +149,9 @@ bool BlockFormattingContext::FormatBlockBox(BlockContainer* parent_container, El
 
 	// Format our children. This may result in scrollbars being added to our formatting context root, then we need to
 	// bail out and restart formatting for the current block formatting context.
-	for (int i = 0; i < element->GetNumChildren(); i++)
+	for (int i = 0; i < LayoutElement::GetNumChildren(element); i++)
 	{
-		if (!FormatBlockContainerChild(container, element->GetChild(i)))
+		if (!FormatBlockContainerChild(container, LayoutElement::GetChild(element, i)))
 			return false;
 	}
 
@@ -164,16 +164,16 @@ bool BlockFormattingContext::FormatBlockBox(BlockContainer* parent_container, El
 bool BlockFormattingContext::FormatInlineBox(BlockContainer* parent_container, Element* element)
 {
 	UI_ZoneScopedC(0x3F6F6F);
-	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
+	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, LayoutElement::GetPosition(element)).size;
 
 	Box box;
 	LayoutDetails::BuildBox(box, containing_block, element, BuildBoxMode::Inline);
 	auto inline_box_handle = parent_container->AddInlineElement(element, box);
 
 	// Format the element's children.
-	for (int i = 0; i < element->GetNumChildren(); i++)
+	for (int i = 0; i < LayoutElement::GetNumChildren(element); i++)
 	{
-		if (!FormatBlockContainerChild(parent_container, element->GetChild(i)))
+		if (!FormatBlockContainerChild(parent_container, LayoutElement::GetChild(element, i)))
 			return false;
 	}
 
@@ -186,18 +186,18 @@ bool BlockFormattingContext::FormatBlockContainerChild(BlockContainer* parent_co
 {
 #ifdef UI_TRACY_PROFILING
 	UI_ZoneScoped;
-	auto name = CreateString(">%s %x", element->GetAddress(false, false).c_str(), element);
+	auto name = CreateString(">%s %x", LayoutElement::GetAddress(element, false, false).c_str(), element);
 	UI_ZoneName(name.c_str(), name.size());
 #endif
 
 	// Check for special formatting tags.
-	if (element->GetTagName() == "br")
+	if (LayoutElement::GetTagName(element) == "br")
 	{
 		parent_container->AddBreak();
 		return true;
 	}
 
-	auto& computed = element->GetComputedValues();
+	auto& computed = LayoutElement::GetComputedValues(element);
 	const Style::Display display = computed.display();
 
 	// Don't lay this element out if it is set to a display type of none.
@@ -233,14 +233,14 @@ bool BlockFormattingContext::FormatBlockContainerChild(BlockContainer* parent_co
 		// Otherwise, check if we have a sized block-level box.
 		else if (layout_box && outer_display == OuterDisplayType::BlockLevel)
 		{
-			if (!parent_container->AddBlockLevelBox(std::move(layout_box), element, element->GetBox()))
+			if (!parent_container->AddBlockLevelBox(std::move(layout_box), element, LayoutElement::GetBox(element)))
 				return false;
 		}
 		// Nope, then this must be an inline-level box.
 		else
 		{
 			UI_ASSERT(outer_display == OuterDisplayType::InlineLevel);
-			auto inline_box_handle = parent_container->AddInlineElement(element, element->GetBox());
+			auto inline_box_handle = parent_container->AddInlineElement(element, LayoutElement::GetBox(element));
 			parent_container->CloseInlineElement(inline_box_handle);
 		}
 

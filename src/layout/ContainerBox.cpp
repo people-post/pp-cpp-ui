@@ -1,6 +1,5 @@
 #include "ContainerBox.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/base/Profiling.h>
 #include "FlexFormattingContext.h"
 #include "FormattingContext.h"
@@ -49,7 +48,7 @@ void ContainerBox::ClosePositionedElements()
 	// updated to reflect changes to the size of this block box. Update relative offsets before handling absolute
 	// elements, as this may affect the resolved static position of the absolute elements.
 	for (Element* child : relative_elements)
-		child->UpdateOffset();
+		LayoutElement::UpdateOffset(child);
 
 	relative_elements.clear();
 
@@ -70,8 +69,8 @@ void ContainerBox::ClosePositionedElements()
 			// the static position's offset parent. Assumes (1) that this container box is part of the containing block
 			// chain of the static position offset parent, and (2) that all offsets in this chain has been set already.
 			Vector2f relative_position;
-			for (Element* ancestor = static_position_offset_parent; ancestor && ancestor != element; ancestor = ancestor->GetOffsetParent())
-				relative_position += ancestor->GetRelativeOffset(BoxArea::Border);
+			for (Element* ancestor = static_position_offset_parent; ancestor && ancestor != element; ancestor = LayoutElement::GetOffsetParent(ancestor))
+				relative_position += LayoutElement::GetRelativeOffset(ancestor, BoxArea::Border);
 
 			// Now simply add the result to the stored static position to get the static position in our local space.
 			Vector2f offset = relative_position + static_position;
@@ -82,23 +81,23 @@ void ContainerBox::ClosePositionedElements()
 			// Now that the element's box has been built, we can offset the position we determined was appropriate for
 			// it by the element's margin. This is necessary because the coordinate system for the box begins at the
 			// border, not the margin.
-			offset.x += absolute_element->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Left);
-			offset.y += absolute_element->GetBox().GetEdge(BoxArea::Margin, BoxEdge::Top);
+			offset.x += LayoutElement::GetBox(absolute_element).GetEdge(BoxArea::Margin, BoxEdge::Left);
+			offset.y += LayoutElement::GetBox(absolute_element).GetEdge(BoxArea::Margin, BoxEdge::Top);
 
 			// Set the offset of the element; the element itself will take care of any RCSS-defined positional offsets.
-			absolute_element->SetOffset(offset, element);
+			LayoutElement::SetOffset(absolute_element, offset, element);
 		}
 	}
 }
 
 void ContainerBox::SetElementBaseline(float element_baseline)
 {
-	element->SetBaseline(element_baseline);
+	LayoutElement::SetBaseline(element, element_baseline);
 }
 
 void ContainerBox::SubmitElementLayout()
 {
-	element->OnLayout();
+	LayoutElement::OnLayout(element);
 }
 
 ContainerBox::ContainerBox(Type type, Element* element, ContainerBox* parent_container) :
@@ -106,7 +105,7 @@ ContainerBox::ContainerBox(Type type, Element* element, ContainerBox* parent_con
 {
 	if (element)
 	{
-		const auto& computed = element->GetComputedValues();
+		const auto& computed = LayoutElement::GetComputedValues(element);
 		overflow_x = computed.overflow_x();
 		overflow_y = computed.overflow_y();
 		is_absolute_positioning_containing_block = (computed.position() != Style::Position::Static || computed.has_local_transform() ||
@@ -192,12 +191,12 @@ bool ContainerBox::SubmitBox(const Vector2f content_overflow_size, const Box& bo
 			is_scroll_container ? LayoutElement::GetScrollbarSize(element, LayoutScrollbarAxis::Horizontal) : 0.f,
 		};
 
-		element->SetBox(box);
+		LayoutElement::SetBox(element, box);
 
 		// Scrollable overflow is the set of things extending our padding area, for which scrolling could be provided.
 		const Vector2f scrollable_overflow_size = Math::Max(padding_size - scrollbar_size, padding_top_left + content_overflow_size);
 		// Set the overflow size but defer clamping of the scroll offset, see `LayoutEngine::FormatElement`.
-		element->SetScrollableOverflowRectangle(scrollable_overflow_size, false);
+		LayoutElement::SetScrollableOverflowRectangle(element, scrollable_overflow_size, false);
 
 		const Vector2f border_size = padding_size + box.GetFrameSize(BoxArea::Border);
 
@@ -248,7 +247,7 @@ bool FlexContainer::Close(const Vector2f content_overflow_size, const Box& box, 
 float FlexContainer::GetShrinkToFitWidth() const
 {
 	// For the trivial case of a fixed width, we simply return that.
-	if (element->GetComputedValues().width().type == Style::Width::Type::Length)
+	if (LayoutElement::GetComputedValues(element).width().type == Style::Width::Type::Length)
 		return box.GetSize().x;
 
 	// Infer shrink-to-fit width from the intrinsic width of the element.
@@ -283,7 +282,7 @@ float TableWrapper::GetShrinkToFitWidth() const
 {
 	// We don't currently support shrink-to-fit layout of tables. However, for the trivial case of a fixed width, we
 	// simply return that.
-	if (element->GetComputedValues().width().type == Style::Width::Type::Length)
+	if (LayoutElement::GetComputedValues(element).width().type == Style::Width::Type::Length)
 		return box.GetSize().x;
 
 	return 0.0f;

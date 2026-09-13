@@ -1,15 +1,15 @@
 #include "ReplacedFormattingContext.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include "BlockFormattingContext.h"
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
 UniquePtr<LayoutBox> ReplacedFormattingContext::Format(ContainerBox* parent_container, Element* element, const Box* override_initial_box)
 {
-	UI_ASSERT(element->IsReplaced());
+	UI_ASSERT(LayoutElement::IsReplaced(element));
 
 	// Replaced elements provide their own rendering, we just set their box here and notify them that the element has been sized.
 	auto replaced_box = MakeUnique<ReplacedBox>(element);
@@ -18,7 +18,7 @@ UniquePtr<LayoutBox> ReplacedFormattingContext::Format(ContainerBox* parent_cont
 		box = *override_initial_box;
 	else
 	{
-		const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
+		const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, LayoutElement::GetPosition(element)).size;
 		LayoutDetails::BuildBox(box, containing_block, element);
 	}
 
@@ -28,7 +28,7 @@ UniquePtr<LayoutBox> ReplacedFormattingContext::Format(ContainerBox* parent_cont
 	// Usually, replaced elements add children to the hidden DOM. If we happen to have any normal DOM children, e.g.
 	// added by the user, we format them using normal block formatting rules. Since replaced elements provide their
 	// own rendering, this could cause conflicting or strange layout results, and is done at the user's own risk.
-	if (element->HasChildNodes())
+	if (LayoutElement::HasChildNodes(element))
 	{
 		RootBox root(box);
 		BlockFormattingContext::Format(&root, element, &box);
@@ -39,8 +39,8 @@ UniquePtr<LayoutBox> ReplacedFormattingContext::Format(ContainerBox* parent_cont
 
 void ReplacedBox::Close()
 {
-	element->SetBox(box);
-	element->OnLayout();
+	LayoutElement::SetBox(element, box);
+	LayoutElement::OnLayout(element);
 }
 
 String ReplacedBox::DebugDumpTree(int depth) const

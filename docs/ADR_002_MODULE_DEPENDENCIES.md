@@ -80,8 +80,8 @@ without defining layers, allowed bridges, or enforcement.
      (`paint → style` also cleared with DecorationsTypes move)
   12. **Narrowing `layout → dom`** (in progress) — see [LAYOUT_DOM_BRIDGE.md](LAYOUT_DOM_BRIDGE.md).
       Phase 1 concentrates scroll / string-width / list-marker access in
-      `LayoutElement` so most layout TUs no longer include `ElementScroll` /
-      `ElementUtilities` / private `ListMarker`.
+      `LayoutElement`. Phase 2 moves remaining Element ops behind the same façade;
+      only `LayoutElement.cpp` among layout `.cpp` files still includes `Element.h`.
 - Optional later: split CMake targets to match layers once the include DAG is clean.
 - Consumers see no API break from this ADR alone; breaks come only from follow-up
   refactors that move types between modules.

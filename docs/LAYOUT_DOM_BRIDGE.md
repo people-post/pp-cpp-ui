@@ -35,17 +35,16 @@ layout sources until Phase 2.
 **Success:** those three include kinds appear only in `LayoutElement.cpp`
 (or not at all).
 
-### Phase 2 — Façade the hot Element ops (in progress)
+### Phase 2 — Façade the hot Element ops (done)
 
 Extend `LayoutElement` with the high-frequency Element operations layout uses
 (`GetComputedValues`, box/offset submit, parent/child walk, replaced/intrinsic,
 font metrics, `OnLayout`, debug name). Convert Inline* / LayoutDetails first,
 then formatting contexts.
 
-**Progress:** `LayoutElement` now covers computed style, box/offset submit, tree walk,
-replaced/intrinsic, attributes/address, and private layout hooks via `ElementAccess`.
-`LayoutEngine`, `FormattingContext`, `InlineBox`, `LayoutPools`, and `LineBox` no longer
-include `Element.h`.
+**Progress:** Every layout `.cpp` except the façade (`LayoutElement.cpp`) no longer
+includes `Element.h`. Remaining Element traffic goes through `LayoutElement` +
+`ElementAccess` (friend) for private layout hooks.
 
 **Success:** most layout `.cpp` files no longer include `Element.h`; they use
 an incomplete `Element*` plus façade calls (or a later `LayoutNode` handle).

@@ -1,6 +1,5 @@
 #include "BlockContainer.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/base/Profiling.h>
 #include "FloatedBoxSpace.h"
 #include "InlineContainer.h"
@@ -72,7 +71,7 @@ bool BlockContainer::Close(BlockContainer* parent_block_container)
 	float element_baseline = 0;
 
 	// For inline-blocks with visible overflow, this is the baseline of the last line of the element (see CSS2 10.8.1).
-	if (element->GetDisplay() == Style::Display::InlineBlock && !IsScrollContainer())
+	if (LayoutElement::GetDisplay(element) == Style::Display::InlineBlock && !IsScrollContainer())
 	{
 		float baseline = 0;
 		bool found_baseline = GetBaselineOfLastLine(baseline);
@@ -120,15 +119,15 @@ BlockContainer* BlockContainer::OpenBlockBox(Element* child_element, const Box& 
 	auto child_container_ptr = MakeUnique<BlockContainer>(this, space, child_element, child_box, min_height, max_height);
 	BlockContainer* child_container = child_container_ptr.get();
 
-	child_container->position = NextBoxPosition(child_box, child_element->GetComputedValues().clear());
-	child_element->SetOffset(child_container->position - position, element);
+	child_container->position = NextBoxPosition(child_box, LayoutElement::GetComputedValues(child_element).clear());
+	LayoutElement::SetOffset(child_element, child_container->position - position, element);
 
 	child_container->ResetScrollbars(child_box);
 
 	// Store relatively positioned elements with their containing block so that their offset can be updated after
 	// their containing block has been sized.
 	{
-		const Style::Position pos = child_element->GetPosition();
+		const Style::Position pos = LayoutElement::GetPosition(child_element);
 		if (pos == Style::Position::Relative || pos == Style::Position::Sticky)
 			AddRelativeElement(child_element);
 	}
@@ -149,10 +148,10 @@ LayoutBox* BlockContainer::AddBlockLevelBox(UniquePtr<LayoutBox> block_level_box
 	// any floats, but we keep it simple here for now and just clear them.
 	Vector2f child_position = NextBoxPosition(child_box, Style::Clear::Both);
 
-	child_element->SetOffset(child_position - position, element);
+	LayoutElement::SetOffset(child_element, child_position - position, element);
 
 	{
-		const Style::Position pos = child_element->GetPosition();
+		const Style::Position pos = LayoutElement::GetPosition(child_element);
 		if (pos == Style::Position::Relative || pos == Style::Position::Sticky)
 			AddRelativeElement(child_element);
 	}
@@ -177,7 +176,7 @@ InlineBoxHandle BlockContainer::AddInlineElement(Element* element, const Box& ch
 	InlineBox* inline_box = inline_container->AddInlineElement(element, child_box);
 
 	{
-		const Style::Position pos = element->GetPosition();
+		const Style::Position pos = LayoutElement::GetPosition(element);
 		if (pos == Style::Position::Relative || pos == Style::Position::Sticky)
 			AddRelativeElement(element);
 	}
@@ -200,7 +199,7 @@ void BlockContainer::CloseInlineElement(InlineBoxHandle handle)
 
 void BlockContainer::AddBreak()
 {
-	const float line_height = element->GetLineHeight();
+	const float line_height = LayoutElement::GetLineHeight(element);
 
 	// Check for an inline box as our last child; if so, we can simply end its line and bail.
 	if (InlineContainer* inline_container = GetOpenInlineContainer())
@@ -223,9 +222,9 @@ void BlockContainer::AddFloatElement(Element* element, Vector2f visible_overflow
 		Vector2f line_size;
 		if (queued_float_elements.empty() && inline_container->GetOpenLineBoxDimensions(line_position_top, line_size))
 		{
-			const Vector2f margin_size = element->GetBox().GetSize(BoxArea::Margin);
-			const Style::Float float_property = element->GetComputedValues().float_();
-			const Style::Clear clear_property = element->GetComputedValues().clear();
+			const Vector2f margin_size = LayoutElement::GetBox(element).GetSize(BoxArea::Margin);
+			const Style::Float float_property = LayoutElement::GetComputedValues(element).float_();
+			const Style::Clear clear_property = LayoutElement::GetComputedValues(element).clear();
 
 			float available_width = 0.f;
 			const Vector2f float_position =
@@ -254,7 +253,7 @@ void BlockContainer::AddFloatElement(Element* element, Vector2f visible_overflow
 	}
 
 	{
-		const Style::Position pos = element->GetPosition();
+		const Style::Position pos = LayoutElement::GetPosition(element);
 		if (pos == Style::Position::Relative || pos == Style::Position::Sticky)
 			AddRelativeElement(element);
 	}
@@ -340,7 +339,7 @@ void BlockContainer::PlaceQueuedFloats(float vertical_position)
 
 float BlockContainer::GetShrinkToFitWidth() const
 {
-	auto& computed = element->GetComputedValues();
+	auto& computed = LayoutElement::GetComputedValues(element);
 
 	float content_width = 0.0f;
 	if (computed.width().type == Style::Width::Length)
@@ -509,7 +508,7 @@ void BlockContainer::EnsureEmptyInterruptedLineBox()
 
 void BlockContainer::PlaceFloat(Element* element, float vertical_position, Vector2f visible_overflow_size)
 {
-	const Box& element_box = element->GetBox();
+	const Box& element_box = LayoutElement::GetBox(element);
 
 	const Vector2f border_size = element_box.GetSize(BoxArea::Border);
 	visible_overflow_size = Math::Max(border_size, visible_overflow_size);
@@ -519,8 +518,8 @@ void BlockContainer::PlaceFloat(Element* element, float vertical_position, Vecto
 		element_box.GetEdge(BoxArea::Margin, BoxEdge::Bottom)};
 	const Vector2f margin_size = border_size + margin_top_left + margin_bottom_right;
 
-	Style::Float float_property = element->GetComputedValues().float_();
-	Style::Clear clear_property = element->GetComputedValues().clear();
+	Style::Float float_property = LayoutElement::GetComputedValues(element).float_();
+	Style::Clear clear_property = LayoutElement::GetComputedValues(element).clear();
 
 	float unused_box_width = 0.f;
 	const Vector2f margin_position = space->NextFloatPosition(this, unused_box_width, vertical_position, margin_size, float_property, clear_property);
@@ -529,7 +528,7 @@ void BlockContainer::PlaceFloat(Element* element, float vertical_position, Vecto
 	space->PlaceFloat(float_property, margin_position, margin_size, border_position, visible_overflow_size);
 
 	// Shift the offset into this container's space, which acts as the float element's containing block.
-	element->SetOffset(border_position - position, GetElement());
+	LayoutElement::SetOffset(element, border_position - position, GetElement());
 }
 
 bool BlockContainer::GetBaselineOfLastLine(float& out_baseline) const

@@ -1,6 +1,5 @@
 #include "TableFormattingContext.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/base/Types.h>
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
@@ -8,6 +7,7 @@
 #include "TableFormattingDetails.h"
 #include <algorithm>
 #include <numeric>
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -17,13 +17,13 @@ UniquePtr<LayoutBox> TableFormattingContext::Format(ContainerBox* parent_contain
 	if (table_wrapper_box->IsScrollContainer())
 	{
 		Log::Message(Log::LT_WARNING, "Table elements can only have 'overflow' property values of 'visible'. Table will not be formatted: %s.",
-			element_table->GetAddress().c_str());
+			LayoutElement::GetAddress(element_table).c_str());
 		return table_wrapper_box;
 	}
 
-	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element_table->GetPosition()).size;
+	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, LayoutElement::GetPosition(element_table)).size;
 	UI_ASSERT(containing_block.x >= 0.f);
-	const ComputedValues& computed_table = element_table->GetComputedValues();
+	const ComputedValues& computed_table = LayoutElement::GetComputedValues(element_table);
 
 	// Build the initial box as specified by the table's style, as if it was a normal block element.
 	Box& box = table_wrapper_box->GetBox();
@@ -123,7 +123,7 @@ void TableFormattingContext::DetermineColumnWidths(TrackBoxList& columns, float&
 	{
 		if (Element* element_group = grid.columns[i].element_group)
 		{
-			const ComputedAxisSize computed = LayoutDetails::BuildComputedHorizontalSize(element_group->GetComputedValues());
+			const ComputedAxisSize computed = LayoutDetails::BuildComputedHorizontalSize(LayoutElement::GetComputedValues(element_group));
 			const int span = grid.columns[i].group_span;
 
 			sizing.ApplyGroupElement(i, span, computed);
@@ -131,7 +131,7 @@ void TableFormattingContext::DetermineColumnWidths(TrackBoxList& columns, float&
 
 		if (Element* element_column = grid.columns[i].element_column)
 		{
-			const ComputedAxisSize computed = LayoutDetails::BuildComputedHorizontalSize(element_column->GetComputedValues());
+			const ComputedAxisSize computed = LayoutDetails::BuildComputedHorizontalSize(LayoutElement::GetComputedValues(element_column));
 			const int span = grid.columns[i].column_span;
 
 			sizing.ApplyTrackElement(i, span, computed);
@@ -143,7 +143,7 @@ void TableFormattingContext::DetermineColumnWidths(TrackBoxList& columns, float&
 	{
 		if (Element* element_cell = grid.columns[i].element_cell)
 		{
-			const ComputedAxisSize computed = LayoutDetails::BuildComputedHorizontalSize(element_cell->GetComputedValues());
+			const ComputedAxisSize computed = LayoutDetails::BuildComputedHorizontalSize(LayoutElement::GetComputedValues(element_cell));
 			const int colspan = grid.columns[i].cell_span;
 
 			sizing.ApplyCellElement(i, colspan, computed);
@@ -224,7 +224,7 @@ void TableFormattingContext::DetermineRowHeights(TrackBoxList& rows, BoxList& ce
 		if (Element* element_group = grid.rows[i].element_group)
 		{
 			// The padding/border/margin of column groups are used, but their widths are ignored.
-			const ComputedAxisSize computed = LayoutDetails::BuildComputedVerticalSize(element_group->GetComputedValues());
+			const ComputedAxisSize computed = LayoutDetails::BuildComputedVerticalSize(LayoutElement::GetComputedValues(element_group));
 			const int span = grid.rows[i].group_span;
 
 			sizing.ApplyGroupElement(i, span, computed);
@@ -233,7 +233,7 @@ void TableFormattingContext::DetermineRowHeights(TrackBoxList& rows, BoxList& ce
 		if (Element* element_row = grid.rows[i].element_row)
 		{
 			// The padding/border/margin and widths of columns are used.
-			const ComputedAxisSize computed = LayoutDetails::BuildComputedVerticalSize(element_row->GetComputedValues());
+			const ComputedAxisSize computed = LayoutDetails::BuildComputedVerticalSize(LayoutElement::GetComputedValues(element_row));
 
 			if (computed.size.type == Style::LengthPercentageAuto::Percentage)
 				percentage_size_used = true;
@@ -247,7 +247,7 @@ void TableFormattingContext::DetermineRowHeights(TrackBoxList& rows, BoxList& ce
 		Log::Message(Log::LT_WARNING,
 			"Table has one or more rows that use percentages for height. However, initial table height is undefined, thus "
 			"these rows will become flattened. Set a fixed height on the table, or use fixed or 'auto' row heights. In element: %s.",
-			element_table->GetAddress().c_str());
+			LayoutElement::GetAddress(element_table).c_str());
 	}
 
 	// Next, find the height of rows that use auto height.
@@ -278,7 +278,7 @@ void TableFormattingContext::DetermineRowHeights(TrackBoxList& rows, BoxList& ce
 				if (box.GetSize().y < 0)
 				{
 					FormattingContext::FormatIndependent(table_wrapper_box, element_cell, &box, FormattingContextType::Block);
-					box.SetContent(element_cell->GetBox().GetSize());
+					box.SetContent(LayoutElement::GetBox(element_cell).GetSize());
 				}
 
 				// Find the height of the cell which applies only to this row.
@@ -326,9 +326,9 @@ void TableFormattingContext::FormatRows(const TrackBoxList& rows, float table_co
 		const Vector2f content_size(table_content_width - box.GetSizeAcross(BoxDirection::Horizontal, BoxArea::Margin, BoxArea::Padding),
 			content_height);
 		box.SetContent(content_size);
-		element->SetBox(box);
+		LayoutElement::SetBox(element, box);
 
-		element->SetOffset(table_content_offset + Vector2f(box.GetEdge(BoxArea::Margin, BoxEdge::Left), offset_y), element_table);
+		LayoutElement::SetOffset(element, table_content_offset + Vector2f(box.GetEdge(BoxArea::Margin, BoxEdge::Left), offset_y), element_table);
 	};
 
 	for (int i = 0; i < (int)rows.size(); i++)
@@ -356,9 +356,9 @@ void TableFormattingContext::FormatColumns(const TrackBoxList& columns, float ta
 		const Vector2f content_size(content_width,
 			table_content_height - box.GetSizeAcross(BoxDirection::Vertical, BoxArea::Margin, BoxArea::Padding));
 		box.SetContent(content_size);
-		element->SetBox(box);
+		LayoutElement::SetBox(element, box);
 
-		element->SetOffset(table_content_offset + Vector2f(offset_x, box.GetEdge(BoxArea::Margin, BoxEdge::Top)), element_table);
+		LayoutElement::SetOffset(element, table_content_offset + Vector2f(offset_x, box.GetEdge(BoxArea::Margin, BoxEdge::Top)), element_table);
 	};
 
 	for (int i = 0; i < (int)columns.size(); i++)
@@ -387,7 +387,7 @@ void TableFormattingContext::FormatCells(BoxList& cells, Vector2f& table_overflo
 		Element* element_cell = grid_cell.element_cell;
 
 		Box& box = cells[cell_index];
-		Style::VerticalAlign vertical_align = element_cell->GetComputedValues().vertical_align();
+		Style::VerticalAlign vertical_align = LayoutElement::GetComputedValues(element_cell).vertical_align();
 
 		const float cell_border_height = GetSpanningCellBorderSize(rows, grid_cell.row_begin, grid_cell.row_last);
 		const Vector2f cell_offset =
@@ -401,7 +401,7 @@ void TableFormattingContext::FormatCells(BoxList& cells, Vector2f& table_overflo
 			{
 				// We need to format the cell to know how much padding to add.
 				FormattingContext::FormatIndependent(table_wrapper_box, element_cell, &box, FormattingContextType::Block);
-				box.SetContent(element_cell->GetBox().GetSize());
+				box.SetContent(LayoutElement::GetBox(element_cell).GetSize());
 			}
 			else
 			{
@@ -448,7 +448,7 @@ void TableFormattingContext::FormatCells(BoxList& cells, Vector2f& table_overflo
 		Vector2f cell_visible_overflow_size = cell_box->GetVisibleOverflowSize();
 
 		// Set the position of the element within the table container
-		element_cell->SetOffset(cell_offset, element_table);
+		LayoutElement::SetOffset(element_cell, cell_offset, element_table);
 
 		// The table baseline is simply set to the first cell that has a baseline.
 		if (!baseline_set && cell_box->GetBaselineOfLastLine(table_baseline))

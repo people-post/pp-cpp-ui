@@ -1,6 +1,5 @@
 #include "FlexFormattingContext.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/layout/LayoutElement.h>
 #include <ui/base/Profiling.h>
 #include <ui/base/Types.h>
@@ -17,9 +16,9 @@ UniquePtr<LayoutBox> FlexFormattingContext::Format(ContainerBox* parent_containe
 	UI_ZoneScopedC(0xAFAF4F);
 	auto flex_container_box = MakeUnique<FlexContainer>(element, parent_container);
 
-		const ComputedValues& computed = element->GetComputedValues();
+		const ComputedValues& computed = LayoutElement::GetComputedValues(element);
 
-	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, element->GetPosition()).size;
+	const Vector2f containing_block = LayoutDetails::GetContainingBlock(parent_container, LayoutElement::GetPosition(element)).size;
 	UI_ASSERT(containing_block.x >= 0.f);
 
 	// Build the initial box as specified by the flex's style, as if it was a normal block element.
@@ -214,7 +213,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 	// The following procedure is based on the CSS flexible box layout algorithm.
 	// For details, see https://drafts.csswg.org/css-flexbox/#layout-algorithm
 
-	const ComputedValues& computed_flex = element_flex->GetComputedValues();
+	const ComputedValues& computed_flex = LayoutElement::GetComputedValues(element_flex);
 	const Style::FlexDirection direction = computed_flex.flex_direction();
 	const Style::LengthPercentage row_gap = computed_flex.row_gap();
 	const Style::LengthPercentage column_gap = computed_flex.column_gap();
@@ -243,14 +242,14 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 	const float cross_gap_size = ResolveValue(main_axis_horizontal ? row_gap : column_gap, cross_size_base_value);
 
 	// -- Build a list of all flex items with base size information --
-	const int num_flex_children = element_flex->GetNumChildren();
+	const int num_flex_children = LayoutElement::GetNumChildren(element_flex);
 	Vector<FlexItem> items;
 	items.reserve(num_flex_children);
 
 	for (int i = 0; i < num_flex_children; i++)
 	{
-		Element* element = element_flex->GetChild(i);
-		const ComputedValues& computed = element->GetComputedValues();
+		Element* element = LayoutElement::GetChild(element_flex, i);
+		const ComputedValues& computed = LayoutElement::GetComputedValues(element);
 
 		if (computed.display() == Style::Display::None)
 		{
@@ -334,7 +333,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 
 			FormattingContext::FormatIndependent(flex_container_box, element, (format_box.GetSize().x >= 0 ? &format_box : nullptr),
 				FormattingContextType::Block);
-			item.inner_flex_base_size = element->GetBox().GetSize().y;
+			item.inner_flex_base_size = LayoutElement::GetBox(element).GetSize().y;
 
 			// Apply the automatic block size as minimum size (§4.5). Strictly speaking, we should also apply this to
 			// the other branches in column mode (and inline min-content size in row mode). However, the formatting step
@@ -676,7 +675,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 				{
 					item.box.SetContent(Vector2f(GetInnerUsedMainSize(item), content_size.y));
 					FormattingContext::FormatIndependent(flex_container_box, item.element, &item.box, FormattingContextType::Block);
-					item.hypothetical_cross_size = item.element->GetBox().GetSize().y + item.cross.sum_edges;
+					item.hypothetical_cross_size = LayoutElement::GetBox(item.element).GetSize().y + item.cross.sum_edges;
 				}
 				else
 				{
@@ -804,7 +803,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 				case AlignSelf::Baseline:
 				{
 					// We don't currently have a good way to get the true baseline here, so we make a very rough zero-effort approximation.
-					const float baseline_heuristic = 0.5f * item.element->GetLineHeight();
+					const float baseline_heuristic = 0.5f * LayoutElement::GetLineHeight(item.element);
 					const float sum_edges_top = (wrap_reverse ? item.cross.sum_edges - item.cross.sum_edges_a : item.cross.sum_edges_a);
 
 					item.cross_baseline_top = sum_edges_top + baseline_heuristic;
@@ -951,7 +950,7 @@ void FlexFormattingContext::Format(Vector2f& flex_resulting_content_size, Vector
 				FormattingContext::FormatIndependent(flex_container_box, item.element, &item.box, FormattingContextType::Block);
 
 			// Set the position of the element within the flex container
-			item.element->SetOffset(flex_content_offset + item_offset, element_flex);
+			LayoutElement::SetOffset(item.element, flex_content_offset + item_offset, element_flex);
 
 			// The flex container baseline is simply set to the first flex item that has a baseline.
 			if (!baseline_set && item_layout_box->GetBaselineOfLastLine(flex_baseline))

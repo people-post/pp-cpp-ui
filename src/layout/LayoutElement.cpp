@@ -217,6 +217,12 @@ bool IsReplaced(Element* element)
 	return element->IsReplaced();
 }
 
+bool HasChildNodes(Element* element)
+{
+	UI_ASSERT(element);
+	return element->HasChildNodes();
+}
+
 bool GetIntrinsicDimensions(Element* element, Vector2f& dimensions, float& ratio)
 {
 	UI_ASSERT(element);

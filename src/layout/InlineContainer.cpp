@@ -1,6 +1,5 @@
 #include "InlineContainer.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include <ui/layout/LayoutTextElement.h>
 #include <ui/base/Profiling.h>
 #include <ui/style/Property.h>
@@ -9,6 +8,7 @@
 #include "InlineLevelBox.h"
 #include "LayoutDetails.h"
 #include "LineBox.h"
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -20,7 +20,7 @@ InlineContainer::InlineContainer(BlockContainer* _parent, float _available_width
 	box_size = {_available_width, -1.f};
 	position = parent->NextBoxPosition();
 
-	const auto& computed = parent->GetElement()->GetComputedValues();
+	const auto& computed = LayoutElement::GetComputedValues(parent->GetElement());
 	element_line_height = computed.line_height().value;
 	wrap_content = (computed.white_space() != Style::WhiteSpace::Nowrap);
 	text_align = computed.text_align();
@@ -36,7 +36,7 @@ InlineBox* InlineContainer::AddInlineElement(Element* element, const Box& box)
 	InlineLevelBox* inline_level_box = nullptr;
 	InlineBoxBase* parent_box = GetOpenInlineBox();
 
-	if (LayoutTextElement* text_element = element->GetAsLayoutTextElement())
+	if (LayoutTextElement* text_element = LayoutElement::GetAsLayoutTextElement(element))
 	{
 		inline_level_box = parent_box->AddChild(MakeUnique<InlineLevelBox_Text>(text_element));
 	}

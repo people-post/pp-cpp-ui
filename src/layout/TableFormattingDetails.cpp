@@ -1,10 +1,10 @@
 #include "TableFormattingDetails.h"
 #include <ui/style/ComputedValues.h>
-#include <ui/dom/Element.h>
 #include "ContainerBox.h"
 #include "LayoutDetails.h"
 #include <algorithm>
 #include <float.h>
+#include <ui/layout/LayoutElement.h>
 
 namespace ui {
 
@@ -13,13 +13,13 @@ bool TableGrid::Build(Element* element_table, TableWrapper& table_wrapper)
 	UI_ASSERT(rows.empty() && columns.empty() && cells.empty() && open_cells.empty());
 	ElementList non_parented_cell_elements;
 
-	const int num_table_children = element_table->GetNumChildren();
+	const int num_table_children = LayoutElement::GetNumChildren(element_table);
 	for (int i = 0; i < num_table_children; i++)
 	{
 		using Display = Style::Display;
 
-		Element* element = element_table->GetChild(i);
-		const Display display = element->GetDisplay();
+		Element* element = LayoutElement::GetChild(element_table, i);
+		const Display display = LayoutElement::GetDisplay(element);
 
 		if (display == Display::None)
 			continue;
@@ -40,21 +40,21 @@ bool TableGrid::Build(Element* element_table, TableWrapper& table_wrapper)
 		}
 		else if (display == Display::TableRowGroup)
 		{
-			const int num_row_group_children = element->GetNumChildren();
+			const int num_row_group_children = LayoutElement::GetNumChildren(element);
 			const int row_group_index = (int)rows.size();
 			int num_rows_added = 0;
 
 			for (int j = 0; j < num_row_group_children; j++)
 			{
-				Element* element_row = element->GetChild(j);
-				const Display display_row = element_row->GetDisplay();
+				Element* element_row = LayoutElement::GetChild(element, j);
+				const Display display_row = LayoutElement::GetDisplay(element_row);
 
 				if (display_row != Display::TableRow)
 				{
 					if (display_row != Display::None)
 					{
 						Log::Message(Log::LT_WARNING, "Only table rows are valid children of table row groups. Ignoring element %s.",
-							element_row->GetAddress().c_str());
+							LayoutElement::GetAddress(element_row).c_str());
 					}
 					continue;
 				}
@@ -69,14 +69,14 @@ bool TableGrid::Build(Element* element_table, TableWrapper& table_wrapper)
 				rows[row_group_index].group_span = num_rows_added;
 			}
 			{
-				const Style::Position pos = element->GetPosition();
+				const Style::Position pos = LayoutElement::GetPosition(element);
 				if (pos == Style::Position::Relative || pos == Style::Position::Sticky)
 					table_wrapper.AddRelativeElement(element);
 			}
 		}
 		else if (rows.empty() && display == Display::TableColumn)
 		{
-			const int span = Math::Max(1, element->GetAttribute("span", 1));
+			const int span = Math::Max(1, LayoutElement::GetAttributeInt(element, "span", 1));
 			PushColumn(element, span);
 		}
 		else if (rows.empty() && display == Display::TableColumnGroup)
@@ -87,11 +87,11 @@ bool TableGrid::Build(Element* element_table, TableWrapper& table_wrapper)
 		{
 			if (display == Display::TableColumn || display == Display::TableColumnGroup)
 				Log::Message(Log::LT_WARNING, "Table columns and column groups must precede any table rows. Ignoring element %s.",
-					element->GetAddress().c_str());
+					LayoutElement::GetAddress(element).c_str());
 			else
 				Log::Message(Log::LT_WARNING,
 					"Only table columns, column groups, rows, row groups, and cells are valid children of tables. Ignoring element %s.",
-					element->GetAddress().c_str());
+					LayoutElement::GetAddress(element).c_str());
 		}
 	}
 
@@ -109,7 +109,7 @@ bool TableGrid::Build(Element* element_table, TableWrapper& table_wrapper)
 		Log::Message(Log::LT_WARNING,
 			"One or more cells span below the last row in table %s. They will not be formatted. Add additional rows, or adjust the rowspan "
 			"attribute.",
-			element_table->GetAddress().c_str());
+			LayoutElement::GetAddress(element_table).c_str());
 	}
 	open_cells.clear();
 	open_cells.shrink_to_fit();
@@ -132,18 +132,18 @@ void TableGrid::PushColumn(Element* element_column, int span)
 void TableGrid::PushColumnGroup(Element* element_column_group)
 {
 	const int column_begin = (int)columns.size();
-	int group_span = Math::Max(0, element_column_group->GetAttribute("span", 0));
+	int group_span = Math::Max(0, LayoutElement::GetAttributeInt(element_column_group, "span", 0));
 
 	if (group_span == 0)
 	{
 		// Look through the column group to find all its column children.
-		const int num_column_group_children = element_column_group->GetNumChildren();
+		const int num_column_group_children = LayoutElement::GetNumChildren(element_column_group);
 		for (int j = 0; j < num_column_group_children; j++)
 		{
-			Element* child = element_column_group->GetChild(j);
-			if (child->GetDisplay() == Style::Display::TableColumn)
+			Element* child = LayoutElement::GetChild(element_column_group, j);
+			if (LayoutElement::GetDisplay(child) == Style::Display::TableColumn)
 			{
-				const int column_span = Math::Max(1, child->GetAttribute("span", 1));
+				const int column_span = Math::Max(1, LayoutElement::GetAttributeInt(child, "span", 1));
 				PushColumn(child, column_span);
 				group_span += column_span;
 			}
@@ -195,26 +195,26 @@ void TableGrid::PushRow(Element* element_row, ElementList cell_elements, TableWr
 	{
 		UI_ASSERT(cell_elements.empty());
 
-		const int num_row_children = element_row->GetNumChildren();
+		const int num_row_children = LayoutElement::GetNumChildren(element_row);
 		cell_elements.reserve(num_row_children);
 
 		for (int j = 0; j < num_row_children; j++)
 		{
-			Element* element_cell = element_row->GetChild(j);
+			Element* element_cell = LayoutElement::GetChild(element_row, j);
 
-			const Style::Display cell_display = element_cell->GetComputedValues().display();
+			const Style::Display cell_display = LayoutElement::GetComputedValues(element_cell).display();
 			if (cell_display == Style::Display::TableCell)
 			{
 				cell_elements.push_back(element_cell);
 			}
 			else if (cell_display != Style::Display::None)
 			{
-				Log::Message(Log::LT_WARNING, "Only table cells are allowed as children of table rows. %s", element_cell->GetAddress().c_str());
+				Log::Message(Log::LT_WARNING, "Only table cells are allowed as children of table rows. %s", LayoutElement::GetAddress(element_cell).c_str());
 			}
 		}
 
 		{
-			const Style::Position pos = element_row->GetPosition();
+			const Style::Position pos = LayoutElement::GetPosition(element_row);
 			if (pos == Style::Position::Relative || pos == Style::Position::Sticky)
 				table_wrapper.AddRelativeElement(element_row);
 		}
@@ -229,8 +229,8 @@ void TableGrid::PushRow(Element* element_row, ElementList cell_elements, TableWr
 	{
 		Element* element_cell = cell_elements[j];
 
-		const int row_span = Math::Max(1, element_cell->GetAttribute("rowspan", 1));
-		const int col_span = Math::Max(1, element_cell->GetAttribute("colspan", 1));
+		const int row_span = Math::Max(1, LayoutElement::GetAttributeInt(element_cell, "rowspan", 1));
+		const int col_span = Math::Max(1, LayoutElement::GetAttributeInt(element_cell, "colspan", 1));
 
 		if (row_index == 0)
 		{
@@ -260,11 +260,11 @@ void TableGrid::PushRow(Element* element_row, ElementList cell_elements, TableWr
 			Log::Message(Log::LT_WARNING,
 				"Too many columns in table row %d while encountering cell: %s\nThe number of columns is %d, as determined by the table columns or "
 				"the first table row.",
-				row_index + 1, element_cell->GetAddress().c_str(), (int)columns.size());
+				row_index + 1, LayoutElement::GetAddress(element_cell).c_str(), (int)columns.size());
 			break;
 		}
 
-		const Style::Position cell_position = element_cell->GetPosition();
+		const Style::Position cell_position = LayoutElement::GetPosition(element_cell);
 		if (cell_position == Style::Position::Absolute || cell_position == Style::Position::Fixed)
 		{
 			ContainerBox* containing_box = LayoutDetails::GetContainingBlock(&table_wrapper, cell_position).container;

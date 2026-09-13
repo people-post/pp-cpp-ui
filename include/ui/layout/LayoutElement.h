@@ -55,6 +55,7 @@ Element* GetOffsetParent(Element* element);
 Vector2f GetRelativeOffset(Element* element, BoxArea area = BoxArea::Content);
 
 bool IsReplaced(Element* element);
+bool HasChildNodes(Element* element);
 bool GetIntrinsicDimensions(Element* element, Vector2f& dimensions, float& ratio);
 
 const String& GetId(Element* element);
