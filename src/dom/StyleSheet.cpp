@@ -190,7 +190,7 @@ SharedPtr<const ElementDefinition> StyleSheet::GetElementDefinition(const Elemen
 	// See if there are any styles defined for this element.
 	const String& tag = element->GetTagName();
 	const String& id = element->GetId();
-	const StringList& class_names = element->GetStyle()->GetClassNameList();
+	const StringList& class_names = element->Style().GetClassNameList();
 
 	// Text elements are never matched.
 	if (tag == "#text")

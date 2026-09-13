@@ -38,7 +38,9 @@ Session policy (focus path, selection gestures, animation clock) belongs on Docu
 
 ## Phases
 
-1. **Expose parts** — accessors + `ElementBox` view; legacy getters alias; `sizeof` unchanged. ← *current*
+1. **Expose parts** — accessors + `ElementBox` view; legacy getters alias; `sizeof` unchanged. ✓
+2. **Engine call sites** — migrate `src/` to parts-first. ✓
+3. **Split TUs** — animation / stacking / transform orchestration extracted from `Element.cpp`. ✓ (more TUs follow)
 2. **Engine call sites** — migrate `src/` to parts-first.
 3. **Split TUs** — move definitions to part-aligned `.cpp` files; `Element.cpp` keeps tree + Update/Render orchestration.
 4. **Conservative `sizeof`** — cold fields allocate-on-use; keep BoxModel hot data in-line.

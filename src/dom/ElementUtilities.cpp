@@ -156,7 +156,7 @@ bool ElementUtilities::GetClippingRegion(Element* element, Rectanglei& out_clip_
 				// region to be clipped. If the element has a transform we only use a clip mask when the content clips.
 				if (has_border_radius || (transform && has_clipping_content))
 				{
-					Geometry* clip_geometry = clipping_element->GetElementBackgroundBorder()->GetClipGeometry(clipping_element, clip_area);
+					Geometry* clip_geometry = clipping_element->BackgroundBorder().GetClipGeometry(clipping_element, clip_area);
 					const ClipMaskOperation clip_operation = (out_clip_mask_list->empty() ? ClipMaskOperation::Set : ClipMaskOperation::Intersect);
 					const Vector2f absolute_offset = clipping_element->GetAbsoluteOffset(BoxArea::Border).Round();
 					out_clip_mask_list->push_back(ClipMaskGeometry{clip_operation, clip_geometry, absolute_offset, transform});
@@ -330,8 +330,8 @@ bool ElementUtilities::PositionElement(Element* element, Vector2f offset, Positi
 
 	const Box& parent_box = parent->GetBox();
 	Vector2f containing_block = parent_box.GetSize();
-	containing_block.x -= parent->GetElementScroll()->GetScrollbarSize(ElementScroll::VERTICAL);
-	containing_block.y -= parent->GetElementScroll()->GetScrollbarSize(ElementScroll::HORIZONTAL);
+	containing_block.x -= parent->Scroll().GetScrollbarSize(ElementScroll::VERTICAL);
+	containing_block.y -= parent->Scroll().GetScrollbarSize(ElementScroll::HORIZONTAL);
 
 	Box box;
 	LayoutDetails::BuildBox(box, containing_block, element);

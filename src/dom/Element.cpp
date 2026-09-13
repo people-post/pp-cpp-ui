@@ -125,7 +125,7 @@ void Element::Update(float dp_ratio, Vector2f vp_dimensions)
 	HandleAnimationProperty();
 	AdvanceAnimations();
 
-	meta->scroll.Update();
+	Scroll().Update();
 
 	UpdateProperties(dp_ratio, vp_dimensions);
 
@@ -137,7 +137,7 @@ void Element::Update(float dp_ratio, Vector2f vp_dimensions)
 		UpdateProperties(dp_ratio, vp_dimensions);
 	}
 
-	meta->effects.InstanceEffects();
+	Effects().InstanceEffects();
 
 	for (size_t i = 0; i < children.size(); i++)
 		children[i]->Update(dp_ratio, vp_dimensions);
@@ -153,13 +153,13 @@ void Element::UpdateProperties(const float dp_ratio, const Vector2f vp_dimension
 {
 	UpdateDefinition();
 
-	if (meta->style.AnyPropertiesDirty())
+	if (Style().AnyPropertiesDirty())
 	{
 		const ComputedValues* parent_values = parent ? &parent->GetComputedValues() : nullptr;
 		const ComputedValues* document_values = owner_document ? &owner_document->GetComputedValues() : nullptr;
 
 		// Compute values and clear dirty properties
-		PropertyIdSet dirty_properties = meta->style.ComputeValues(meta->computed_values, parent_values, document_values,
+		PropertyIdSet dirty_properties = Style().ComputeValues(meta->computed_values, parent_values, document_values,
 			computed_values_are_default_initialized, dp_ratio, vp_dimensions);
 
 		computed_values_are_default_initialized = false;
@@ -190,13 +190,13 @@ void Element::Render()
 	// Apply our transform
 	ElementUtilities::ApplyTransform(*this);
 
-	meta->effects.RenderEffects(RenderStage::Enter);
+	Effects().RenderEffects(RenderStage::Enter);
 
 	// Set up the clipping region for this element.
 	if (ElementUtilities::SetClippingRegion(this))
 	{
-		meta->background_border.Render(this);
-		meta->effects.RenderEffects(RenderStage::Decoration);
+		BackgroundBorder().Render(this);
+		Effects().RenderEffects(RenderStage::Decoration);
 
 		{
 			UI_ZoneScopedNC("OnRender", 0x228B22);
@@ -209,7 +209,7 @@ void Element::Render()
 	for (Element* element : stacking_context)
 		element->Render();
 
-	meta->effects.RenderEffects(RenderStage::Exit);
+	Effects().RenderEffects(RenderStage::Exit);
 }
 
 ElementPtr Element::Clone() const
@@ -251,13 +251,13 @@ ElementPtr Element::Clone() const
 
 void Element::SetClass(const String& class_name, bool activate)
 {
-	if (meta->style.SetClass(class_name, activate))
+	if (Style().SetClass(class_name, activate))
 		DirtyDefinition(DirtyNodes::SelfAndSiblings);
 }
 
 bool Element::IsClassSet(const String& class_name) const
 {
-	return meta->style.IsClassSet(class_name);
+	return Style().IsClassSet(class_name);
 }
 
 void Element::SetClassNames(const String& class_names)
@@ -267,7 +267,7 @@ void Element::SetClassNames(const String& class_names)
 
 String Element::GetClassNames() const
 {
-	return meta->style.GetClassNames();
+	return Style().GetClassNames();
 }
 
 const StyleSheet* Element::GetStyleSheet() const
@@ -289,7 +289,7 @@ String Element::GetAddress(bool include_pseudo_classes, bool include_parents) co
 		address += id;
 	}
 
-	String classes = meta->style.GetClassNames();
+	String classes = Style().GetClassNames();
 	if (!classes.empty())
 	{
 		classes = StringUtilities::Replace(classes, ' ', '.');
@@ -299,7 +299,7 @@ String Element::GetAddress(bool include_pseudo_classes, bool include_parents) co
 
 	if (include_pseudo_classes)
 	{
-		const PseudoClassMap& pseudo_classes = meta->style.GetActivePseudoClasses();
+		const PseudoClassMap& pseudo_classes = Style().GetActivePseudoClasses();
 		for (auto& pseudo_class : pseudo_classes)
 		{
 			address += ":";
@@ -399,9 +399,9 @@ void Element::UpdateAbsoluteOffsetAndRenderBoxData()
 		if (new_rounded_main_padding_size != rounded_main_padding_size)
 		{
 			rounded_main_padding_size = new_rounded_main_padding_size;
-			meta->background_border.DirtyBackground();
-			meta->background_border.DirtyBorder();
-			meta->effects.DirtyEffectsData();
+			BackgroundBorder().DirtyBackground();
+			BackgroundBorder().DirtyBorder();
+			Effects().DirtyEffectsData();
 		}
 	}
 }
@@ -444,9 +444,9 @@ void Element::SetBox(const Box& box)
 
 		OnResize();
 		rounded_main_padding_size_dirty = true;
-		meta->background_border.DirtyBackground();
-		meta->background_border.DirtyBorder();
-		meta->effects.DirtyEffectsData();
+		BackgroundBorder().DirtyBackground();
+		BackgroundBorder().DirtyBorder();
+		Effects().DirtyEffectsData();
 	}
 }
 
@@ -454,9 +454,9 @@ void Element::AddBox(const Box& box, Vector2f offset)
 {
 	additional_boxes.emplace_back(PositionedBox{box, offset});
 	OnResize();
-	meta->background_border.DirtyBackground();
-	meta->background_border.DirtyBorder();
-	meta->effects.DirtyEffectsData();
+	BackgroundBorder().DirtyBackground();
+	BackgroundBorder().DirtyBorder();
+	Effects().DirtyEffectsData();
 }
 
 const Box& Element::GetBox()
@@ -638,7 +638,7 @@ bool Element::SetProperty(const String& name, const String& value)
 	}
 	for (auto& property : properties.GetProperties())
 	{
-		if (!meta->style.SetProperty(property.first, property.second))
+		if (!Style().SetProperty(property.first, property.second))
 			return false;
 	}
 	return true;
@@ -646,14 +646,14 @@ bool Element::SetProperty(const String& name, const String& value)
 
 bool Element::SetProperty(PropertyId id, const Property& property)
 {
-	return meta->style.SetProperty(id, property);
+	return Style().SetProperty(id, property);
 }
 
 void Element::RemoveProperty(const String& name)
 {
 	auto property_id = StyleSheetSpecification::GetPropertyId(name);
 	if (property_id != PropertyId::Invalid)
-		meta->style.RemoveProperty(property_id);
+		Style().RemoveProperty(property_id);
 	else
 	{
 		auto shorthand_id = StyleSheetSpecification::GetShorthandId(name);
@@ -661,46 +661,46 @@ void Element::RemoveProperty(const String& name)
 		{
 			auto property_id_set = StyleSheetSpecification::GetShorthandUnderlyingProperties(shorthand_id);
 			for (auto it = property_id_set.begin(); it != property_id_set.end(); ++it)
-				meta->style.RemoveProperty(*it);
+				Style().RemoveProperty(*it);
 		}
 	}
 }
 
 void Element::RemoveProperty(PropertyId id)
 {
-	meta->style.RemoveProperty(id);
+	Style().RemoveProperty(id);
 }
 
 const Property* Element::GetProperty(const String& name)
 {
-	return meta->style.GetProperty(StyleSheetSpecification::GetPropertyId(name));
+	return Style().GetProperty(StyleSheetSpecification::GetPropertyId(name));
 }
 
 const Property* Element::GetProperty(PropertyId id)
 {
-	return meta->style.GetProperty(id);
+	return Style().GetProperty(id);
 }
 
 const Property* Element::GetLocalProperty(const String& name)
 {
-	return meta->style.GetLocalProperty(StyleSheetSpecification::GetPropertyId(name));
+	return Style().GetLocalProperty(StyleSheetSpecification::GetPropertyId(name));
 }
 
 const Property* Element::GetLocalProperty(PropertyId id)
 {
-	return meta->style.GetLocalProperty(id);
+	return Style().GetLocalProperty(id);
 }
 
 const PropertyMap& Element::GetLocalStyleProperties()
 {
-	return meta->style.GetLocalStyleProperties();
+	return Style().GetLocalStyleProperties();
 }
 
 float Element::ResolveLength(NumericValue value)
 {
 	float result = 0.f;
 	if (Any(value.unit & Unit::LENGTH))
-		result = meta->style.ResolveNumericValue(value, 0.f);
+		result = Style().ResolveNumericValue(value, 0.f);
 	return result;
 }
 
@@ -708,7 +708,7 @@ float Element::ResolveNumericValue(NumericValue value, float base_value)
 {
 	float result = 0.f;
 	if (Any(value.unit & Unit::NUMERIC))
-		result = meta->style.ResolveNumericValue(value, base_value);
+		result = Style().ResolveNumericValue(value, base_value);
 	return result;
 }
 
@@ -725,8 +725,8 @@ Vector2f Element::GetContainingBlock()
 		if (position_property == Position::Static || position_property == Position::Relative || position_property == Position::Sticky)
 		{
 			containing_block = parent_box.GetSize();
-			containing_block.x -= meta->scroll.GetScrollbarSize(ElementScroll::VERTICAL);
-			containing_block.y -= meta->scroll.GetScrollbarSize(ElementScroll::HORIZONTAL);
+			containing_block.x -= Scroll().GetScrollbarSize(ElementScroll::VERTICAL);
+			containing_block.y -= Scroll().GetScrollbarSize(ElementScroll::HORIZONTAL);
 		}
 		else if (position_property == Position::Absolute || position_property == Position::Fixed)
 		{
@@ -766,53 +766,9 @@ const TransformState* Element::GetTransformState() const noexcept
 	return transform_state.get();
 }
 
-bool Element::Project(Vector2f& point) const noexcept
-{
-	if (!transform_state || !transform_state->GetTransform())
-		return true;
-
-	// The input point is in window coordinates. Need to find the projection of the point onto the current element plane,
-	// taking into account the full transform applied to the element.
-
-	if (const Matrix4f* inv_transform = transform_state->GetInverseTransform())
-	{
-		// Pick two points forming a line segment perpendicular to the window.
-		Vector4f window_points[2] = {{point.x, point.y, -10, 1}, {point.x, point.y, 10, 1}};
-
-		// Project them into the local element space.
-		window_points[0] = *inv_transform * window_points[0];
-		window_points[1] = *inv_transform * window_points[1];
-
-		Vector3f local_points[2] = {window_points[0].PerspectiveDivide(), window_points[1].PerspectiveDivide()};
-
-		// Construct a ray from the two projected points in the local space of the current element.
-		// Find the intersection with the z=0 plane to produce our destination point.
-		Vector3f ray = local_points[1] - local_points[0];
-
-		// Only continue if we are not close to parallel with the plane.
-		if (Math::Absolute(ray.z) > 1.0f)
-		{
-			// Solving the line equation p = p0 + t*ray for t, knowing that p.z = 0, produces the following.
-			float t = -local_points[0].z / ray.z;
-			Vector3f p = local_points[0] + ray * t;
-
-			point = Vector2f(p.x, p.y);
-			return true;
-		}
-	}
-
-	// The transformation matrix is either singular, or the ray is parallel to the element's plane.
-	return false;
-}
-
-PropertiesIteratorView Element::IterateLocalProperties() const
-{
-	return PropertiesIteratorView(MakeUnique<PropertiesIterator>(meta->style.Iterate()));
-}
-
 void Element::SetPseudoClass(const String& pseudo_class, bool activate)
 {
-	if (meta->style.SetPseudoClass(pseudo_class, activate, false))
+	if (Style().SetPseudoClass(pseudo_class, activate, false))
 	{
 		// Include siblings in case of RCSS presence of sibling combinators '+', '~'.
 		DirtyDefinition(DirtyNodes::SelfAndSiblings);
@@ -822,7 +778,7 @@ void Element::SetPseudoClass(const String& pseudo_class, bool activate)
 
 bool Element::IsPseudoClassSet(const String& pseudo_class) const
 {
-	return meta->style.IsPseudoClassSet(pseudo_class);
+	return Style().IsPseudoClassSet(pseudo_class);
 }
 
 bool Element::ArePseudoClassesSet(const StringList& pseudo_classes) const
@@ -838,7 +794,7 @@ bool Element::ArePseudoClassesSet(const StringList& pseudo_classes) const
 
 StringList Element::GetActivePseudoClasses() const
 {
-	const PseudoClassMap& pseudo_classes = meta->style.GetActivePseudoClasses();
+	const PseudoClassMap& pseudo_classes = Style().GetActivePseudoClasses();
 	StringList names;
 	names.reserve(pseudo_classes.size());
 	for (auto& pseudo_class : pseudo_classes)
@@ -852,7 +808,7 @@ StringList Element::GetActivePseudoClasses() const
 void Element::OverridePseudoClass(Element* element, const String& pseudo_class, bool activate)
 {
 	UI_ASSERT(element);
-	element->GetStyle()->SetPseudoClass(pseudo_class, activate, true);
+	element->Style().SetPseudoClass(pseudo_class, activate, true);
 }
 
 Variant* Element::GetAttribute(const String& name)
@@ -966,12 +922,12 @@ float Element::GetClientTop()
 
 float Element::GetClientWidth()
 {
-	return GetBox().GetSize(BoxArea::Padding).x - meta->scroll.GetScrollbarSize(ElementScroll::VERTICAL);
+	return GetBox().GetSize(BoxArea::Padding).x - Scroll().GetScrollbarSize(ElementScroll::VERTICAL);
 }
 
 float Element::GetClientHeight()
 {
-	return GetBox().GetSize(BoxArea::Padding).y - meta->scroll.GetScrollbarSize(ElementScroll::HORIZONTAL);
+	return GetBox().GetSize(BoxArea::Padding).y - Scroll().GetScrollbarSize(ElementScroll::HORIZONTAL);
 }
 
 Element* Element::GetOffsetParent()
@@ -1011,7 +967,7 @@ void Element::SetScrollLeft(float scroll_left, bool clamp)
 	if (new_offset != scroll_offset.x)
 	{
 		scroll_offset.x = new_offset;
-		meta->scroll.UpdateScrollbar(ElementScroll::HORIZONTAL);
+		Scroll().UpdateScrollbar(ElementScroll::HORIZONTAL);
 		DirtyAbsoluteOffset();
 
 		DispatchEvent(EventId::Scroll, Dictionary());
@@ -1030,7 +986,7 @@ void Element::SetScrollTop(float scroll_top, bool clamp)
 	if (new_offset != scroll_offset.y)
 	{
 		scroll_offset.y = new_offset;
-		meta->scroll.UpdateScrollbar(ElementScroll::VERTICAL);
+		Scroll().UpdateScrollbar(ElementScroll::VERTICAL);
 		DirtyAbsoluteOffset();
 
 		DispatchEvent(EventId::Scroll, Dictionary());
@@ -1300,23 +1256,23 @@ void Element::Click()
 void Element::AddEventListener(const String& event, EventListener* listener, const bool in_capture_phase)
 {
 	const EventId id = EventSpecificationInterface::GetIdOrInsert(event);
-	meta->event_dispatcher.AttachEvent(id, listener, in_capture_phase);
+	Events().AttachEvent(id, listener, in_capture_phase);
 }
 
 void Element::AddEventListener(const EventId id, EventListener* listener, const bool in_capture_phase)
 {
-	meta->event_dispatcher.AttachEvent(id, listener, in_capture_phase);
+	Events().AttachEvent(id, listener, in_capture_phase);
 }
 
 void Element::RemoveEventListener(const String& event, EventListener* listener, bool in_capture_phase)
 {
 	EventId id = EventSpecificationInterface::GetIdOrInsert(event);
-	meta->event_dispatcher.DetachEvent(id, listener, in_capture_phase);
+	Events().DetachEvent(id, listener, in_capture_phase);
 }
 
 void Element::RemoveEventListener(EventId id, EventListener* listener, bool in_capture_phase)
 {
-	meta->event_dispatcher.DetachEvent(id, listener, in_capture_phase);
+	Events().DetachEvent(id, listener, in_capture_phase);
 }
 
 bool Element::DispatchEvent(const String& type, const Dictionary& parameters)
@@ -1716,7 +1672,7 @@ EventDispatcher* Element::GetEventDispatcher() const
 
 String Element::GetEventDispatcherSummary() const
 {
-	return meta->event_dispatcher.ToString();
+	return Events().ToString();
 }
 
 ElementBackgroundBorder* Element::GetElementBackgroundBorder() const
@@ -1749,14 +1705,6 @@ void Element::SetInstancer(ElementInstancer* _instancer)
 	}
 }
 
-void Element::ForceLocalStackingContext()
-{
-	local_stacking_context_forced = true;
-	local_stacking_context = true;
-
-	DirtyStackingContext();
-}
-
 void Element::OnUpdate() {}
 
 void Element::OnRender() {}
@@ -1781,7 +1729,7 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 		}
 		else if (attribute == "class")
 		{
-			meta->style.SetClassNames(value.Get<String>());
+			Style().SetClassNames(value.Get<String>());
 		}
 		else if (((attribute == "colspan" || attribute == "rowspan") && meta->computed_values.display() == Style::Display::TableCell) ||
 			(attribute == "span" &&
@@ -1829,7 +1777,7 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 				parser.ParseProperties(properties, value.GetReference<String>());
 
 				for (const auto& name_value : properties.GetProperties())
-					meta->style.SetProperty(name_value.first, name_value.second);
+					Style().SetProperty(name_value.first, name_value.second);
 			}
 			else if (value.GetType() != Variant::NONE)
 				Log::Message(Log::LT_WARNING, "Invalid 'style' attribute, string type required. In element: %s", GetAddress().c_str());
@@ -1837,7 +1785,7 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 		else if (attribute == "lang")
 		{
 			if (value.GetType() == Variant::STRING)
-				meta->style.SetProperty(PropertyId::Ui_Language, Property(value.GetReference<String>(), Unit::STRING));
+				Style().SetProperty(PropertyId::Ui_Language, Property(value.GetReference<String>(), Unit::STRING));
 			else if (value.GetType() != Variant::NONE)
 				Log::Message(Log::LT_WARNING, "Invalid 'lang' attribute, string type required. In element: %s", GetAddress().c_str());
 		}
@@ -1848,11 +1796,11 @@ void Element::OnAttributeChange(const ElementAttributes& changed_attributes)
 				const String& dir_value = value.GetReference<String>();
 
 				if (dir_value == "auto")
-					meta->style.SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Auto));
+					Style().SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Auto));
 				else if (dir_value == "ltr")
-					meta->style.SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Ltr));
+					Style().SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Ltr));
 				else if (dir_value == "rtl")
-					meta->style.SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Rtl));
+					Style().SetProperty(PropertyId::Ui_Direction, Property(Style::Direction::Rtl));
 				else
 					Log::Message(Log::LT_WARNING, "Invalid 'dir' attribute '%s', value must be 'auto', 'ltr', or 'rtl'. In element: %s",
 						dir_value.c_str(), GetAddress().c_str());
@@ -1976,7 +1924,7 @@ void Element::OnPropertyChange(const PropertyIdSet& changed_properties)
 		changed_properties.Contains(PropertyId::ImageColor) ||      //
 		changed_properties.Contains(PropertyId::BoxShadow))         //
 	{
-		meta->background_border.DirtyBackground();
+		BackgroundBorder().DirtyBackground();
 	}
 
 	// Dirty the border if it's changed.
@@ -1991,13 +1939,13 @@ void Element::OnPropertyChange(const PropertyIdSet& changed_properties)
 		changed_properties.Contains(PropertyId::BorderLeftColor) ||   //
 		changed_properties.Contains(PropertyId::Opacity))
 	{
-		meta->background_border.DirtyBorder();
+		BackgroundBorder().DirtyBorder();
 	}
 
 	// Dirty the effects if they've changed.
 	if (border_radius_changed || filter_or_mask_changed || changed_properties.Contains(PropertyId::Decorator))
 	{
-		meta->effects.DirtyEffects();
+		Effects().DirtyEffects();
 	}
 
 	const bool font_changed = (changed_properties.Contains(PropertyId::FontFamily) || changed_properties.Contains(PropertyId::FontStyle) ||
@@ -2011,7 +1959,7 @@ void Element::OnPropertyChange(const PropertyIdSet& changed_properties)
 		changed_properties.Contains(PropertyId::Color) ||   //
 		changed_properties.Contains(PropertyId::ImageColor))
 	{
-		meta->effects.DirtyEffectsData();
+		Effects().DirtyEffectsData();
 	}
 
 	// Check for `perspective' and `perspective-origin' changes
@@ -2226,7 +2174,7 @@ void Element::GetRML(String& content)
 		}
 	}
 
-	const PropertyMap& local_properties = meta->style.GetLocalStyleProperties();
+	const PropertyMap& local_properties = Style().GetLocalStyleProperties();
 	if (!local_properties.empty())
 		content += " style=\"";
 
@@ -2298,7 +2246,7 @@ void Element::SetParent(Element* _parent)
 	{
 		// We need to update our definition and make sure we inherit the properties of our new parent.
 		DirtyDefinition(DirtyNodes::Self);
-		meta->style.DirtyInheritedProperties();
+		Style().DirtyInheritedProperties();
 	}
 
 	// The transform state may require recalculation.
@@ -2542,178 +2490,6 @@ void Element::SetBaseline(float in_baseline)
 	baseline = in_baseline;
 }
 
-enum class RenderOrder {
-	StackNegative, // Local stacking context with z < 0.
-	Block,
-	TableColumnGroup,
-	TableColumn,
-	TableRowGroup,
-	TableRow,
-	TableCell,
-	Floating,
-	Inline,
-	Positioned,    // Positioned element, or local stacking context with z == 0.
-	StackPositive, // Local stacking context with z > 0.
-};
-struct StackingContextChild {
-	Element* element = nullptr;
-	RenderOrder order = {};
-};
-static bool operator<(const StackingContextChild& lhs, const StackingContextChild& rhs)
-{
-	if (int(lhs.order) == int(rhs.order))
-		return lhs.element->GetZIndex() < rhs.element->GetZIndex();
-	return int(lhs.order) < int(rhs.order);
-}
-
-// Treat all children in the range [index_begin, end) as if the parent created a new stacking context, by sorting them
-// separately and then assigning their parent's paint order. However, positioned and descendants which create a new
-// stacking context should be considered part of the parent stacking context. See CSS 2, Appendix E.
-static void StackingContext_MakeAtomicRange(Vector<StackingContextChild>& stacking_children, size_t index_begin, RenderOrder parent_render_order)
-{
-	std::stable_sort(stacking_children.begin() + index_begin, stacking_children.end());
-
-	for (auto it = stacking_children.begin() + index_begin; it != stacking_children.end(); ++it)
-	{
-		auto order = it->order;
-		if (order != RenderOrder::StackNegative && order != RenderOrder::Positioned && order != RenderOrder::StackPositive)
-			it->order = parent_render_order;
-	}
-}
-
-void Element::BuildLocalStackingContext()
-{
-	stacking_context_dirty = false;
-
-	Vector<StackingContextChild> stacking_children;
-	AddChildrenToStackingContext(stacking_children);
-	std::stable_sort(stacking_children.begin(), stacking_children.end());
-
-	stacking_context.resize(stacking_children.size());
-	for (size_t i = 0; i < stacking_children.size(); i++)
-		stacking_context[i] = stacking_children[i].element;
-}
-
-void Element::AddChildrenToStackingContext(Vector<StackingContextChild>& stacking_children)
-{
-	bool is_flex_container = (GetDisplay() == Style::Display::Flex);
-	const int num_children = (int)children.size();
-	for (int i = 0; i < num_children; ++i)
-	{
-		const bool is_non_dom_element = (i >= num_children - num_non_dom_children);
-		children[i]->AddToStackingContext(stacking_children, is_flex_container, is_non_dom_element);
-	}
-}
-
-void Element::AddToStackingContext(Vector<StackingContextChild>& stacking_children, bool is_flex_item, bool is_non_dom_element)
-{
-	using Style::Display;
-
-	if (!IsVisible())
-		return;
-
-	const Display display = GetDisplay();
-
-	RenderOrder order = RenderOrder::Inline;
-	bool include_children = true;
-	bool render_as_atomic_unit = false;
-
-	if (local_stacking_context)
-	{
-		if (z_index > 0.f)
-			order = RenderOrder::StackPositive;
-		else if (z_index < 0.f)
-			order = RenderOrder::StackNegative;
-		else
-			order = RenderOrder::Positioned;
-
-		include_children = false;
-	}
-	else if (display == Display::TableRow || display == Display::TableRowGroup || display == Display::TableColumn ||
-		display == Display::TableColumnGroup)
-	{
-		// Handle internal display values taking priority over position and float.
-		switch (display)
-		{
-		case Display::TableRow: order = RenderOrder::TableRow; break;
-		case Display::TableRowGroup: order = RenderOrder::TableRowGroup; break;
-		case Display::TableColumn: order = RenderOrder::TableColumn; break;
-		case Display::TableColumnGroup: order = RenderOrder::TableColumnGroup; break;
-		default: break;
-		}
-	}
-	else if (GetPosition() != Style::Position::Static)
-	{
-		order = RenderOrder::Positioned;
-		render_as_atomic_unit = true;
-	}
-	else if (GetFloat() != Style::Float::None)
-	{
-		order = RenderOrder::Floating;
-		render_as_atomic_unit = true;
-	}
-	else
-	{
-		switch (display)
-		{
-		case Display::Block:
-		case Display::FlowRoot:
-		case Display::Table:
-		case Display::Flex:
-			order = RenderOrder::Block;
-			render_as_atomic_unit = (display == Display::Table || is_flex_item);
-			break;
-
-		case Display::Inline:
-		case Display::InlineBlock:
-		case Display::InlineFlex:
-		case Display::InlineTable:
-			order = RenderOrder::Inline;
-			render_as_atomic_unit = (display != Display::Inline || is_flex_item);
-			break;
-
-		case Display::TableCell:
-			order = RenderOrder::TableCell;
-			render_as_atomic_unit = true;
-			break;
-
-		case Display::TableRow:
-		case Display::TableRowGroup:
-		case Display::TableColumn:
-		case Display::TableColumnGroup:
-		case Display::None: UI_ERROR; break; // Handled above.
-		}
-	}
-
-	if (is_non_dom_element)
-		render_as_atomic_unit = true;
-
-	stacking_children.push_back(StackingContextChild{this, order});
-
-	if (include_children && !children.empty())
-	{
-		const size_t index_child_begin = stacking_children.size();
-
-		AddChildrenToStackingContext(stacking_children);
-
-		if (render_as_atomic_unit)
-			StackingContext_MakeAtomicRange(stacking_children, index_child_begin, order);
-	}
-}
-
-void Element::DirtyStackingContext()
-{
-	// Find the first ancestor that has a local stacking context, that is our stacking context parent.
-	Element* stacking_context_parent = this;
-	while (stacking_context_parent && !stacking_context_parent->local_stacking_context)
-	{
-		stacking_context_parent = stacking_context_parent->GetParentNode();
-	}
-
-	if (stacking_context_parent)
-		stacking_context_parent->stacking_context_dirty = true;
-}
-
 void Element::DirtyDefinition(DirtyNodes dirty_nodes)
 {
 	switch (dirty_nodes)
@@ -2738,7 +2514,7 @@ void Element::UpdateDefinition()
 		// combinators, but those are handled during the DirtyDefinition call.
 		dirty_child_definitions = true;
 
-		GetStyle()->UpdateDefinition();
+		Style().UpdateDefinition();
 	}
 
 	if (dirty_child_definitions)
@@ -2749,491 +2525,9 @@ void Element::UpdateDefinition()
 	}
 }
 
-bool Element::Animate(const String& property_name, const Property& target_value, float duration, Tween tween, int num_iterations,
-	bool alternate_direction, float delay, const Property* start_value)
-{
-	return Animate(StyleSheetSpecification::GetPropertyId(property_name), target_value, duration, tween, num_iterations, alternate_direction, delay,
-		start_value);
-}
-
-bool Element::Animate(PropertyId id, const Property& target_value, float duration, Tween tween, int num_iterations, bool alternate_direction,
-	float delay, const Property* start_value)
-{
-	bool result = false;
-	auto it_animation = StartAnimation(id, start_value, num_iterations, alternate_direction, delay, false);
-	if (it_animation != animations.end())
-	{
-		result = it_animation->AddKey(duration, target_value, *this, tween, true);
-		if (!result)
-			animations.erase(it_animation);
-	}
-
-	return result;
-}
-
-bool Element::AddAnimationKey(const String& property_name, const Property& target_value, float duration, Tween tween)
-{
-	return AddAnimationKey(StyleSheetSpecification::GetPropertyId(property_name), target_value, duration, tween);
-}
-
-bool Element::AddAnimationKey(PropertyId id, const Property& target_value, float duration, Tween tween)
-{
-	ElementAnimation* animation = nullptr;
-	for (auto& existing_animation : animations)
-	{
-		if (existing_animation.GetPropertyId() == id)
-		{
-			animation = &existing_animation;
-			break;
-		}
-	}
-	if (!animation)
-		return false;
-
-	bool result = animation->AddKey(animation->GetDuration() + duration, target_value, *this, tween, true);
-
-	return result;
-}
-
-ElementAnimationList::iterator Element::StartAnimation(PropertyId property_id, const Property* start_value, int num_iterations,
-	bool alternate_direction, float delay, bool initiated_by_animation_property)
-{
-	auto it = std::find_if(animations.begin(), animations.end(), [&](const ElementAnimation& el) { return el.GetPropertyId() == property_id; });
-
-	if (it != animations.end())
-	{
-		const bool allow_overwriting_animation = !initiated_by_animation_property;
-		if (!allow_overwriting_animation)
-		{
-			Log::Message(Log::LT_WARNING,
-				"Could not animate property '%s' on element: %s. "
-				"Please ensure that the property does not appear in multiple animations on the same element.",
-				StyleSheetSpecification::GetPropertyName(property_id).c_str(), GetAddress().c_str());
-			return it;
-		}
-
-		*it = ElementAnimation{};
-	}
-	else
-	{
-		animations.emplace_back();
-		it = animations.end() - 1;
-	}
-
-	Property value;
-
-	if (start_value)
-	{
-		value = *start_value;
-		if (!value.definition)
-			if (auto default_value = GetProperty(property_id))
-				value.definition = default_value->definition;
-	}
-	else if (auto default_value = GetProperty(property_id))
-	{
-		value = *default_value;
-	}
-
-	if (value.definition)
-	{
-		ElementAnimationOrigin origin = (initiated_by_animation_property ? ElementAnimationOrigin::Animation : ElementAnimationOrigin::User);
-		double start_time = Clock::GetElapsedTime() + (double)delay;
-		*it = ElementAnimation{property_id, origin, value, *this, start_time, 0.0f, num_iterations, alternate_direction};
-	}
-
-	if (!it->IsInitalized())
-	{
-		animations.erase(it);
-		it = animations.end();
-	}
-
-	return it;
-}
-
-bool Element::AddAnimationKeyTime(PropertyId property_id, const Property* target_value, float time, Tween tween)
-{
-	if (!target_value)
-		target_value = meta->style.GetProperty(property_id);
-	if (!target_value)
-		return false;
-
-	ElementAnimation* animation = nullptr;
-
-	for (auto& existing_animation : animations)
-	{
-		if (existing_animation.GetPropertyId() == property_id)
-		{
-			animation = &existing_animation;
-			break;
-		}
-	}
-	if (!animation)
-		return false;
-
-	bool result = animation->AddKey(time, *target_value, *this, tween, true);
-
-	return result;
-}
-
-bool Element::StartTransition(const Transition& transition, const Property& start_value, const Property& target_value)
-{
-	auto it = std::find_if(animations.begin(), animations.end(), [&](const ElementAnimation& el) { return el.GetPropertyId() == transition.id; });
-
-	if (it != animations.end() && !it->IsTransition())
-		return false;
-
-	float duration = transition.duration;
-	double start_time = Clock::GetElapsedTime() + (double)transition.delay;
-
-	if (it == animations.end())
-	{
-		// Add transition as new animation
-		animations.push_back(ElementAnimation{transition.id, ElementAnimationOrigin::Transition, start_value, *this, start_time, 0.0f, 1, false});
-		it = (animations.end() - 1);
-	}
-	else
-	{
-		// Compress the duration based on the progress of the current animation
-		float f = it->GetInterpolationFactor();
-		f = 1.0f - (1.0f - f) * transition.reverse_adjustment_factor;
-		duration = duration * f;
-		// Replace old transition
-		*it = ElementAnimation{transition.id, ElementAnimationOrigin::Transition, start_value, *this, start_time, 0.0f, 1, false};
-	}
-
-	bool result = it->AddKey(duration, target_value, *this, transition.tween, true);
-
-	if (result)
-		SetProperty(transition.id, start_value);
-	else
-		animations.erase(it);
-
-	return result;
-}
-
-void Element::HandleTransitionProperty()
-{
-	if (dirty_transition)
-	{
-		dirty_transition = false;
-
-		// Remove all transitions that are no longer in our local list
-		const TransitionList* keep_transitions = GetComputedValues().transition();
-
-		if (keep_transitions && keep_transitions->all)
-			return;
-
-		auto it_remove = animations.end();
-
-		if (!keep_transitions || keep_transitions->none)
-		{
-			// All transitions should be removed, but only touch the animations that originate from the 'transition' property.
-			// Move all animations to be erased in a valid state at the end of the list, and erase later.
-			it_remove = std::partition(animations.begin(), animations.end(),
-				[](const ElementAnimation& animation) -> bool { return !animation.IsTransition(); });
-		}
-		else
-		{
-			UI_ASSERT(keep_transitions);
-
-			// Only remove the transitions that are not in our keep list.
-			const auto& keep_transitions_list = keep_transitions->transitions;
-
-			it_remove = std::partition(animations.begin(), animations.end(), [&keep_transitions_list](const ElementAnimation& animation) -> bool {
-				if (!animation.IsTransition())
-					return true;
-				auto it = std::find_if(keep_transitions_list.begin(), keep_transitions_list.end(),
-					[&animation](const Transition& transition) { return animation.GetPropertyId() == transition.id; });
-				bool keep_animation = (it != keep_transitions_list.end());
-				return keep_animation;
-			});
-		}
-
-		// We can decide what to do with cancelled transitions here.
-		for (auto it = it_remove; it != animations.end(); ++it)
-			RemoveProperty(it->GetPropertyId());
-
-		animations.erase(it_remove, animations.end());
-	}
-}
-
-void Element::HandleAnimationProperty()
-{
-	// Note: We are effectively restarting all animations whenever 'dirty_animation' is set. Use the dirty flag with care,
-	// or find another approach which only updates actual "dirty" animations.
-	if (dirty_animation)
-	{
-		dirty_animation = false;
-
-		const AnimationList* animation_list = meta->computed_values.animation();
-		bool element_has_animations = ((animation_list && !animation_list->empty()) || !animations.empty());
-		const StyleSheet* stylesheet = nullptr;
-
-		if (element_has_animations)
-			stylesheet = GetStyleSheet();
-
-		if (stylesheet)
-		{
-			// Remove existing animations
-			{
-				// We only touch the animations that originate from the 'animation' property.
-				auto it_remove = std::partition(animations.begin(), animations.end(),
-					[](const ElementAnimation& animation) { return animation.GetOrigin() != ElementAnimationOrigin::Animation; });
-
-				// We can decide what to do with cancelled animations here.
-				for (auto it = it_remove; it != animations.end(); ++it)
-					RemoveProperty(it->GetPropertyId());
-
-				animations.erase(it_remove, animations.end());
-			}
-
-			// Start animations
-			if (animation_list)
-			{
-				for (const auto& animation : *animation_list)
-				{
-					const Keyframes* keyframes_ptr = stylesheet->GetKeyframes(animation.name);
-					if (keyframes_ptr && keyframes_ptr->blocks.size() >= 1 && !animation.paused)
-					{
-						auto& property_ids = keyframes_ptr->property_ids;
-						auto& blocks = keyframes_ptr->blocks;
-
-						bool has_from_key = (blocks[0].normalized_time == 0);
-						bool has_to_key = (blocks.back().normalized_time == 1);
-
-						// If the first key defines initial conditions for a given property, use those values, else, use this element's current
-						// values.
-						for (PropertyId id : property_ids)
-							StartAnimation(id, (has_from_key ? blocks[0].properties.GetProperty(id) : nullptr), animation.num_iterations,
-								animation.alternate, animation.delay, true);
-
-						// Add middle keys: Need to skip the first and last keys if they set the initial and end conditions, respectively.
-						for (int i = (has_from_key ? 1 : 0); i < (int)blocks.size() + (has_to_key ? -1 : 0); i++)
-						{
-							// Add properties of current key to animation
-							float time = blocks[i].normalized_time * animation.duration;
-							for (auto& property : blocks[i].properties.GetProperties())
-								AddAnimationKeyTime(property.first, &property.second, time, animation.tween);
-						}
-
-						// If the last key defines end conditions for a given property, use those values, else, use this element's current values.
-						float time = animation.duration;
-						for (PropertyId id : property_ids)
-							AddAnimationKeyTime(id, (has_to_key ? blocks.back().properties.GetProperty(id) : nullptr), time, animation.tween);
-					}
-				}
-			}
-		}
-	}
-}
-
-void Element::AdvanceAnimations()
-{
-	if (!animations.empty())
-	{
-		double time = Clock::GetElapsedTime();
-
-		for (auto& animation : animations)
-		{
-			Property property = animation.UpdateAndGetProperty(time, *this);
-			if (property.unit != Unit::UNKNOWN)
-				SetProperty(animation.GetPropertyId(), property);
-		}
-
-		// Move all completed animations to the end of the list
-		auto it_completed =
-			std::partition(animations.begin(), animations.end(), [](const ElementAnimation& animation) { return !animation.IsComplete(); });
-
-		Vector<Dictionary> dictionary_list;
-		Vector<bool> is_transition;
-		dictionary_list.reserve(animations.end() - it_completed);
-		is_transition.reserve(animations.end() - it_completed);
-
-		for (auto it = it_completed; it != animations.end(); ++it)
-		{
-			const String& property_name = StyleSheetSpecification::GetPropertyName(it->GetPropertyId());
-
-			dictionary_list.emplace_back();
-			dictionary_list.back().emplace("property", Variant(property_name));
-			is_transition.push_back(it->IsTransition());
-
-			// Remove completed transition- and animation-initiated properties.
-			// Should behave like in HandleTransitionProperty() and HandleAnimationProperty() respectively.
-			if (it->GetOrigin() != ElementAnimationOrigin::User)
-				RemoveProperty(it->GetPropertyId());
-		}
-
-		// Need to erase elements before submitting event, as iterators might be invalidated when calling external code.
-		animations.erase(it_completed, animations.end());
-
-		for (size_t i = 0; i < dictionary_list.size(); i++)
-			DispatchEvent(is_transition[i] ? EventId::Transitionend : EventId::Animationend, dictionary_list[i]);
-	}
-}
-
-void Element::DirtyTransformState(bool perspective_dirty, bool transform_dirty)
-{
-	dirty_perspective |= perspective_dirty;
-	dirty_transform |= transform_dirty;
-}
-
-void Element::UpdateTransformState()
-{
-	if (!dirty_perspective && !dirty_transform)
-		return;
-
-	const ComputedValues& computed = meta->computed_values;
-
-	const Vector2f pos = GetAbsoluteOffset(BoxArea::Border);
-	const Vector2f size = GetBox().GetSize(BoxArea::Border);
-
-	bool perspective_or_transform_changed = false;
-
-	if (dirty_perspective)
-	{
-		// If perspective is set on this element, then it applies to our children. We just calculate it here,
-		// and let the children's transform update merge it with their transform.
-		bool had_perspective = (transform_state && transform_state->GetLocalPerspective());
-
-		float distance = computed.perspective();
-		Vector2f vanish = Vector2f(pos.x + size.x * 0.5f, pos.y + size.y * 0.5f);
-		bool have_perspective = false;
-
-		if (distance > 0.0f)
-		{
-			have_perspective = true;
-
-			// Compute the vanishing point from the perspective origin
-			if (computed.perspective_origin_x().type == Style::PerspectiveOrigin::Percentage)
-				vanish.x = pos.x + computed.perspective_origin_x().value * 0.01f * size.x;
-			else
-				vanish.x = pos.x + computed.perspective_origin_x().value;
-
-			if (computed.perspective_origin_y().type == Style::PerspectiveOrigin::Percentage)
-				vanish.y = pos.y + computed.perspective_origin_y().value * 0.01f * size.y;
-			else
-				vanish.y = pos.y + computed.perspective_origin_y().value;
-		}
-
-		if (have_perspective)
-		{
-			// Equivalent to: Translate(x,y,0) * Perspective(distance) * Translate(-x,-y,0)
-			Matrix4f perspective = Matrix4f::FromRows( //
-				{1, 0, -vanish.x / distance, 0},       //
-				{0, 1, -vanish.y / distance, 0},       //
-				{0, 0, 1, 0},                          //
-				{0, 0, -1 / distance, 1}               //
-			);
-
-			if (!transform_state)
-				transform_state = MakeUnique<TransformState>();
-
-			perspective_or_transform_changed |= transform_state->SetLocalPerspective(&perspective);
-		}
-		else if (transform_state)
-			transform_state->SetLocalPerspective(nullptr);
-
-		perspective_or_transform_changed |= (have_perspective != had_perspective);
-
-		dirty_perspective = false;
-	}
-
-	if (dirty_transform)
-	{
-		// We want to find the accumulated transform given all our ancestors. It is assumed here that the parent transform is already updated,
-		// so that we only need to consider our local transform and combine it with our parent's transform and perspective matrices.
-		bool had_transform = (transform_state && transform_state->GetTransform());
-
-		bool have_transform = false;
-		Matrix4f transform = Matrix4f::Identity();
-
-		if (TransformPtr transform_ptr = computed.transform())
-		{
-			// First find the current element's transform
-			const int n = transform_ptr->GetNumPrimitives();
-			for (int i = 0; i < n; ++i)
-			{
-				const TransformPrimitive& primitive = transform_ptr->GetPrimitive(i);
-				Matrix4f matrix = TransformUtilities::ResolveTransform(primitive, *this);
-				transform *= matrix;
-				have_transform = true;
-			}
-
-			if (have_transform)
-			{
-				// Compute the transform origin
-				Vector3f transform_origin(pos.x + size.x * 0.5f, pos.y + size.y * 0.5f, 0);
-
-				if (computed.transform_origin_x().type == Style::TransformOrigin::Percentage)
-					transform_origin.x = pos.x + computed.transform_origin_x().value * size.x * 0.01f;
-				else
-					transform_origin.x = pos.x + computed.transform_origin_x().value;
-
-				if (computed.transform_origin_y().type == Style::TransformOrigin::Percentage)
-					transform_origin.y = pos.y + computed.transform_origin_y().value * size.y * 0.01f;
-				else
-					transform_origin.y = pos.y + computed.transform_origin_y().value;
-
-				transform_origin.z = computed.transform_origin_z();
-
-				// Make the transformation apply relative to the transform origin
-				transform = Matrix4f::Translate(transform_origin) * transform * Matrix4f::Translate(-transform_origin);
-			}
-
-			// We may want to include the local offsets here, as suggested by the CSS specs, so that the local transform is applied after the offset I
-			// believe the motivation is. Then we would need to subtract the absolute zero-offsets during geometry submit whenever we have transforms.
-		}
-
-		if (parent && parent->transform_state)
-		{
-			// Apply the parent's local perspective and transform.
-			// @performance: If we have no local transform and no parent perspective, we can effectively just point to the parent transform instead of
-			// copying it.
-			const TransformState& parent_state = *parent->transform_state;
-
-			if (auto parent_perspective = parent_state.GetLocalPerspective())
-			{
-				transform = *parent_perspective * transform;
-				have_transform = true;
-			}
-
-			if (auto parent_transform = parent_state.GetTransform())
-			{
-				transform = *parent_transform * transform;
-				have_transform = true;
-			}
-		}
-
-		if (have_transform)
-		{
-			if (!transform_state)
-				transform_state = MakeUnique<TransformState>();
-
-			perspective_or_transform_changed |= transform_state->SetTransform(&transform);
-		}
-		else if (transform_state)
-			transform_state->SetTransform(nullptr);
-
-		perspective_or_transform_changed |= (had_transform != have_transform);
-	}
-
-	// A change in perspective or transform will require an update to children transforms as well.
-	if (perspective_or_transform_changed)
-	{
-		for (size_t i = 0; i < children.size(); i++)
-			children[i]->DirtyTransformState(false, true);
-	}
-
-	// No reason to keep the transform state around if transform and perspective have been removed.
-	if (transform_state && !transform_state->GetTransform() && !transform_state->GetLocalPerspective())
-	{
-		transform_state.reset();
-	}
-}
-
 void Element::OnStyleSheetChangeRecursive()
 {
-	meta->effects.DirtyEffects();
+	Effects().DirtyEffects();
 
 	OnStyleSheetChange();
 
@@ -3245,8 +2539,8 @@ void Element::OnStyleSheetChangeRecursive()
 
 void Element::OnDpRatioChangeRecursive()
 {
-	meta->effects.DirtyEffects();
-	GetStyle()->DirtyPropertiesWithUnits(Unit::DP_SCALABLE_LENGTH);
+	Effects().DirtyEffects();
+	Style().DirtyPropertiesWithUnits(Unit::DP_SCALABLE_LENGTH);
 
 	OnDpRatioChange();
 
@@ -3259,7 +2553,7 @@ void Element::OnDpRatioChangeRecursive()
 void Element::DirtyFontFaceRecursive()
 {
 	// Dirty the font size to force the element to update the face handle during the next Update(), and update any existing text geometry.
-	meta->style.DirtyProperty(PropertyId::FontSize);
+	Style().DirtyProperty(PropertyId::FontSize);
 	meta->computed_values.font_face_handle(0);
 
 	const int num_children = GetNumChildren(true);
@@ -3283,7 +2577,7 @@ void Element::ClampScrollOffset()
 	// At this point the scrollbars have been resolved, both in terms of size and visibility. Update their properties
 	// now so that any visibility changes in particular are reflected immediately on the next render. Otherwise we risk
 	// that the scrollbars renders a frame late, since changes to scrollbars can happen during layouting.
-	meta->scroll.UpdateProperties();
+	Scroll().UpdateProperties();
 }
 
 void Element::ClampScrollOffsetRecursive()
@@ -3293,5 +2587,11 @@ void Element::ClampScrollOffsetRecursive()
 	for (int i = 0; i < num_children; ++i)
 		GetChild(i)->ClampScrollOffsetRecursive();
 }
+
+PropertiesIteratorView Element::IterateLocalProperties() const
+{
+	return PropertiesIteratorView(MakeUnique<PropertiesIterator>(Style().Iterate()));
+}
+
 
 } // namespace ui

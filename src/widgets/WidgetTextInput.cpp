@@ -1343,7 +1343,7 @@ void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor)
 void WidgetTextInput::FormatElement()
 {
 	using namespace Style;
-	ElementScroll* scroll = parent->GetElementScroll();
+	ElementScroll& scroll = parent->Scroll();
 	float width = parent->GetBox().GetSize(BoxArea::Padding).x;
 
 	const Overflow x_overflow_property = parent->GetComputedValues().overflow_x();
@@ -1351,14 +1351,14 @@ void WidgetTextInput::FormatElement()
 	const bool word_wrap = (parent->GetComputedValues().white_space() == WhiteSpace::Prewrap);
 
 	if (x_overflow_property == Overflow::Scroll)
-		scroll->EnableScrollbar(ElementScroll::HORIZONTAL, width);
+		scroll.EnableScrollbar(ElementScroll::HORIZONTAL, width);
 	else
-		scroll->DisableScrollbar(ElementScroll::HORIZONTAL);
+		scroll.DisableScrollbar(ElementScroll::HORIZONTAL);
 
 	if (y_overflow_property == Overflow::Scroll)
-		scroll->EnableScrollbar(ElementScroll::VERTICAL, width);
+		scroll.EnableScrollbar(ElementScroll::VERTICAL, width);
 	else
-		scroll->DisableScrollbar(ElementScroll::VERTICAL);
+		scroll.DisableScrollbar(ElementScroll::VERTICAL);
 
 	// If the formatting produces scrollbars we need to format again later, this constraint enables early exit for the first formatting round.
 	const float formatting_height_constraint = (y_overflow_property == Overflow::Auto ? GetAvailableHeight() : FLT_MAX);
@@ -1368,22 +1368,22 @@ void WidgetTextInput::FormatElement()
 
 	// If we're set to automatically generate horizontal scrollbars, check for that now.
 	if (!word_wrap && x_overflow_property == Overflow::Auto && content_area.x > GetAvailableWidth() + OVERFLOW_TOLERANCE)
-		scroll->EnableScrollbar(ElementScroll::HORIZONTAL, width);
+		scroll.EnableScrollbar(ElementScroll::HORIZONTAL, width);
 
 	// Now check for vertical overflow. If we do turn on the scrollbar, this will cause a reflow.
 	if (y_overflow_property == Overflow::Auto && content_area.y > GetAvailableHeight() + OVERFLOW_TOLERANCE)
 	{
-		scroll->EnableScrollbar(ElementScroll::VERTICAL, width);
+		scroll.EnableScrollbar(ElementScroll::VERTICAL, width);
 		content_area = FormatText();
 
 		if (!word_wrap && x_overflow_property == Overflow::Auto && content_area.x > GetAvailableWidth() + OVERFLOW_TOLERANCE)
-			scroll->EnableScrollbar(ElementScroll::HORIZONTAL, width);
+			scroll.EnableScrollbar(ElementScroll::HORIZONTAL, width);
 	}
 
 	// For text elements, make the content and padding on all sides reachable by scrolling.
 	const Vector2f padding_size = parent->GetBox().GetFrameSize(BoxArea::Padding);
 	parent->SetScrollableOverflowRectangle(content_area + padding_size, true);
-	scroll->FormatScrollbars();
+	scroll.FormatScrollbars();
 }
 
 Vector2f WidgetTextInput::FormatText(float height_constraint)

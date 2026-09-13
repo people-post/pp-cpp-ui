@@ -67,7 +67,7 @@ const Property* ElementStyle::GetProperty(PropertyId id, const Element* element,
 		Element* parent = element->GetParentNode();
 		while (parent)
 		{
-			const Property* parent_property = parent->GetStyle()->GetLocalProperty(id);
+			const Property* parent_property = parent->Style().GetLocalProperty(id);
 			if (parent_property)
 				return parent_property;
 
@@ -441,7 +441,7 @@ void ElementStyle::DirtyPropertiesWithUnitsRecursive(Units units)
 	// Now dirty all of our descendant's properties that use the unit(s).
 	int num_children = element->GetNumChildren(true);
 	for (int i = 0; i < num_children; ++i)
-		element->GetChild(i)->GetStyle()->DirtyPropertiesWithUnitsRecursive(units);
+		element->GetChild(i)->Style().DirtyPropertiesWithUnitsRecursive(units);
 }
 
 bool ElementStyle::AnyPropertiesDirty() const
@@ -913,7 +913,7 @@ PropertyIdSet ElementStyle::ComputeValues(Style::ComputedValues& values, const S
 		for (int i = 0; i < element->GetNumChildren(true); i++)
 		{
 			auto child = element->GetChild(i);
-			child->GetStyle()->dirty_properties |= dirty_inherited_properties;
+			child->Style().dirty_properties |= dirty_inherited_properties;
 		}
 	}
 

@@ -1858,7 +1858,7 @@ void Context::ReleaseUnloadedDocuments()
 
 		// Clear the deleted list.
 		for (size_t i = 0; i < documents.size(); ++i)
-			documents[i]->GetEventDispatcher()->DetachAllEvents();
+			documents[i]->Events().DetachAllEvents();
 		documents.clear();
 	}
 }
