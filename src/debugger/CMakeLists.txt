@@ -27,7 +27,7 @@ add_library(ui_debugger
 
 set_common_target_options(ui_debugger)
 
-target_include_directories(ui_debugger PRIVATE "${PP_UI_INCLUDE_DIR}" "${CMAKE_SOURCE_DIR}/src")
+target_include_directories(ui_debugger PRIVATE "${PP_UI_INCLUDE_DIR}" "${PP_UI_REPO_ROOT}/src")
 target_include_directories(ui_debugger INTERFACE
 	"$<BUILD_INTERFACE:${PP_UI_INCLUDE_DIR}>"
 	"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"

@@ -1,8 +1,8 @@
 # Owned engine: one OBJECT library per module folder (folded into STATIC ui_core), umbrella ui_core for consumers.
 
-include("${CMAKE_SOURCE_DIR}/cmake/engine/Utilities.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/engine/UiModule.cmake")
-include("${CMAKE_SOURCE_DIR}/cmake/engine/UiModuleTests.cmake")
+include("${PP_UI_REPO_ROOT}/cmake/engine/Utilities.cmake")
+include("${PP_UI_REPO_ROOT}/cmake/engine/UiModule.cmake")
+include("${PP_UI_REPO_ROOT}/cmake/engine/UiModuleTests.cmake")
 
 # Layer order matches ADR 002 (low → high). Optional svg before core so the umbrella can link it.
 add_subdirectory(base)

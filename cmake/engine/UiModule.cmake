@@ -24,12 +24,12 @@ function(ui_add_module name)
 	target_include_directories(${target}
 		PUBLIC
 			"$<BUILD_INTERFACE:${PP_UI_INCLUDE_DIR}>"
-			"$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/base/containers>"
+			"$<BUILD_INTERFACE:${PP_UI_REPO_ROOT}/src/base/containers>"
 			"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 		PRIVATE
-			"${CMAKE_SOURCE_DIR}/src"
+			"${PP_UI_REPO_ROOT}/src"
 			"${PP_UI_INCLUDE_DIR}"
-			"${CMAKE_SOURCE_DIR}/src/base/containers"
+			"${PP_UI_REPO_ROOT}/src/base/containers"
 	)
 
 	target_compile_definitions(${target} PUBLIC "UI_STATIC_LIB")
@@ -40,6 +40,6 @@ function(ui_add_module name)
 	endif()
 
 	if(UI_PRECOMPILED_HEADERS AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
-		target_precompile_headers(${target} PRIVATE "${CMAKE_SOURCE_DIR}/src/base/precompiled.h")
+		target_precompile_headers(${target} PRIVATE "${PP_UI_REPO_ROOT}/src/base/precompiled.h")
 	endif()
 endfunction()

@@ -26,12 +26,12 @@ set_common_target_options(ui_core)
 target_include_directories(ui_core
 	PUBLIC
 		"$<BUILD_INTERFACE:${PP_UI_INCLUDE_DIR}>"
-		"$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src/base/containers>"
+		"$<BUILD_INTERFACE:${PP_UI_REPO_ROOT}/src/base/containers>"
 		"$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>"
 	PRIVATE
-		"${CMAKE_SOURCE_DIR}/src"
+		"${PP_UI_REPO_ROOT}/src"
 		"${PP_UI_INCLUDE_DIR}"
-		"${CMAKE_SOURCE_DIR}/src/base/containers"
+		"${PP_UI_REPO_ROOT}/src/base/containers"
 )
 
 # Fold per-folder OBJECT libs into this umbrella archive (avoids static link cycles).
@@ -99,7 +99,7 @@ if(UI_MATRIX_ROW_MAJOR)
 endif()
 
 if(UI_PRECOMPILED_HEADERS AND CMAKE_VERSION VERSION_GREATER_EQUAL "3.16")
-	target_precompile_headers(ui_core PRIVATE "${CMAKE_SOURCE_DIR}/src/base/precompiled.h")
+	target_precompile_headers(ui_core PRIVATE "${PP_UI_REPO_ROOT}/src/base/precompiled.h")
 elseif(UI_PRECOMPILED_HEADERS)
 	message(STATUS "Could not enable precompiled headers, requires CMake version 3.16 or greater.")
 endif()
