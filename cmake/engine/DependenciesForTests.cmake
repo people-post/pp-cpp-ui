@@ -2,7 +2,7 @@
 	Set up dependencies for the pp-cpp-ui tests. The dependencies are all built-in header-only libraries.
 ]]
 function(add_builtin_header_only_tests_dependency NAME)
-	set(DEPENDENCY_PATH "${CMAKE_SOURCE_DIR}/tests/engine/Dependencies/${NAME}")
+	set(DEPENDENCY_PATH "${PP_UI_REPO_ROOT}/tests/engine/Dependencies/${NAME}")
 	set(DEPENDENCY_TARGET "${NAME}::${NAME}")
 	add_library(${DEPENDENCY_TARGET} IMPORTED INTERFACE)
 	set_property(TARGET ${DEPENDENCY_TARGET} PROPERTY INTERFACE_INCLUDE_DIRECTORIES "${DEPENDENCY_PATH}")
@@ -14,7 +14,7 @@ add_builtin_header_only_tests_dependency("lodepng")
 add_builtin_header_only_tests_dependency("trompeloeil")
 
 # Include doctest's discovery module
-include("${CMAKE_SOURCE_DIR}/tests/engine/Dependencies/doctest/cmake/doctest.cmake")
+include("${PP_UI_REPO_ROOT}/tests/engine/Dependencies/doctest/cmake/doctest.cmake")
 
 if(MSVC)
 	target_compile_definitions(doctest::doctest INTERFACE DOCTEST_CONFIG_USE_STD_HEADERS)

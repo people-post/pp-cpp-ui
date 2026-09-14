@@ -4,10 +4,13 @@
 function(pp_ui_add_engine)
   message(STATUS "pp-cpp-ui: configuring first-party UI engine")
 
-  set(PP_UI_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/include" CACHE PATH "pp-cpp-ui public include root" FORCE)
+  if(NOT PP_UI_INCLUDE_DIR)
+    set(PP_UI_INCLUDE_DIR "${PP_UI_REPO_ROOT}/include")
+  endif()
+  set(PP_UI_INCLUDE_DIR "${PP_UI_INCLUDE_DIR}" CACHE PATH "pp-cpp-ui public include root" FORCE)
 
   # Export consumer-facing paths (replaces former rmlui/ root vars).
-  set(PP_LIB_UI_ROOT "${CMAKE_SOURCE_DIR}" CACHE PATH "pp-cpp-ui engine root" FORCE)
+  set(PP_LIB_UI_ROOT "${PP_UI_REPO_ROOT}" CACHE PATH "pp-cpp-ui engine root" FORCE)
   set(PP_LIB_UI_INCLUDE "${PP_UI_INCLUDE_DIR}" CACHE PATH "Public headers (include/)" FORCE)
 
   # Product-fixed engine options (no upstream option matrix).
@@ -31,11 +34,11 @@ function(pp_ui_add_engine)
   set(UI_VERSION_RELEASE TRUE)
   set(UI_VERSION_SHORT "6.2")
 
-  list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/engine/Modules")
+  list(APPEND CMAKE_MODULE_PATH "${PP_UI_REPO_ROOT}/cmake/engine/Modules")
 
   include(GNUInstallDirs)
-  include("${CMAKE_SOURCE_DIR}/cmake/engine/Utilities.cmake")
-  include("${CMAKE_SOURCE_DIR}/cmake/engine/RuntimeUtilities.cmake")
+  include("${PP_UI_REPO_ROOT}/cmake/engine/Utilities.cmake")
+  include("${PP_UI_REPO_ROOT}/cmake/engine/RuntimeUtilities.cmake")
   setup_binary_output_directories()
   setup_runtime_dependency_set_arg()
 
@@ -48,7 +51,7 @@ function(pp_ui_add_engine)
   message(STATUS "Found lunasvg::lunasvg - SVG plugin enabled")
   message(STATUS "Found harfbuzz::harfbuzz - HarfBuzz text shaping enabled")
 
-  add_subdirectory("${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/src")
+  add_subdirectory("${PP_UI_REPO_ROOT}/src" "${CMAKE_CURRENT_BINARY_DIR}/src")
 
   if(NOT TARGET ui_engine)
     add_library(ui_engine INTERFACE)
@@ -61,17 +64,17 @@ function(pp_ui_add_engine)
     set(UI_SHELL ON)
     set(UI_BACKEND "SDL_GL3" CACHE STRING "" FORCE)
     set(UI_SDL_VERSION_MAJOR "3" CACHE STRING "" FORCE)
-    include("${CMAKE_SOURCE_DIR}/cmake/engine/BackendAutoSelection.cmake")
-    include("${CMAKE_SOURCE_DIR}/cmake/engine/DependenciesForBackends.cmake")
-    include("${CMAKE_SOURCE_DIR}/cmake/engine/DependenciesForShell.cmake")
+    include("${PP_UI_REPO_ROOT}/cmake/engine/BackendAutoSelection.cmake")
+    include("${PP_UI_REPO_ROOT}/cmake/engine/DependenciesForBackends.cmake")
+    include("${PP_UI_REPO_ROOT}/cmake/engine/DependenciesForShell.cmake")
     add_subdirectory(
-      "${CMAKE_SOURCE_DIR}/tests/support/reference_backends/all"
-      "${CMAKE_BINARY_DIR}/tests/reference_backends")
+      "${PP_UI_REPO_ROOT}/tests/support/reference_backends/all"
+      "${CMAKE_CURRENT_BINARY_DIR}/tests/reference_backends")
     add_subdirectory(
-      "${CMAKE_SOURCE_DIR}/tests/support/shell"
-      "${CMAKE_BINARY_DIR}/tests/shell")
+      "${PP_UI_REPO_ROOT}/tests/support/shell"
+      "${CMAKE_CURRENT_BINARY_DIR}/tests/shell")
     add_subdirectory(
-      "${CMAKE_SOURCE_DIR}/tests/engine"
-      "${CMAKE_BINARY_DIR}/tests/engine")
+      "${PP_UI_REPO_ROOT}/tests/engine"
+      "${CMAKE_CURRENT_BINARY_DIR}/tests/engine")
   endif()
 endfunction()
