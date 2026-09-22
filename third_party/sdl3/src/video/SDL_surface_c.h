@@ -1,6 +1,6 @@
 /*
   Simple DirectMedia Layer
-  Copyright (C) 1997-2025 Sam Lantinga <slouken@libsdl.org>
+  Copyright (C) 1997-2026 Sam Lantinga <slouken@libsdl.org>
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -78,15 +78,22 @@ struct SDL_Surface
 
     /** info for fast blit mapping to other surfaces */
     SDL_BlitMap map;
+
+    /** Original pixels when RLE is enabled */
+    void *saved_pixels;
 };
 
 // Surface functions
 extern bool SDL_SurfaceValid(SDL_Surface *surface);
 extern void SDL_UpdateSurfaceLockFlag(SDL_Surface *surface);
+extern bool SDL_CalculateSurfaceSize(SDL_PixelFormat format, int width, int height, size_t *size, size_t *pitch, bool minimalPitch);
 extern float SDL_GetDefaultSDRWhitePoint(SDL_Colorspace colorspace);
 extern float SDL_GetSurfaceSDRWhitePoint(SDL_Surface *surface, SDL_Colorspace colorspace);
 extern float SDL_GetDefaultHDRHeadroom(SDL_Colorspace colorspace);
 extern float SDL_GetSurfaceHDRHeadroom(SDL_Surface *surface, SDL_Colorspace colorspace);
 extern SDL_Surface *SDL_GetSurfaceImage(SDL_Surface *surface, float display_scale);
+extern SDL_Surface *SDL_ConvertSurfaceRect(SDL_Surface *surface, const SDL_Rect *rect, SDL_PixelFormat format);
+extern bool SDL_IsBMP(SDL_IOStream *src);
+extern bool SDL_IsPNG(SDL_IOStream *src);
 
 #endif // SDL_surface_c_h_

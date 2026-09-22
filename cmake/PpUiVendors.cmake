@@ -196,6 +196,10 @@ function(pp_ui_add_sdl_deps)
       set(SDL_OPENGL ON CACHE BOOL "Include OpenGL/GLX in SDL3" FORCE)
       set(SDL_OPENGLES OFF CACHE BOOL "Disable OpenGL ES (desktop GL3 backend)" FORCE)
       set(SDL_X11 ON CACHE BOOL "" FORCE)
+      # Optional X11 extensions — not required for GL3; avoid hard deps on
+      # libxss-dev / libxtst-dev (SDL 3.4+ treats missing headers as FATAL).
+      set(SDL_X11_XSCRNSAVER OFF CACHE BOOL "" FORCE)
+      set(SDL_X11_XTEST OFF CACHE BOOL "" FORCE)
     endif()
 
     set(SDL_SHARED OFF CACHE BOOL "" FORCE)
