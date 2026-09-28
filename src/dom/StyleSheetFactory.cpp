@@ -10,6 +10,9 @@ namespace ui {
 
 static UniquePtr<StyleSheetFactory> instance;
 
+// Tracks recursion depth while expanding nested ':not(...)' selectors, see GetSelector() below.
+static thread_local int not_nesting_depth = 0;
+
 StyleSheetFactory::StyleSheetFactory() :
 	selectors{
 		{"nth-child", StructuralSelectorType::Nth_Child},
@@ -113,9 +116,21 @@ StructuralSelector StyleSheetFactory::GetSelector(const String& name)
 
 		if (selector_type == StructuralSelectorType::Not)
 		{
+			// ':not(...)' recurses back into the selector parser for its argument, which can itself contain
+			// ':not(...)'. Cap the nesting depth so a deeply nested selector can't overflow the stack.
+			constexpr int max_not_nesting_depth = 32;
+			if (++not_nesting_depth > max_not_nesting_depth)
+			{
+				--not_nesting_depth;
+				Log::Message(Log::LT_WARNING, "Selector ':not(...)' exceeds the maximum nesting depth (%d).", max_not_nesting_depth);
+				return StructuralSelector(StructuralSelectorType::Invalid, 0, 0);
+			}
+
 			auto list = MakeShared<SelectorTree>();
 			list->root = MakeUnique<StyleSheetNode>();
 			list->leafs = StyleSheetParser::ConstructNodes(*list->root, parameters);
+
+			--not_nesting_depth;
 
 			int specificity = 0;
 			for (const StyleSheetNode* node : list->leafs)
