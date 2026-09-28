@@ -124,6 +124,11 @@ const XMLParser::ParseFrame* XMLParser::GetParseFrame() const
 	return &stack.top();
 }
 
+size_t XMLParser::GetStackDepth() const
+{
+	return stack.size();
+}
+
 const URL& XMLParser::GetSourceURL() const
 {
 	UI_ASSERT(GetSourceURLPtr());
