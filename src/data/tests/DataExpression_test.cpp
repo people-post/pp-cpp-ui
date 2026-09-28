@@ -168,3 +168,24 @@ TEST_CASE("Data expressions")
 	CHECK(TestExpression("true ? num_multi[0] : num_multi[999]") == "left");
 	CHECK(TestExpression("false ? num_multi[999] : num_multi[1]") == "right");
 }
+
+TEST_CASE("Data expressions.deeply_nested")
+{
+	// A pathologically deep expression (e.g. from untrusted 'data-if' RML markup) must be rejected with a
+	// parse error rather than recursing the descent parser without bound and overflowing the stack.
+	DataTypeRegister type_register;
+	DataModel model(&type_register);
+	DataExpressionInterface expression_interface(&model, nullptr);
+
+	const String deeply_nested_parens = String(10000, '(') + "1" + String(10000, ')');
+	DataExpression parens_expression(deeply_nested_parens);
+	CHECK_FALSE(parens_expression.Parse(expression_interface, false));
+
+	const String deeply_nested_not = String(10000, '!') + "true";
+	DataExpression not_expression(deeply_nested_not);
+	CHECK_FALSE(not_expression.Parse(expression_interface, false));
+
+	const String deeply_nested_member_access = "a" + String(10000, '.') + "b";
+	DataExpression member_expression(deeply_nested_member_access);
+	member_expression.Parse(expression_interface, false); // Must not crash; success/failure both acceptable.
+}
