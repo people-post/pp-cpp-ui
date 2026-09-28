@@ -185,10 +185,26 @@ bool URL::SetURL(const String& _url)
 		// Copy the path including the trailing slash.
 		path = String(path_begin, ++file_name_begin);
 
-		// Normalise the path, stripping any ../'s from it
+		// Normalise the path, stripping any ../'s from it.
+		const bool is_absolute = (!path.empty() && path[0] == '/');
+
 		size_t parent_dir_pos = String::npos;
-		while ((parent_dir_pos = path.find("/../")) != String::npos && parent_dir_pos != 0)
+		while ((parent_dir_pos = path.find("/../")) != String::npos)
 		{
+			if (parent_dir_pos == 0)
+			{
+				// A leading '/../' has nothing above the root to cancel against. For an absolute path we
+				// must not leave it in place: doing so would let the normalised path climb above whatever
+				// directory the caller treats as the root (e.g. "/../secret" resolving outside a sandbox).
+				// Drop just the '../' and keep looping, in case of a chain like '/../../..'. A relative
+				// path can never match here, since it has no leading '/' to form the pattern in the first
+				// place, so its leading '..' is left untouched.
+				UI_ASSERT(is_absolute);
+				path.erase(1, 3);
+				url_dirty = true;
+				continue;
+			}
+
 			// Find the start of the parent directory.
 			size_t parent_dir_start_pos = path.rfind('/', parent_dir_pos - 1);
 			if (parent_dir_start_pos == String::npos)

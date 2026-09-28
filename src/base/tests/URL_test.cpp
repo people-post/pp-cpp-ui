@@ -70,7 +70,14 @@ TEST_CASE("url.normalize")
 	CHECK(Normalize("./") == "./");
 	CHECK(Normalize("../") == "../");
 	CHECK(Normalize("/") == "/");
-	CHECK(Normalize("/../") == "/../");
+
+	// A leading '..' can never climb above the root of an absolute path: previously it was left in the
+	// normalised string verbatim (as a deliberate, documented exception), which let a path like "/../secret"
+	// escape whatever directory the caller treats as the root. It's now dropped instead, for any number of
+	// chained leading '..'s.
+	CHECK(Normalize("/../") == "/");
+	CHECK(Normalize("/../../../etc/passwd") == "/etc/passwd");
+	CHECK(Normalize("/a/../../../etc/passwd") == "/etc/passwd");
 
 	/*** We may want to support these later. ***/
 
@@ -135,10 +142,17 @@ TEST_CASE("url.join")
 	CHECK(JoinPath("file:///data/d.rml", "../blue.png") == "file:///blue.png");
 	CHECK(JoinPath("file:///data/d.rml", "img/../blue.png") == "file:///data/blue.png");
 
-	/*** These ones are supported now, but we may want to revise them later ***/
+	// A '..' that would otherwise climb above the document root is dropped rather than kept in the result,
+	// so joining can never escape above '/'.
+	CHECK(JoinPath("/d.rml", "../data/images/icons/blue.png") == "/data/images/icons/blue.png");
+	CHECK(JoinPath("/data/d.rml", "../../images/icons/blue.png") == "/images/icons/blue.png");
 
-	CHECK(JoinPath("/d.rml", "../data/images/icons/blue.png") == "/../data/images/icons/blue.png");
-	CHECK(JoinPath("/data/d.rml", "../../images/icons/blue.png") == "/../images/icons/blue.png");
+	// Note: a reference path that is itself absolute (leading '/', e.g. "/../../etc/passwd") is intentionally
+	// NOT run through the same normalisation. This test suite (and this engine's own test harness, see e.g.
+	// Specificity_Basic_test.cpp) relies on such paths resolving relative to the current working directory
+	// via a leading "..", to reach fixture files from documents loaded from memory. Normalising it away here
+	// broke that widely-used idiom; sandboxing an absolute reference path is left to the embedding
+	// application's FileInterface, which is the component that actually knows the real root directory.
 
 	/*** We may want to support these later ***/
 
