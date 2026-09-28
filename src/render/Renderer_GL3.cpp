@@ -1251,19 +1251,38 @@ ui::TextureHandle RenderInterface_GL3::LoadTexture(ui::Vector2i& texture_dimensi
 	TGAHeader header;
 	memcpy(&header, buffer.get(), sizeof(TGAHeader));
 
-	int color_mode = header.bitsPerPixel / 8;
-	const size_t image_size = header.width * header.height * 4; // We always make 32bit textures
-
 	if (header.dataType != 2)
 	{
 		ui::Log::Message(ui::Log::LT_ERROR, "Only 24/32bit uncompressed TGAs are supported.");
 		return false;
 	}
 
-	// Ensure we have at least 3 colors
-	if (color_mode < 3)
+	// Reject non-positive or unreasonably large dimensions before doing any size arithmetic.
+	constexpr int max_dimension = 1 << 14; // 16384, well beyond any legitimate UI texture.
+	if (header.width <= 0 || header.height <= 0 || header.width > max_dimension || header.height > max_dimension)
+	{
+		ui::Log::Message(ui::Log::LT_ERROR, "TGA image has invalid or excessive dimensions.");
+		return false;
+	}
+
+	const int color_mode = header.bitsPerPixel / 8;
+
+	// Ensure we have at least 3 colors, and no more than 4 (32bit).
+	if (color_mode < 3 || color_mode > 4)
 	{
 		ui::Log::Message(ui::Log::LT_ERROR, "Only 24 and 32bit textures are supported.");
+		return false;
+	}
+
+	const size_t width = size_t(header.width);
+	const size_t height = size_t(header.height);
+	const size_t source_size = width * height * size_t(color_mode);
+	const size_t image_size = width * height * 4; // We always make 32bit textures
+
+	// Verify the file actually contains as much pixel data as the header claims.
+	if (buffer_size - sizeof(TGAHeader) < source_size)
+	{
+		ui::Log::Message(ui::Log::LT_ERROR, "TGA file is smaller than its header declares.");
 		return false;
 	}
 
