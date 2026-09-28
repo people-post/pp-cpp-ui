@@ -22,7 +22,9 @@ bool FontEffectOutline::Initialise(int _width)
 
 	width = _width;
 
-	filter.Initialise(width, FilterOperation::Dilation);
+	if (!filter.Initialise(width, FilterOperation::Dilation))
+		return false;
+
 	for (int x = -width; x <= width; ++x)
 	{
 		for (int y = -width; y <= width; ++y)

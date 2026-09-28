@@ -16,7 +16,11 @@ bool ConvolutionFilter::Initialise(int _kernel_radius, FilterOperation _operatio
 
 bool ConvolutionFilter::Initialise(Vector2i _kernel_radii, FilterOperation _operation)
 {
-	if (_kernel_radii.x < 0 || _kernel_radii.y < 0)
+	// Font effects (outline, blur, glow) derive their radius from user-controlled CSS lengths. Cap it well
+	// below where the kernel dimensions or its element count (computed as size_t below) could overflow.
+	constexpr int max_kernel_radius = 512;
+
+	if (_kernel_radii.x < 0 || _kernel_radii.y < 0 || _kernel_radii.x > max_kernel_radius || _kernel_radii.y > max_kernel_radius)
 	{
 		UI_ERRORMSG("Invalid input parameters to convolution filter.");
 		return false;
@@ -24,7 +28,8 @@ bool ConvolutionFilter::Initialise(Vector2i _kernel_radii, FilterOperation _oper
 
 	kernel_size = _kernel_radii * 2 + Vector2i(1);
 
-	kernel = UniquePtr<float[]>(new float[kernel_size.x * kernel_size.y]());
+	const size_t kernel_element_count = size_t(kernel_size.x) * size_t(kernel_size.y);
+	kernel = UniquePtr<float[]>(new float[kernel_element_count]());
 
 	operation = _operation;
 	return true;
