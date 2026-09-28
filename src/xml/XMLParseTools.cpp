@@ -110,6 +110,11 @@ bool XMLParseTools::ReadAttribute(const char*& string, String& name, String& val
 	return true;
 }
 
+// Templates can reference themselves, directly or through another template, which would otherwise recurse
+// without bound while expanding the body. Cap the nesting depth to keep this from overflowing the stack.
+static constexpr int MAX_TEMPLATE_EXPANSION_DEPTH = 32;
+static thread_local int template_expansion_depth = 0;
+
 Element* XMLParseTools::ParseTemplate(Element* element, const String& template_name)
 {
 	// Load the template, and parse it
@@ -120,7 +125,19 @@ Element* XMLParseTools::ParseTemplate(Element* element, const String& template_n
 		return element;
 	}
 
-	return parse_template->ParseTemplate(element);
+	if (template_expansion_depth >= MAX_TEMPLATE_EXPANSION_DEPTH)
+	{
+		Log::ParseError(element->GetOwnerDocument()->GetSourceURL(), -1,
+			"Template '%s' exceeds the maximum template expansion depth (%d), likely a self- or mutually-recursive template.",
+			template_name.c_str(), MAX_TEMPLATE_EXPANSION_DEPTH);
+		return element;
+	}
+
+	template_expansion_depth++;
+	Element* result = parse_template->ParseTemplate(element);
+	template_expansion_depth--;
+
+	return result;
 }
 
 const char* XMLParseTools::ParseDataBrackets(bool& inside_brackets, bool& inside_string, char c, char previous)

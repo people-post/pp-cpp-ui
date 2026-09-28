@@ -307,3 +307,34 @@ TEST_CASE("template.inline+inline.identical.siblings")
 	document->Close();
 	TestsShell::ShutdownShell();
 }
+
+TEST_CASE("template.self_recursive")
+{
+	// A template that injects itself (directly, or through another template) must not recurse without
+	// bound while expanding: see assets/recursive_template.rml, and XMLParseTools::ParseTemplate.
+	static const String document_rml = R"(
+<rml>
+<head>
+	<link type="text/template" href="/assets/recursive_template.rml"/>
+</head>
+<body id="body">
+<template src="recursive_template">
+</template>
+</body>
+</rml>
+)";
+
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	INFO("Expected error: template expansion depth exceeded.");
+	TestsShell::SetNumExpectedWarnings(1);
+	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+	TestsShell::SetNumExpectedWarnings(0);
+
+	document->Show();
+	TestsShell::RenderLoop();
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
