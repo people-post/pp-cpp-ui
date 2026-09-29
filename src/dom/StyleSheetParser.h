@@ -36,8 +36,9 @@ public:
 	/// Converts a selector query to a tree of nodes.
 	/// @param[out] root_node Node to construct into.
 	/// @param[in] selectors The selector rules as a string value.
+	/// @param[out] out_valid If given, set to false if any selector is invalid, and invalid selectors are not logged.
 	/// @return The list of leaf nodes in the constructed tree, which are all owned by the root node.
-	static StyleSheetNodeListRaw ConstructNodes(StyleSheetNode& root_node, const String& selectors);
+	static StyleSheetNodeListRaw ConstructNodes(StyleSheetNode& root_node, const String& selectors, bool* out_valid = nullptr);
 
 	/// Initialises property parsers. Call after initialisation of StylesheetSpecification.
 	static void Initialise();

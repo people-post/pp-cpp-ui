@@ -742,8 +742,11 @@ void StyleSheetParser::ParseProperties(PropertyDictionary& parsed_properties, co
 	stream = nullptr;
 }
 
-StyleSheetNodeListRaw StyleSheetParser::ConstructNodes(StyleSheetNode& root_node, const String& selectors)
+StyleSheetNodeListRaw StyleSheetParser::ConstructNodes(StyleSheetNode& root_node, const String& selectors, bool* out_valid)
 {
+	if (out_valid)
+		*out_valid = true;
+
 	const PropertyDictionary empty_properties;
 
 	StringList selector_list;
@@ -756,7 +759,12 @@ StyleSheetNodeListRaw StyleSheetParser::ConstructNodes(StyleSheetNode& root_node
 		StyleSheetNode* leaf_node = ImportProperties(&root_node, selector, empty_properties, 0);
 
 		if (!leaf_node)
-			Log::Message(Log::LT_WARNING, "Invalid selector '%s' encountered.", selector.c_str());
+		{
+			if (out_valid)
+				*out_valid = false;
+			else
+				Log::Message(Log::LT_WARNING, "Invalid selector '%s' encountered.", selector.c_str());
+		}
 		else if (leaf_node != &root_node)
 			leaf_nodes.push_back(leaf_node);
 	}
@@ -940,7 +948,10 @@ StyleSheetNode* StyleSheetParser::ImportProperties(StyleSheetNode* node, const S
 				case ':':
 				{
 					String pseudo_class_name = String(p_begin + 1, p_end);
-					StructuralSelector node_selector = StyleSheetFactory::GetSelector(pseudo_class_name);
+					bool invalid_rule = false;
+					StructuralSelector node_selector = StyleSheetFactory::GetSelector(pseudo_class_name, &invalid_rule);
+					if (invalid_rule)
+						return nullptr;
 					if (node_selector.type != StructuralSelectorType::Invalid)
 						selector.structural_selectors.push_back(node_selector);
 					else
