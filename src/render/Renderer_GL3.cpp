@@ -1245,8 +1245,14 @@ ui::TextureHandle RenderInterface_GL3::LoadTexture(ui::Vector2i& texture_dimensi
 
 	using ui::byte;
 	ui::UniquePtr<byte[]> buffer(new byte[buffer_size]);
-	file_interface->Read(buffer.get(), buffer_size, file_handle);
+	const size_t bytes_read = file_interface->Read(buffer.get(), buffer_size, file_handle);
 	file_interface->Close(file_handle);
+
+	if (bytes_read != buffer_size)
+	{
+		ui::Log::Message(ui::Log::LT_ERROR, "Could not read texture file %s.", source.c_str());
+		return false;
+	}
 
 	TGAHeader header;
 	memcpy(&header, buffer.get(), sizeof(TGAHeader));
