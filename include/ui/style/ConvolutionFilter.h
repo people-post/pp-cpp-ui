@@ -19,6 +19,9 @@ enum class FilterOperation {
 
 class UI_CORE_API ConvolutionFilter {
 public:
+	/// Maximum kernel radius accepted by Initialise().
+	static constexpr int MAX_KERNEL_RADIUS = 64;
+
 	ConvolutionFilter();
 	~ConvolutionFilter();
 

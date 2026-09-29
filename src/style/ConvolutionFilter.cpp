@@ -1,4 +1,5 @@
 #include <ui/style/ConvolutionFilter.h>
+#include <ui/base/Log.h>
 #include <ui/base/Profiling.h>
 #include <float.h>
 #include <string.h>
@@ -16,13 +17,17 @@ bool ConvolutionFilter::Initialise(int _kernel_radius, FilterOperation _operatio
 
 bool ConvolutionFilter::Initialise(Vector2i _kernel_radii, FilterOperation _operation)
 {
-	// Font effects (outline, blur, glow) derive their radius from user-controlled CSS lengths. Cap it well
-	// below where the kernel dimensions or its element count (computed as size_t below) could overflow.
-	constexpr int max_kernel_radius = 512;
-
-	if (_kernel_radii.x < 0 || _kernel_radii.y < 0 || _kernel_radii.x > max_kernel_radius || _kernel_radii.y > max_kernel_radius)
+	if (_kernel_radii.x < 0 || _kernel_radii.y < 0)
 	{
 		UI_ERRORMSG("Invalid input parameters to convolution filter.");
+		return false;
+	}
+
+	// Font effect radii come from style sheet lengths; the cost per pixel grows with the kernel area.
+	if (_kernel_radii.x > MAX_KERNEL_RADIUS || _kernel_radii.y > MAX_KERNEL_RADIUS)
+	{
+		Log::Message(Log::LT_WARNING, "Convolution filter radius (%d, %d) exceeds the maximum of %d.", _kernel_radii.x, _kernel_radii.y,
+			MAX_KERNEL_RADIUS);
 		return false;
 	}
 
