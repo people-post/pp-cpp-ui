@@ -338,3 +338,43 @@ TEST_CASE("template.self_recursive")
 	document->Close();
 	TestsShell::ShutdownShell();
 }
+
+static int GetMaxDepth(Element* element)
+{
+	int max_child_depth = 0;
+	for (int i = 0; i < element->GetNumChildren(); i++)
+		max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
+	return 1 + max_child_depth;
+}
+
+TEST_CASE("template.max_document_depth")
+{
+	// Document depth is counted across nested template expansions.
+	static const String document_rml = R"(
+<rml>
+<head>
+	<link type="text/template" href="/assets/deep_recursive_template.rml"/>
+</head>
+<body id="body">
+<template src="deep_recursive_template">
+</template>
+</body>
+</rml>
+)";
+
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	TestsShell::SetNumExpectedWarnings(1);
+	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+	TestsShell::SetNumExpectedWarnings(0);
+	REQUIRE(document);
+
+	CHECK(GetMaxDepth(document) <= 512);
+
+	document->Show();
+	TestsShell::RenderLoop();
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}

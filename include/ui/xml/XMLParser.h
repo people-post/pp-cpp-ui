@@ -68,9 +68,6 @@ public:
 	/// Access the current parse frame.
 	const ParseFrame* GetParseFrame() const;
 
-	/// Returns the current depth of the parse stack, i.e. how many tags are currently open.
-	size_t GetStackDepth() const;
-
 	/// Returns the source URL of this parse.
 	const URL& GetSourceURL() const;
 
@@ -87,6 +84,8 @@ private:
 	UniquePtr<DocumentHeader> header;
 	XMLNodeHandler* active_handler;
 	Stack<ParseFrame> stack;
+	// Number of open tags inside a subtree discarded for exceeding the maximum document depth.
+	int discard_depth = 0;
 };
 
 } // namespace ui

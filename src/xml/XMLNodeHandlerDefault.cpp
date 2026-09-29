@@ -9,11 +9,6 @@
 
 namespace ui {
 
-// Limits how deeply nested a document's elements may be. Layout, style cascading, and element destruction
-// all recurse over the DOM tree, so an unbounded document depth (e.g. tens of thousands of nested <div>s)
-// can overflow the stack well before any of those later stages get a chance to reject it.
-static constexpr size_t MAX_DOCUMENT_DEPTH = 512;
-
 XMLNodeHandlerDefault::XMLNodeHandlerDefault() {}
 
 XMLNodeHandlerDefault::~XMLNodeHandlerDefault() {}
@@ -24,13 +19,6 @@ Element* XMLNodeHandlerDefault::ElementStart(XMLParser* parser, const String& na
 
 	// Determine the parent
 	Element* parent = parser->GetParseFrame()->element;
-
-	if (parser->GetStackDepth() >= MAX_DOCUMENT_DEPTH)
-	{
-		Log::Message(Log::LT_WARNING, "Element '%s' exceeds the maximum document depth (%zu) and was discarded.", name.c_str(),
-			MAX_DOCUMENT_DEPTH);
-		return nullptr;
-	}
 
 	// Attempt to instance the element with the instancer
 	ElementPtr element = Factory::InstanceElement(parent, name, name, attributes);
