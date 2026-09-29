@@ -171,8 +171,7 @@ TEST_CASE("Data expressions")
 
 TEST_CASE("Data expressions.deeply_nested")
 {
-	// A pathologically deep expression (e.g. from untrusted 'data-if' RML markup) must be rejected with a
-	// parse error rather than recursing the descent parser without bound and overflowing the stack.
+	// Excessive nesting is rejected with a parse error instead of overflowing the stack.
 	DataTypeRegister type_register;
 	DataModel model(&type_register);
 	DataExpressionInterface expression_interface(&model, nullptr);
@@ -188,4 +187,49 @@ TEST_CASE("Data expressions.deeply_nested")
 	const String deeply_nested_member_access = "a" + String(10000, '.') + "b";
 	DataExpression member_expression(deeply_nested_member_access);
 	member_expression.Parse(expression_interface, false); // Must not crash; success/failure both acceptable.
+
+	String deeply_nested_ternary;
+	for (int i = 0; i < 10000; i++)
+		deeply_nested_ternary += "true ? 1 : ";
+	deeply_nested_ternary += "0";
+	DataExpression ternary_expression(deeply_nested_ternary);
+	CHECK_FALSE(ternary_expression.Parse(expression_interface, false));
+
+	String nested_condition;
+	for (int i = 0; i < 10000; i++)
+		nested_condition += "1 ? ";
+	nested_condition += "1";
+	for (int i = 0; i < 10000; i++)
+		nested_condition += " : 0";
+	DataExpression condition_expression(nested_condition);
+	CHECK_FALSE(condition_expression.Parse(expression_interface, false));
+
+	String deeply_nested_pipe;
+	for (int i = 0; i < 10000; i++)
+		deeply_nested_pipe += "1 | f(";
+	deeply_nested_pipe += "1" + String(10000, ')');
+	DataExpression pipe_expression(deeply_nested_pipe);
+	CHECK_FALSE(pipe_expression.Parse(expression_interface, false));
+
+	String deeply_nested_function;
+	for (int i = 0; i < 10000; i++)
+		deeply_nested_function += "f(";
+	deeply_nested_function += "1" + String(10000, ')');
+	DataExpression function_expression(deeply_nested_function);
+	CHECK_FALSE(function_expression.Parse(expression_interface, false));
+
+	// Moderate nesting still parses.
+	String moderate_ternary;
+	for (int i = 0; i < 20; i++)
+		moderate_ternary += "true ? 1 : ";
+	moderate_ternary += "0";
+	DataExpression moderate_ternary_expression(moderate_ternary);
+	CHECK(moderate_ternary_expression.Parse(expression_interface, false));
+
+	String moderate_pipe;
+	for (int i = 0; i < 20; i++)
+		moderate_pipe += "1 | f(";
+	moderate_pipe += "1" + String(20, ')');
+	DataExpression moderate_pipe_expression(moderate_pipe);
+	CHECK(moderate_pipe_expression.Parse(expression_interface, false));
 }

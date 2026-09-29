@@ -251,10 +251,9 @@ public:
 		return true;
 	}
 
-	// The recursive-descent grammar recurses on nested parentheses, unary operators, and bracketed/dotted
-	// variable accesses. Without a limit, a maliciously deep expression (e.g. "((((...1...))))") can overflow
-	// the stack. Callers should use RecursionGuard rather than calling these directly.
-	static constexpr int MAX_RECURSION_DEPTH = 128;
+	// Nesting limit for the recursive-descent parser (parentheses, ternaries, function arguments, unary
+	// operators, variable accesses). Callers should use RecursionGuard rather than calling these directly.
+	static constexpr int MAX_RECURSION_DEPTH = 256;
 	bool EnterRecursion()
 	{
 		if (++recursion_depth > MAX_RECURSION_DEPTH)
@@ -457,6 +456,10 @@ namespace Parse {
 	}
 	static void Expression(DataParser& parser)
 	{
+		RecursionGuard guard(parser);
+		if (!guard.ok)
+			return;
+
 		Relational(parser);
 
 		bool looping = true;
