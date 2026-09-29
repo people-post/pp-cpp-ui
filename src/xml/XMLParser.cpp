@@ -9,6 +9,7 @@
 #include <ui/xml/XMLNodeHandler.h>
 #include "base/ControlledLifetimeResource.h"
 #include "dom/DocumentHeader.h"
+#include "XMLParseTools.h"
 
 namespace ui {
 
@@ -63,9 +64,14 @@ XMLParser::XMLParser(Element* root)
 	active_handler = nullptr;
 
 	header = MakeUnique<DocumentHeader>();
+
+	XMLParseTools::BeginParser();
 }
 
-XMLParser::~XMLParser() {}
+XMLParser::~XMLParser()
+{
+	XMLParseTools::EndParser();
+}
 
 void XMLParser::RegisterPersistentCDATATag(const String& _tag)
 {

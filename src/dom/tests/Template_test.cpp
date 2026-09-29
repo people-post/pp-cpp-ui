@@ -310,8 +310,7 @@ TEST_CASE("template.inline+inline.identical.siblings")
 
 TEST_CASE("template.self_recursive")
 {
-	// A template that injects itself (directly, or through another template) must not recurse without
-	// bound while expanding: see assets/recursive_template.rml, and XMLParseTools::ParseTemplate.
+	// Expansion stops at the maximum template expansion depth.
 	static const String document_rml = R"(
 <rml>
 <head>
@@ -339,12 +338,54 @@ TEST_CASE("template.self_recursive")
 	TestsShell::ShutdownShell();
 }
 
+static int CountDescendants(Element* element)
+{
+	int count = 0;
+	for (int i = 0; i < element->GetNumChildren(); i++)
+		count += 1 + CountDescendants(element->GetChild(i));
+	return count;
+}
+
 static int GetMaxDepth(Element* element)
 {
 	int max_child_depth = 0;
 	for (int i = 0; i < element->GetNumChildren(); i++)
 		max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
 	return 1 + max_child_depth;
+}
+
+TEST_CASE("template.self_recursive_fanout")
+{
+	// Expansion stops at the maximum number of template expansions.
+	static const String document_rml = R"(
+<rml>
+<head>
+	<link type="text/template" href="/assets/recursive_template_fanout.rml"/>
+</head>
+<body id="body">
+<template src="recursive_template_fanout">
+</template>
+</body>
+</rml>
+)";
+
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	TestsShell::SetNumExpectedWarnings(2);
+	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+	TestsShell::SetNumExpectedWarnings(0);
+	REQUIRE(document);
+
+	Element* body = document->GetElementById("body");
+	REQUIRE(body);
+	CHECK(CountDescendants(body) <= 256);
+
+	document->Show();
+	TestsShell::RenderLoop();
+
+	document->Close();
+	TestsShell::ShutdownShell();
 }
 
 TEST_CASE("template.max_document_depth")
