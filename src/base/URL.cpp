@@ -28,6 +28,44 @@ URL::URL(const char* _url)
 
 URL::~URL() {}
 
+// Resolves '..' segments in a path ending with '/'. A '..' is kept only at the start of a relative path.
+static bool NormalizeParentDirectories(String& path, bool is_rooted)
+{
+	if (path.find("..") == String::npos)
+		return false;
+
+	const bool leading_slash = (!path.empty() && path[0] == '/');
+	StringList segments;
+	size_t begin = (leading_slash ? 1 : 0);
+	while (begin < path.size())
+	{
+		const size_t end = path.find('/', begin);
+		String segment = path.substr(begin, end - begin);
+		begin = end + 1;
+
+		if (segment == "..")
+		{
+			if (!segments.empty() && segments.back() != "..")
+				segments.pop_back();
+			else if (!is_rooted)
+				segments.push_back(std::move(segment));
+		}
+		else
+		{
+			segments.push_back(std::move(segment));
+		}
+	}
+
+	String result = (leading_slash ? "/" : "");
+	for (const String& segment : segments)
+		result += segment + '/';
+
+	if (result == path)
+		return false;
+	path = std::move(result);
+	return true;
+}
+
 bool URL::SetURL(const String& _url)
 {
 	url_dirty = false;
@@ -172,53 +210,25 @@ bool URL::SetURL(const String& _url)
 	}
 
 	// Find the path. This is the string appearing after the host, terminated
-	// by the last forward slash.
+	// by the last forward slash. A trailing '.' or '..' belongs to the path.
 	const char* file_name_begin = strrchr(path_begin, '/');
-	if (nullptr == file_name_begin)
+	file_name_begin = (file_name_begin ? file_name_begin + 1 : path_begin);
+	String path_with_dots;
+	if (strcmp(file_name_begin, ".") == 0 || strcmp(file_name_begin, "..") == 0)
 	{
-		// No path!
-		file_name_begin = path_begin;
-		path = "";
+		path_with_dots = String(path_begin) + '/';
+		path_begin = path_with_dots.c_str();
+		file_name_begin = path_begin + path_with_dots.size();
+		url_dirty = true;
 	}
-	else
-	{
-		// Copy the path including the trailing slash.
-		path = String(path_begin, ++file_name_begin);
 
-		// Normalise the path, stripping any ../'s from it.
-		const bool is_absolute = (!path.empty() && path[0] == '/');
+	// Copy the path including the trailing slash.
+	path = String(path_begin, file_name_begin);
 
-		size_t parent_dir_pos = String::npos;
-		while ((parent_dir_pos = path.find("/../")) != String::npos)
-		{
-			if (parent_dir_pos == 0)
-			{
-				// A leading '/../' has nothing above the root to cancel against. For an absolute path we
-				// must not leave it in place: doing so would let the normalised path climb above whatever
-				// directory the caller treats as the root (e.g. "/../secret" resolving outside a sandbox).
-				// Drop just the '../' and keep looping, in case of a chain like '/../../..'. A relative
-				// path can never match here, since it has no leading '/' to form the pattern in the first
-				// place, so its leading '..' is left untouched.
-				UI_ASSERT(is_absolute);
-				path.erase(1, 3);
-				url_dirty = true;
-				continue;
-			}
-
-			// Find the start of the parent directory.
-			size_t parent_dir_start_pos = path.rfind('/', parent_dir_pos - 1);
-			if (parent_dir_start_pos == String::npos)
-				parent_dir_start_pos = 0;
-			else
-				parent_dir_start_pos += 1;
-
-			// Strip out the parent dir and the /..
-			path.erase(parent_dir_start_pos, parent_dir_pos - parent_dir_start_pos + 4);
-
-			// We've altered the URL, mark it dirty
-			url_dirty = true;
-		}
-	}
+	// Normalise the path. A path following a host is rooted even without a leading '/'.
+	const bool is_rooted = (host_begin != _url.c_str()) || (!path.empty() && path[0] == '/');
+	if (NormalizeParentDirectories(path, is_rooted))
+		url_dirty = true;
 
 	// Find the file name. This is the string after the trailing slash of the
 	// path, and just before the extension.
