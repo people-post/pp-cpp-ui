@@ -94,6 +94,10 @@ namespace SVG {
 
 	static ControlledLifetimeResource<SVGCacheData> svg_cache_data;
 
+	// Limits on the size of a rendered SVG texture.
+	static constexpr int MAX_SVG_TEXTURE_DIMENSION = 16384;
+	static constexpr size_t MAX_SVG_TEXTURE_PIXELS = 4096 * 4096;
+
 	SVGData::SVGData(Geometry& geometry, Texture texture, Vector2f intrinsic_dimensions, const SVGKey& cache_key) :
 		geometry(geometry), texture(texture), intrinsic_dimensions(intrinsic_dimensions), cache_key(cache_key)
 	{}
@@ -216,8 +220,16 @@ namespace SVG {
 				UI_SVG_DEBUG_LOG("Generating texture: %s, (%d, %d), %s", GetSourceOr(svg_document, "").c_str(), dimensions.x, dimensions.y,
 					crop_to_content ? "crop_to_content" : "crop_none");
 
-				if (dimensions.x == 0 || dimensions.y == 0)
+				if (dimensions.x <= 0 || dimensions.y <= 0)
 					return false;
+
+				if (dimensions.x > MAX_SVG_TEXTURE_DIMENSION || dimensions.y > MAX_SVG_TEXTURE_DIMENSION ||
+					size_t(dimensions.x) * size_t(dimensions.y) > MAX_SVG_TEXTURE_PIXELS)
+				{
+					Log::Message(ui::Log::Type::LT_WARNING, "SVG render size (%d, %d) exceeds the maximum texture size: %s", dimensions.x,
+						dimensions.y, GetSourceOr(svg_document, "").c_str());
+					return false;
+				}
 
 				lunasvg::Bitmap bitmap;
 				if (crop_to_content)
@@ -244,7 +256,7 @@ namespace SVG {
 				}
 
 				// Swap red and blue channels, assuming LunaSVG v2.3.2 or newer, to convert to pp-cpp-ui's expected RGBA-ordering.
-				const size_t bitmap_byte_size = bitmap.width() * bitmap.height() * 4;
+				const size_t bitmap_byte_size = size_t(bitmap.width()) * size_t(bitmap.height()) * 4;
 				uint8_t* bitmap_data = bitmap.data();
 				for (size_t i = 0; i < bitmap_byte_size; i += 4)
 					std::swap(bitmap_data[i], bitmap_data[i + 2]);

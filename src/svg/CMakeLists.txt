@@ -19,3 +19,7 @@ target_sources(ui_svg PRIVATE
 target_compile_definitions(ui_svg PUBLIC "UI_SVG_PLUGIN")
 
 target_link_libraries(ui_svg PUBLIC lunasvg::lunasvg)
+
+if(PP_UI_BUILD_TESTS OR UI_TESTS)
+	add_subdirectory(tests)
+endif()

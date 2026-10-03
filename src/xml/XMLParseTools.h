@@ -28,6 +28,10 @@ public:
 	/// @returns Element to continue the parse from
 	static Element* ParseTemplate(Element* element, const String& template_name);
 
+	/// Tracks nested XML parsers; the template expansion budget is reset when the outermost parser starts.
+	static void BeginParser();
+	static void EndParser();
+
 	/// Determine the presence of data expression brackets inside XML data.
 	/// Call this for each iteration through the data string.
 	/// 'inside_brackets' should be initialized to false.

@@ -251,6 +251,20 @@ public:
 		return true;
 	}
 
+	// Nesting limit for the recursive-descent parser (parentheses, ternaries, function arguments, unary
+	// operators, variable accesses). Callers should use RecursionGuard rather than calling these directly.
+	static constexpr int MAX_RECURSION_DEPTH = 256;
+	bool EnterRecursion()
+	{
+		if (++recursion_depth > MAX_RECURSION_DEPTH)
+		{
+			Error("Expression exceeds the maximum nesting depth.");
+			return false;
+		}
+		return true;
+	}
+	void ExitRecursion() { --recursion_depth; }
+
 private:
 	void VariableGetSet(const String& name, bool is_assignment)
 	{
@@ -272,6 +286,7 @@ private:
 	bool reached_end = false;
 	bool parse_error = true;
 	int program_stack_size = 0;
+	int recursion_depth = 0;
 
 	Program program;
 
@@ -279,6 +294,16 @@ private:
 };
 
 namespace Parse {
+
+	// RAII depth guard for the mutually recursive parse functions below. Construct at the top of any
+	// function that can recurse; 'ok' is false once the nesting limit has been exceeded, in which case the
+	// caller should bail out without recursing further.
+	struct RecursionGuard {
+		DataParser& parser;
+		bool ok;
+		explicit RecursionGuard(DataParser& parser) : parser(parser), ok(parser.EnterRecursion()) {}
+		~RecursionGuard() { parser.ExitRecursion(); }
+	};
 
 	// Forward declare all parse functions.
 	static void Assignment(DataParser& parser);
@@ -431,6 +456,10 @@ namespace Parse {
 	}
 	static void Expression(DataParser& parser)
 	{
+		RecursionGuard guard(parser);
+		if (!guard.ok)
+			return;
+
 		Relational(parser);
 
 		bool looping = true;
@@ -522,6 +551,10 @@ namespace Parse {
 	}
 	static void Factor(DataParser& parser)
 	{
+		RecursionGuard guard(parser);
+		if (!guard.ok)
+			return;
+
 		const char c = parser.Look();
 
 		if (c == '(')
@@ -595,6 +628,10 @@ namespace Parse {
 
 	static String VariableExpression(DataParser& parser, const String& address_prefix)
 	{
+		RecursionGuard guard(parser);
+		if (!guard.ok)
+			return "";
+
 		if (parser.Look() == '[')
 		{
 			parser.Next();

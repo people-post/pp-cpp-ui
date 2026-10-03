@@ -9,6 +9,7 @@
 #include <ui/xml/XMLNodeHandler.h>
 #include "base/ControlledLifetimeResource.h"
 #include "dom/DocumentHeader.h"
+#include "XMLParseTools.h"
 
 namespace ui {
 
@@ -19,6 +20,20 @@ struct XmlParserData {
 };
 
 static ControlledLifetimeResource<XmlParserData> xml_parser_data;
+
+// Maximum DOM depth of elements created by the parser, counted from the root of the element tree.
+static constexpr int MAX_DOCUMENT_DEPTH = 512;
+
+static bool ExceedsMaxDocumentDepth(const Element* parent)
+{
+	int depth = 0;
+	for (const Element* e = parent; e; e = e->GetParentNode())
+	{
+		if (++depth >= MAX_DOCUMENT_DEPTH)
+			return true;
+	}
+	return false;
+}
 
 XMLParser::XMLParser(Element* root)
 {
@@ -49,9 +64,14 @@ XMLParser::XMLParser(Element* root)
 	active_handler = nullptr;
 
 	header = MakeUnique<DocumentHeader>();
+
+	XMLParseTools::BeginParser();
 }
 
-XMLParser::~XMLParser() {}
+XMLParser::~XMLParser()
+{
+	XMLParseTools::EndParser();
+}
 
 void XMLParser::RegisterPersistentCDATATag(const String& _tag)
 {
@@ -135,6 +155,22 @@ void XMLParser::HandleElementStart(const String& _name, const XMLAttributes& att
 	UI_ZoneScoped;
 	const String name = StringUtilities::ToLower(_name);
 
+	// Discard the whole subtree of an element that would exceed the maximum document depth.
+	if (discard_depth > 0 || ExceedsMaxDocumentDepth(stack.top().element))
+	{
+		if (discard_depth == 0)
+			Log::Message(Log::LT_WARNING, "Element '%s' on line %d exceeds the maximum document depth (%d) and was discarded.", name.c_str(),
+				GetLineNumber(), MAX_DOCUMENT_DEPTH);
+		discard_depth++;
+
+		ParseFrame frame;
+		frame.element = stack.top().element;
+		frame.tag = name;
+		stack.push(frame);
+		active_handler = nullptr;
+		return;
+	}
+
 	// Check for a specific handler that will override the child handler.
 	auto itr = xml_parser_data->node_handlers.find(name);
 	if (itr != xml_parser_data->node_handlers.end())
@@ -169,6 +205,8 @@ void XMLParser::HandleElementEnd(const String& _name)
 	ParseFrame frame = stack.top();
 	// Pop the frame
 	stack.pop();
+	if (discard_depth > 0)
+		discard_depth--;
 	// Restore active handler to the previous frame's child handler
 	active_handler = stack.top().child_handler;
 

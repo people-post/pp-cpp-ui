@@ -1,0 +1,8 @@
+<template name="recursive_template" content="c">
+<head></head>
+<body>
+	<div id="c">
+		<template src="recursive_template"/>
+	</div>
+</body>
+</template>

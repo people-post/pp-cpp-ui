@@ -70,7 +70,22 @@ TEST_CASE("url.normalize")
 	CHECK(Normalize("./") == "./");
 	CHECK(Normalize("../") == "../");
 	CHECK(Normalize("/") == "/");
-	CHECK(Normalize("/../") == "/../");
+
+	// A leading '..' is dropped from rooted paths and kept in relative paths.
+	CHECK(Normalize("/../") == "/");
+	CHECK(Normalize("/../../../etc/passwd") == "/etc/passwd");
+	CHECK(Normalize("/a/../../../etc/passwd") == "/etc/passwd");
+	CHECK(Normalize("../../data/blue.png") == "../../data/blue.png");
+	CHECK(Normalize("a/../../data/blue.png") == "../data/blue.png");
+	CHECK(URL("file:///a/../../etc/passwd").GetPath() == "etc/");
+	CHECK(Normalize("file://host/../etc/passwd") == "file://host/etc/passwd");
+
+	// A trailing '.' or '..' is part of the path.
+	CHECK(Normalize("/../..") == "/");
+	CHECK(Normalize("/a/b/..") == "/a/");
+	CHECK(Normalize("a/..") == "");
+	CHECK(Normalize("..") == "../");
+	CHECK(URL("file:///a/b/..").GetPath() == "a/");
 
 	/*** We may want to support these later. ***/
 
@@ -135,10 +150,12 @@ TEST_CASE("url.join")
 	CHECK(JoinPath("file:///data/d.rml", "../blue.png") == "file:///blue.png");
 	CHECK(JoinPath("file:///data/d.rml", "img/../blue.png") == "file:///data/blue.png");
 
-	/*** These ones are supported now, but we may want to revise them later ***/
+	// A '..' above the root is dropped.
+	CHECK(JoinPath("/d.rml", "../data/images/icons/blue.png") == "/data/images/icons/blue.png");
+	CHECK(JoinPath("/data/d.rml", "../../images/icons/blue.png") == "/images/icons/blue.png");
 
-	CHECK(JoinPath("/d.rml", "../data/images/icons/blue.png") == "/../data/images/icons/blue.png");
-	CHECK(JoinPath("/data/d.rml", "../../images/icons/blue.png") == "/../images/icons/blue.png");
+	// A reference path with a leading '/' is only stripped of that '/', not normalised.
+	CHECK(JoinPath("/data/d.rml", "/images/blue.png") == "images/blue.png");
 
 	/*** We may want to support these later ***/
 

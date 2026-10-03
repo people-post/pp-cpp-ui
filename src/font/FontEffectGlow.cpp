@@ -30,7 +30,9 @@ bool FontEffectGlow::Initialise(int _width_outline, int _width_blur, Vector2i _o
 	offset = _offset;
 
 	// Outline filter.
-	filter_outline.Initialise(width_outline, FilterOperation::Dilation);
+	if (!filter_outline.Initialise(width_outline, FilterOperation::Dilation))
+		return false;
+
 	for (int x = -width_outline; x <= width_outline; ++x)
 	{
 		for (int y = -width_outline; y <= width_outline; ++y)
@@ -56,8 +58,9 @@ bool FontEffectGlow::Initialise(int _width_outline, int _width_blur, Vector2i _o
 	float sum_weight = 0.f;
 
 	// We separate the blur filter into two passes, horizontal and vertical, for performance reasons.
-	filter_blur_x.Initialise(Vector2i(width_blur, 0), FilterOperation::Sum);
-	filter_blur_y.Initialise(Vector2i(0, width_blur), FilterOperation::Sum);
+	if (!filter_blur_x.Initialise(Vector2i(width_blur, 0), FilterOperation::Sum) ||
+		!filter_blur_y.Initialise(Vector2i(0, width_blur), FilterOperation::Sum))
+		return false;
 
 	for (int x = -width_blur; x <= width_blur; ++x)
 	{

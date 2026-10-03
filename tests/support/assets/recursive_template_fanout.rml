@@ -1,0 +1,9 @@
+<template name="recursive_template_fanout" content="c">
+<head></head>
+<body>
+	<div id="c">
+		<template src="recursive_template_fanout"/>
+		<template src="recursive_template_fanout"/>
+	</div>
+</body>
+</template>
