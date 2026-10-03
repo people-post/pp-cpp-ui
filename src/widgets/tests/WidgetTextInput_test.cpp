@@ -204,3 +204,55 @@ TEST_CASE("IME composition then commit does not block backspace")
 }
 
 TEST_SUITE_END();
+
+TEST_CASE("WidgetTextInput.textarea_max_rows_grows_with_text")
+{
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+	ElementDocument* document = context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>
+		textarea { display: block; width: 300px; line-height: 20px; padding: 0; border-width: 0; }
+	</style>
+</head>
+<body>
+<textarea id="grow" rows="2" max-rows="6"></textarea>
+<textarea id="fixed" rows="2"></textarea>
+</body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+
+	auto* grow = ui_dynamic_cast<ElementFormControl*>(document->GetElementById("grow"));
+	auto* fixed = ui_dynamic_cast<ElementFormControl*>(document->GetElementById("fixed"));
+	REQUIRE(grow);
+	REQUIRE(fixed);
+
+	auto height_with = [&](ElementFormControl* control, const String& value) {
+		control->SetValue(value);
+		// One update notices the new line count, the next lays out with it.
+		for (int i = 0; i < 3; i++)
+		{
+			context->Update();
+			context->Render();
+		}
+		return control->GetClientHeight();
+	};
+
+	CHECK(height_with(grow, "") == doctest::Approx(40.f));
+	CHECK(height_with(grow, "a\nb") == doctest::Approx(40.f));
+	CHECK(height_with(grow, "a\nb\nc\nd") == doctest::Approx(80.f));
+	CHECK(height_with(grow, "1\n2\n3\n4\n5\n6\n7\n8\n9") == doctest::Approx(120.f));
+	CHECK(height_with(grow, "a\nb\nc") == doctest::Approx(60.f));
+	CHECK(height_with(grow, "") == doctest::Approx(40.f));
+
+	// Without max-rows the height stays at 'rows'.
+	CHECK(height_with(fixed, "1\n2\n3\n4\n5") == doctest::Approx(40.f));
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
