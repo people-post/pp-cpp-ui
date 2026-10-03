@@ -96,14 +96,28 @@ void ElementFormControlTextArea::SetCompositionRange(int range_start, int range_
 bool ElementFormControlTextArea::GetIntrinsicDimensions(Vector2f& dimensions, float& /*ratio*/)
 {
 	dimensions.x = (float)(GetNumColumns() * ElementUtilities::GetStringWidth(this, "m"));
-	dimensions.y = (float)GetNumRows() * Math::Round(GetLineHeight());
+	displayed_rows = GetDisplayedRows();
+	dimensions.y = (float)displayed_rows * Math::Round(GetLineHeight());
 
 	return true;
+}
+
+int ElementFormControlTextArea::GetDisplayedRows() const
+{
+	const int rows = GetNumRows();
+	const int max_rows = GetAttribute<int>("max-rows", 0);
+	if (max_rows <= rows)
+		return rows;
+	return Math::Clamp(widget->GetNumLines(), rows, max_rows);
 }
 
 void ElementFormControlTextArea::OnUpdate()
 {
 	widget->OnUpdate();
+
+	// Grow or shrink with the text. Layout dirtied while formatting is ignored, so this is checked here.
+	if (displayed_rows != 0 && displayed_rows != GetDisplayedRows())
+		DirtyLayout();
 }
 
 void ElementFormControlTextArea::Render()
@@ -134,7 +148,8 @@ void ElementFormControlTextArea::OnAttributeChange(const ElementAttributes& chan
 	if (changed_attributes.find("wrap") != changed_attributes.end())
 		SetWordWrapProperties();
 
-	if (changed_attributes.find("rows") != changed_attributes.end() || changed_attributes.find("cols") != changed_attributes.end())
+	if (changed_attributes.find("rows") != changed_attributes.end() || changed_attributes.find("cols") != changed_attributes.end() ||
+		changed_attributes.find("max-rows") != changed_attributes.end())
 		DirtyLayout();
 
 	auto it = changed_attributes.find("maxlength");

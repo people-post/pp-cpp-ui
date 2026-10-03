@@ -84,6 +84,9 @@ public:
 	void EndHandleDrag();
 	/// Formats the widget's internal content.
 	void OnLayout();
+
+	/// Returns the number of lines the text is currently formatted into.
+	int GetNumLines() const { return (int)lines.size(); }
 	/// Called when the parent element's size changes.
 	void OnResize();
 
