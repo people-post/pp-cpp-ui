@@ -25,7 +25,7 @@
   "sdl3": {
     "repository": "https://github.com/libsdl-org/SDL.git",
     "tag": "release-3.4.16",
-    "notes": "SDL 3.4.16 for iOS 27 UIScene lifecycle (B11). SDL_image remains 3.2.4."
+    "notes": "SDL 3.4.16 for iOS 27 UIScene lifecycle (B11). SDL_image remains 3.2.4. Local patch (re-apply on bumps): src/video/cocoa/SDL_cocoakeyboard.m unmarkText returns early when nothing is being composed, so the macOS Pinyin IME no longer swallows backspace."
   },
   "sdl3_image": {
     "repository": "https://github.com/libsdl-org/SDL_image.git",

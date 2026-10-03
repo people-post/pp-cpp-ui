@@ -307,8 +307,9 @@ void SelectionController::OnPointerUp()
 
 bool SelectionController::OnKeyDown(Input::KeyIdentifier key, int key_modifier_state)
 {
-	const bool ctrl = (key_modifier_state & Input::KM_CTRL) != 0;
-	if (!ctrl || key != Input::KI_C)
+	// The command key (macOS) is reported as meta; it copies like ctrl.
+	const bool command = (key_modifier_state & (Input::KM_CTRL | Input::KM_META)) != 0;
+	if (!command || key != Input::KI_C)
 		return false;
 
 	RebuildGlobalMap();
