@@ -540,6 +540,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		bool numlock = event.GetParameter<int>("num_lock_key", 0) > 0;
 		bool shift = event.GetParameter<int>("shift_key", 0) > 0;
 		bool ctrl = event.GetParameter<int>("ctrl_key", 0) > 0;
+		// The command key (macOS) is reported as meta; it triggers the same clipboard shortcuts as ctrl.
+		bool command = ctrl || event.GetParameter<int>("meta_key", 0) > 0;
 		bool alt = event.GetParameter<int>("alt_key", 0) > 0;
 		bool selection_changed = false;
 		bool out_of_bounds = false;
@@ -598,21 +600,21 @@ void WidgetTextInput::ProcessEvent(Event& event)
 
 		case Input::KI_A:
 		{
-			if (ctrl && !alt)
+			if (command && !alt)
 				Select();
 		}
 		break;
 
 		case Input::KI_C:
 		{
-			if (ctrl && selection_length > 0)
+			if (command && selection_length > 0)
 				CopySelection();
 		}
 		break;
 
 		case Input::KI_X:
 		{
-			if (ctrl && selection_length > 0)
+			if (command && selection_length > 0)
 			{
 				CopySelection();
 				DeleteSelection();
@@ -624,7 +626,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 
 		case Input::KI_V:
 		{
-			if (ctrl && !alt)
+			if (command && !alt)
 			{
 				String clipboard_text;
 				GetSystemInterface()->GetClipboardText(clipboard_text);

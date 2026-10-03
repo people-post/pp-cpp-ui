@@ -513,12 +513,14 @@ int RmlSDL::GetKeyModifierState()
 	constexpr auto mod_ctrl = SDL_KMOD_CTRL;
 	constexpr auto mod_shift = SDL_KMOD_SHIFT;
 	constexpr auto mod_alt = SDL_KMOD_ALT;
+	constexpr auto mod_meta = SDL_KMOD_GUI;
 	constexpr auto mod_num = SDL_KMOD_NUM;
 	constexpr auto mod_caps = SDL_KMOD_CAPS;
 #else
 	constexpr auto mod_ctrl = KMOD_CTRL;
 	constexpr auto mod_shift = KMOD_SHIFT;
 	constexpr auto mod_alt = KMOD_ALT;
+	constexpr auto mod_meta = KMOD_GUI;
 	constexpr auto mod_num = KMOD_NUM;
 	constexpr auto mod_caps = KMOD_CAPS;
 #endif
@@ -533,6 +535,9 @@ int RmlSDL::GetKeyModifierState()
 
 	if (sdl_mods & mod_alt)
 		retval |= ui::Input::KM_ALT;
+
+	if (sdl_mods & mod_meta)
+		retval |= ui::Input::KM_META;
 
 	if (sdl_mods & mod_num)
 		retval |= ui::Input::KM_NUMLOCK;
