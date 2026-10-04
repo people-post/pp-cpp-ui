@@ -660,8 +660,13 @@ void Context::UpdateTouchGestures()
 		if (state.long_press_fired || state.selection_armed || state.touch_scrolling)
 			continue;
 
-		if (current_time - state.touch_start_time < TOUCH_LONG_PRESS_TIME)
+		const double remaining = TOUCH_LONG_PRESS_TIME - (current_time - state.touch_start_time);
+		if (remaining > 0)
+		{
+			// A still finger sends no events; without this an idle host sleeps past the long-press time.
+			RequestNextUpdate(remaining);
 			continue;
+		}
 
 		const Vector2f delta = state.last_position - state.start_position;
 		if (delta.SquaredMagnitude() > slop * slop)
