@@ -31,8 +31,13 @@ public:
 	void ActivateKeyboard(ui::Vector2f caret_position, float line_height) override;
 	void DeactivateKeyboard() override;
 
+	// Set when the app lifts its own layout above the on-screen keyboard. The text input area is then sent
+	// with zero height, so SDL (iOS) does not also pan the view by the caret line.
+	void SetAppHandlesKeyboardInset(bool app_handles);
+
 private:
 	SDL_Window* window = nullptr;
+	bool app_handles_keyboard_inset_ = false;
 
 #if UI_SDL_VERSION_MAJOR >= 3
 	SDL_Rect last_text_input_rect_{};

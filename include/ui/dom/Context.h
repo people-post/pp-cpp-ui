@@ -136,6 +136,9 @@ public:
 	using TouchLongPressCallback = std::function<void(Vector2i position, Element* target)>;
 	/// Invoked when a touch long-press is recognized (static text or text editor).
 	void SetTouchLongPressCallback(TouchLongPressCallback callback);
+	/// Whether a long press on selectable static text selects the word under the finger (default) before the
+	/// long-press callback runs. Hosts that open their own menu for the pressed item turn this off.
+	void SetTouchLongPressSelectsText(bool selects);
 
 	/// Registers a callback to capture and draw the touch text magnifier during Context::Render().
 	void SetTextLoupeRenderCallback(TextLoupeRenderCallback callback);
@@ -376,6 +379,8 @@ private:
 		bool touch_scrolling = false;
 		bool selection_armed = false;
 		bool long_press_fired = false;
+		/// Long press on a text field: its menu opens when the finger lifts, so the hold can move the caret.
+		bool editor_long_press = false;
 		Vector2f start_position;
 		Vector2f last_position;
 		/** ObserverPtrs: shell remount / safe-area reflow can destroy targets mid-gesture. */
@@ -407,6 +412,7 @@ private:
 	};
 	SmallUnorderedMap<TouchId, TouchState> touch_states;
 	TouchLongPressCallback touch_long_press_callback;
+	bool touch_long_press_selects_text = true;
 
 	TextLoupeState text_loupe_static_state;
 	bool text_loupe_widget_active = false;

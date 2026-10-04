@@ -7,6 +7,8 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/widgets/ElementFormControl.h>
+#include <ui/widgets/ElementFormControlInput.h>
+#include <ui/widgets/ElementFormControlTextArea.h>
 #include <doctest.h>
 
 using namespace ui;
@@ -201,6 +203,112 @@ TEST_CASE("IME composition then commit does not block backspace")
 		f.Key(Input::KI_BACK);
 		CHECK(f.Value() == "");
 	}
+}
+
+TEST_CASE("dragging a selection handle moves that end of the selection")
+{
+	Fixture f("input");
+	f.Type("hello world, hello world");
+	auto* input = ui_dynamic_cast<ElementFormControlInput*>(f.control);
+	REQUIRE(input);
+	input->Select();
+	f.context->Update();
+
+	int start = -1, end = -1;
+	input->GetSelection(&start, &end, nullptr);
+	REQUIRE(start == 0);
+	REQUIRE(end == 24);
+
+	// The start handle sits at the first character: press it and drag to the right.
+	const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+	f.context->ProcessMouseMove(int(origin.x) + 2, int(origin.y) + 4, 0);
+	f.context->ProcessMouseButtonDown(0, 0);
+	for (int dx = 10; dx <= 60; dx += 10)
+		f.context->ProcessMouseMove(int(origin.x) + 2 + dx, int(origin.y) + 4, 0);
+	f.context->ProcessMouseButtonUp(0, 0);
+
+	input->GetSelection(&start, &end, nullptr);
+	CHECK(start > 0);
+	CHECK(end == 24);
+}
+
+TEST_CASE("a handle drag ends on release and works right after a double click")
+{
+	Fixture f("input");
+	f.Type("hello world, hello world");
+	auto* input = ui_dynamic_cast<ElementFormControlInput*>(f.control);
+	REQUIRE(input);
+	const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+	const int y = int(origin.y) + 4;
+	const auto drag = [&](int from_x, int to_x) {
+		f.context->ProcessMouseMove(from_x, y, 0);
+		f.context->ProcessMouseButtonDown(0, 0);
+		const int step = to_x > from_x ? 10 : -10;
+		for (int x = from_x + step; (to_x - x) * step >= 0; x += step)
+			f.context->ProcessMouseMove(x, y, 0);
+		f.context->ProcessMouseButtonUp(0, 0);
+	};
+	int start = -1, end = -1;
+
+	// A double click selects a word; the start handle must then follow a drag (it used to be ignored).
+	f.context->ProcessMouseMove(int(origin.x) + 10, y, 0);
+	f.context->ProcessMouseButtonDown(0, 0);
+	f.context->ProcessMouseButtonUp(0, 0);
+	f.context->ProcessMouseButtonDown(0, 0);
+	f.context->ProcessMouseButtonUp(0, 0);
+	input->GetSelection(&start, &end, nullptr);
+	REQUIRE(start == 0);
+	REQUIRE(end == 5);
+	const int old_end = end;
+	drag(int(origin.x) + 2, int(origin.x) + 22);
+	input->GetSelection(&start, &end, nullptr);
+	CHECK(start > 0);
+	CHECK(end == old_end);
+
+	// The handle drag is over: a press far from both handles starts a new selection there instead of
+	// moving the old handle.
+	const int far_x = int(origin.x) + 90;
+	drag(far_x, far_x + 30);
+	int new_start = -1, new_end = -1;
+	input->GetSelection(&new_start, &new_end, nullptr);
+	CHECK(new_start >= old_end);
+	CHECK(new_end > new_start);
+}
+
+TEST_CASE("a click in a scrolled textarea lands on the line under the pointer")
+{
+	Fixture f("area");
+	String value;
+	for (int i = 0; i < 20; ++i)
+		value += "line" + ToString(i % 10) + "\n";
+	f.control->SetValue(value);
+	f.context->Update();
+	f.context->Render();
+	auto* area = ui_dynamic_cast<ElementFormControlTextArea*>(f.control);
+	REQUIRE(area);
+
+	// Scroll to the end, as typing there does.
+	f.control->SetScrollTop(f.control->GetScrollHeight());
+	f.context->Update();
+	const float scroll_top = f.control->GetScrollTop();
+	REQUIRE(scroll_top > 0.f);
+
+	const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+	const auto click_line_offset = [&](float dy) {
+		f.context->ProcessMouseMove(int(origin.x) + 2, int(origin.y + dy), 0);
+		f.context->ProcessMouseButtonDown(0, 0);
+		f.context->ProcessMouseButtonUp(0, 0);
+		int start = -1, end = -1;
+		area->GetSelection(&start, &end, nullptr);
+		return start;
+	};
+
+	// The first visible line is not the last line of the text, and a lower click lands further down.
+	const int top = click_line_offset(4.f);
+	const int lower = click_line_offset(60.f);
+	const int last_line_start = 20 * 6;
+	CHECK(top < last_line_start - 6);
+	CHECK(lower > top);
 }
 
 TEST_SUITE_END();

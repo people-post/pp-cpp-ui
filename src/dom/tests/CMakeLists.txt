@@ -15,4 +15,5 @@ ui_add_module_tests(dom
 	Specificity_Basic_test.cpp
 	Specificity_MediaQuery_test.cpp
 	Template_test.cpp
+	TouchLongPress_test.cpp
 )
