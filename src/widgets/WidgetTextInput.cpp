@@ -711,7 +711,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 			Vector2f absolute_mouse_position = Vector2f(event.GetParameter<float>("mouse_x", 0), event.GetParameter<float>("mouse_y", 0));
 			Vector2f mouse_position = absolute_mouse_position;
 			mouse_position -= text_element->BoxModel().GetAbsoluteOffset();
-			mouse_position.y += parent->Scroll().GetScrollTop();
+			// text_element's absolute offset already moves with the scroll position: no scroll term here.
 
 			const int cursor_line_index = CalculateLineIndex(mouse_position.y);
 			const int cursor_character_index = CalculateCharacterIndex(cursor_line_index, mouse_position.x);
@@ -756,7 +756,6 @@ void WidgetTextInput::ProcessEvent(Event& event)
 
 			pointer_selecting = true;
 			mouse_position -= text_element->BoxModel().GetAbsoluteOffset();
-			mouse_position.y += parent->Scroll().GetScrollTop();
 
 			if (event == EventId::Drag || event == EventId::Mousedown)
 				ScrollForPointerDrag(mouse_position.y);

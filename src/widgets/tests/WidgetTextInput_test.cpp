@@ -8,6 +8,7 @@
 #include <ui/dom/ElementDocument.h>
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/widgets/ElementFormControlInput.h>
+#include <ui/widgets/ElementFormControlTextArea.h>
 #include <doctest.h>
 
 using namespace ui;
@@ -272,6 +273,42 @@ TEST_CASE("a handle drag ends on release and works right after a double click")
 	input->GetSelection(&new_start, &new_end, nullptr);
 	CHECK(new_start >= old_end);
 	CHECK(new_end > new_start);
+}
+
+TEST_CASE("a click in a scrolled textarea lands on the line under the pointer")
+{
+	Fixture f("area");
+	String value;
+	for (int i = 0; i < 20; ++i)
+		value += "line" + ToString(i % 10) + "\n";
+	f.control->SetValue(value);
+	f.context->Update();
+	f.context->Render();
+	auto* area = ui_dynamic_cast<ElementFormControlTextArea*>(f.control);
+	REQUIRE(area);
+
+	// Scroll to the end, as typing there does.
+	f.control->SetScrollTop(f.control->GetScrollHeight());
+	f.context->Update();
+	const float scroll_top = f.control->GetScrollTop();
+	REQUIRE(scroll_top > 0.f);
+
+	const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+	const auto click_line_offset = [&](float dy) {
+		f.context->ProcessMouseMove(int(origin.x) + 2, int(origin.y + dy), 0);
+		f.context->ProcessMouseButtonDown(0, 0);
+		f.context->ProcessMouseButtonUp(0, 0);
+		int start = -1, end = -1;
+		area->GetSelection(&start, &end, nullptr);
+		return start;
+	};
+
+	// The first visible line is not the last line of the text, and a lower click lands further down.
+	const int top = click_line_offset(4.f);
+	const int lower = click_line_offset(60.f);
+	const int last_line_start = 20 * 6;
+	CHECK(top < last_line_start - 6);
+	CHECK(lower > top);
 }
 
 TEST_SUITE_END();
