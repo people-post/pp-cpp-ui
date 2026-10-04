@@ -183,6 +183,8 @@ WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
 	parent->Events().AttachEvent(EventId::Mousedown, this, true);
 	parent->Events().AttachEvent(EventId::Dblclick, this, true);
 	parent->Events().AttachEvent(EventId::Drag, this, true);
+	parent->Events().AttachEvent(EventId::Dragend, this, true);
+	parent->Events().AttachEvent(EventId::Mouseup, this, true);
 
 	ElementPtr unique_text = Factory::InstanceElement(parent, "#text", "#text", XMLAttributes());
 	text_element = ui_dynamic_cast<ElementText*>(unique_text.get());
@@ -238,6 +240,8 @@ WidgetTextInput::~WidgetTextInput()
 	parent->Events().DetachEvent(EventId::Mousedown, this, true);
 	parent->Events().DetachEvent(EventId::Dblclick, this, true);
 	parent->Events().DetachEvent(EventId::Drag, this, true);
+	parent->Events().DetachEvent(EventId::Dragend, this, true);
+	parent->Events().DetachEvent(EventId::Mouseup, this, true);
 
 	// This widget might be parented by an input element, which may now be constructing a completely different type.
 	// Thus, remove all properties set by this widget so they don't affect the new type.
@@ -739,6 +743,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 				{
 					handle_drag = handle;
 					pointer_selecting = false;
+					// A double click (or the menu's Select) leaves this set; grabbing a handle is a new gesture.
+					cancel_next_drag = false;
 					selection_anchor_index = (handle == SelectionHandleSide::Start) ? selection_begin_index + selection_length :
 																						 selection_begin_index;
 					// The press must keep propagating: the context only makes this element the drag target, and so
@@ -798,6 +804,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		}
 	}
 	break;
+	// Dragend as well: the pointer may be released outside the field, where no Mouseup reaches it.
+	case EventId::Dragend:
 	case EventId::Mouseup:
 	{
 		if (IsEventForWidget(event, parent))
