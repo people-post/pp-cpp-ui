@@ -741,8 +741,9 @@ void WidgetTextInput::ProcessEvent(Event& event)
 					pointer_selecting = false;
 					selection_anchor_index = (handle == SelectionHandleSide::Start) ? selection_begin_index + selection_length :
 																						 selection_begin_index;
+					// The press must keep propagating: the context only makes this element the drag target, and so
+					// sends the Drag events that move the handle, for a press that was not stopped.
 					UpdateTextLoupe(absolute_mouse_position);
-					event.StopPropagation();
 					break;
 				}
 			}
@@ -772,7 +773,10 @@ void WidgetTextInput::ProcessEvent(Event& event)
 				break;
 			}
 
-			if (UpdateSelection(event == EventId::Drag || event.GetParameter<int>("shift_key", 0) > 0))
+			// A finger dragged through the text moves the caret, as on a phone; a selection is made by a double
+			// tap or the menu and adjusted with the handles. A mouse drag selects.
+			const bool touch = parent->GetContext() && parent->GetContext()->HasActiveTouch();
+			if (UpdateSelection((event == EventId::Drag && !touch) || event.GetParameter<int>("shift_key", 0) > 0))
 				FormatText();
 
 			const bool move_to_cursor = (event == EventId::Drag);

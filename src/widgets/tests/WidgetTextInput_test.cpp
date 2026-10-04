@@ -7,6 +7,7 @@
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
 #include <ui/widgets/ElementFormControl.h>
+#include <ui/widgets/ElementFormControlInput.h>
 #include <doctest.h>
 
 using namespace ui;
@@ -201,6 +202,33 @@ TEST_CASE("IME composition then commit does not block backspace")
 		f.Key(Input::KI_BACK);
 		CHECK(f.Value() == "");
 	}
+}
+
+TEST_CASE("dragging a selection handle moves that end of the selection")
+{
+	Fixture f("input");
+	f.Type("hello world, hello world");
+	auto* input = ui_dynamic_cast<ElementFormControlInput*>(f.control);
+	REQUIRE(input);
+	input->Select();
+	f.context->Update();
+
+	int start = -1, end = -1;
+	input->GetSelection(&start, &end, nullptr);
+	REQUIRE(start == 0);
+	REQUIRE(end == 24);
+
+	// The start handle sits at the first character: press it and drag to the right.
+	const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+	f.context->ProcessMouseMove(int(origin.x) + 2, int(origin.y) + 4, 0);
+	f.context->ProcessMouseButtonDown(0, 0);
+	for (int dx = 10; dx <= 60; dx += 10)
+		f.context->ProcessMouseMove(int(origin.x) + 2 + dx, int(origin.y) + 4, 0);
+	f.context->ProcessMouseButtonUp(0, 0);
+
+	input->GetSelection(&start, &end, nullptr);
+	CHECK(start > 0);
+	CHECK(end == 24);
 }
 
 TEST_SUITE_END();
