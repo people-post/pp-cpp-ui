@@ -118,7 +118,7 @@ void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float li
 		const float scale = density > 0.f ? density : 1.f;
 		const int caret_h = int(line_height / scale + 0.5f);
 		const SDL_Rect rect = {int(caret_position.x / scale + 0.5f), int(caret_position.y / scale + 0.5f), 1,
-			caret_h > 0 ? caret_h : 1};
+			app_handles_keyboard_inset_ ? 0 : (caret_h > 0 ? caret_h : 1)};
 
 		// ShowCursor() calls this on every keystroke. Re-issuing StartTextInput / thrashing
 		// SetTextInputArea makes UIKit dismiss+reshow the soft keyboard (worse on small sims
@@ -139,6 +139,11 @@ void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float li
 		SDL_StartTextInput();
 #endif
 	}
+}
+
+void SystemInterface_SDL::SetAppHandlesKeyboardInset(bool app_handles)
+{
+	app_handles_keyboard_inset_ = app_handles;
 }
 
 void SystemInterface_SDL::DeactivateKeyboard()
