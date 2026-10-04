@@ -589,6 +589,11 @@ void Context::SetTouchLongPressCallback(TouchLongPressCallback callback)
 	touch_long_press_callback = std::move(callback);
 }
 
+void Context::SetTouchLongPressSelectsText(bool selects)
+{
+	touch_long_press_selects_text = selects;
+}
+
 void Context::SetTextLoupeRenderCallback(TextLoupeRenderCallback callback)
 {
 	text_loupe_render_callback = std::move(callback);
@@ -657,7 +662,8 @@ void Context::UpdateTouchGestures()
 	for (auto& entry : touch_states)
 	{
 		TouchState& state = entry.second;
-		if (state.long_press_fired || state.selection_armed || state.touch_scrolling)
+		// A finger resting on a text field's selection handle is a drag in progress, not a long press.
+		if (state.long_press_fired || state.selection_armed || state.touch_scrolling || text_loupe_widget_active)
 			continue;
 
 		const double remaining = TOUCH_LONG_PRESS_TIME - (current_time - state.touch_start_time);
@@ -687,7 +693,7 @@ void Context::UpdateTouchGestures()
 			continue;
 		}
 
-		if (selection_controller->CanSelectStaticText(target))
+		if (touch_long_press_selects_text && selection_controller->CanSelectStaticText(target))
 		{
 			selection_controller->SelectWordAt(position);
 			state.selection_armed = true;
