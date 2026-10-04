@@ -893,8 +893,10 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 		Element* interactive = ClickRouting::FindInteractiveElement(hover);
 
 		// Set the currently hovered element to focus if it isn't already the focus.
+		// A press inside the context menu leaves the focus where it is: blurring the text field the menu
+		// acts on would close the on-screen keyboard only for it to reopen when the action refocuses it.
 		Element* new_focus = nullptr;
-		if (hover)
+		if (hover && !IsContextMenuTarget(hover))
 		{
 			new_focus = FindFocusElement(hover);
 			if (new_focus && new_focus != focus_controller->GetFocusElement() && new_focus->GetComputedValues().focus() != Style::Focus::None)

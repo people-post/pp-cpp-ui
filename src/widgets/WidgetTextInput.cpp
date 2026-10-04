@@ -717,7 +717,9 @@ void WidgetTextInput::ProcessEvent(Event& event)
 			if (UpdateSelection(true))
 				FormatText();
 
-			ShowCursor(false);
+			// Only the caret hides while a handle is dragged. Closing the keyboard here made the on-screen
+			// keyboard, and the layout lifted above it, flap on every drag step.
+			ShowCursor(false, true, true);
 			UpdateTextLoupe(absolute_mouse_position);
 			event.StopPropagation();
 			break;
@@ -1299,7 +1301,7 @@ int WidgetTextInput::CalculateCharacterIndex(int line_index, float position)
 	return prev_offset;
 }
 
-void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor)
+void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor, bool keep_keyboard)
 {
 	if (show)
 	{
@@ -1334,7 +1336,7 @@ void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor)
 		cursor_visible = false;
 		cursor_timer = -1;
 		last_update_time = 0;
-		if (keyboard_showed)
+		if (keyboard_showed && !keep_keyboard)
 		{
 			SetKeyboardActive(false);
 			keyboard_showed = false;

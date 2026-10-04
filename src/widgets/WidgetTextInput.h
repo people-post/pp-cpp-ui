@@ -191,7 +191,8 @@ private:
 	/// Shows or hides the cursor.
 	/// @param[in] show True to show the cursor, false to hide it.
 	/// @param[in] move_to_cursor True to force the cursor to be visible, false to not scroll the widget.
-	void ShowCursor(bool show, bool move_to_cursor = true);
+	/// @param[in] keep_keyboard When hiding, leave the on-screen keyboard up (the widget keeps focus).
+	void ShowCursor(bool show, bool move_to_cursor = true, bool keep_keyboard = false);
 
 	/// Formats the element, laying out the text and inserting scrollbars as appropriate.
 	void FormatElement();

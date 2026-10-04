@@ -57,3 +57,51 @@ TEST_CASE("touch.long_press_wakes_idle_host")
 	document->Close();
 	TestsShell::ShutdownShell();
 }
+
+TEST_CASE("context_menu.press_keeps_focus")
+{
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	ElementDocument* document = context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<title>Test</title>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<style>
+		div { display: block; width: 200px; height: 40px; }
+	</style>
+</head>
+<body>
+<div id="field"/>
+<div id="outside"/>
+<div id="context-menu-layer"><div id="item"/></div>
+</body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	context->Update();
+	context->Render();
+
+	Element* field = document->GetElementById("field");
+	const auto press = [&](const char* id) {
+		const Vector2f at = document->GetElementById(id)->GetAbsoluteOffset(BoxArea::Border) + Vector2f(5.f, 5.f);
+		context->ProcessMouseMove(int(at.x), int(at.y), 0);
+		context->ProcessMouseButtonDown(0, 0);
+		context->ProcessMouseButtonUp(0, 0);
+	};
+
+	field->Focus();
+	REQUIRE(context->GetFocusElement() == field);
+
+	// The menu acts on the focused field; pressing one of its items must not blur that field.
+	press("item");
+	CHECK(context->GetFocusElement() == field);
+
+	press("outside");
+	CHECK(context->GetFocusElement() != field);
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
