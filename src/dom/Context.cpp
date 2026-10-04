@@ -1260,7 +1260,10 @@ bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
 
 	const float scroll_slop = TOUCH_SCROLL_SLOP * density_independent_pixel_ratio;
 	const Vector2f delta_from_start = touch.position - state->start_position;
-	if (!state->selection_armed && (Math::Absolute(delta_from_start.y) > scroll_slop &&
+	// A text field reports its own selection-handle drag through the loupe; that touch moves the handle and
+	// must not scroll the field (or whatever contains it).
+	const bool widget_handle_drag = text_loupe_widget_active;
+	if (!state->selection_armed && !widget_handle_drag && (Math::Absolute(delta_from_start.y) > scroll_slop &&
 			Math::Absolute(delta_from_start.y) >= Math::Absolute(delta_from_start.x)))
 		state->touch_scrolling = true;
 
@@ -1268,7 +1271,8 @@ bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
 	{
 		const Vector2f delta = touch.position - state->last_position;
 
-		if (drag || (selection_controller->IsDragging() && state->selection_armed) || selection_controller->IsHandleDragging())
+		if (drag || widget_handle_drag || (selection_controller->IsDragging() && state->selection_armed) ||
+			selection_controller->IsHandleDragging())
 		{
 			// Don't scroll and reset scrolling state when dragging any element (scrollbars and others)
 			// or drag-selecting static text inside a scroll container.
