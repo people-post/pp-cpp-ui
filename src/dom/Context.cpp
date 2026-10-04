@@ -688,8 +688,8 @@ void Context::UpdateTouchGestures()
 		const Vector2i position(static_cast<int>(state.start_position.x), static_cast<int>(state.start_position.y));
 		if (IsTextEditorTarget(target))
 		{
-			if (touch_long_press_callback)
-				touch_long_press_callback(position, target);
+			// Reported from ProcessTouchEnd: while the finger is down it may still drag the caret.
+			state.editor_long_press = true;
 			continue;
 		}
 
@@ -1225,6 +1225,7 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 	state->touch_scrolling = false;
 	state->selection_armed = false;
 	state->long_press_fired = false;
+	state->editor_long_press = false;
 	state->touch_start_time = state->scrolling_last_time;
 	state->ClearSamples();
 	state->PushSample(touch.position, state->scrolling_last_time);
@@ -1352,6 +1353,15 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 			scroll_controller->ActivateInertia(scroll_container, velocity);
 	}
 
+	// A text field's menu opens once the finger lifts after a long press or after dragging the caret or a
+	// selection handle (a plain tap only places the caret).
+	const float menu_slop = TOUCH_SCROLL_SLOP * density_independent_pixel_ratio;
+	const bool dragged_in_editor = text_loupe_widget_active && (touch.position - state->start_position).SquaredMagnitude() > menu_slop * menu_slop;
+	Element* editor_menu_target = (state->editor_long_press || dragged_in_editor) ? state->touch_target.get() : nullptr;
+	if (editor_menu_target && !IsTextEditorTarget(editor_menu_target))
+		editor_menu_target = nullptr;
+	ObserverPtr<Element> editor_menu_observer = editor_menu_target ? editor_menu_target->GetObserverPtr() : ObserverPtr<Element>{};
+
 	touch_states.erase(touch.identifier);
 
 	ClearTextLoupeState();
@@ -1360,6 +1370,12 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 
 	// always assume touch press/release events are handled as left mouse button
 	const bool result = ProcessMouseButtonUp(0, key_modifier_state);
+
+	if (touch_long_press_callback)
+	{
+		if (Element* target = editor_menu_observer.get())
+			touch_long_press_callback(Vector2i(static_cast<int>(touch.position.x), static_cast<int>(touch.position.y)), target);
+	}
 	// Clear sticky :hover after the last finger lifts so remount/layout shifts
 	// (e.g. compact nav pill reflow) cannot leave hover fill on the wrong control.
 	if (touch_states.empty())

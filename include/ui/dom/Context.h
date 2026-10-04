@@ -379,6 +379,8 @@ private:
 		bool touch_scrolling = false;
 		bool selection_armed = false;
 		bool long_press_fired = false;
+		/// Long press on a text field: its menu opens when the finger lifts, so the hold can move the caret.
+		bool editor_long_press = false;
 		Vector2f start_position;
 		Vector2f last_position;
 		/** ObserverPtrs: shell remount / safe-area reflow can destroy targets mid-gesture. */

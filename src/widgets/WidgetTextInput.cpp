@@ -1878,7 +1878,13 @@ void WidgetTextInput::UpdateTextLoupe(Vector2f absolute_position)
 		return;
 
 	if (pointer_selecting || handle_drag != SelectionHandleSide::None)
-		context->SetTextLoupeFromWidget(true, absolute_position);
+	{
+		// Magnify the caret's line, not whatever is under the finger: the finger is usually below the text.
+		const Vector2f element_offset = parent->BoxModel().GetAbsoluteOffset() - Vector2f{parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop()};
+		const Vector2f caret_centre = element_offset + cursor_position + Vector2f(0.f, cursor_size.y * 0.5f);
+		context->SetTextLoupeFromWidget(true, caret_centre);
+		(void)absolute_position;
+	}
 }
 
 void WidgetTextInput::ClearTextLoupeIfTouch()
