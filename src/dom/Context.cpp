@@ -47,6 +47,19 @@ static bool IsContextMenuTarget(Element* element)
 	return false;
 }
 
+// Chrome around a text field (a composer's send button) sits inside an element marked `keep-focus`: a
+// press there must not take the focus from the field, or the on-screen keyboard closes under the finger
+// and the layout moves before the click lands.
+static bool IsKeepFocusTarget(Element* element)
+{
+	for (Element* current = element; current; current = current->GetParentNode())
+	{
+		if (current->HasAttribute("keep-focus"))
+			return true;
+	}
+	return false;
+}
+
 static bool IsTextEditorTarget(Element* element)
 {
 	for (Element* current = element; current; current = current->GetParentNode())
@@ -902,7 +915,8 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 		// A press inside the context menu leaves the focus where it is: blurring the text field the menu
 		// acts on would close the on-screen keyboard only for it to reopen when the action refocuses it.
 		Element* new_focus = nullptr;
-		if (hover && !IsContextMenuTarget(hover))
+		// ...and so does a press on keep-focus chrome, unless it is on a text field itself.
+		if (hover && !IsContextMenuTarget(hover) && !(IsKeepFocusTarget(hover) && !IsTextEditorTarget(hover)))
 		{
 			new_focus = FindFocusElement(hover);
 			if (new_focus && new_focus != focus_controller->GetFocusElement() && new_focus->GetComputedValues().focus() != Style::Focus::None)

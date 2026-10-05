@@ -105,3 +105,58 @@ TEST_CASE("context_menu.press_keeps_focus")
 	document->Close();
 	TestsShell::ShutdownShell();
 }
+
+TEST_CASE("keep_focus.press_on_chrome_keeps_the_field_focused")
+{
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	ElementDocument* document = context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<title>Test</title>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>
+		div, button, textarea { display: block; width: 200px; height: 40px; }
+		#composer { height: auto; }
+	</style>
+</head>
+<body>
+<div id="composer" keep-focus="">
+	<textarea id="field"></textarea>
+	<button id="send">send</button>
+</div>
+<div id="outside"/>
+</body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	context->Update();
+	context->Render();
+
+	Element* field = document->GetElementById("field");
+	const auto press = [&](const char* id) {
+		const Vector2f at = document->GetElementById(id)->GetAbsoluteOffset(BoxArea::Border) + Vector2f(5.f, 5.f);
+		context->ProcessMouseMove(int(at.x), int(at.y), 0);
+		context->ProcessMouseButtonDown(0, 0);
+		context->ProcessMouseButtonUp(0, 0);
+	};
+
+	field->Focus();
+	REQUIRE(context->GetFocusElement() == field);
+
+	// The send button is chrome of the field: pressing it must not blur the field.
+	press("send");
+	CHECK(context->GetFocusElement() == field);
+
+	// A press elsewhere still moves the focus, and a press on the field itself gives it back.
+	press("outside");
+	CHECK(context->GetFocusElement() != field);
+	press("field");
+	CHECK(context->GetFocusElement() == field);
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
