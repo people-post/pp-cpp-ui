@@ -1,0 +1,9 @@
+<template name="deep_recursive_template" content="c">
+<head></head>
+<body>
+	<div id="c"/>
+	<div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div><div>
+		<template src="deep_recursive_template"/>
+	</div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div></div>
+</body>
+</template>

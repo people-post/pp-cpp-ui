@@ -30,8 +30,9 @@ public:
 
 	/// Returns one of the available node selectors.
 	/// @param name[in] The name of the desired selector.
+	/// @param out_invalid_rule[out] Set to true if the selector invalidates the whole selector it is part of, such as an invalid ':not(...)'.
 	/// @return The selector registered with the given name, or nullptr if none exists.
-	static StructuralSelector GetSelector(const String& name);
+	static StructuralSelector GetSelector(const String& name, bool* out_invalid_rule = nullptr);
 
 private:
 	StyleSheetFactory();

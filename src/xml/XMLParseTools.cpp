@@ -110,6 +110,30 @@ bool XMLParseTools::ReadAttribute(const char*& string, String& name, String& val
 	return true;
 }
 
+// Limits on template expansion, counted per outermost XML parser (a document load or an inner RML parse).
+static constexpr int MAX_TEMPLATE_EXPANSION_DEPTH = 16;
+static constexpr int MAX_TEMPLATE_EXPANSION_COUNT = 256;
+
+struct TemplateExpansionState {
+	int active_parsers = 0;
+	int depth = 0;
+	int count = 0;
+	bool depth_reported = false;
+	bool count_reported = false;
+};
+static thread_local TemplateExpansionState template_expansion;
+
+void XMLParseTools::BeginParser()
+{
+	if (template_expansion.active_parsers++ == 0)
+		template_expansion = TemplateExpansionState{1};
+}
+
+void XMLParseTools::EndParser()
+{
+	template_expansion.active_parsers--;
+}
+
 Element* XMLParseTools::ParseTemplate(Element* element, const String& template_name)
 {
 	// Load the template, and parse it
@@ -120,7 +144,30 @@ Element* XMLParseTools::ParseTemplate(Element* element, const String& template_n
 		return element;
 	}
 
-	return parse_template->ParseTemplate(element);
+	TemplateExpansionState& state = template_expansion;
+	if (state.depth >= MAX_TEMPLATE_EXPANSION_DEPTH)
+	{
+		if (!state.depth_reported)
+			Log::ParseError(element->GetOwnerDocument()->GetSourceURL(), -1, "Template '%s' exceeds the maximum template expansion depth (%d).",
+				template_name.c_str(), MAX_TEMPLATE_EXPANSION_DEPTH);
+		state.depth_reported = true;
+		return element;
+	}
+	if (state.count >= MAX_TEMPLATE_EXPANSION_COUNT)
+	{
+		if (!state.count_reported)
+			Log::ParseError(element->GetOwnerDocument()->GetSourceURL(), -1, "Template '%s' exceeds the maximum number of template expansions (%d).",
+				template_name.c_str(), MAX_TEMPLATE_EXPANSION_COUNT);
+		state.count_reported = true;
+		return element;
+	}
+
+	state.count++;
+	state.depth++;
+	Element* result = parse_template->ParseTemplate(element);
+	state.depth--;
+
+	return result;
 }
 
 const char* XMLParseTools::ParseDataBrackets(bool& inside_brackets, bool& inside_string, char c, char previous)

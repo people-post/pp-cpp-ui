@@ -150,6 +150,12 @@
 
 - (void)unmarkText
 {
+    // pp-cpp-ui patch: with nothing being composed the IME did not consume the key. The macOS
+    // Pinyin IME sends an empty setMarkedText for a plain backspace, which used to drop the key.
+    if (_markedText == nil) {
+        return;
+    }
+
     _markedText = nil;
 
     // This key event was consumed by the IME

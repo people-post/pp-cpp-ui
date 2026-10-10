@@ -106,7 +106,12 @@ private:
 	/// Sets the necessary properties to display the widget in the current word wrap state.
 	void SetWordWrapProperties();
 
+	/// Rows to display: 'rows', or with 'max-rows' the number of text lines clamped to [rows, max-rows].
+	int GetDisplayedRows() const;
+
 	UniquePtr<WidgetTextInputMultiLine> widget;
+	// Rows the element was last laid out with; only differs from 'rows' when 'max-rows' is set.
+	int displayed_rows = 0;
 };
 
 } // namespace ui

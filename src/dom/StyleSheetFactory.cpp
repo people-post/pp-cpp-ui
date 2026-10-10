@@ -10,6 +10,9 @@ namespace ui {
 
 static UniquePtr<StyleSheetFactory> instance;
 
+// Nesting depth of ':not(...)' selectors being parsed.
+static thread_local int not_nesting_depth = 0;
+
 StyleSheetFactory::StyleSheetFactory() :
 	selectors{
 		{"nth-child", StructuralSelectorType::Nth_Child},
@@ -67,7 +70,7 @@ void StyleSheetFactory::ClearStyleSheetCache()
 	instance->stylesheets.clear();
 }
 
-StructuralSelector StyleSheetFactory::GetSelector(const String& name)
+StructuralSelector StyleSheetFactory::GetSelector(const String& name, bool* out_invalid_rule)
 {
 	SelectorMap::const_iterator it;
 	const size_t parameter_start = name.find('(');
@@ -113,9 +116,30 @@ StructuralSelector StyleSheetFactory::GetSelector(const String& name)
 
 		if (selector_type == StructuralSelectorType::Not)
 		{
+			// An invalid or too deeply nested argument invalidates the whole selector.
+			constexpr int max_not_nesting_depth = 32;
+			if (++not_nesting_depth > max_not_nesting_depth)
+			{
+				--not_nesting_depth;
+				Log::Message(Log::LT_WARNING, "Selector ':not(...)' exceeds the maximum nesting depth (%d).", max_not_nesting_depth);
+				if (out_invalid_rule)
+					*out_invalid_rule = true;
+				return StructuralSelector(StructuralSelectorType::Invalid, 0, 0);
+			}
+
 			auto list = MakeShared<SelectorTree>();
 			list->root = MakeUnique<StyleSheetNode>();
-			list->leafs = StyleSheetParser::ConstructNodes(*list->root, parameters);
+			bool valid = true;
+			list->leafs = StyleSheetParser::ConstructNodes(*list->root, parameters, &valid);
+
+			--not_nesting_depth;
+
+			if (!valid)
+			{
+				if (out_invalid_rule)
+					*out_invalid_rule = true;
+				return StructuralSelector(StructuralSelectorType::Invalid, 0, 0);
+			}
 
 			int specificity = 0;
 			for (const StyleSheetNode* node : list->leafs)

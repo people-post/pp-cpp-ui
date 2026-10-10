@@ -183,6 +183,8 @@ WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
 	parent->Events().AttachEvent(EventId::Mousedown, this, true);
 	parent->Events().AttachEvent(EventId::Dblclick, this, true);
 	parent->Events().AttachEvent(EventId::Drag, this, true);
+	parent->Events().AttachEvent(EventId::Dragend, this, true);
+	parent->Events().AttachEvent(EventId::Mouseup, this, true);
 
 	ElementPtr unique_text = Factory::InstanceElement(parent, "#text", "#text", XMLAttributes());
 	text_element = ui_dynamic_cast<ElementText*>(unique_text.get());
@@ -238,6 +240,8 @@ WidgetTextInput::~WidgetTextInput()
 	parent->Events().DetachEvent(EventId::Mousedown, this, true);
 	parent->Events().DetachEvent(EventId::Dblclick, this, true);
 	parent->Events().DetachEvent(EventId::Drag, this, true);
+	parent->Events().DetachEvent(EventId::Dragend, this, true);
+	parent->Events().DetachEvent(EventId::Mouseup, this, true);
 
 	// This widget might be parented by an input element, which may now be constructing a completely different type.
 	// Thus, remove all properties set by this widget so they don't affect the new type.
@@ -540,6 +544,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		bool numlock = event.GetParameter<int>("num_lock_key", 0) > 0;
 		bool shift = event.GetParameter<int>("shift_key", 0) > 0;
 		bool ctrl = event.GetParameter<int>("ctrl_key", 0) > 0;
+		// The command key (macOS) is reported as meta; it triggers the same clipboard shortcuts as ctrl.
+		bool command = ctrl || event.GetParameter<int>("meta_key", 0) > 0;
 		bool alt = event.GetParameter<int>("alt_key", 0) > 0;
 		bool selection_changed = false;
 		bool out_of_bounds = false;
@@ -598,21 +604,21 @@ void WidgetTextInput::ProcessEvent(Event& event)
 
 		case Input::KI_A:
 		{
-			if (ctrl && !alt)
+			if (command && !alt)
 				Select();
 		}
 		break;
 
 		case Input::KI_C:
 		{
-			if (ctrl && selection_length > 0)
+			if (command && selection_length > 0)
 				CopySelection();
 		}
 		break;
 
 		case Input::KI_X:
 		{
-			if (ctrl && selection_length > 0)
+			if (command && selection_length > 0)
 			{
 				CopySelection();
 				DeleteSelection();
@@ -624,7 +630,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 
 		case Input::KI_V:
 		{
-			if (ctrl && !alt)
+			if (command && !alt)
 			{
 				String clipboard_text;
 				GetSystemInterface()->GetClipboardText(clipboard_text);
@@ -705,7 +711,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 			Vector2f absolute_mouse_position = Vector2f(event.GetParameter<float>("mouse_x", 0), event.GetParameter<float>("mouse_y", 0));
 			Vector2f mouse_position = absolute_mouse_position;
 			mouse_position -= text_element->BoxModel().GetAbsoluteOffset();
-			mouse_position.y += parent->Scroll().GetScrollTop();
+			// text_element's absolute offset already moves with the scroll position: no scroll term here.
 
 			const int cursor_line_index = CalculateLineIndex(mouse_position.y);
 			const int cursor_character_index = CalculateCharacterIndex(cursor_line_index, mouse_position.x);
@@ -715,7 +721,9 @@ void WidgetTextInput::ProcessEvent(Event& event)
 			if (UpdateSelection(true))
 				FormatText();
 
-			ShowCursor(false);
+			// Only the caret hides while a handle is dragged. Closing the keyboard here made the on-screen
+			// keyboard, and the layout lifted above it, flap on every drag step.
+			ShowCursor(false, true, true);
 			UpdateTextLoupe(absolute_mouse_position);
 			event.StopPropagation();
 			break;
@@ -735,17 +743,19 @@ void WidgetTextInput::ProcessEvent(Event& event)
 				{
 					handle_drag = handle;
 					pointer_selecting = false;
+					// A double click (or the menu's Select) leaves this set; grabbing a handle is a new gesture.
+					cancel_next_drag = false;
 					selection_anchor_index = (handle == SelectionHandleSide::Start) ? selection_begin_index + selection_length :
 																						 selection_begin_index;
+					// The press must keep propagating: the context only makes this element the drag target, and so
+					// sends the Drag events that move the handle, for a press that was not stopped.
 					UpdateTextLoupe(absolute_mouse_position);
-					event.StopPropagation();
 					break;
 				}
 			}
 
 			pointer_selecting = true;
 			mouse_position -= text_element->BoxModel().GetAbsoluteOffset();
-			mouse_position.y += parent->Scroll().GetScrollTop();
 
 			if (event == EventId::Drag || event == EventId::Mousedown)
 				ScrollForPointerDrag(mouse_position.y);
@@ -768,7 +778,10 @@ void WidgetTextInput::ProcessEvent(Event& event)
 				break;
 			}
 
-			if (UpdateSelection(event == EventId::Drag || event.GetParameter<int>("shift_key", 0) > 0))
+			// A finger dragged through the text moves the caret, as on a phone; a selection is made by a double
+			// tap or the menu and adjusted with the handles. A mouse drag selects.
+			const bool touch = parent->GetContext() && parent->GetContext()->HasActiveTouch();
+			if (UpdateSelection((event == EventId::Drag && !touch) || event.GetParameter<int>("shift_key", 0) > 0))
 				FormatText();
 
 			const bool move_to_cursor = (event == EventId::Drag);
@@ -790,6 +803,8 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		}
 	}
 	break;
+	// Dragend as well: the pointer may be released outside the field, where no Mouseup reaches it.
+	case EventId::Dragend:
 	case EventId::Mouseup:
 	{
 		if (IsEventForWidget(event, parent))
@@ -1297,7 +1312,7 @@ int WidgetTextInput::CalculateCharacterIndex(int line_index, float position)
 	return prev_offset;
 }
 
-void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor)
+void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor, bool keep_keyboard)
 {
 	if (show)
 	{
@@ -1332,7 +1347,7 @@ void WidgetTextInput::ShowCursor(bool show, bool move_to_cursor)
 		cursor_visible = false;
 		cursor_timer = -1;
 		last_update_time = 0;
-		if (keyboard_showed)
+		if (keyboard_showed && !keep_keyboard)
 		{
 			SetKeyboardActive(false);
 			keyboard_showed = false;
@@ -1870,7 +1885,13 @@ void WidgetTextInput::UpdateTextLoupe(Vector2f absolute_position)
 		return;
 
 	if (pointer_selecting || handle_drag != SelectionHandleSide::None)
-		context->SetTextLoupeFromWidget(true, absolute_position);
+	{
+		// Magnify the caret's line, not whatever is under the finger: the finger is usually below the text.
+		const Vector2f element_offset = parent->BoxModel().GetAbsoluteOffset() - Vector2f{parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop()};
+		const Vector2f caret_centre = element_offset + cursor_position + Vector2f(0.f, cursor_size.y * 0.5f);
+		context->SetTextLoupeFromWidget(true, caret_centre);
+		(void)absolute_position;
+	}
 }
 
 void WidgetTextInput::ClearTextLoupeIfTouch()

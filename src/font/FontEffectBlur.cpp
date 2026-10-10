@@ -31,8 +31,8 @@ bool FontEffectBlur::Initialise(int _width)
 	float sum_weight = 0.f;
 
 	// We separate the blur filter into two passes, horizontal and vertical, for performance reasons.
-	filter_x.Initialise(Vector2i(width, 0), FilterOperation::Sum);
-	filter_y.Initialise(Vector2i(0, width), FilterOperation::Sum);
+	if (!filter_x.Initialise(Vector2i(width, 0), FilterOperation::Sum) || !filter_y.Initialise(Vector2i(0, width), FilterOperation::Sum))
+		return false;
 
 	for (int x = -width; x <= width; ++x)
 	{

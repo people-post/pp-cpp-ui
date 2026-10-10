@@ -5,6 +5,7 @@
 #include <ui/dom/ElementDocument.h>
 #include <ui/dom/ElementText.h>
 #include <ui/dom/Factory.h>
+#include <algorithm>
 #include <doctest.h>
 
 using namespace ui;
@@ -166,5 +167,42 @@ TEST_CASE("XMLParser.comments_and_cdata")
 		document->Close();
 		context->Update();
 	}
+	TestsShell::ShutdownShell();
+}
+
+static int GetMaxDepth(Element* element)
+{
+	int max_child_depth = 0;
+	for (int i = 0; i < element->GetNumChildren(); i++)
+		max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
+	return 1 + max_child_depth;
+}
+
+TEST_CASE("XMLParser.max_document_depth")
+{
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	const int num_nested = 10000;
+	String document_rml = "<rml><body>";
+	for (int i = 0; i < num_nested; i++)
+		document_rml += "<div>";
+	for (int i = 0; i < num_nested; i++)
+		document_rml += "</div>";
+	document_rml += "<div id=\"after\"/></body></rml>";
+
+	TestsShell::SetNumExpectedWarnings(1);
+	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+	TestsShell::SetNumExpectedWarnings(0);
+	REQUIRE(document);
+
+	CHECK(GetMaxDepth(document) <= 512);
+	CHECK(GetMaxDepth(document) >= 500);
+	CHECK(document->GetElementById("after"));
+
+	document->Show();
+	TestsShell::RenderLoop();
+
+	document->Close();
 	TestsShell::ShutdownShell();
 }

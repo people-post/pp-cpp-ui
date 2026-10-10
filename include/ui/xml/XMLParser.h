@@ -84,6 +84,8 @@ private:
 	UniquePtr<DocumentHeader> header;
 	XMLNodeHandler* active_handler;
 	Stack<ParseFrame> stack;
+	// Number of open tags inside a subtree discarded for exceeding the maximum document depth.
+	int discard_depth = 0;
 };
 
 } // namespace ui

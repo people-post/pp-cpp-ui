@@ -67,6 +67,17 @@ struct QuerySelector {
 	String expected_ids_after_operation;
 };
 
+static String NestedNot(int depth, const String& inner)
+{
+	String result;
+	for (int i = 0; i < depth; i++)
+		result += ":not(";
+	result += inner;
+	for (int i = 0; i < depth; i++)
+		result += ")";
+	return result;
+}
+
 // clang-format off
 static const Vector<QuerySelector> query_selectors =
 {
@@ -178,6 +189,10 @@ static const Vector<QuerySelector> query_selectors =
 	{ "#D :not(#D0)",                "D1" },
 	{ "body > :not(:checked)",       "X Y Z P",         SelectorOp::RemoveChecked,        "I", "X Y Z P I" },
 	{ "div.hello:not(.world)",       "X" },
+	{ NestedNot(32, "span"),         "Y D0 D1 F0" },
+	{ NestedNot(33, "span"),         "", 2, 6 },
+	{ NestedNot(34, "span"),         "", 2, 6 },
+	{ "p" + NestedNot(40, "*") + ", span", "Y D0 D1 F0", 2, 4 },
 	{ ":not(div,:nth-child(2),p *)", "A C D E F G H I" },
 
 	{ ".hello + .world",             "Y",               SelectorOp::RemoveClasses,        "hello", ""  },

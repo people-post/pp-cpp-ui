@@ -1,4 +1,5 @@
 #include <ui/style/ConvolutionFilter.h>
+#include <ui/base/Log.h>
 #include <ui/base/Profiling.h>
 #include <float.h>
 #include <string.h>
@@ -22,9 +23,18 @@ bool ConvolutionFilter::Initialise(Vector2i _kernel_radii, FilterOperation _oper
 		return false;
 	}
 
+	// Font effect radii come from style sheet lengths; the cost per pixel grows with the kernel area.
+	if (_kernel_radii.x > MAX_KERNEL_RADIUS || _kernel_radii.y > MAX_KERNEL_RADIUS)
+	{
+		Log::Message(Log::LT_WARNING, "Convolution filter radius (%d, %d) exceeds the maximum of %d.", _kernel_radii.x, _kernel_radii.y,
+			MAX_KERNEL_RADIUS);
+		return false;
+	}
+
 	kernel_size = _kernel_radii * 2 + Vector2i(1);
 
-	kernel = UniquePtr<float[]>(new float[kernel_size.x * kernel_size.y]());
+	const size_t kernel_element_count = size_t(kernel_size.x) * size_t(kernel_size.y);
+	kernel = UniquePtr<float[]>(new float[kernel_element_count]());
 
 	operation = _operation;
 	return true;

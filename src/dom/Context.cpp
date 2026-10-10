@@ -47,6 +47,19 @@ static bool IsContextMenuTarget(Element* element)
 	return false;
 }
 
+// Chrome around a text field (a composer's send button) sits inside an element marked `keep-focus`: a
+// press there must not take the focus from the field, or the on-screen keyboard closes under the finger
+// and the layout moves before the click lands.
+static bool IsKeepFocusTarget(Element* element)
+{
+	for (Element* current = element; current; current = current->GetParentNode())
+	{
+		if (current->HasAttribute("keep-focus"))
+			return true;
+	}
+	return false;
+}
+
 static bool IsTextEditorTarget(Element* element)
 {
 	for (Element* current = element; current; current = current->GetParentNode())
@@ -589,6 +602,11 @@ void Context::SetTouchLongPressCallback(TouchLongPressCallback callback)
 	touch_long_press_callback = std::move(callback);
 }
 
+void Context::SetTouchLongPressSelectsText(bool selects)
+{
+	touch_long_press_selects_text = selects;
+}
+
 void Context::SetTextLoupeRenderCallback(TextLoupeRenderCallback callback)
 {
 	text_loupe_render_callback = std::move(callback);
@@ -657,11 +675,17 @@ void Context::UpdateTouchGestures()
 	for (auto& entry : touch_states)
 	{
 		TouchState& state = entry.second;
-		if (state.long_press_fired || state.selection_armed || state.touch_scrolling)
+		// A finger resting on a text field's selection handle is a drag in progress, not a long press.
+		if (state.long_press_fired || state.selection_armed || state.touch_scrolling || text_loupe_widget_active)
 			continue;
 
-		if (current_time - state.touch_start_time < TOUCH_LONG_PRESS_TIME)
+		const double remaining = TOUCH_LONG_PRESS_TIME - (current_time - state.touch_start_time);
+		if (remaining > 0)
+		{
+			// A still finger sends no events; without this an idle host sleeps past the long-press time.
+			RequestNextUpdate(remaining);
 			continue;
+		}
 
 		const Vector2f delta = state.last_position - state.start_position;
 		if (delta.SquaredMagnitude() > slop * slop)
@@ -677,12 +701,12 @@ void Context::UpdateTouchGestures()
 		const Vector2i position(static_cast<int>(state.start_position.x), static_cast<int>(state.start_position.y));
 		if (IsTextEditorTarget(target))
 		{
-			if (touch_long_press_callback)
-				touch_long_press_callback(position, target);
+			// Reported from ProcessTouchEnd: while the finger is down it may still drag the caret.
+			state.editor_long_press = true;
 			continue;
 		}
 
-		if (selection_controller->CanSelectStaticText(target))
+		if (touch_long_press_selects_text && selection_controller->CanSelectStaticText(target))
 		{
 			selection_controller->SelectWordAt(position);
 			state.selection_armed = true;
@@ -888,8 +912,11 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 		Element* interactive = ClickRouting::FindInteractiveElement(hover);
 
 		// Set the currently hovered element to focus if it isn't already the focus.
+		// A press inside the context menu leaves the focus where it is: blurring the text field the menu
+		// acts on would close the on-screen keyboard only for it to reopen when the action refocuses it.
 		Element* new_focus = nullptr;
-		if (hover)
+		// ...and so does a press on keep-focus chrome, unless it is on a text field itself.
+		if (hover && !IsContextMenuTarget(hover) && !(IsKeepFocusTarget(hover) && !IsTextEditorTarget(hover)))
 		{
 			new_focus = FindFocusElement(hover);
 			if (new_focus && new_focus != focus_controller->GetFocusElement() && new_focus->GetComputedValues().focus() != Style::Focus::None)
@@ -1212,6 +1239,7 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 	state->touch_scrolling = false;
 	state->selection_armed = false;
 	state->long_press_fired = false;
+	state->editor_long_press = false;
 	state->touch_start_time = state->scrolling_last_time;
 	state->ClearSamples();
 	state->PushSample(touch.position, state->scrolling_last_time);
@@ -1253,7 +1281,10 @@ bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
 
 	const float scroll_slop = TOUCH_SCROLL_SLOP * density_independent_pixel_ratio;
 	const Vector2f delta_from_start = touch.position - state->start_position;
-	if (!state->selection_armed && (Math::Absolute(delta_from_start.y) > scroll_slop &&
+	// A text field reports its own selection-handle drag through the loupe; that touch moves the handle and
+	// must not scroll the field (or whatever contains it).
+	const bool widget_handle_drag = text_loupe_widget_active;
+	if (!state->selection_armed && !widget_handle_drag && (Math::Absolute(delta_from_start.y) > scroll_slop &&
 			Math::Absolute(delta_from_start.y) >= Math::Absolute(delta_from_start.x)))
 		state->touch_scrolling = true;
 
@@ -1261,7 +1292,8 @@ bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
 	{
 		const Vector2f delta = touch.position - state->last_position;
 
-		if (drag || (selection_controller->IsDragging() && state->selection_armed) || selection_controller->IsHandleDragging())
+		if (drag || widget_handle_drag || (selection_controller->IsDragging() && state->selection_armed) ||
+			selection_controller->IsHandleDragging())
 		{
 			// Don't scroll and reset scrolling state when dragging any element (scrollbars and others)
 			// or drag-selecting static text inside a scroll container.
@@ -1335,6 +1367,15 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 			scroll_controller->ActivateInertia(scroll_container, velocity);
 	}
 
+	// A text field's menu opens once the finger lifts after a long press or after dragging the caret or a
+	// selection handle (a plain tap only places the caret).
+	const float menu_slop = TOUCH_SCROLL_SLOP * density_independent_pixel_ratio;
+	const bool dragged_in_editor = text_loupe_widget_active && (touch.position - state->start_position).SquaredMagnitude() > menu_slop * menu_slop;
+	Element* editor_menu_target = (state->editor_long_press || dragged_in_editor) ? state->touch_target.get() : nullptr;
+	if (editor_menu_target && !IsTextEditorTarget(editor_menu_target))
+		editor_menu_target = nullptr;
+	ObserverPtr<Element> editor_menu_observer = editor_menu_target ? editor_menu_target->GetObserverPtr() : ObserverPtr<Element>{};
+
 	touch_states.erase(touch.identifier);
 
 	ClearTextLoupeState();
@@ -1343,6 +1384,12 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 
 	// always assume touch press/release events are handled as left mouse button
 	const bool result = ProcessMouseButtonUp(0, key_modifier_state);
+
+	if (touch_long_press_callback)
+	{
+		if (Element* target = editor_menu_observer.get())
+			touch_long_press_callback(Vector2i(static_cast<int>(touch.position.x), static_cast<int>(touch.position.y)), target);
+	}
 	// Clear sticky :hover after the last finger lifts so remount/layout shifts
 	// (e.g. compact nav pill reflow) cannot leave hover fill on the wrong control.
 	if (touch_states.empty())
