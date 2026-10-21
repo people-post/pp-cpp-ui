@@ -4,6 +4,8 @@
 #include <ui/dom/Context.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
+#include <ui/dom/Event.h>
+#include <ui/dom/EventListener.h>
 #include <doctest.h>
 
 using namespace ui;
@@ -157,6 +159,121 @@ TEST_CASE("keep_focus.press_on_chrome_keeps_the_field_focused")
 	press("field");
 	CHECK(context->GetFocusElement() == field);
 
+	document->Close();
+	TestsShell::ShutdownShell();
+}
+
+// A composer's text field above a scrollable transcript: on a phone a touch on the transcript that turns
+// into a scroll keeps the field focused (the on-screen keyboard stays up); a plain tap blurs it on release.
+static const String touch_focus_doc_rml = R"(
+<rml>
+<head>
+	<title>Test</title>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>
+		div, button, textarea { display: block; width: 200px; height: 40px; }
+		#transcript { height: 100px; overflow-y: auto; }
+		#message { height: 400px; }
+		#composer { height: auto; }
+	</style>
+</head>
+<body>
+<div id="transcript"><div id="message"/></div>
+<div id="composer" keep-focus="">
+	<textarea id="field"></textarea>
+	<button id="send">send</button>
+</div>
+</body>
+</rml>
+)";
+
+namespace {
+struct ClickRecorder : public EventListener {
+	Context* context = nullptr;
+	Element* field = nullptr;
+	int clicks = 0;
+	bool field_focused_at_click = false;
+	void ProcessEvent(Event& /*event*/) override
+	{
+		++clicks;
+		field_focused_at_click = context->GetFocusElement() == field;
+	}
+};
+} // namespace
+
+TEST_CASE("touch_focus.scroll_keeps_the_field_focused_tap_blurs_on_release")
+{
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+
+	ElementDocument* document = context->LoadDocumentFromMemory(touch_focus_doc_rml);
+	REQUIRE(document);
+	document->Show();
+	context->Update();
+	context->Render();
+
+	Element* field = document->GetElementById("field");
+	Element* message = document->GetElementById("message");
+	ClickRecorder recorder;
+	recorder.context = context;
+	recorder.field = field;
+	message->AddEventListener(EventId::Click, &recorder);
+
+	const Vector2f on_message = message->GetAbsoluteOffset(BoxArea::Border) + Vector2f(20.f, 60.f);
+
+	SUBCASE("a touch that scrolls the transcript keeps the field focused")
+	{
+		field->Focus();
+		REQUIRE(context->GetFocusElement() == field);
+
+		context->ProcessTouchStart(TouchList{Touch{TouchId(1), on_message}}, 0);
+		CHECK(context->GetFocusElement() == field);
+		context->ProcessTouchMove(TouchList{Touch{TouchId(1), on_message + Vector2f(0.f, -15.f)}}, 0);
+		context->ProcessTouchMove(TouchList{Touch{TouchId(1), on_message + Vector2f(0.f, -40.f)}}, 0);
+		context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message + Vector2f(0.f, -40.f)}}, 0);
+		CHECK(context->GetFocusElement() == field);
+		CHECK(recorder.clicks == 0);
+	}
+
+	SUBCASE("a tap on the transcript blurs the field on release, before the click")
+	{
+		field->Focus();
+		REQUIRE(context->GetFocusElement() == field);
+
+		context->ProcessTouchStart(TouchList{Touch{TouchId(1), on_message}}, 0);
+		// Still focused while the finger is down: it may yet become a scroll.
+		CHECK(context->GetFocusElement() == field);
+		context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message}}, 0);
+		CHECK(context->GetFocusElement() != field);
+		CHECK(recorder.clicks == 1);
+		CHECK_FALSE(recorder.field_focused_at_click);
+	}
+
+	SUBCASE("a tap on keep-focus chrome keeps the field focused")
+	{
+		field->Focus();
+		REQUIRE(context->GetFocusElement() == field);
+
+		const Vector2f on_send = document->GetElementById("send")->GetAbsoluteOffset(BoxArea::Border) + Vector2f(5.f, 5.f);
+		context->ProcessTouchStart(TouchList{Touch{TouchId(1), on_send}}, 0);
+		context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_send}}, 0);
+		CHECK(context->GetFocusElement() == field);
+	}
+
+	SUBCASE("a mouse press on the transcript blurs the field at once")
+	{
+		field->Focus();
+		REQUIRE(context->GetFocusElement() == field);
+
+		context->ProcessMouseMove(int(on_message.x), int(on_message.y), 0);
+		context->ProcessMouseButtonDown(0, 0);
+		CHECK(context->GetFocusElement() != field);
+		context->ProcessMouseButtonUp(0, 0);
+		CHECK(recorder.clicks == 1);
+	}
+
+	message->RemoveEventListener(EventId::Click, &recorder);
 	document->Close();
 	TestsShell::ShutdownShell();
 }

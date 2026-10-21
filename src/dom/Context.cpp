@@ -914,13 +914,22 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 		// Set the currently hovered element to focus if it isn't already the focus.
 		// A press inside the context menu leaves the focus where it is: blurring the text field the menu
 		// acts on would close the on-screen keyboard only for it to reopen when the action refocuses it.
+		const bool touch_pointer = !touch_states.empty();
 		Element* new_focus = nullptr;
 		// ...and so does a press on keep-focus chrome, unless it is on a text field itself.
 		if (hover && !IsContextMenuTarget(hover) && !(IsKeepFocusTarget(hover) && !IsTextEditorTarget(hover)))
 		{
 			new_focus = FindFocusElement(hover);
 			if (new_focus && new_focus != focus_controller->GetFocusElement() && new_focus->GetComputedValues().focus() != Style::Focus::None)
-				new_focus->Focus();
+			{
+				// A touch that takes the focus from a text field waits for the release: if it turns into a
+				// scroll the field keeps the focus and the on-screen keyboard stays up.
+				Element* current_focus = focus_controller->GetFocusElement();
+				if (touch_pointer && current_focus && IsTextEditorTarget(current_focus) && !IsTextEditorTarget(hover))
+					deferred_touch_focus = new_focus->GetObserverPtr();
+				else
+					new_focus->Focus();
+			}
 		}
 
 		// Deepest element under the pointer at press time (browser-style press target).
@@ -932,7 +941,6 @@ bool Context::ProcessMouseButtonDown(int button_index, int key_modifier_state)
 			selection_controller->OnPointerUp();
 		}
 
-		const bool touch_pointer = !touch_states.empty();
 		const bool defer_static_selection = touch_pointer && hover && selection_controller->CanSelectStaticText(hover);
 
 		float mouse_distance_squared = float((mouse_position - last_click_mouse_position).SquaredMagnitude());
@@ -1268,7 +1276,13 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 	}
 
 	// always assume touch press/release events are handled as left mouse button
-	return ProcessMouseButtonDown(0, key_modifier_state);
+	const TouchId identifier = touch.identifier;
+	deferred_touch_focus = {};
+	const bool result = ProcessMouseButtonDown(0, key_modifier_state);
+	if (TouchState* pressed = LookupTouch(identifier))
+		pressed->tap_focus = deferred_touch_focus;
+	deferred_touch_focus = {};
+	return result;
 }
 
 bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
@@ -1284,6 +1298,8 @@ bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
 	// A text field reports its own selection-handle drag through the loupe; that touch moves the handle and
 	// must not scroll the field (or whatever contains it).
 	const bool widget_handle_drag = text_loupe_widget_active;
+	if (delta_from_start.SquaredMagnitude() > scroll_slop * scroll_slop)
+		state->tap_focus = {};
 	if (!state->selection_armed && !widget_handle_drag && (Math::Absolute(delta_from_start.y) > scroll_slop &&
 			Math::Absolute(delta_from_start.y) >= Math::Absolute(delta_from_start.x)))
 		state->touch_scrolling = true;
@@ -1375,12 +1391,20 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 	if (editor_menu_target && !IsTextEditorTarget(editor_menu_target))
 		editor_menu_target = nullptr;
 	ObserverPtr<Element> editor_menu_observer = editor_menu_target ? editor_menu_target->GetObserverPtr() : ObserverPtr<Element>{};
+	const ObserverPtr<Element> tap_focus = state->tap_focus;
 
 	touch_states.erase(touch.identifier);
 
 	ClearTextLoupeState();
 
 	ProcessMouseMove(static_cast<int>(touch.position.x), static_cast<int>(touch.position.y), key_modifier_state);
+
+	// The touch stayed a tap: the focus it held back from the text field moves now, before the click.
+	if (Element* new_focus = tap_focus.get())
+	{
+		if (new_focus->GetOwnerDocument() && new_focus != focus_controller->GetFocusElement())
+			new_focus->Focus();
+	}
 
 	// always assume touch press/release events are handled as left mouse button
 	const bool result = ProcessMouseButtonUp(0, key_modifier_state);
