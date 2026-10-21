@@ -7,6 +7,7 @@ ui_add_module_tests(dom
 	ElementDocument_test.cpp
 	ElementHandle_test.cpp
 	ElementStyle_test.cpp
+	ElementTextLineBreak_test.cpp
 	EventListener_test.cpp
 	Filter_test.cpp
 	Localization_test.cpp
