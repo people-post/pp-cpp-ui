@@ -296,6 +296,16 @@ bool ElementText::GenerateLine(String& line, int& line_length, float& line_width
 					{
 						partial_string_end = StringUtilities::SeekBackwardUTF8(partial_string_end - 1, token_begin);
 
+						// Kinsoku: don't split before closing punctuation or after opening punctuation.
+						if (partial_string_end != token_begin)
+						{
+							const char* previous_character = StringUtilities::SeekBackwardUTF8(partial_string_end - 1, token_begin);
+							const Character before = StringUtilities::ToCharacter(previous_character, partial_string_end);
+							const Character after = StringUtilities::ToCharacter(partial_string_end, token_begin + token_max_size);
+							if (!StringUtilities::CanBreakBetween(before, after, true))
+								continue;
+						}
+
 						bool force_loop_break_at_end = false;
 						if (partial_string_end == token_begin)
 						{
@@ -586,6 +596,8 @@ static bool BuildToken(String& token, const char*& token_begin, const char* stri
 
 	// Check what the first character of the token is; all we need to know is if it is white-space or not.
 	bool parsing_white_space = StringUtilities::IsWhitespace(*token_begin);
+	// The last non-white-space code point of the token, for finding CJK break opportunities.
+	Character previous_codepoint = Character::Null;
 
 	// Loop through the string from the token's beginning until we find an end to the token. This can occur in various
 	// places, depending on the white-space processing;
@@ -687,6 +699,23 @@ static bool BuildToken(String& token, const char*& token_begin, const char* stri
 		}
 		else
 		{
+			// End the token between CJK characters, or between CJK and other text, unless kinsoku forbids it. Decode
+			// only at code point boundaries; escaped characters are ASCII, or a no-break space.
+			if ((character & 0b1100'0000) != 0b1000'0000)
+			{
+				Character codepoint = Character(character);
+				if (token_begin == escape_begin)
+					codepoint = StringUtilities::ToCharacter(token_begin, string_end);
+				else if (force_non_whitespace)
+					codepoint = Character(0xA0);
+				if (previous_codepoint != Character::Null && StringUtilities::CanBreakBetween(previous_codepoint, codepoint, false))
+				{
+					token_begin = escape_begin;
+					return false;
+				}
+				previous_codepoint = codepoint;
+			}
+
 			if (text_transformation == Style::TextTransform::Uppercase)
 			{
 				if (character >= 'a' && character <= 'z')

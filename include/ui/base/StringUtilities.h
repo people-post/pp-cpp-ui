@@ -63,6 +63,16 @@ namespace StringUtilities {
 		return (x == '\r' || x == '\n' || x == ' ' || x == '\t');
 	}
 
+	/// Checks if a code point is CJK (Han, kana, Hangul syllables, CJK symbols and punctuation, fullwidth forms).
+	UI_CORE_API bool IsCjk(Character character);
+	/// Checks if a line must not break before this code point (kinsoku: closing punctuation, small kana, combining marks).
+	UI_CORE_API bool IsNoBreakBefore(Character character);
+	/// Checks if a line must not break after this code point (kinsoku: opening punctuation).
+	UI_CORE_API bool IsNoBreakAfter(Character character);
+	/// Checks if a line may break between two adjacent code points, without any white-space between them. Unless
+	/// 'break_anywhere' is set, only pairs involving a CJK character are break opportunities. Kinsoku applies either way.
+	UI_CORE_API bool CanBreakBetween(Character before, Character after, bool break_anywhere);
+
 	/// Strip whitespace characters from the beginning and end of a string.
 	UI_CORE_API String StripWhitespace(const String& string);
 
