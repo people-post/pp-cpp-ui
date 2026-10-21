@@ -715,6 +715,86 @@ const char* StringUtilities::SeekBackwardGraphemeCluster(const char* p, const ch
 	return cursor;
 }
 
+// Code points that join their neighbours: no-break spaces, word joiners and the zero-width joiner.
+static bool IsGlue(char32_t c)
+{
+	return c == 0x00A0 || c == 0x202F || c == 0x2060 || c == 0xFEFF || IsZWJ(c);
+}
+
+bool StringUtilities::IsCjk(Character character)
+{
+	const char32_t c = static_cast<char32_t>(character);
+	return (c >= 0x2E80 && c <= 0x2FDF) || // CJK and Kangxi radicals
+		(c >= 0x3000 && c <= 0x33FF) ||    // CJK symbols and punctuation, kana, bopomofo, Hangul compatibility jamo, enclosed CJK
+		(c >= 0x3400 && c <= 0x4DBF) ||    // Han extension A
+		(c >= 0x4E00 && c <= 0x9FFF) ||    // Han
+		(c >= 0xAC00 && c <= 0xD7AF) ||    // Hangul syllables
+		(c >= 0xF900 && c <= 0xFAFF) ||    // Han compatibility ideographs
+		(c >= 0xFE30 && c <= 0xFE4F) ||    // CJK compatibility forms
+		(c >= 0xFF00 && c <= 0xFFEF) ||    // Halfwidth and fullwidth forms
+		(c >= 0x1B000 && c <= 0x1B16F) ||  // Kana supplement and extensions
+		(c >= 0x20000 && c <= 0x3FFFD);    // Han extensions B and later
+}
+
+bool StringUtilities::IsNoBreakBefore(Character character)
+{
+	const char32_t c = static_cast<char32_t>(character);
+	switch (c)
+	{
+	// Closing CJK punctuation.
+	case 0x3001: case 0x3002: case 0x3009: case 0x300B: case 0x300D: case 0x300F: case 0x3011: case 0x3015: case 0x3017: case 0x3019:
+	case 0x301B:
+	// Fullwidth ！）．，：；？］｝
+	case 0xFF01: case 0xFF09: case 0xFF0C: case 0xFF0E: case 0xFF1A: case 0xFF1B: case 0xFF1F: case 0xFF3D: case 0xFF5D:
+	// Prolonged sound mark, iteration marks, katakana middle dot.
+	case 0x30FC: case 0x3005: case 0x309D: case 0x309E: case 0x30FD: case 0x30FE: case 0x30FB:
+	// Small kana.
+	case 0x3041: case 0x3043: case 0x3045: case 0x3047: case 0x3049: case 0x3063: case 0x3083: case 0x3085: case 0x3087: case 0x308E:
+	case 0x30A1: case 0x30A3: case 0x30A5: case 0x30A7: case 0x30A9: case 0x30C3: case 0x30E3: case 0x30E5: case 0x30E7: case 0x30EE:
+	case 0x30F5: case 0x30F6:
+	// Combining kana voiced sound marks.
+	case 0x3099: case 0x309A: return true;
+	default: break;
+	}
+	return IsClusterExtender(c) || IsGlue(c);
+}
+
+bool StringUtilities::IsNoBreakAfter(Character character)
+{
+	const char32_t c = static_cast<char32_t>(character);
+	switch (c)
+	{
+	// Opening CJK punctuation.
+	case 0x3008: case 0x300A: case 0x300C: case 0x300E: case 0x3010: case 0x3014: case 0x3016: case 0x3018: case 0x301A:
+	// Fullwidth （［｛
+	case 0xFF08: case 0xFF3B: case 0xFF5B: return true;
+	default: break;
+	}
+	return IsGlue(c);
+}
+
+bool StringUtilities::CanBreakBetween(Character before, Character after, bool break_anywhere)
+{
+	const bool cjk_before = IsCjk(before);
+	const bool cjk_after = IsCjk(after);
+	if (!break_anywhere && !cjk_before && !cjk_after)
+		return false;
+	if (IsNoBreakAfter(before) || IsNoBreakBefore(after))
+		return false;
+
+	// Latin punctuation and quotation marks stay with the CJK text they close or open.
+	const char32_t a = static_cast<char32_t>(after);
+	const char32_t b = static_cast<char32_t>(before);
+	if (cjk_before &&
+		(a == '?' || a == '!' || a == ',' || a == '.' || a == ':' || a == ';' || a == ')' || a == ']' || a == '}' || a == 0x2019 || a == 0x201D ||
+			a == 0x2026))
+		return false;
+	if (cjk_after && (b == '(' || b == '[' || b == '{' || b == 0x2018 || b == 0x201C))
+		return false;
+
+	return true;
+}
+
 size_t StringUtilities::LengthUTF8(StringView string_view)
 {
 	const char* const p_end = string_view.end();

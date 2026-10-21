@@ -1,5 +1,6 @@
 #include <ui/base/StringUtilities.h>
 #include <ui/base/Types.h>
+#include <cstring>
 #include <doctest.h>
 
 using namespace ui;
@@ -168,4 +169,46 @@ TEST_CASE("FormatString")
 		CHECK(result == large_string);
 		CHECK(length == string_size);
 	}
+}
+
+TEST_CASE("StringUtilities::CanBreakBetween")
+{
+	auto C = [](const char* utf8) { return StringUtilities::ToCharacter(utf8, utf8 + strlen(utf8)); };
+
+	CHECK(StringUtilities::IsCjk(C("中")));
+	CHECK(StringUtilities::IsCjk(C("あ")));
+	CHECK(StringUtilities::IsCjk(C("한")));
+	CHECK(StringUtilities::IsCjk(C("，")));
+	CHECK(StringUtilities::IsCjk(C("𠀀")));
+	CHECK_FALSE(StringUtilities::IsCjk(C("a")));
+	CHECK_FALSE(StringUtilities::IsCjk(C("é")));
+
+	// Between CJK characters, and between CJK and Latin.
+	CHECK(StringUtilities::CanBreakBetween(C("中"), C("文"), false));
+	CHECK(StringUtilities::CanBreakBetween(C("在"), C("G"), false));
+	CHECK(StringUtilities::CanBreakBetween(C("b"), C("上"), false));
+	// Not between Latin letters, unless breaking anywhere.
+	CHECK_FALSE(StringUtilities::CanBreakBetween(C("a"), C("b"), false));
+	CHECK(StringUtilities::CanBreakBetween(C("a"), C("b"), true));
+
+	// Kinsoku.
+	for (const char* closing : {"。", "，", "、", "？", "！", "）", "」", "』", "】", "》", "ー", "っ", "ャ"})
+	{
+		CAPTURE(String(closing));
+		CHECK_FALSE(StringUtilities::CanBreakBetween(C("好"), C(closing), false));
+		CHECK_FALSE(StringUtilities::CanBreakBetween(C("好"), C(closing), true));
+	}
+	for (const char* opening : {"（", "「", "『", "【", "《"})
+	{
+		CAPTURE(String(opening));
+		CHECK_FALSE(StringUtilities::CanBreakBetween(C(opening), C("好"), false));
+		CHECK(StringUtilities::CanBreakBetween(C("好"), C(opening), false));
+	}
+	CHECK(StringUtilities::CanBreakBetween(C("。"), C("好"), false));
+	CHECK_FALSE(StringUtilities::CanBreakBetween(C("好"), C("?"), false));
+	CHECK_FALSE(StringUtilities::CanBreakBetween(C("好"), C(","), false));
+	CHECK_FALSE(StringUtilities::CanBreakBetween(C("("), C("好"), false));
+	// ASCII punctuation is only glued to CJK text; Latin break-anywhere splits are unchanged.
+	CHECK(StringUtilities::CanBreakBetween(C("a"), C("?"), true));
+	CHECK(StringUtilities::CanBreakBetween(C("("), C("a"), true));
 }
