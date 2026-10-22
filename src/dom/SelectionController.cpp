@@ -515,16 +515,15 @@ void SelectionController::RenderSelectionHandles()
 
 	RenderManager& render_manager = context->GetRenderManager();
 	const RenderState saved_state = render_manager.GetState();
-	const float dp_ratio = context->GetDensityIndependentPixelRatio();
 
 	render_manager.SetTransform(nullptr);
 	render_manager.DisableClipMask();
 	render_manager.SetScissorRegion(Rectanglei::FromSize(render_manager.GetViewport()));
 
+#if defined(UI_DEBUG_SELECTION_HANDLES)
+	const float dp_ratio = context->GetDensityIndependentPixelRatio();
 	const int start = Math::Min(anchor_index, focus_index);
 	const int end = Math::Max(anchor_index, focus_index);
-
-#if defined(UI_DEBUG_SELECTION_HANDLES)
 	RenderSelectionHandleDebugMarker(render_manager, GetGlobalIndexPosition(start), dp_ratio);
 	RenderSelectionHandleDebugMarker(render_manager, GetGlobalIndexPosition(end), dp_ratio);
 #endif

@@ -328,7 +328,10 @@ public:
             return i->second;
         }
 
-        i = m_container.emplace(i, std::forward<K>(k), mapped_type());
+        // pp-cpp-ui: the key is made before the insert. Made inside it (from a string literal),
+        // GCC 13 at -O2+ reports a bogus -Warray-bounds in std::string's construction.
+        key_type key(std::forward<K>(k));
+        i = m_container.emplace(i, std::move(key), mapped_type());
         return i->second;
     }
 
