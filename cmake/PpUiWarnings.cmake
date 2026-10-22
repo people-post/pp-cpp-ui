@@ -34,6 +34,13 @@ function(pp_ui_apply_warnings target)
       -Wextra
       -Wno-missing-field-initializers
       -Wno-unused-parameter)
+    # GCC 13's -Wdangling-reference flags every reference bound through a part view returned by
+    # value (`const Box& b = element->BoxModel().GetBox();` — ElementBox, ElementStyle… point into
+    # the element, which outlives them). GCC 14 no longer warns for such reference-like classes.
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13
+       AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14)
+      target_compile_options(${target} PRIVATE -Wno-dangling-reference)
+    endif()
     if(PP_UI_WARNINGS_AS_ERRORS)
       target_compile_options(${target} PRIVATE -Werror)
     endif()
