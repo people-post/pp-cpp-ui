@@ -567,7 +567,7 @@ void Element::SetParent(Element* _parent)
 		{
 			SetDataModel(parent->data_model);
 		}
-		else if (Context* context = GetContext())
+		else if (GetContext())
 		{
 			String name = it->second.Get<String>();
 			if (!AttachNamedDataModel(name))

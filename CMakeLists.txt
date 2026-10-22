@@ -8,6 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(PP_UI_REPO_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 
 option(PP_UI_BUILD_TESTS "Build pp-cpp-ui / pp-cpp-ui unit tests" OFF)
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/PpUiWarnings.cmake")
 
 set(PP_UI_THIRD_PARTY_DIR "${CMAKE_CURRENT_SOURCE_DIR}/third_party")
 set(PP_UI_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
@@ -65,6 +66,7 @@ if(NOT TARGET pp_ui_backend)
     src/render/gl/glad.cpp
   )
   add_library(pp::ui_backend ALIAS pp_ui_backend)
+  pp_ui_apply_warnings(pp_ui_backend)
 
   # Public: include/ (ui/...).
   target_include_directories(pp_ui_backend PUBLIC

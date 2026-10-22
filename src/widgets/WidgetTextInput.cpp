@@ -476,13 +476,13 @@ void WidgetTextInput::RenderSelectionHandlesAbsolute()
 
 	RenderManager& render_manager = context->GetRenderManager();
 	const RenderState saved_state = render_manager.GetState();
-	const float dp_ratio = context->GetDensityIndependentPixelRatio();
 
 	render_manager.SetTransform(nullptr);
 	render_manager.DisableClipMask();
 	render_manager.SetScissorRegion(Rectanglei::FromSize(render_manager.GetViewport()));
 
 #if defined(UI_DEBUG_SELECTION_HANDLES)
+	const float dp_ratio = context->GetDensityIndependentPixelRatio();
 	const Vector2f start_pos = GetAbsolutePositionForByteIndex(selection_begin_index);
 	const Vector2f end_pos = GetAbsolutePositionForByteIndex(selection_begin_index + selection_length);
 	RenderSelectionHandleDebugMarker(render_manager, start_pos, dp_ratio);
