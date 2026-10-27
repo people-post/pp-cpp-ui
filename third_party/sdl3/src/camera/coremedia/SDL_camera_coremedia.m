@@ -361,34 +361,21 @@ static bool COREMEDIA_OpenDevice(SDL_Camera *device, const SDL_CameraSpec *spec)
 
     if (spec_format == nil) {
         return SDL_SetError("camera spec format not available");
-    } else if (![avdevice lockForConfiguration:NULL]) {
-        return SDL_SetError("Cannot lockForConfiguration");
     }
-
-    avdevice.activeFormat = spec_format;
-
-    // Try to set the frame duration to enforce the requested frame rate
     const CMTime frameDuration = CMTimeMake(spec->framerate_denominator, spec->framerate_numerator);
-
-    // Check if the device supports setting frame duration
-    if ([avdevice respondsToSelector:@selector(setActiveVideoMinFrameDuration:)] &&
-        [avdevice respondsToSelector:@selector(setActiveVideoMaxFrameDuration:)]) {
-        @try {
-            avdevice.activeVideoMinFrameDuration = frameDuration;
-            avdevice.activeVideoMaxFrameDuration = frameDuration;
-        } @catch (NSException *exception) {
-            // Some devices don't support setting frame duration, that's okay
-        }
-    }
-
-    [avdevice unlockForConfiguration];
 
     AVCaptureSession *session = [[AVCaptureSession alloc] init];
     if (session == nil) {
         return SDL_SetError("Failed to allocate/init AVCaptureSession");
     }
 
+    [session beginConfiguration];
+    // A quality preset takes control of activeFormat and can replace our selected size/FPS.
+#if defined(SDL_PLATFORM_IOS)
+    session.sessionPreset = AVCaptureSessionPresetInputPriority;
+#else
     session.sessionPreset = AVCaptureSessionPresetHigh;
+#endif
 #if defined(SDL_PLATFORM_IOS)
     if (@available(iOS 10.0, tvOS 17.0, *)) {
         session.automaticallyConfiguresCaptureDeviceForWideColor = NO;
@@ -436,15 +423,20 @@ static bool COREMEDIA_OpenDevice(SDL_Camera *device, const SDL_CameraSpec *spec)
     }
     [session addOutput:output];
 
-    // Try to set the frame rate on the device (preferred modern approach)
+    // Configure after attaching the input, in one session transaction. Setting a preset
+    // after activeFormat would silently undo the requested low-resolution capture format.
     if ([avdevice lockForConfiguration:nil]) {
         @try {
+            avdevice.activeFormat = spec_format;
             avdevice.activeVideoMinFrameDuration = frameDuration;
             avdevice.activeVideoMaxFrameDuration = frameDuration;
         } @catch (NSException *exception) {
-            // Some devices don't support setting frame duration, that's okay
+            [avdevice unlockForConfiguration];
+            return SDL_SetError("Cannot configure camera frame duration: %s", exception.reason.UTF8String);
         }
         [avdevice unlockForConfiguration];
+    } else {
+        return SDL_SetError("Cannot lockForConfiguration");
     }
 
     [session commitConfiguration];
@@ -482,6 +474,14 @@ static bool COREMEDIA_OpenDevice(SDL_Camera *device, const SDL_CameraSpec *spec)
     device->hidden = (struct SDL_PrivateCameraData *)CFBridgingRetain(hidden);
 
     [session startRunning];  // !!! FIXME: docs say this can block while camera warms up and shouldn't be done on main thread. Maybe push through `queue`?
+
+    if (!device->props) {
+        device->props = SDL_CreateProperties();
+    }
+    SDL_SetNumberProperty(device->props, "SDL.camera.coremedia.min_frame_ns",
+                          (Sint64)(CMTimeGetSeconds(avdevice.activeVideoMinFrameDuration) * SDL_NS_PER_SECOND));
+    SDL_SetNumberProperty(device->props, "SDL.camera.coremedia.max_frame_ns",
+                          (Sint64)(CMTimeGetSeconds(avdevice.activeVideoMaxFrameDuration) * SDL_NS_PER_SECOND));
 
     CheckCameraPermissions(device);  // check right away, in case the process is already granted permission.
 
@@ -524,6 +524,15 @@ static void GatherCameraSpecs(AVCaptureDevice *device, CameraFormatAddData *add_
             SDL_CalculateFraction(framerate.maxFrameRate, &max_numerator, &max_denominator);
             if (max_numerator != min_numerator || max_denominator != min_denominator) {
                 SDL_AddCameraFormat(add_data, device_format, device_colorspace, w, h, max_numerator, max_denominator);
+            }
+            // AVFoundation supplies continuous ranges; SDL negotiates discrete specs. Only
+            // advertising endpoints makes a 30 FPS request pick 1 FPS from a 1..60 range.
+            static const int common_rates[] = { 5, 10, 15, 20, 24, 25, 30, 50, 60, 90, 120, 240 };
+            for (int i = 0; i < SDL_arraysize(common_rates); i++) {
+                const int rate = common_rates[i];
+                if (rate > framerate.minFrameRate && rate < framerate.maxFrameRate) {
+                    SDL_AddCameraFormat(add_data, device_format, device_colorspace, w, h, rate, 1);
+                }
             }
         }
     }
