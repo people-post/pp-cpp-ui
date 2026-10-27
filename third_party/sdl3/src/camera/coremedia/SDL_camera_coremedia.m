@@ -37,6 +37,16 @@
 #import <UIKit/UIKit.h>
 #endif
 
+#if defined(SDL_PLATFORM_IOS) && !defined(SDL_PLATFORM_TVOS) && !defined(SDL_PLATFORM_VISIONOS)
+#define USE_IOS_CAMERA_ZOOM
+#endif
+
+#define COREMEDIA_ZOOM_SUPPORTED "SDL.camera.coremedia.zoom_supported"
+#define COREMEDIA_MAX_ZOOM "SDL.camera.coremedia.max_zoom"
+#define COREMEDIA_ZOOM "SDL.camera.coremedia.zoom"
+#define COREMEDIA_ZOOM_CURRENT "SDL.camera.coremedia.zoom_current"
+#define COREMEDIA_ZOOM_RAMPING "SDL.camera.coremedia.zoom_ramping"
+
 /*
  * Need to link with:: CoreMedia CoreVideo
  *
@@ -85,6 +95,14 @@ static void CoreMediaFormatToSDL(FourCharCode fmt, SDL_PixelFormat *pixel_format
 @property(nonatomic, retain) AVCaptureSession *session;
 @property(nonatomic, retain) SDLCaptureVideoDataOutputSampleBufferDelegate *delegate;
 @property(nonatomic, assign) CMSampleBufferRef current_sample;
+// Atomic accessor also guards feedback published after the native monitor is released.
+@property(atomic, assign) BOOL zoom_closed;
+#ifdef USE_IOS_CAMERA_ZOOM
+// Zoom state is serialized against CloseDevice by @synchronized(hidden).
+@property(nonatomic, retain) AVCaptureDevice *zoom_device;
+@property(nonatomic, assign) float max_zoom;
+@property(nonatomic, assign) float requested_zoom;
+#endif
 #ifdef USE_UIKIT_DEVICE_ROTATION
 @property(nonatomic, assign) UIDeviceOrientation last_device_orientation;
 #endif
@@ -93,6 +111,125 @@ static void CoreMediaFormatToSDL(FourCharCode fmt, SDL_PixelFormat *pixel_format
 @implementation SDLPrivateCameraData
 @end
 
+
+// Publish a coherent feedback pair after releasing the native lock and camera monitor.
+static void COREMEDIA_PublishZoom(SDL_Camera *device, SDLPrivateCameraData *hidden, float current, bool ramping)
+{
+    if (!SDL_LockProperties(device->props)) {
+        return;
+    }
+    // A delegate may have sampled just before CloseDevice reset the native camera. Checking
+    // the atomic close flag under the properties lock prevents that stale sample winning.
+    if (hidden.zoom_closed) {
+        current = 1.0f;
+        ramping = false;
+    }
+    SDL_SetFloatProperty(device->props, COREMEDIA_ZOOM_CURRENT, current);
+    SDL_SetBooleanProperty(device->props, COREMEDIA_ZOOM_RAMPING, ramping);
+    SDL_UnlockProperties(device->props);
+}
+
+// The caller opens/closes on its device thread; the serial capture queue applies requests.
+// Never hold the SDL properties lock while configuring native zoom.
+static bool COREMEDIA_InitZoom(SDL_Camera *device, SDLPrivateCameraData *hidden, AVCaptureDevice *avdevice)
+{
+    bool supported = false;
+    float max_zoom = 1.0f;
+    (void)hidden;
+    (void)avdevice;
+#ifdef USE_IOS_CAMERA_ZOOM
+    if (avdevice.position == AVCaptureDevicePositionBack) {
+        if (![avdevice lockForConfiguration:nil]) {
+            return SDL_SetError("Cannot lock camera zoom configuration");
+        }
+        @try {
+            const CGFloat native_max = MIN(avdevice.activeFormat.videoMaxZoomFactor, avdevice.maxAvailableVideoZoomFactor);
+            if (avdevice.minAvailableVideoZoomFactor <= 1.0 && native_max >= 1.0) {
+                [avdevice cancelVideoZoomRamp];
+                avdevice.videoZoomFactor = 1.0;
+                max_zoom = (float)MIN(native_max, 4.0);
+                supported = max_zoom > 1.0f;
+                hidden.zoom_device = avdevice;
+                hidden.max_zoom = max_zoom;
+                hidden.requested_zoom = 1.0f;
+            }
+        } @catch (NSException *exception) {
+            [avdevice unlockForConfiguration];
+            return SDL_SetError("Cannot reset camera zoom: %s", exception.reason.UTF8String);
+        }
+        [avdevice unlockForConfiguration];
+    }
+#endif
+    // Publish only after releasing the AVFoundation configuration lock.
+    SDL_SetBooleanProperty(device->props, COREMEDIA_ZOOM_SUPPORTED, supported);
+    SDL_SetFloatProperty(device->props, COREMEDIA_MAX_ZOOM, max_zoom);
+    SDL_SetFloatProperty(device->props, COREMEDIA_ZOOM, 1.0f);
+    COREMEDIA_PublishZoom(device, hidden, 1.0f, false);
+    return true;
+}
+
+static void COREMEDIA_ApplyZoom(SDL_Camera *device, SDLPrivateCameraData *hidden)
+{
+    float current = 1.0f;
+    bool ramping = false;
+#ifdef USE_IOS_CAMERA_ZOOM
+    // SDL_GetFloatProperty releases its internal lock before @synchronized/native locking.
+    float requested = SDL_GetFloatProperty(device->props, COREMEDIA_ZOOM, 1.0f);
+    if (SDL_isnanf(requested) || SDL_isinff(requested)) {
+        requested = 1.0f;
+    }
+    @synchronized(hidden) {
+        AVCaptureDevice *avdevice = hidden.zoom_device;
+        if (avdevice) {
+            requested = SDL_clamp(requested, 1.0f, hidden.max_zoom);
+            if (SDL_fabsf(requested - hidden.requested_zoom) >= 0.01f && [avdevice lockForConfiguration:nil]) {
+                @try {
+                    // Native ranges can narrow at runtime; never send an out-of-range ramp target.
+                    const CGFloat minimum = MAX(1.0, avdevice.minAvailableVideoZoomFactor);
+                    const CGFloat maximum = MIN(hidden.max_zoom, avdevice.maxAvailableVideoZoomFactor);
+                    if (minimum <= maximum) {
+                        const CGFloat target = MIN(MAX(requested, minimum), maximum);
+                        [avdevice rampToVideoZoomFactor:target withRate:1.0f];
+                        hidden.requested_zoom = requested;
+                    }
+                } @catch (NSException *exception) {
+                    SDL_Log("CAMERA: Cannot ramp zoom: %s", exception.reason.UTF8String);
+                }
+                [avdevice unlockForConfiguration];
+            }
+            // Read on every frame, including when the requested target has not changed.
+            current = (float)avdevice.videoZoomFactor;
+            ramping = avdevice.isRampingVideoZoom;
+        }
+    }
+#endif
+    COREMEDIA_PublishZoom(device, hidden, current, ramping);
+}
+
+static void COREMEDIA_ResetZoom(SDL_Camera *device, SDLPrivateCameraData *hidden)
+{
+    hidden.zoom_closed = YES;
+#ifdef USE_IOS_CAMERA_ZOOM
+    @synchronized(hidden) {
+        AVCaptureDevice *avdevice = hidden.zoom_device;
+        hidden.zoom_device = nil;  // An in-flight delegate cannot restart a ramp after this reset.
+        if (avdevice) {
+            if ([avdevice lockForConfiguration:nil]) {
+                @try {
+                    [avdevice cancelVideoZoomRamp];
+                    avdevice.videoZoomFactor = 1.0;
+                } @catch (NSException *exception) {
+                    SDL_Log("CAMERA: Cannot restore camera zoom: %s", exception.reason.UTF8String);
+                }
+                [avdevice unlockForConfiguration];
+            } else {
+                SDL_Log("CAMERA: Cannot lock camera to restore zoom");
+            }
+        }
+    }
+#endif
+    COREMEDIA_PublishZoom(device, hidden, 1.0f, false);
+}
 
 static bool CheckCameraPermissions(SDL_Camera *device)
 {
@@ -139,6 +276,7 @@ static bool CheckCameraPermissions(SDL_Camera *device)
         }
 
         SDLPrivateCameraData *hidden = (__bridge SDLPrivateCameraData *) device->hidden;
+        COREMEDIA_ApplyZoom(device, hidden);
         hidden.current_sample = sampleBuffer;
         SDL_CameraThreadIterate(device);
         hidden.current_sample = NULL;
@@ -279,6 +417,7 @@ static void COREMEDIA_CloseDevice(SDL_Camera *device)
 
         SDLPrivateCameraData *hidden = (SDLPrivateCameraData *) CFBridgingRelease(device->hidden);
         device->hidden = NULL;
+        COREMEDIA_ResetZoom(device, hidden);
 
         AVCaptureSession *session = hidden.session;
         if (session) {
@@ -449,6 +588,13 @@ static bool COREMEDIA_OpenDevice(SDL_Camera *device, const SDL_CameraSpec *spec)
     hidden.session = session;
     hidden.delegate = delegate;
     hidden.current_sample = NULL;
+
+    if (!device->props) {
+        device->props = SDL_CreateProperties();
+    }
+    if (!COREMEDIA_InitZoom(device, hidden, avdevice)) {
+        return false;
+    }
 
     #ifdef USE_UIKIT_DEVICE_ROTATION
     // When using a camera, we turn on device orientation tracking. The docs note that this turns on

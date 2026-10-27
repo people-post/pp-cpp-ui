@@ -265,6 +265,7 @@ static void ClosePhysicalCamera(SDL_Camera *device)
     device->hidden = NULL;  // just in case backend didn't reset this.
 
     SDL_DestroyProperties(device->props);
+    device->props = 0;
 
     SDL_DestroySurface(device->acquire_surface);
     device->acquire_surface = NULL;
