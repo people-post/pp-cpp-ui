@@ -48,6 +48,11 @@ backend). Unit tests default to a dummy render interface and do not open a windo
 
 Linux needs X11 + OpenGL (+ Pulse/ALSA recommended for SDL audio drivers).
 
+Warnings are errors on first-party targets — the engine modules, the SDL / GL3 backend, the tests —
+with the flags pp-browser uses (`cmake/PpUiWarnings.cmake`): `-Wall -Wextra` on GCC / Clang, `/W4`
+on MSVC. `-DPP_UI_WARNINGS_AS_ERRORS=OFF` keeps them warnings (e.g. a new compiler); a consumer
+can set it from its own policy. `third_party/` keeps its own options.
+
 ## Consume (FetchContent)
 
 Pin a **release tag cut from `main`**:
