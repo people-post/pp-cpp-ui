@@ -6,6 +6,7 @@
 #include <ui/dom/Context.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
+#include <ui/dom/EventListener.h>
 #include <ui/widgets/ElementFormControl.h>
 #include <ui/widgets/ElementFormControlInput.h>
 #include <ui/widgets/ElementFormControlTextArea.h>
@@ -309,6 +310,399 @@ TEST_CASE("a click in a scrolled textarea lands on the line under the pointer")
 	const int last_line_start = 20 * 6;
 	CHECK(top < last_line_start - 6);
 	CHECK(lower > top);
+}
+
+namespace {
+
+// Clipboard interface whose clock the test moves by hand, so pauses between keystrokes need no sleeping.
+struct UndoEnv {
+	ClipboardSystemInterface system;
+	double now = 100.0;
+	UndoEnv()
+	{
+		REQUIRE(TestsShell::GetContext());
+		// The shell installs its own system interface on initialization, so swap ours in afterwards.
+		SetSystemInterface(&system);
+		system.SetManualTime(now);
+	}
+	void Wait(double seconds)
+	{
+		now += seconds;
+		system.SetManualTime(now);
+	}
+};
+
+const char* const CJK = "\xe4\xbd\xa0\xe5\xa5\xbd"; // 你好
+
+constexpr int kShift = Input::KM_SHIFT;
+
+} // namespace
+
+TEST_CASE("undo after typing restores the empty field, redo brings the text back")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			for (char c : String("hello"))
+				f.Type(String(1, c));
+			CHECK(f.Value() == "hello");
+
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+			// Nothing left to undo.
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+
+			f.Key(Input::KI_Z, mod | kShift);
+			CHECK(f.Value() == "hello");
+			// Caret is back at the end: typing continues there.
+			f.Type("!");
+			CHECK(f.Value() == "hello!");
+		}
+}
+
+TEST_CASE("typing is undone word by word")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			for (char c : String("one two three"))
+				f.Type(String(1, c));
+			CHECK(f.Value() == "one two three");
+
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "one two");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "one");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+		}
+}
+
+TEST_CASE("a pause of more than a second starts a new undo step")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			f.Type("a");
+			env.Wait(0.5);
+			f.Type("b");
+			env.Wait(0.9);
+			f.Type("c");
+			// Under a second between keystrokes: one step.
+			env.Wait(1.5);
+			f.Type("d");
+			f.Type("e");
+			CHECK(f.Value() == "abcde");
+
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "abc");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+		}
+}
+
+TEST_CASE("moving the caret or switching between typing and deleting starts a new undo step")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			f.Type("a");
+			f.Type("b");
+			f.Type("c");
+			f.Key(Input::KI_BACK);
+			f.Key(Input::KI_BACK);
+			CHECK(f.Value() == "a");
+			f.Type("x");
+			CHECK(f.Value() == "ax");
+
+			f.Key(Input::KI_Z, mod); // typing x
+			CHECK(f.Value() == "a");
+			f.Key(Input::KI_Z, mod); // the two backspaces together
+			CHECK(f.Value() == "abc");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+
+			f.Key(Input::KI_Z, mod | kShift);
+			f.Key(Input::KI_Z, mod | kShift);
+			f.Key(Input::KI_Z, mod | kShift);
+			CHECK(f.Value() == "ax");
+
+			// Moving the caret ends the step even without a pause.
+			f.Key(Input::KI_HOME);
+			f.Type("1");
+			f.Key(Input::KI_END);
+			f.Type("2");
+			CHECK(f.Value() == "1ax2");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "1ax");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "ax");
+		}
+}
+
+TEST_CASE("undo after a paste removes exactly the paste")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			env.system.clipboard = "PASTED";
+			Fixture f(id);
+			f.Type("a");
+			f.Type("b");
+			f.Key(Input::KI_V, mod);
+			f.Type("c");
+			CHECK(f.Value() == "abPASTEDc");
+
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "abPASTED");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "ab");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+		}
+}
+
+TEST_CASE("undo of a cut brings back the text and its selection")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			f.Type("hello world");
+			f.Key(Input::KI_A, mod);
+			f.Key(Input::KI_X, mod);
+			CHECK(f.Value() == "");
+			CHECK(env.system.clipboard == "hello world");
+
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "hello world");
+			int start = -1, end = -1;
+			auto* widget_control = ui_dynamic_cast<ElementFormControlInput*>(f.control);
+			auto* area_control = ui_dynamic_cast<ElementFormControlTextArea*>(f.control);
+			if (widget_control)
+				widget_control->GetSelection(&start, &end, nullptr);
+			else
+				area_control->GetSelection(&start, &end, nullptr);
+			CHECK(start == 0);
+			CHECK(end == 11);
+
+			// Backspace over a selection is one step too.
+			f.Key(Input::KI_BACK);
+			CHECK(f.Value() == "");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "hello world");
+		}
+}
+
+TEST_CASE("a new edit after undo clears redo")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			f.Type("a");
+			env.Wait(2);
+			f.Type("b");
+			CHECK(f.Value() == "ab");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "a");
+
+			f.Type("c");
+			CHECK(f.Value() == "ac");
+			// Redo is gone; the edit is on the undo list.
+			f.Key(Input::KI_Z, mod | kShift);
+			CHECK(f.Value() == "ac");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "a");
+		}
+}
+
+TEST_CASE("ctrl+Y redoes")
+{
+	for (const char* id : {"input", "area"})
+	{
+		UndoEnv env;
+		Fixture f(id);
+		f.Type("a");
+		env.Wait(2);
+		f.Type("b");
+		f.Key(Input::KI_Z, Input::KM_CTRL);
+		CHECK(f.Value() == "a");
+		f.Key(Input::KI_Y, Input::KM_CTRL);
+		CHECK(f.Value() == "ab");
+		f.Key(Input::KI_Z, Input::KM_META);
+		f.Key(Input::KI_Z, Input::KM_META);
+		CHECK(f.Value() == "");
+		f.Key(Input::KI_Y, Input::KM_CTRL);
+		f.Key(Input::KI_Y, Input::KM_CTRL);
+		CHECK(f.Value() == "ab");
+	}
+}
+
+TEST_CASE("a value set by the app clears the undo history")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			f.Type("send me");
+			CHECK(f.Value() == "send me");
+
+			// The app empties the composer after sending.
+			f.control->SetValue("");
+			CHECK(f.Value() == "");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+			f.Key(Input::KI_Z, mod | kShift);
+			CHECK(f.Value() == "");
+
+			// Editing works again afterwards, and only goes back as far as the new value.
+			f.Type("new");
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+
+			// Same for a value replaced while redo was available.
+			f.Type("a");
+			env.Wait(2);
+			f.Type("b");
+			f.Key(Input::KI_Z, mod);
+			f.control->SetValue("replaced");
+			f.Key(Input::KI_Z, mod | kShift);
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "replaced");
+		}
+}
+
+namespace {
+// Plays the app that empties its field from the change handler, like a chat composer that sends on change.
+struct ClearOnChange : public EventListener {
+	ElementFormControl* control = nullptr;
+	bool armed = false;
+	void ProcessEvent(Event&) override
+	{
+		if (armed)
+			control->SetValue("");
+	}
+};
+} // namespace
+
+TEST_CASE("a value cleared from a change handler is not resurrected by undo")
+{
+	UndoEnv env;
+	Fixture f("input");
+	f.Type("keep");
+	ClearOnChange listener;
+	listener.control = f.control;
+	f.control->AddEventListener(EventId::Change, &listener);
+
+	listener.armed = true;
+	f.Type("!");
+	listener.armed = false;
+	CHECK(f.Value() == "");
+
+	f.Key(Input::KI_Z, Input::KM_CTRL);
+	CHECK(f.Value() == "");
+	f.control->RemoveEventListener(EventId::Change, &listener);
+}
+
+TEST_CASE("Chinese text round-trips through undo and redo")
+{
+	for (const char* id : {"input", "area"})
+		for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+		{
+			UndoEnv env;
+			Fixture f(id);
+			f.Type(CJK);
+			env.Wait(2);
+			f.Type(String("\xe4\xb8\x96\xe7\x95\x8c")); // 世界
+			CHECK(f.Value() == String(CJK) + "\xe4\xb8\x96\xe7\x95\x8c");
+
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == CJK);
+			f.Key(Input::KI_Z, mod);
+			CHECK(f.Value() == "");
+			f.Key(Input::KI_Z, mod | kShift);
+			CHECK(f.Value() == CJK);
+			f.Key(Input::KI_Z, mod | kShift);
+			CHECK(f.Value() == String(CJK) + "\xe4\xb8\x96\xe7\x95\x8c");
+
+			// The caret came back after the last character.
+			f.Type("!");
+			CHECK(f.Value() == String(CJK) + "\xe4\xb8\x96\xe7\x95\x8c!");
+		}
+}
+
+TEST_CASE("a line break in a textarea is its own undo step")
+{
+	for (int mod : {(int)Input::KM_CTRL, (int)Input::KM_META})
+	{
+		UndoEnv env;
+		Fixture f("area");
+		f.Type("a");
+		f.Type("\n");
+		f.Type("b");
+		CHECK(f.Value() == "a\nb");
+		f.Key(Input::KI_Z, mod);
+		CHECK(f.Value() == "a\n");
+		f.Key(Input::KI_Z, mod);
+		CHECK(f.Value() == "a");
+	}
+}
+
+TEST_CASE("the undo history is capped")
+{
+	UndoEnv env;
+	Fixture f("input");
+	for (int i = 0; i < 150; ++i)
+	{
+		f.Type("x");
+		env.Wait(2); // every character its own step
+	}
+	CHECK(f.Value().size() == 150);
+	for (int i = 0; i < 200; ++i)
+		f.Key(Input::KI_Z, Input::KM_CTRL);
+	CHECK(f.Value().size() == 50);
+}
+
+TEST_CASE("undo is ignored while an IME composition is active and covers the commit as one step")
+{
+	REQUIRE(TestsShell::GetContext());
+	CapturingTextInputHandler handler;
+	Context* ime_context = CreateContext("ime_undo", Vector2i(1024, 768), nullptr, &handler);
+	REQUIRE(ime_context);
+	{
+		Fixture f("input", ime_context);
+		REQUIRE(handler.context);
+		f.Type("a");
+		// Move on from the typing step.
+		f.Key(Input::KI_END);
+
+		handler.context->SetText("n", 1, 1);
+		handler.context->SetCompositionRange(1, 2);
+		handler.context->SetText("ni", 1, 2);
+		handler.context->SetCompositionRange(1, 3);
+		CHECK(f.Value() == "ani");
+		f.Key(Input::KI_Z, Input::KM_CTRL);
+		CHECK(f.Value() == "ani");
+
+		handler.context->CommitComposition(String(CJK));
+		CHECK(f.Value() == String("a") + CJK);
+		f.Key(Input::KI_Z, Input::KM_CTRL);
+		CHECK(f.Value() == "a");
+	}
 }
 
 TEST_SUITE_END();

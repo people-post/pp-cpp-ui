@@ -58,6 +58,11 @@ public:
 	void SetCompositionRange(int range_start, int range_end);
 	/// Obtains the IME composition byte range relative to the current value.
 	void GetCompositionRange(int& range_start, int& range_end) const;
+	/// Sets the value while an IME is composing. Not recorded as an undo step on its own: the whole composition is
+	/// recorded by the CommitImeValue() that ends it.
+	void SetImeValue(const String& value);
+	/// Sets the value to the committed IME text and records it as one undo step.
+	void CommitImeValue(const String& value);
 
 	/// Update the colours of the selected text.
 	void UpdateSelectionColours();
@@ -218,6 +223,32 @@ private:
 	/// Copies the selection (if any) to the clipboard.
 	void CopySelection();
 
+	/// How a user edit may be merged into the previous undo step.
+	enum class EditKind {
+		Typing,   // Consecutive typing merges into one step.
+		Deleting, // Consecutive single-character deletes merge into one step.
+		Atomic,   // Paste, cut, line break, word delete, IME commit: always a step of its own.
+	};
+	/// Value, cursor and selection at one point of the undo history. Indices are bytes into the displayed value.
+	struct UndoState {
+		String value;
+		int cursor = 0;
+		int selection_begin = 0;
+		int selection_length = 0;
+	};
+	/// Brackets one user edit: remembers the state before it and, if the value changed, records an undo step.
+	class UserEditScope;
+
+	UndoState CaptureUndoState() const;
+	void ApplyUndoState(const UndoState& state);
+	/// Records the state before a user edit that has just been made.
+	void RecordUserEdit(const UndoState& before, EditKind kind, bool word_boundary);
+	/// Drops the whole undo / redo history. Called when the value is changed by something other than the user.
+	void ClearUndoHistory();
+	void Undo();
+	void Redo();
+	bool IsComposing() const { return ime_composition_end_index > ime_composition_begin_index; }
+
 	/// Split one line of text into three parts, based on the current selection.
 	/// @param[out] pre_selection The section of unselected text before any selected text on the line.
 	/// @param[out] selection The section of selected text on the line.
@@ -291,6 +322,23 @@ private:
 	// IME composition range. The start and end indices are in absolute coordinates.
 	int ime_composition_begin_index;
 	int ime_composition_end_index;
+
+	// Undo / redo history: states before each user edit, oldest first.
+	Vector<UndoState> undo_stack;
+	Vector<UndoState> redo_stack;
+	// What the last recorded edit was, for merging the next one into it.
+	bool edit_has_last = false;
+	EditKind edit_last_kind = EditKind::Atomic;
+	double edit_last_time = 0;
+	int edit_last_cursor = 0;
+	// Bumped whenever the history is cleared, so an edit that is still open when that happens is not recorded.
+	int undo_epoch = 0;
+	// Non-zero while the widget itself writes the value; such writes must not clear the history.
+	int history_suspend = 0;
+	bool in_edit_scope = false;
+	// State before the first change of the IME composition in progress.
+	bool ime_edit_pending = false;
+	UndoState ime_edit_before;
 
 	// The IME context for this widget.
 	UniquePtr<WidgetTextInputContext> text_input_context;
