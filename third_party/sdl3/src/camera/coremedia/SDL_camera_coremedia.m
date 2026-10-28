@@ -570,8 +570,9 @@ static bool COREMEDIA_OpenDevice(SDL_Camera *device, const SDL_CameraSpec *spec)
             avdevice.activeVideoMinFrameDuration = frameDuration;
             avdevice.activeVideoMaxFrameDuration = frameDuration;
         } @catch (NSException *exception) {
-            [avdevice unlockForConfiguration];
-            return SDL_SetError("Cannot configure camera frame duration: %s", exception.reason.UTF8String);
+            // A duration just outside the native range (29.97 vs 30, UVC cameras on macOS) must
+            // not lose the camera: keep the device rate, as before; min/max_frame_ns reveal it.
+            SDL_Log("CAMERA: Cannot configure camera frame duration: %s", exception.reason.UTF8String);
         }
         [avdevice unlockForConfiguration];
     } else {

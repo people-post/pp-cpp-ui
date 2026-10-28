@@ -11,7 +11,9 @@ from replacing the selected resolution. macOS retains its existing High preset.
 The camera's SDL properties include `SDL.camera.coremedia.min_frame_ns` and
 `SDL.camera.coremedia.max_frame_ns`, read after session startup. They report native device
 configuration; SDL's public app-facing spec alone can differ from the native format.
-Configuration exceptions fail open instead of silently retaining an unintended frame rate.
+A frame-duration configuration exception is logged and the camera still opens at the device
+rate (macOS UVC cameras can reject a duration a hair outside their range); the properties above
+show the rate that was actually applied.
 
 Apple API contract: [activeFormat](https://developer.apple.com/documentation/avfoundation/avcapturedevice/activeformat).
 Local patch: `third_party/sdl3/src/camera/coremedia/SDL_camera_coremedia.m` (SDL 3.4.16).
