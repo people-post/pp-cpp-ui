@@ -47,6 +47,23 @@ static bool IsEventForWidget(const Event& event, Element* parent)
 	return target && target->GetParentNode() == parent;
 }
 
+static constexpr size_t UNDO_HISTORY_LIMIT = 100;
+static constexpr double UNDO_TYPING_PAUSE = 1.0; // [s] A longer pause between typed characters starts a new undo step.
+
+static bool IsAsciiSpace(char c)
+{
+	return c == ' ' || c == '\t' || c == '\n' || c == '\r';
+}
+
+// Marks the widget's own writes to the value, which must not clear the undo history.
+struct HistorySuspend {
+	explicit HistorySuspend(int& counter) : counter(counter) { ++counter; }
+	~HistorySuspend() { --counter; }
+	HistorySuspend(const HistorySuspend&) = delete;
+	HistorySuspend& operator=(const HistorySuspend&) = delete;
+	int& counter;
+};
+
 // Clamps the value to the given maximum number of unicode code points. Returns true if the value was changed.
 static bool ClampValue(String& value, int max_length)
 {
@@ -120,7 +137,7 @@ void WidgetTextInputContext::SetText(StringView text, int start, int end)
 	UI_ASSERTMSG(end >= start, "Invalid end character offset.");
 	value.replace(start, end - start, text.begin(), text.size());
 
-	element->SetValue(value);
+	owner->SetImeValue(value);
 }
 
 void WidgetTextInputContext::SetCompositionRange(int start, int end)
@@ -160,7 +177,7 @@ void WidgetTextInputContext::CommitComposition(StringView composition)
 	UI_ASSERTMSG(end_byte >= start_byte, "Invalid end character offset.");
 	value.replace(start_byte, end_byte - start_byte, composition.begin(), composition.size());
 
-	element->SetValue(value);
+	owner->CommitImeValue(value);
 }
 
 WidgetTextInput::WidgetTextInput(ElementFormControl* _parent)
@@ -277,6 +294,11 @@ void WidgetTextInput::SetValue(String value)
 	// cursor there makes characters appear to mutate while typing.
 	if (value == GetValue())
 		return;
+
+	// Not our own write, so the app replaced the text (for example emptied the composer after sending): the old
+	// states must not come back through undo.
+	if (history_suspend == 0)
+		ClearUndoHistory();
 
 	text_element->SetText(value);
 
@@ -531,6 +553,170 @@ void WidgetTextInput::DispatchChangeEvent(bool linebreak)
 	GetElement()->DispatchEvent(EventId::Change, parameters);
 }
 
+class WidgetTextInput::UserEditScope {
+public:
+	/// @param[in] typed The text being typed, to find word boundaries.
+	/// @param[in] before_override State to record instead of the current one (an IME composition started earlier).
+	UserEditScope(WidgetTextInput& widget, EditKind kind, const String* typed = nullptr, const UndoState* before_override = nullptr) :
+		widget(widget), kind(kind), active(!widget.in_edit_scope)
+	{
+		if (!active)
+			return;
+		widget.in_edit_scope = true;
+		epoch = widget.undo_epoch;
+		before = before_override ? *before_override : widget.CaptureUndoState();
+		// An edit of its own supersedes a composition that never got committed.
+		if (!before_override)
+			widget.ime_edit_pending = false;
+		// A typed space after a word ends the word's undo step.
+		if (kind == EditKind::Typing && typed && !typed->empty() && IsAsciiSpace((*typed)[0]) && before.cursor > 0 &&
+			(size_t)before.cursor <= before.value.size())
+			word_boundary = !IsAsciiSpace(before.value[(size_t)before.cursor - 1]);
+	}
+	~UserEditScope()
+	{
+		if (!active)
+			return;
+		widget.in_edit_scope = false;
+		// Skip when nothing changed, or when the history was cleared meanwhile (a change listener replaced the text).
+		if (epoch == widget.undo_epoch && widget.GetAttributeValue() != before.value)
+			widget.RecordUserEdit(before, kind, word_boundary);
+	}
+	UserEditScope(const UserEditScope&) = delete;
+	UserEditScope& operator=(const UserEditScope&) = delete;
+
+private:
+	WidgetTextInput& widget;
+	EditKind kind;
+	bool active;
+	bool word_boundary = false;
+	int epoch = 0;
+	UndoState before;
+};
+
+WidgetTextInput::UndoState WidgetTextInput::CaptureUndoState() const
+{
+	UndoState state;
+	state.value = GetAttributeValue();
+	state.cursor = absolute_cursor_index;
+	state.selection_begin = selection_begin_index;
+	state.selection_length = selection_length;
+	return state;
+}
+
+void WidgetTextInput::ApplyUndoState(const UndoState& state)
+{
+	{
+		const HistorySuspend suspend(history_suspend);
+		parent->SetAttribute("value", state.value);
+	}
+
+	const String& value = GetValue();
+	const auto to_character = [&](int byte_index) {
+		return StringUtilities::ConvertByteOffsetToCharacterOffset(value, Math::Clamp(byte_index, 0, (int)value.size()));
+	};
+	const int cursor = to_character(state.cursor);
+	if (state.selection_length > 0)
+	{
+		const int begin = to_character(state.selection_begin);
+		const int end = to_character(state.selection_begin + state.selection_length);
+		// The caret sits at the end of the selection it was made towards.
+		if (state.cursor <= state.selection_begin)
+			SetSelectionRange(end, begin);
+		else
+			SetSelectionRange(begin, end);
+	}
+	else
+		SetSelectionRange(cursor, cursor);
+}
+
+void WidgetTextInput::RecordUserEdit(const UndoState& before, EditKind kind, bool word_boundary)
+{
+	const double now = GetSystemInterface()->GetElapsedTime();
+
+	// Typing or deleting continues the previous step if it picks up where that one stopped, without a pause.
+	const bool merge = kind != EditKind::Atomic && !word_boundary && edit_has_last && edit_last_kind == kind && !undo_stack.empty() &&
+		before.selection_length == 0 && before.cursor == edit_last_cursor && now - edit_last_time <= UNDO_TYPING_PAUSE;
+
+	if (!merge)
+	{
+		undo_stack.push_back(before);
+		if (undo_stack.size() > UNDO_HISTORY_LIMIT)
+			undo_stack.erase(undo_stack.begin());
+	}
+	redo_stack.clear();
+
+	edit_has_last = (kind != EditKind::Atomic);
+	edit_last_kind = kind;
+	edit_last_time = now;
+	edit_last_cursor = absolute_cursor_index;
+}
+
+void WidgetTextInput::ClearUndoHistory()
+{
+	undo_stack.clear();
+	redo_stack.clear();
+	edit_has_last = false;
+	ime_edit_pending = false;
+	++undo_epoch;
+}
+
+void WidgetTextInput::Undo()
+{
+	// An IME composition is not part of the history yet.
+	if (undo_stack.empty() || IsComposing())
+		return;
+
+	redo_stack.push_back(CaptureUndoState());
+	const UndoState state = std::move(undo_stack.back());
+	undo_stack.pop_back();
+	edit_has_last = false;
+
+	ApplyUndoState(state);
+	DispatchChangeEvent();
+	ShowCursor(true);
+}
+
+void WidgetTextInput::Redo()
+{
+	if (redo_stack.empty() || IsComposing())
+		return;
+
+	undo_stack.push_back(CaptureUndoState());
+	if (undo_stack.size() > UNDO_HISTORY_LIMIT)
+		undo_stack.erase(undo_stack.begin());
+	const UndoState state = std::move(redo_stack.back());
+	redo_stack.pop_back();
+	edit_has_last = false;
+
+	ApplyUndoState(state);
+	DispatchChangeEvent();
+	ShowCursor(true);
+}
+
+void WidgetTextInput::SetImeValue(const String& value)
+{
+	// The first change of a composition remembers the state before it; the commit records the step.
+	if (!ime_edit_pending)
+	{
+		ime_edit_before = CaptureUndoState();
+		ime_edit_pending = true;
+	}
+	const HistorySuspend suspend(history_suspend);
+	parent->SetValue(value);
+}
+
+void WidgetTextInput::CommitImeValue(const String& value)
+{
+	const UndoState pending_before = ime_edit_before;
+	const bool had_pending = ime_edit_pending;
+	ime_edit_pending = false;
+
+	UserEditScope edit(*this, EditKind::Atomic, nullptr, had_pending ? &pending_before : nullptr);
+	const HistorySuspend suspend(history_suspend);
+	parent->SetValue(value);
+}
+
 void WidgetTextInput::ProcessEvent(Event& event)
 {
 	if (parent->IsDisabled())
@@ -580,6 +766,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		case Input::KI_BACK:
 		{
 			CursorMovement direction = (ctrl ? CursorMovement::PreviousWord : CursorMovement::Left);
+			UserEditScope edit(*this, ctrl ? EditKind::Atomic : EditKind::Deleting);
 			DeleteCharacters(direction);
 			ShowCursor(true);
 		}
@@ -589,6 +776,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		case Input::KI_DELETE:
 		{
 			CursorMovement direction = (ctrl ? CursorMovement::NextWord : CursorMovement::Right);
+			UserEditScope edit(*this, ctrl ? EditKind::Atomic : EditKind::Deleting);
 			DeleteCharacters(direction);
 			ShowCursor(true);
 		}
@@ -621,10 +809,30 @@ void WidgetTextInput::ProcessEvent(Event& event)
 			if (command && selection_length > 0)
 			{
 				CopySelection();
+				UserEditScope edit(*this, EditKind::Atomic);
 				DeleteSelection();
 				DispatchChangeEvent();
 				ShowCursor(true);
 			}
+		}
+		break;
+
+		case Input::KI_Z:
+		{
+			if (command && !alt)
+			{
+				if (shift)
+					Redo();
+				else
+					Undo();
+			}
+		}
+		break;
+
+		case Input::KI_Y:
+		{
+			if (ctrl && !alt && !shift)
+				Redo();
 		}
 		break;
 
@@ -635,6 +843,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 				String clipboard_text;
 				GetSystemInterface()->GetClipboardText(clipboard_text);
 
+				UserEditScope edit(*this, EditKind::Atomic);
 				AddCharacters(clipboard_text);
 				ShowCursor(true);
 			}
@@ -660,6 +869,7 @@ void WidgetTextInput::ProcessEvent(Event& event)
 		if (event.GetParameter<int>("ctrl_key", 0) == 0 && event.GetParameter<int>("alt_key", 0) == 0 && event.GetParameter<int>("meta_key", 0) == 0)
 		{
 			String text = event.GetParameter("text", String{});
+			UserEditScope edit(*this, text.find('\n') != String::npos ? EditKind::Atomic : EditKind::Typing, &text);
 			AddCharacters(text);
 		}
 
@@ -838,7 +1048,10 @@ bool WidgetTextInput::AddCharacters(String string)
 
 	const int new_cursor_attribute_index = AttributeIndexToDisplayIndex(attribute_insert_index + (int)string.size(), value);
 	absolute_cursor_index = new_cursor_attribute_index;
-	parent->SetAttribute("value", value);
+	{
+		const HistorySuspend suspend(history_suspend);
+		parent->SetAttribute("value", value);
+	}
 
 	if (UpdateSelection(false))
 		FormatText();
@@ -1703,7 +1916,10 @@ void WidgetTextInput::DeleteSelection()
 		// Move the cursor to the beginning of the old selection.
 		absolute_cursor_index = selection_begin_index;
 
-		GetElement()->SetAttribute("value", new_value);
+		{
+			const HistorySuspend suspend(history_suspend);
+			GetElement()->SetAttribute("value", new_value);
+		}
 
 		// Erase our record of the selection.
 		if (UpdateSelection(false))
