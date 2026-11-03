@@ -289,21 +289,47 @@ bool ElementText::GenerateLine(String& line, int& line_length, float& line_width
 					// Try to break up the word
 					max_token_width = RoundDownToIntegerClamped(maximum_line_width - line_width);
 					const int token_max_size = int(next_token_begin - token_begin);
-					const char* partial_string_end = token_begin + token_max_size;
 
-					// @performance: Can be made much faster. Use string width heuristics and logarithmic search.
+					const char* const token_max_end = token_begin + token_max_size;
+					const auto previous_boundary = [&](const char* p) { return StringUtilities::SeekBackwardUTF8(p - 1, token_begin); };
+					const auto measure_prefix = [&](const char* prefix_end) {
+						token.clear();
+						next_token_begin = token_begin;
+						BuildToken(token, next_token_begin, prefix_end, line.empty() && trim_whitespace_prefix, collapse_white_space, break_at_endline,
+							text_transform_property, decode_escape_characters);
+						return font_engine_interface->GetStringWidth(font_face_handle, token, text_shaping_context, previous_codepoint);
+					};
+
+					// Binary search for the longest prefix that fits. Invariant: 'lo' fits (or is token_begin), the answer is within [lo, hi].
+					const char* lo = token_begin;
+					const char* hi = previous_boundary(token_max_end);
+					while (lo < hi)
+					{
+						const char* mid = lo + (hi - lo + 1) / 2;
+						const char* boundary = StringUtilities::SeekBackwardUTF8(mid, token_begin);
+						if (boundary == lo)
+							boundary = StringUtilities::SeekForwardUTF8(mid, hi);
+						if (measure_prefix(boundary) <= max_token_width)
+							lo = boundary;
+						else
+							hi = previous_boundary(boundary);
+					}
+
+					// Linear fix-up: shaping can make width slightly non-monotonic, so verify and step back until the prefix fits.
+					const char* partial_string_end = lo;
 					while (true)
 					{
-						partial_string_end = StringUtilities::SeekBackwardUTF8(partial_string_end - 1, token_begin);
-
 						// Kinsoku: don't split before closing punctuation or after opening punctuation.
 						if (partial_string_end != token_begin)
 						{
-							const char* previous_character = StringUtilities::SeekBackwardUTF8(partial_string_end - 1, token_begin);
+							const char* previous_character = previous_boundary(partial_string_end);
 							const Character before = StringUtilities::ToCharacter(previous_character, partial_string_end);
-							const Character after = StringUtilities::ToCharacter(partial_string_end, token_begin + token_max_size);
+							const Character after = StringUtilities::ToCharacter(partial_string_end, token_max_end);
 							if (!StringUtilities::CanBreakBetween(before, after, true))
+							{
+								partial_string_end = previous_character;
 								continue;
+							}
 						}
 
 						bool force_loop_break_at_end = false;
@@ -314,18 +340,14 @@ bool ElementText::GenerateLine(String& line, int& line_length, float& line_width
 								return false;
 
 							// Continue by forcing the first character to be consumed, even though it will overflow.
-							partial_string_end = StringUtilities::SeekForwardUTF8(token_begin + 1, token_begin + token_max_size);
+							partial_string_end = StringUtilities::SeekForwardUTF8(token_begin + 1, token_max_end);
 							force_loop_break_at_end = true;
 						}
 
-						token.clear();
-						next_token_begin = token_begin;
-						BuildToken(token, next_token_begin, partial_string_end, line.empty() && trim_whitespace_prefix, collapse_white_space,
-							break_at_endline, text_transform_property, decode_escape_characters);
-						token_width = font_engine_interface->GetStringWidth(font_face_handle, token, text_shaping_context, previous_codepoint);
-
+						token_width = measure_prefix(partial_string_end);
 						if (force_loop_break_at_end || token_width <= max_token_width)
 							break;
+						partial_string_end = previous_boundary(partial_string_end);
 					}
 
 					break_line = true;
