@@ -53,6 +53,8 @@ public:
 	bool HasAutoscrollMoved() const;
 
 	Mode GetMode() const { return mode; }
+	// Current speed of an inertia coast or overscroll settle [px/s]; zero in the other modes.
+	Vector2f GetCoastVelocity() const;
 	Element* GetTarget() const { return target; }
 	bool HasVisualOverscroll() const;
 
