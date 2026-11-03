@@ -35,7 +35,8 @@ public:
 	FontFaceHandleHarfBuzz();
 	~FontFaceHandleHarfBuzz();
 
-	bool Initialize(FontFaceHandleFreetype face, int font_size, bool load_default_glyphs);
+	/// @param[in] weight The weight of the face; fallback glyphs come from the fallback faces nearest to it.
+	bool Initialize(FontFaceHandleFreetype face, int font_size, bool load_default_glyphs, ui::Style::FontWeight weight);
 
 	const FontMetrics& GetFontMetrics() const;
 
@@ -173,6 +174,7 @@ private:
 	LayerConfigurationList layer_configurations;
 
 	FontMetrics metrics;
+	ui::Style::FontWeight weight = ui::Style::FontWeight::Normal;
 
 	FontFaceHandleFreetype ft_face;
 	struct hb_font_t* hb_font;

@@ -24,3 +24,8 @@ if(UI_FONT_ENGINE STREQUAL "freetype")
 	endif()
 	target_link_libraries(ui_font PUBLIC Freetype::Freetype)
 endif()
+
+# The tests exercise the HarfBuzz engine (the one pp-browser uses).
+if((PP_UI_BUILD_TESTS OR UI_TESTS) AND UI_FONT_ENGINE STREQUAL "freetype" AND UI_FONT_ENGINE_HARFBUZZ)
+	add_subdirectory(tests)
+endif()

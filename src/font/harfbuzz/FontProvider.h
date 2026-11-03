@@ -45,8 +45,10 @@ public:
 	/// Return the number of fallback font faces.
 	static int CountFallbackFontFaces();
 
-	/// Return a font face handle with the given index, at the given font size.
-	static FontFaceHandleHarfBuzz* GetFallbackFontFace(int index, int font_size);
+	/// Return a font face handle with the given index, at the given font size, for text of the given weight.
+	/// Fallback families keep the order they were first added in; within a family the face nearest to the weight comes
+	/// first (on a tie, the heavier face above 500, otherwise the lighter), then the family's other faces by distance.
+	static FontFaceHandleHarfBuzz* GetFallbackFontFace(int index, int font_size, Style::FontWeight weight);
 
 	/// Releases resources owned by sized font faces, including their textures and rendered glyphs.
 	static void ReleaseFontResources();
@@ -64,11 +66,20 @@ private:
 	bool AddFace(FontFaceHandleFreetype face, const String& family, Style::FontStyle style, Style::FontWeight weight,
 		bool fallback_face, UniquePtr<byte[]> face_memory);
 
-	using FontFaceList = Vector<FontFace*>;
+	const Vector<FontFace*>& GetFallbackOrder(Style::FontWeight weight);
+
+	struct FallbackFace {
+		FontFace* face;
+		int family_order; // Order in which the face's family first appeared among fallback faces.
+	};
+	using FallbackFaceList = Vector<FallbackFace>;
 	using FontFamilyMap = UnorderedMap<String, UniquePtr<FontFamily>>;
 
 	FontFamilyMap font_families;
-	FontFaceList fallback_font_faces;
+	FallbackFaceList fallback_font_faces;
+	Vector<String> fallback_families;
+	// Fallback faces in lookup order, per requested weight. Cleared when a fallback face is added.
+	UnorderedMap<int, Vector<FontFace*>> fallback_order_by_weight;
 
 	static const String debugger_font_family_name;
 };

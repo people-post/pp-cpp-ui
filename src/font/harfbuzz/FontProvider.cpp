@@ -59,14 +59,43 @@ int FontProvider::CountFallbackFontFaces()
 	return (int)Get().fallback_font_faces.size();
 }
 
-FontFaceHandleHarfBuzz* FontProvider::GetFallbackFontFace(int index, int font_size)
+FontFaceHandleHarfBuzz* FontProvider::GetFallbackFontFace(int index, int font_size, Style::FontWeight weight)
 {
-	auto& faces = FontProvider::Get().fallback_font_faces;
+	const auto& faces = Get().GetFallbackOrder(weight);
 
 	if (index >= 0 && index < (int)faces.size())
 		return faces[index]->GetHandle(font_size, false);
 
 	return nullptr;
+}
+
+const Vector<FontFace*>& FontProvider::GetFallbackOrder(Style::FontWeight weight)
+{
+	auto it = fallback_order_by_weight.find((int)weight);
+	if (it != fallback_order_by_weight.end())
+		return it->second;
+
+	const int target = (int)weight;
+	// Lower rank is preferred: nearest weight first; on a tie the heavier face for bold text, the lighter otherwise.
+	auto rank = [target](const FontFace* face) {
+		const int face_weight = (int)face->GetWeight();
+		const bool preferred_side = (target > 500 ? face_weight > target : face_weight < target);
+		return 2 * ui::Math::Absolute(face_weight - target) + (preferred_side ? 0 : 1);
+	};
+
+	FallbackFaceList sorted = fallback_font_faces;
+	std::stable_sort(sorted.begin(), sorted.end(), [&rank](const FallbackFace& a, const FallbackFace& b) {
+		if (a.family_order != b.family_order)
+			return a.family_order < b.family_order;
+		return rank(a.face) < rank(b.face);
+	});
+
+	Vector<FontFace*> order;
+	order.reserve(sorted.size());
+	for (const FallbackFace& entry : sorted)
+		order.push_back(entry.face);
+
+	return fallback_order_by_weight.emplace((int)weight, std::move(order)).first->second;
 }
 
 void FontProvider::ReleaseFontResources()
@@ -220,10 +249,16 @@ bool FontProvider::AddFace(FontFaceHandleFreetype face, const String& family, St
 
 	if (font_face_result && fallback_face)
 	{
-		auto it_fallback_face = std::find(fallback_font_faces.begin(), fallback_font_faces.end(), font_face_result);
+		auto it_fallback_face = std::find_if(fallback_font_faces.begin(), fallback_font_faces.end(),
+			[font_face_result](const FallbackFace& entry) { return entry.face == font_face_result; });
 		if (it_fallback_face == fallback_font_faces.end())
 		{
-			fallback_font_faces.push_back(font_face_result);
+			auto it_family = std::find(fallback_families.begin(), fallback_families.end(), family_lower);
+			const int family_order = (int)(it_family - fallback_families.begin());
+			if (it_family == fallback_families.end())
+				fallback_families.push_back(family_lower);
+			fallback_font_faces.push_back(FallbackFace{font_face_result, family_order});
+			fallback_order_by_weight.clear();
 		}
 	}
 
