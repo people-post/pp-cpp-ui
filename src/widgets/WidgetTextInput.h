@@ -248,6 +248,8 @@ private:
 	void Undo();
 	void Redo();
 	bool IsComposing() const { return ime_composition_end_index > ime_composition_begin_index; }
+	/// Sets the field's `:composing` pseudo-class while an IME composition is shown in it.
+	void UpdateComposingPseudoClass();
 
 	/// Split one line of text into three parts, based on the current selection.
 	/// @param[out] pre_selection The section of unselected text before any selected text on the line.

@@ -956,6 +956,80 @@ TEST_CASE("leaving the field drops the IME composition")
 	CHECK(f.Value() == "a");
 }
 
+TEST_CASE("a field is :composing while an IME composes, so a placeholder label after it can hide")
+{
+	REQUIRE(TestsShell::GetContext());
+	TestTextInputMethodEditor ime;
+	Context* ime_context = CreateContext("ime_composing_class", Vector2i(1024, 768), nullptr, &ime);
+	REQUIRE(ime_context);
+	// The app's pattern: the engine draws no placeholder on phones, so a label sits over the empty field.
+	ElementDocument* document = ime_context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>
+		input, textarea { display: block; width: 300px; }
+		textarea { height: 100px; }
+		.label { display: block; }
+		input:composing ~ .label, textarea:composing ~ .label { display: none; }
+	</style>
+</head>
+<body>
+<div><input type="text" id="input"/><p class="label" id="input-label">Message</p></div>
+<div><textarea id="area"></textarea><p class="label" id="area-label">Message</p></div>
+</body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	ime_context->Update();
+
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		auto* control = ui_dynamic_cast<ElementFormControl*>(document->GetElementById(id));
+		Element* label = document->GetElementById(String(id) + "-label");
+		REQUIRE(control);
+		REQUIRE(label);
+		const auto label_hidden = [&] {
+			ime_context->Update();
+			return label->GetComputedValues().display() == Style::Display::None;
+		};
+		control->Focus();
+		ime_context->Update();
+		REQUIRE(ime.context);
+
+		CHECK_FALSE(control->IsPseudoClassSet("composing"));
+		CHECK_FALSE(label_hidden());
+
+		ime.SetComposition("ni", -1);
+		CHECK(control->IsPseudoClassSet("composing"));
+		CHECK(label_hidden());
+		ime.SetComposition("nihao", -1);
+		CHECK(control->IsPseudoClassSet("composing"));
+
+		// Committed: the field holds text now and the app's own rule (value not empty) takes over.
+		CHECK(ime.Commit(NIHAO));
+		CHECK_FALSE(control->IsPseudoClassSet("composing"));
+		CHECK_FALSE(label_hidden());
+
+		// A composition the IME empties again, and one the app wipes by replacing the value, end it too.
+		control->SetValue("");
+		ime.SetComposition("ni", -1);
+		CHECK(control->IsPseudoClassSet("composing"));
+		ime.SetComposition("", 0);
+		CHECK_FALSE(control->IsPseudoClassSet("composing"));
+		ime.SetComposition("ni", -1);
+		control->SetValue("");
+		CHECK_FALSE(control->IsPseudoClassSet("composing"));
+		CHECK_FALSE(label_hidden());
+		control->Blur();
+	}
+	document->Close();
+	TestsShell::ShutdownShell();
+}
+
 TEST_SUITE_END();
 
 TEST_CASE("WidgetTextInput.textarea_max_rows_grows_with_text")

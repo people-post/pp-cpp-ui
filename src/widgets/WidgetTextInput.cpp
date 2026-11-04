@@ -278,6 +278,7 @@ WidgetTextInput::~WidgetTextInput()
 	parent->Style().RemoveProperty(PropertyId::Drag);
 	parent->Style().RemoveProperty(PropertyId::WordBreak);
 	parent->Style().RemoveProperty(PropertyId::TextTransform);
+	parent->SetPseudoClass("composing", false);
 
 	// Remove all the children added by the text widget.
 	parent->RemoveChild(text_element);
@@ -315,6 +316,7 @@ void WidgetTextInput::SetValue(String value)
 	// Reset the IME composition range when the value changes.
 	ime_composition_begin_index = 0;
 	ime_composition_end_index = 0;
+	UpdateComposingPseudoClass();
 
 	FormatElement();
 	UpdateCursorPosition(true);
@@ -419,8 +421,16 @@ void WidgetTextInput::SetCompositionRange(int range_start, int range_end)
 		ime_composition_begin_index = 0;
 		ime_composition_end_index = 0;
 	}
+	UpdateComposingPseudoClass();
 
 	FormatText();
+}
+
+void WidgetTextInput::UpdateComposingPseudoClass()
+{
+	// The field's value stays unchanged for listeners while an IME composes (no change event), so a stylesheet that
+	// shows a placeholder label over the empty field needs this to hide it under the composition: `input:composing ~ label`.
+	parent->SetPseudoClass("composing", IsComposing());
 }
 
 void WidgetTextInput::GetCompositionRange(int& range_start, int& range_end) const
