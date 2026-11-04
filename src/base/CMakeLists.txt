@@ -26,6 +26,7 @@ target_sources(ui_base PRIVATE
 	"${CMAKE_CURRENT_SOURCE_DIR}/StringUtilities.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/SystemInterface.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TextInputHandler.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/TextInputMethodEditor.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Traits.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/Tween.cpp"
 	"${CMAKE_CURRENT_SOURCE_DIR}/TypeConverter.cpp"

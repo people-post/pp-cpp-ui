@@ -53,6 +53,12 @@ public:
 	/// @param[in] end The first character *after* the range.
 	virtual void SetCompositionRange(int start, int end) = 0;
 
+	/// Retrieve the range of the text being composed (for IME); [0, 0] when nothing is being composed, including after
+	/// the value was replaced from outside.
+	/// @param[out] start The first character in the range.
+	/// @param[out] end The first character *after* the range.
+	virtual void GetCompositionRange(int& start, int& end) const = 0;
+
 	/// Commit an composition string (from IME), and respect internal restrictions (e.g., the maximum length).
 	/// @param[in] composition The string to replace the composition range with.
 	/// @note If the composition range equals to [0, 0], it takes no action.

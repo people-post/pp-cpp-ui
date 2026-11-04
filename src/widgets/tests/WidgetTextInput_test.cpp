@@ -3,6 +3,7 @@
 #include <ui/core/Core.h>
 #include <ui/base/TextInputContext.h>
 #include <ui/base/TextInputHandler.h>
+#include <ui/base/TextInputMethodEditor.h>
 #include <ui/dom/Context.h>
 #include <ui/dom/Element.h>
 #include <ui/dom/ElementDocument.h>
@@ -703,6 +704,256 @@ TEST_CASE("undo is ignored while an IME composition is active and covers the com
 		f.Key(Input::KI_Z, Input::KM_CTRL);
 		CHECK(f.Value() == "a");
 	}
+}
+
+namespace {
+
+// The IME editor a platform layer drives, with the focused field's context kept for checking the caret.
+class TestTextInputMethodEditor : public TextInputMethodEditor {
+public:
+	void OnActivate(TextInputContext* c) override
+	{
+		TextInputMethodEditor::OnActivate(c);
+		context = c;
+	}
+	void OnDestroy(TextInputContext* c) override
+	{
+		TextInputMethodEditor::OnDestroy(c);
+		if (context == c)
+			context = nullptr;
+	}
+	int Caret() const
+	{
+		int start = 0, end = 0;
+		context->GetSelectionRange(start, end);
+		CHECK(start == end);
+		return end;
+	}
+	TextInputContext* context = nullptr;
+};
+
+struct CountChanges : public EventListener {
+	void ProcessEvent(Event&) override { ++count; }
+	int count = 0;
+};
+
+const String NIHAO = "\xe4\xbd\xa0\xe5\xa5\xbd"; // 你好
+
+} // namespace
+
+TEST_CASE("an IME composition shows in the field and is not reported as a change before the commit")
+{
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		// Each fixture shuts the shell down, contexts included.
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_compose", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		f.Type("a");
+		CountChanges changes;
+		f.control->AddEventListener(EventId::Change, &changes);
+
+		ime.SetComposition("n", -1);
+		ime.SetComposition("ni", -1);
+		CHECK(ime.IsComposing());
+		CHECK(f.Value() == "ani");
+		int start = 0, end = 0;
+		ime.context->GetCompositionRange(start, end);
+		CHECK(start == 1);
+		CHECK(end == 3);
+		CHECK(ime.Caret() == 3);
+		CHECK(changes.count == 0);
+
+		f.control->RemoveEventListener(EventId::Change, &changes);
+	}
+}
+
+TEST_CASE("an IME commit replaces the composition once, in an input and in a textarea")
+{
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		// Each fixture shuts the shell down, contexts included.
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_commit", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		f.Type("a");
+		CountChanges changes;
+		f.control->AddEventListener(EventId::Change, &changes);
+
+		ime.SetComposition("ni", -1);
+		ime.SetComposition("nihao", -1);
+		CHECK(ime.Commit(NIHAO));
+		CHECK_FALSE(ime.IsComposing());
+		CHECK(f.Value() == String("a") + NIHAO);
+		CHECK(changes.count == 1);
+		int start = 0, end = 0;
+		ime.context->GetCompositionRange(start, end);
+		CHECK(start == 0);
+		CHECK(end == 0);
+		CHECK(ime.Caret() == 3);
+
+		// Nothing is composed any more: the next text is ordinary typing, not a second commit.
+		CHECK_FALSE(ime.Commit("x"));
+		f.Type("x");
+		CHECK(f.Value() == String("a") + NIHAO + "x");
+
+		f.control->RemoveEventListener(EventId::Change, &changes);
+	}
+}
+
+TEST_CASE("an empty IME composition removes it and leaves the caret where it started")
+{
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		// Each fixture shuts the shell down, contexts included.
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_clear", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		f.Type("ac");
+		f.Key(Input::KI_LEFT);
+
+		ime.SetComposition("ni", -1);
+		CHECK(f.Value() == "anic");
+		ime.SetComposition("", 0);
+		CHECK_FALSE(ime.IsComposing());
+		CHECK(f.Value() == "ac");
+		CHECK(ime.Caret() == 1);
+
+		// The order macOS and Windows use for a commit: the composition is cleared, then the text arrives.
+		ime.SetComposition("nihao", -1);
+		ime.SetComposition("", 0);
+		CHECK_FALSE(ime.Commit(NIHAO));
+		f.Type(NIHAO);
+		CHECK(f.Value() == String("a") + NIHAO + "c");
+	}
+}
+
+TEST_CASE("the caret can sit inside an IME composition")
+{
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		// Each fixture shuts the shell down, contexts included.
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_caret", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		f.Type("ab");
+		f.Key(Input::KI_LEFT);
+
+		ime.SetComposition("nihao", 2);
+		CHECK(f.Value() == "anihaob");
+		CHECK(ime.Caret() == 3);
+		ime.SetComposition("nihao", 0);
+		CHECK(ime.Caret() == 1);
+		// Out of range means the end of the composition.
+		ime.SetComposition("nihao", 99);
+		CHECK(ime.Caret() == 6);
+
+		CHECK(ime.Commit(NIHAO));
+		CHECK(f.Value() == String("a") + NIHAO + "b");
+		CHECK(ime.Caret() == 3);
+	}
+}
+
+TEST_CASE("keys during an IME composition do not edit the committed text")
+{
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		// Each fixture shuts the shell down, contexts included.
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_keys", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		f.Type("ab");
+
+		ime.SetComposition("nihao", -1);
+		f.Key(Input::KI_BACK);
+		f.Key(Input::KI_DELETE);
+		f.Key(Input::KI_LEFT);
+		f.Key(Input::KI_RETURN);
+		CHECK(f.Value() == "abnihao");
+		CHECK(ime.Caret() == 7);
+
+		// The IME shortens the composition itself.
+		ime.SetComposition("niha", -1);
+		CHECK(f.Value() == "abniha");
+		CHECK(ime.Commit(NIHAO));
+		CHECK(f.Value() == String("ab") + NIHAO);
+
+		// After the commit the keys edit again.
+		f.Key(Input::KI_BACK);
+		CHECK(f.Value() == "ab\xe4\xbd\xa0");
+	}
+}
+
+TEST_CASE("an IME composition replaces the selection")
+{
+	REQUIRE(TestsShell::GetContext());
+	TestTextInputMethodEditor ime;
+	Context* ime_context = CreateContext("ime_selection", Vector2i(1024, 768), nullptr, &ime);
+	REQUIRE(ime_context);
+	Fixture f("input", ime_context);
+	REQUIRE(ime.context);
+	f.Type("abc");
+	ime.context->SetSelectionRange(1, 2);
+
+	ime.SetComposition("ni", -1);
+	CHECK(f.Value() == "anic");
+	CHECK(ime.Commit(NIHAO));
+	CHECK(f.Value() == String("a") + NIHAO + "c");
+}
+
+TEST_CASE("a value the app sets ends the IME composition without touching the new text")
+{
+	REQUIRE(TestsShell::GetContext());
+	TestTextInputMethodEditor ime;
+	Context* ime_context = CreateContext("ime_app_value", Vector2i(1024, 768), nullptr, &ime);
+	REQUIRE(ime_context);
+	Fixture f("input", ime_context);
+	REQUIRE(ime.context);
+	f.Type("ab");
+	f.Key(Input::KI_LEFT);
+
+	ime.SetComposition("ni", -1);
+	CHECK(f.Value() == "anib");
+	f.control->SetValue("xyz");
+	CHECK_FALSE(ime.IsComposing());
+	CHECK_FALSE(ime.Commit(NIHAO));
+	CHECK(f.Value() == "xyz");
+}
+
+TEST_CASE("leaving the field drops the IME composition")
+{
+	REQUIRE(TestsShell::GetContext());
+	TestTextInputMethodEditor ime;
+	Context* ime_context = CreateContext("ime_blur", Vector2i(1024, 768), nullptr, &ime);
+	REQUIRE(ime_context);
+	Fixture f("input", ime_context);
+	REQUIRE(ime.context);
+	f.Type("a");
+
+	ime.SetComposition("ni", -1);
+	f.control->Blur();
+	CHECK_FALSE(ime.IsComposing());
+	CHECK(f.Value() == "a");
 }
 
 TEST_SUITE_END();

@@ -90,6 +90,7 @@ public:
 	void SetCursorPosition(int position) override;
 	void SetText(StringView text, int start, int end) override;
 	void SetCompositionRange(int start, int end) override;
+	void GetCompositionRange(int& start, int& end) const override;
 	void CommitComposition(StringView composition) override;
 
 private:
@@ -143,6 +144,15 @@ void WidgetTextInputContext::SetText(StringView text, int start, int end)
 void WidgetTextInputContext::SetCompositionRange(int start, int end)
 {
 	owner->SetCompositionRange(start, end);
+}
+
+void WidgetTextInputContext::GetCompositionRange(int& start, int& end) const
+{
+	int start_byte, end_byte;
+	owner->GetCompositionRange(start_byte, end_byte);
+	const String value = owner->GetAttributeValue();
+	start = StringUtilities::ConvertByteOffsetToCharacterOffset(value, start_byte);
+	end = StringUtilities::ConvertByteOffsetToCharacterOffset(value, end_byte);
 }
 
 void WidgetTextInputContext::CommitComposition(StringView composition)
@@ -713,8 +723,12 @@ void WidgetTextInput::CommitImeValue(const String& value)
 	ime_edit_pending = false;
 
 	UserEditScope edit(*this, EditKind::Atomic, nullptr, had_pending ? &pending_before : nullptr);
-	const HistorySuspend suspend(history_suspend);
-	parent->SetValue(value);
+	{
+		const HistorySuspend suspend(history_suspend);
+		parent->SetValue(value);
+	}
+	// Listeners do not see the composition; the committed text reaches them like typed text.
+	DispatchChangeEvent();
 }
 
 void WidgetTextInput::ProcessEvent(Event& event)
@@ -726,6 +740,13 @@ void WidgetTextInput::ProcessEvent(Event& event)
 	{
 	case EventId::Keydown:
 	{
+		// While an IME composes, its keys edit the composition; acting on them here would also edit the committed text.
+		if (IsComposing())
+		{
+			event.StopPropagation();
+			break;
+		}
+
 		Input::KeyIdentifier key_identifier = (Input::KeyIdentifier)event.GetParameter<int>("key_identifier", 0);
 		bool numlock = event.GetParameter<int>("num_lock_key", 0) > 0;
 		bool shift = event.GetParameter<int>("shift_key", 0) > 0;
