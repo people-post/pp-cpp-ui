@@ -79,6 +79,7 @@ static void SDLCALL SDL_HideHomeIndicatorHintChanged(void *userdata, const char 
     NSString *committedText;
     NSString *obligateForBackspace;
     BOOL isOTPMode;
+    BOOL hasMarkedText; // pp-cpp-ui patch: a TEXT_EDITING composition is being shown
 #endif
 }
 
@@ -565,8 +566,55 @@ static void SDLCALL SDL_HideHomeIndicatorHintChanged(void *userdata, const char 
     SDL_SendScreenKeyboardHidden();
 }
 
+/* pp-cpp-ui patch: report the IME's marked text (pinyin being composed) as SDL_EVENT_TEXT_EDITING, the way Cocoa
+ * does. committedText is not touched while text is marked, so the commit below still sends the chosen text once. */
+- (void)sendMarkedText
+{
+    UITextRange *marked = textField.markedTextRange;
+    NSString *text = [textField textInRange:marked];
+    if (text.length == 0) {
+        // The IME emptied its composition (last letter deleted): clear it, send no key.
+        if (hasMarkedText) {
+            hasMarkedText = NO;
+            SDL_SendEditingText("", 0, 0);
+        }
+        return;
+    }
+    hasMarkedText = YES;
+
+    NSInteger caret = (NSInteger)text.length;
+    NSInteger selected = 0;
+    UITextRange *selection = textField.selectedTextRange;
+    if (selection) {
+        caret = [textField offsetFromPosition:marked.start toPosition:selection.start];
+        selected = [textField offsetFromPosition:selection.start toPosition:selection.end];
+    }
+    caret = SDL_clamp(caret, 0, (NSInteger)text.length);
+    selected = SDL_clamp(selected, 0, (NSInteger)text.length - caret);
+
+    // Offsets in UTF-32 characters, as SDL_EVENT_TEXT_EDITING documents them.
+    NSString *before = [text substringToIndex:(NSUInteger)caret];
+    NSString *through = [text substringToIndex:(NSUInteger)(caret + selected)];
+    NSUInteger caret32 = [before lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+    NSUInteger end32 = [through lengthOfBytesUsingEncoding:NSUTF32StringEncoding] / 4;
+
+    SDL_SendEditingText([text UTF8String], (int)caret32, (int)(end32 - caret32));
+}
+
 - (void)textFieldTextDidChange:(NSNotification *)notification
 {
+    // pp-cpp-ui patch: while text is marked the IME edits it (backspace included); only the composition is reported.
+    if (textField.markedTextRange != nil) {
+        [self sendMarkedText];
+        return;
+    }
+    // pp-cpp-ui patch: the composition ended. Clear it before any committed text, as macOS does; a cancel ends here
+    // with nothing to send, because the field holds committedText again.
+    if (hasMarkedText) {
+        hasMarkedText = NO;
+        SDL_SendEditingText("", 0, 0);
+    }
+
     if (textField.markedTextRange == nil) {
         if (isOTPMode && labs((NSInteger)textField.text.length - (NSInteger)committedText.length) != 1) {
             return;
@@ -670,6 +718,11 @@ static void SDLCALL SDL_HideHomeIndicatorHintChanged(void *userdata, const char 
 
 - (void)resetTextState
 {
+    // pp-cpp-ui patch: replacing the text drops any marked text.
+    if (hasMarkedText) {
+        hasMarkedText = NO;
+        SDL_SendEditingText("", 0, 0);
+    }
     if (!isOTPMode) {
         textField.text = obligateForBackspace;
         committedText = textField.text;
