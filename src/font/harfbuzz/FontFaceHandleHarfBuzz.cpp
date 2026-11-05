@@ -58,9 +58,10 @@ FontFaceHandleHarfBuzz::~FontFaceHandleHarfBuzz()
 	layers.clear();
 }
 
-bool FontFaceHandleHarfBuzz::Initialize(FontFaceHandleFreetype face, int font_size, bool load_default_glyphs)
+bool FontFaceHandleHarfBuzz::Initialize(FontFaceHandleFreetype face, int font_size, bool load_default_glyphs, Style::FontWeight face_weight)
 {
 	ft_face = face;
+	weight = face_weight;
 
 	UI_ASSERTMSG(layer_configurations.empty(), "Initialize must only be called once.");
 
@@ -449,7 +450,7 @@ bool FontFaceHandleHarfBuzz::AppendFallbackGlyph(Character& character)
 	const int num_fallback_faces = FontProvider::CountFallbackFontFaces();
 	for (int i = 0; i < num_fallback_faces; i++)
 	{
-		FontFaceHandleHarfBuzz* fallback_face = FontProvider::GetFallbackFontFace(i, metrics.size);
+		FontFaceHandleHarfBuzz* fallback_face = FontProvider::GetFallbackFontFace(i, metrics.size, weight);
 		if (!fallback_face || fallback_face == this)
 			continue;
 
@@ -551,7 +552,7 @@ bool FontFaceHandleHarfBuzz::AppendFallbackClusterGlyphs(StringView cluster, con
 	const int num_fallback_faces = FontProvider::CountFallbackFontFaces();
 	for (int i = 0; i < num_fallback_faces; i++)
 	{
-		FontFaceHandleHarfBuzz* fallback_face = FontProvider::GetFallbackFontFace(i, metrics.size);
+		FontFaceHandleHarfBuzz* fallback_face = FontProvider::GetFallbackFontFace(i, metrics.size, weight);
 		if (!fallback_face || fallback_face == this)
 			continue;
 

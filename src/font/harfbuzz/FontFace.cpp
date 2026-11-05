@@ -39,7 +39,7 @@ FontFaceHandleHarfBuzz* FontFace::GetHandle(int size, bool load_default_glyphs)
 
 	// Construct and initialise the new handle.
 	auto handle = ui::MakeUnique<FontFaceHandleHarfBuzz>();
-	if (!handle->Initialize(face, size, load_default_glyphs))
+	if (!handle->Initialize(face, size, load_default_glyphs, weight))
 	{
 		handles[size] = nullptr;
 		return nullptr;

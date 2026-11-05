@@ -25,7 +25,7 @@
   "sdl3": {
     "repository": "https://github.com/libsdl-org/SDL.git",
     "tag": "release-3.4.16",
-    "notes": "SDL 3.4.16 for iOS 27 UIScene lifecycle (B11). SDL_image remains 3.2.4. Local patch (re-apply on bumps): src/video/cocoa/SDL_cocoakeyboard.m unmarkText returns early when nothing is being composed, so the macOS Pinyin IME no longer swallows backspace."
+    "notes": "SDL 3.4.16 for iOS 27 UIScene lifecycle (B11). SDL_image remains 3.2.4. Local patch (re-apply on bumps): src/video/cocoa/SDL_cocoakeyboard.m unmarkText returns early when nothing is being composed, so the macOS Pinyin IME no longer swallows backspace. src/video/uikit/SDL_uikitviewcontroller.m textFieldTextDidChange: sends the UITextField marked text as SDL_EVENT_TEXT_EDITING (caret and length in UTF-32 characters, like Cocoa) and an empty TEXT_EDITING when the composition ends, before any committed text; resetTextState clears it too (sendMarkedText, hasMarkedText)."
   },
   "sdl3_image": {
     "repository": "https://github.com/libsdl-org/SDL_image.git",

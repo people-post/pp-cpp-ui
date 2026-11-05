@@ -3,6 +3,12 @@
 #include <ui/base/Input.h>
 #include <ui/base/StringUtilities.h>
 #include <ui/base/SystemInterface.h>
+#include <ui/base/TextInputMethodEditor.h>
+
+// Shows the IME composition in the focused text field (SDL_EVENT_TEXT_EDITING). Static: text input contexts keep a
+// pointer to their handler until they are destroyed.
+static ui::TextInputMethodEditor g_text_input_method_editor;
+
 static ui::TouchList TouchEventToTouchList(SDL_Event& ev, ui::Context* context, SDL_FingerID finger_id)
 {
 	const ui::Vector2f position = ui::Vector2f{ev.tfinger.x, ev.tfinger.y} * ui::Vector2f{context->GetDimensions()};
@@ -21,6 +27,16 @@ SystemInterface_SDL::SystemInterface_SDL()
 	cursor_cross = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_CROSSHAIR);
 	cursor_text = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_TEXT);
 	cursor_unavailable = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_NOT_ALLOWED);
+
+	// Unless the app brings its own handler, text fields draw the IME composition themselves. Windows and Linux (IBus,
+	// Fcitx) only send SDL_EVENT_TEXT_EDITING with this hint; Windows reads it on the first SDL_StartTextInput, X11 XIM
+	// when the window is created, so an app wanting XIM too sets it before creating the window.
+	if (!ui::GetTextInputHandler())
+	{
+		ui::SetTextInputHandler(&g_text_input_method_editor);
+		if (!SDL_GetHint(SDL_HINT_IME_IMPLEMENTED_UI))
+			SDL_SetHint(SDL_HINT_IME_IMPLEMENTED_UI, "composition");
+	}
 #else
 	cursor_default = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_ARROW);
 	cursor_move = SDL_CreateSystemCursor(SDL_SYSTEM_CURSOR_SIZEALL);
@@ -249,6 +265,14 @@ bool RmlSDL::InputEventHandler(ui::Context* context, SDL_Window* window, SDL_Eve
 	break;
 	case event_key_down:
 	{
+#if SDL_MAJOR_VERSION >= 3
+		// Keys the IME did not swallow must not edit around the composition (no Return line break either).
+		if (g_text_input_method_editor.IsComposing())
+		{
+			result = false;
+			break;
+		}
+#endif
 		result = context->ProcessKeyDown(ConvertKey(GetKey(ev)), GetKeyModifierState());
 		if (GetKey(ev) == SDLK_RETURN || GetKey(ev) == SDLK_KP_ENTER)
 			result &= context->ProcessTextInput('\n');
@@ -261,9 +285,27 @@ bool RmlSDL::InputEventHandler(ui::Context* context, SDL_Window* window, SDL_Eve
 	break;
 	case event_text_input:
 	{
+#if SDL_MAJOR_VERSION >= 3
+		// The committed text replaces the composition. Most platforms clear the composition first, and then this is
+		// ordinary typing at the caret where the composition was.
+		if (g_text_input_method_editor.Commit(ui::String(ev.text.text)))
+		{
+			result = false;
+			break;
+		}
+#endif
 		result = context->ProcessTextInput(ui::String(&ev.text.text[0]));
 	}
 	break;
+#if SDL_MAJOR_VERSION >= 3
+	case SDL_EVENT_TEXT_EDITING:
+	{
+		// start is the caret within the composition (-1 if unknown); an empty text ends the composition.
+		g_text_input_method_editor.SetComposition(ui::String(ev.edit.text ? ev.edit.text : ""), ev.edit.start);
+		result = false;
+	}
+	break;
+#endif
 	case event_finger_down:
 	{
 		const ui::TouchList touches = TouchEventToTouchList(ev, context, GetFingerId(ev));

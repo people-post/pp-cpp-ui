@@ -477,6 +477,15 @@ bool ScrollController::HasSmoothscrollReachedTarget() const
 	return (smoothscroll_target_distance - smoothscroll_scrolled_distance).SquaredMagnitude() < epsilon;
 }
 
+Vector2f ScrollController::GetCoastVelocity() const
+{
+	if (mode == Mode::Inertia)
+		return inertia_scroll_velocity;
+	if (mode == Mode::Overscroll)
+		return overscroll_velocity;
+	return {};
+}
+
 bool ScrollController::HasVisualOverscroll() const
 {
 	Element* el = target ? target : overscroll_element;
