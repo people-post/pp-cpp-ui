@@ -33,9 +33,38 @@ static constexpr float UNIT_SCROLL_LENGTH = 80.f;   // [dp]
 static constexpr float SCROLL_INERTIA_DELAY = 0.1f;
 static constexpr float TOUCH_CLICK_MAX_DISTANCE = DOUBLE_CLICK_MAX_DIST; // [dp]
 static constexpr float TOUCH_SCROLL_SLOP = 10.f;                         // [dp]
+// A touch that lands on content coasting faster than this only stops the coast and is not a tap. Slower than
+// this the content drifts under 10dp in the ~0.1s between seeing a target and the finger landing on it.
+static constexpr float TOUCH_STOP_COAST_SPEED = 100.f; // [dp/s]
 static constexpr double TOUCH_LONG_PRESS_TIME = 0.5;                   // [s]
 // Recent touch samples used to estimate fling velocity (more stable than a single exponential window).
 static constexpr float TOUCH_VELOCITY_WINDOW = 0.1f; // [s]
+
+// Whether `element` scrolls along `axis` (0 = x, 1 = y); the same rule ScrollController applies.
+static bool CanScrollAxis(Element* element, int axis)
+{
+	const Style::Overflow overflow = axis == 0 ? element->GetComputedValues().overflow_x() : element->GetComputedValues().overflow_y();
+	const float range = axis == 0 ? element->Scroll().GetScrollWidth() - element->GetClientWidth()
+								  : element->Scroll().GetScrollHeight() - element->GetClientHeight();
+	return overflow == Style::Overflow::Scroll || (overflow == Style::Overflow::Auto && range > 0.5f);
+}
+
+// The scroll container a touch locked to `axis` moves: the closest one from `container` up that scrolls along
+// that axis, so a vertical swipe on a sideways carousel scrolls the list around it. A container with
+// `overscroll-behavior: contain` does not hand the touch on.
+static Element* FindTouchScrollContainer(Element* container, int axis)
+{
+	for (Element* element = container; element;)
+	{
+		if (CanScrollAxis(element, axis))
+			return element;
+		if (element->GetComputedValues().overscroll_behavior() == Style::OverscrollBehavior::Contain)
+			return nullptr;
+		Element* parent = element->GetParentNode();
+		element = parent ? parent->Scroll().GetClosestScrollableContainer() : nullptr;
+	}
+	return nullptr;
+}
 
 static bool IsContextMenuTarget(Element* element)
 {
@@ -676,7 +705,8 @@ void Context::UpdateTouchGestures()
 	{
 		TouchState& state = entry.second;
 		// A finger resting on a text field's selection handle is a drag in progress, not a long press.
-		if (state.long_press_fired || state.selection_armed || state.touch_scrolling || text_loupe_widget_active)
+		// Neither is a touch that only stopped a coasting list.
+		if (state.long_press_fired || state.selection_armed || state.touch_scrolling || state.stopped_coast || text_loupe_widget_active)
 			continue;
 
 		const double remaining = TOUCH_LONG_PRESS_TIME - (current_time - state.touch_start_time);
@@ -1245,6 +1275,7 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 	state->last_position = touch.position;
 	state->scrolling_last_time = GetSystemInterface()->GetElapsedTime();
 	state->touch_scrolling = false;
+	state->scroll_axis = TouchState::ScrollAxis::Undecided;
 	state->selection_armed = false;
 	state->long_press_fired = false;
 	state->editor_long_press = false;
@@ -1257,7 +1288,10 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 	Element* scrollable = touch_element ? touch_element->Scroll().GetClosestScrollableContainer() : nullptr;
 	state->scroll_container = scrollable ? scrollable->GetObserverPtr() : ObserverPtr<Element>{};
 
-	// Interrupt any coast / rubber-band settle when a new touch begins.
+	// Interrupt any coast / rubber-band settle when a new touch begins. If the content was still moving fast the
+	// touch only stops it (as on iOS): the finger aimed at what was there a moment ago, so it is not a tap.
+	const float stop_coast_speed = TOUCH_STOP_COAST_SPEED * density_independent_pixel_ratio;
+	state->stopped_coast = scroll_controller->GetCoastVelocity().SquaredMagnitude() > stop_coast_speed * stop_coast_speed;
 	if (scroll_controller->GetMode() != ScrollController::Mode::None || scroll_controller->HasVisualOverscroll())
 		scroll_controller->Reset();
 
@@ -1274,6 +1308,10 @@ bool Context::ProcessTouchStart(const Touch& touch, int key_modifier_state)
 			return true;
 		}
 	}
+
+	// No mouse-down, so nothing is pressed (no :active, no focus change) and the release clicks nothing.
+	if (state->stopped_coast)
+		return !IsMouseInteracting();
 
 	// always assume touch press/release events are handled as left mouse button
 	const TouchId identifier = touch.identifier;
@@ -1319,8 +1357,33 @@ bool Context::ProcessTouchMove(const Touch& touch, int key_modifier_state)
 		}
 		else if (delta.x != 0 || delta.y != 0)
 		{
-			// Finger-tracking with rubber-band overscroll past edges.
-			scroll_controller->InstantScrollOnTarget(scroll_container, -delta, true);
+			// The touch picks its axis once, when it first leaves the slop: vertical, or sideways if something
+			// under it scrolls sideways. A sideways touch over a list that only scrolls vertically scrolls
+			// nothing, so the app's own swipe (back from the edge, a chat row's buttons) owns it.
+			if (state->scroll_axis == TouchState::ScrollAxis::Undecided && delta_from_start.SquaredMagnitude() > scroll_slop * scroll_slop)
+			{
+				const bool vertical = Math::Absolute(delta_from_start.y) >= Math::Absolute(delta_from_start.x);
+				Element* axis_container = FindTouchScrollContainer(scroll_container, vertical ? 1 : 0);
+				if (axis_container)
+				{
+					scroll_container = axis_container;
+					state->scroll_container = axis_container->GetObserverPtr();
+				}
+				if (vertical || axis_container)
+				{
+					state->scroll_axis = vertical ? TouchState::ScrollAxis::Y : TouchState::ScrollAxis::X;
+					state->touch_scrolling = true;
+				}
+				else
+					state->scroll_axis = TouchState::ScrollAxis::None;
+			}
+
+			// Finger-tracking with rubber-band overscroll past edges, along the locked axis only. The slop is
+			// not scrolled, so the content does not jump when the scroll begins.
+			if (state->scroll_axis == TouchState::ScrollAxis::Y)
+				scroll_controller->InstantScrollOnTarget(scroll_container, {0.f, -delta.y}, true);
+			else if (state->scroll_axis == TouchState::ScrollAxis::X)
+				scroll_controller->InstantScrollOnTarget(scroll_container, {-delta.x, 0.f}, true);
 			state->PushSample(touch.position, state->scrolling_last_time);
 
 			const float touch_max_distance = TOUCH_CLICK_MAX_DISTANCE * density_independent_pixel_ratio;
@@ -1342,7 +1405,7 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 	if (!state)
 		return true;
 
-	if (!state->selection_armed && !state->long_press_fired && !state->touch_scrolling)
+	if (!state->selection_armed && !state->long_press_fired && !state->touch_scrolling && !state->stopped_coast)
 		selection_controller->OnTouchTap(Vector2i(static_cast<int>(touch.position.x), static_cast<int>(touch.position.y)), hover);
 
 	if (Element* scroll_container = state->scroll_container.get())
@@ -1350,8 +1413,11 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 		const double current_time = GetSystemInterface()->GetElapsedTime();
 		const double time_since_last_move = current_time - state->scrolling_last_time;
 
+		// Inertia only along the axis the touch scrolled; none if it never scrolled.
+		const bool scrolled_x = state->scroll_axis == TouchState::ScrollAxis::X;
+		const bool scrolled_y = state->scroll_axis == TouchState::ScrollAxis::Y;
 		Vector2f velocity;
-		if (time_since_last_move < SCROLL_INERTIA_DELAY && state->sample_count >= 2)
+		if ((scrolled_x || scrolled_y) && time_since_last_move < SCROLL_INERTIA_DELAY && state->sample_count >= 2)
 		{
 			constexpr int capacity = TouchState::VelocitySampleCapacity;
 			const auto& newest = state->samples[(state->sample_write + capacity - 1) % capacity];
@@ -1367,6 +1433,10 @@ bool Context::ProcessTouchEnd(const Touch& touch, int key_modifier_state)
 			const float dt = static_cast<float>(newest.time - oldest_in_window->time);
 			if (dt > 1e-4f)
 				velocity = (oldest_in_window->position - newest.position) / dt;
+			if (scrolled_x)
+				velocity.y = 0.f;
+			else
+				velocity.x = 0.f;
 		}
 
 		const float scroll_top = scroll_container->Scroll().GetScrollTop();

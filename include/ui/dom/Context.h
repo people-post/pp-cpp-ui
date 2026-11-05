@@ -376,7 +376,14 @@ private:
 	struct TouchState {
 		static constexpr int VelocitySampleCapacity = 8;
 
+		/// Axis this touch scrolls along, decided once when the finger first leaves the scroll slop.
+		/// None: the touch is horizontal and nothing under it scrolls sideways, so it scrolls nothing.
+		enum class ScrollAxis { Undecided, X, Y, None };
+
 		bool touch_scrolling = false;
+		ScrollAxis scroll_axis = ScrollAxis::Undecided;
+		/// The touch landed on a list that was still coasting: it only stops the coast, it is not a tap.
+		bool stopped_coast = false;
 		bool selection_armed = false;
 		bool long_press_fired = false;
 		/// Long press on a text field: its menu opens when the finger lifts, so the hold can move the caret.

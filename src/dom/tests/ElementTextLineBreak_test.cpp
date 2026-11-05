@@ -6,6 +6,7 @@
 #include <ui/dom/ElementText.h>
 #include <ui/font/FontEngineInterface.h>
 #include <doctest.h>
+#include <chrono>
 
 using namespace ui;
 
@@ -191,4 +192,26 @@ TEST_CASE("ElementText.LineBreak.BreakAllRespectsKinsoku")
 	REQUIRE(lines.size() == 2);
 	CHECK(lines[0] == "abcdefghi");
 	CHECK(lines[1] == "j。");
+}
+
+TEST_CASE("ElementText.LineBreak.BreakWordLongUnbrokenToken")
+{
+	FixedWidthFontScope scope;
+
+	// 20 KB without break opportunities; a per-character shrink search would make this layout quadratic.
+	String text;
+	for (int i = 0; i < 20000; i++)
+		text += char('a' + i % 26);
+
+	const auto start = std::chrono::steady_clock::now();
+	const Vector<String> lines = LayoutLines(scope.context, text, "word-break: break-word;");
+	const auto elapsed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count();
+
+	REQUIRE(lines.size() == 2000);
+	CheckLinesFit(lines);
+	String joined;
+	for (const String& line : lines)
+		joined += line;
+	CHECK(joined == text);
+	CHECK(elapsed_ms < 2000);
 }
