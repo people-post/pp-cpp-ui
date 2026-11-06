@@ -1089,13 +1089,18 @@ namespace {
 // Records what the platform is asked to do with the on-screen keyboard.
 class KeyboardSystemInterface : public TestsSystemInterface {
 public:
-	void ActivateKeyboard(Vector2f /*caret_position*/, float /*line_height*/) override { active = true; }
+	void ActivateKeyboard(Vector2f /*caret_position*/, float /*line_height*/, KeyboardType keyboard_type) override
+	{
+		active = true;
+		type = keyboard_type;
+	}
 	void DeactivateKeyboard() override
 	{
 		active = false;
 		++deactivations;
 	}
 	bool active = false;
+	KeyboardType type = KeyboardType::Text;
 	int deactivations = 0;
 };
 
@@ -1122,6 +1127,7 @@ TEST_CASE("the on-screen keyboard stays up when the focus moves from one text fi
 <input type="password" id="pin"/>
 <input type="password" id="confirm"/>
 <textarea id="note"></textarea>
+<input type="text" id="name"/>
 <input type="checkbox" id="check"/>
 <button id="ok">OK</button>
 </body>
@@ -1135,14 +1141,24 @@ TEST_CASE("the on-screen keyboard stays up when the focus moves from one text fi
 	Element* pin = document->GetElementById("pin");
 	REQUIRE(pin->Focus());
 	CHECK(system.active);
+	CHECK(system.type == KeyboardType::Password);
 	context->ProcessTextInput("1234");
 
 	REQUIRE(document->GetElementById("confirm")->Focus());
 	CHECK(system.active);
+	CHECK(system.type == KeyboardType::Password);
 	CHECK(system.deactivations == 0);
 
+	// A text field asks for the ordinary keyboard; the platform switches the type (SystemInterface_SDL restarts text
+	// input only when the type changes).
 	REQUIRE(document->GetElementById("note")->Focus());
 	CHECK(system.active);
+	CHECK(system.type == KeyboardType::Text);
+	CHECK(system.deactivations == 0);
+	REQUIRE(document->GetElementById("name")->Focus());
+	CHECK(system.type == KeyboardType::Text);
+	REQUIRE(pin->Focus());
+	CHECK(system.type == KeyboardType::Password);
 	CHECK(system.deactivations == 0);
 
 	// Leaving the text fields for a control that takes no typing closes the keyboard.

@@ -2026,7 +2026,7 @@ void WidgetTextInput::SetKeyboardActive(bool active)
 			// Activate the keyboard and submit the cursor position and line height to enable clients to adjust the input method editor (IME).
 			const Vector2f element_offset = parent->BoxModel().GetAbsoluteOffset() - Vector2f{parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop()};
 			const Vector2f absolute_cursor_position = element_offset + cursor_position;
-			system->ActivateKeyboard(absolute_cursor_position, cursor_size.y);
+			system->ActivateKeyboard(absolute_cursor_position, cursor_size.y, GetKeyboardType());
 		}
 		else
 		{

@@ -53,7 +53,7 @@ public:
 	void GetClipboardText(String& text) override;
 
 	/// Activate keyboard (for touchscreen devices).
-	void ActivateKeyboard(ui::Vector2f caret_position, float line_height) override;
+	void ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type) override;
 
 	/// Deactivate keyboard (for touchscreen devices).
 	void DeactivateKeyboard() override;
