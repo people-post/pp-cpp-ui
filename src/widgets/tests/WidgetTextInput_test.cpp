@@ -1,6 +1,7 @@
 #include "TestsShell.h"
 #include "TestsInterface.h"
 #include <ui/core/Core.h>
+#include <ui/data/DataModelHandle.h>
 #include <ui/base/TextInputContext.h>
 #include <ui/base/TextInputHandler.h>
 #include <ui/base/TextInputMethodEditor.h>
@@ -1175,6 +1176,104 @@ TEST_CASE("the on-screen keyboard stays up when the focus moves from one text fi
 	REQUIRE(pin->Focus());
 	pin->Blur();
 	CHECK_FALSE(system.active);
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
+
+
+TEST_CASE("a value set from outside keeps the caret on a whole character, so the next text does not split one")
+{
+	// "群xy聊" with the caret after y (byte 5); the app then sets "群聊", where byte 5 is inside 聊.
+	const String QUN = "\xe7\xbe\xa4", LIAO = "\xe8\x81\x8a", COMMA = "\xef\xbc\x8c"; // 群 聊 ，
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		Fixture f(id);
+		f.Type(QUN + "xy" + LIAO);
+		f.Key(Input::KI_LEFT);
+		f.control->SetValue(QUN + LIAO);
+		f.Type(COMMA);
+		CHECK(f.Value() == QUN + COMMA + LIAO);
+
+		// The same for a selection whose ends fall inside a character.
+		f.control->SetValue(QUN + "xy" + LIAO + "z");
+		f.Key(Input::KI_END);
+		f.Key(Input::KI_LEFT);
+		f.Key(Input::KI_LEFT, Input::KM_SHIFT);
+		f.Key(Input::KI_LEFT, Input::KM_SHIFT); // "y聊" selected, bytes 4 to 8
+		f.control->SetValue(QUN + LIAO + LIAO + "z");
+		f.Type("w");
+		for (size_t i = 0; i < f.Value().size();)
+		{
+			const unsigned char lead = (unsigned char)f.Value()[i];
+			REQUIRE((lead & 0xC0) != 0x80);
+			i += lead < 0x80 ? 1 : lead < 0xE0 ? 2 : lead < 0xF0 ? 3 : 4;
+		}
+	}
+}
+
+TEST_CASE("the data model catching up with the committed text does not end an IME composition")
+{
+	// A commit and the next syllable's composition can arrive before the data model updates (one event batch on a
+	// phone). The model then writes back the committed text, which lacks the composition shown in the field.
+	REQUIRE(TestsShell::GetContext());
+	TestTextInputMethodEditor ime;
+	Context* ime_context = CreateContext("ime_data_value", Vector2i(1024, 768), nullptr, &ime);
+	REQUIRE(ime_context);
+	const String QUN = "\xe7\xbe\xa4", LIAO = "\xe8\x81\x8a", NI = "\xe4\xbd\xa0", HA = "\xe5\x93\x88";
+	String title = QUN + LIAO;
+	{
+		DataModelConstructor constructor = ime_context->CreateDataModel("group");
+		REQUIRE(constructor);
+		constructor.Bind("title", &title);
+	}
+	ElementDocument* document = ime_context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>input { display: block; width: 300px; }</style>
+</head>
+<body><div data-model="group"><label><span>Name</span><input type="text" id="name" data-value="title"/></label></div></body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	ime_context->Update();
+	ime_context->Render();
+	auto* control = ui_dynamic_cast<ElementFormControl*>(document->GetElementById("name"));
+	REQUIRE(control);
+	control->Focus();
+	ime_context->ProcessKeyDown(Input::KI_HOME, 0);
+	ime_context->ProcessKeyDown(Input::KI_RIGHT, 0);
+	ime_context->Update();
+
+	// 你 is committed the way SDL reports it (the composition cleared, then the text), and "h" starts the next one.
+	ime.SetComposition("ni", -1);
+	ime.SetComposition("", 0);
+	ime_context->ProcessTextInput(NI);
+	ime.SetComposition("h", -1);
+	ime_context->Update();
+	CHECK(title == QUN + NI + LIAO);
+	CHECK(ime.IsComposing());
+	CHECK(control->GetValue() == QUN + NI + "h" + LIAO);
+
+	ime.SetComposition("ha", -1);
+	CHECK(control->GetValue() == QUN + NI + "ha" + LIAO);
+	ime.SetComposition("", 0);
+	ime_context->ProcessTextInput(HA);
+	ime_context->Update();
+	CHECK(control->GetValue() == QUN + NI + HA + LIAO);
+	CHECK(title == control->GetValue());
+
+	// A different value from the app still ends the composition.
+	ime.SetComposition("x", -1);
+	title = "abc";
+	ime_context->GetDataModel("group").GetModelHandle().DirtyVariable("title");
+	ime_context->Update();
+	CHECK_FALSE(ime.IsComposing());
+	CHECK(control->GetValue() == "abc");
 
 	document->Close();
 	TestsShell::ShutdownShell();

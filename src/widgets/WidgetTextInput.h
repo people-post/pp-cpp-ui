@@ -341,6 +341,8 @@ private:
 	int undo_epoch = 0;
 	// Non-zero while the widget itself writes the value; such writes must not clear the history.
 	int history_suspend = 0;
+	// The value last sent to change listeners (a data binding holds it).
+	String reported_value;
 	bool in_edit_scope = false;
 	// State before the first change of the IME composition in progress.
 	bool ime_edit_pending = false;

@@ -78,6 +78,15 @@ struct HistorySuspend {
 	int& counter;
 };
 
+// Clamps a byte index into the value and moves it back to the start of the character it falls in.
+static int SnapToCharacterStart(const String& value, int index)
+{
+	index = Math::Clamp(index, 0, (int)value.size());
+	while (index > 0 && index < (int)value.size() && ((unsigned char)value[(size_t)index] & 0xC0) == 0x80)
+		--index;
+	return index;
+}
+
 // Clamps the value to the given maximum number of unicode code points. Returns true if the value was changed.
 static bool ClampValue(String& value, int max_length)
 {
@@ -312,6 +321,7 @@ void WidgetTextInput::SetValue(String value)
 		return;
 	}
 
+	const String untransformed = value;
 	TransformValue(value);
 
 	// Skip reformatting when the displayed value is unchanged. Data-model write-back
@@ -319,6 +329,21 @@ void WidgetTextInput::SetValue(String value)
 	// cursor there makes characters appear to mutate while typing.
 	if (value == GetValue())
 		return;
+
+	// The same write-back while an IME composes: listeners never see the composition, so a bound value catching up
+	// with the text last reported to them arrives without it (a commit and the next syllable in one event batch). That
+	// is not a new value; keep the composition and put it back into the attribute the IME edits. Any other value, an
+	// emptied composer included, replaces the text and ends the composition.
+	if (history_suspend == 0 && IsComposing() && value == untransformed && value == reported_value)
+	{
+		String committed = GetValue();
+		committed.erase((size_t)ime_composition_begin_index, size_t(ime_composition_end_index - ime_composition_begin_index));
+		if (value == committed)
+		{
+			parent->SetAttribute("value", GetValue());
+			return;
+		}
+	}
 
 	// Not our own write, so the app replaced the text (for example emptied the composer after sending): the old
 	// states must not come back through undo.
@@ -331,6 +356,14 @@ void WidgetTextInput::SetValue(String value)
 	ime_composition_begin_index = 0;
 	ime_composition_end_index = 0;
 	UpdateComposingPseudoClass();
+
+	// The caret and selection are byte indices into the old text. In the new one they may fall inside a character,
+	// and text typed there would split it into invalid UTF-8 (garbled characters). Move them to a character start.
+	const int selection_end_index = SnapToCharacterStart(value, selection_begin_index + selection_length);
+	absolute_cursor_index = SnapToCharacterStart(value, absolute_cursor_index);
+	selection_anchor_index = SnapToCharacterStart(value, selection_anchor_index);
+	selection_begin_index = SnapToCharacterStart(value, selection_begin_index);
+	selection_length = Math::Max(0, selection_end_index - selection_begin_index);
 
 	FormatElement();
 	UpdateCursorPosition(true);
@@ -582,7 +615,8 @@ bool WidgetTextInput::IsFocused() const
 void WidgetTextInput::DispatchChangeEvent(bool linebreak)
 {
 	Dictionary parameters;
-	parameters["value"] = GetAttributeValue();
+	reported_value = GetAttributeValue();
+	parameters["value"] = reported_value;
 	parameters["linebreak"] = Variant(linebreak);
 	GetElement()->DispatchEvent(EventId::Change, parameters);
 }
