@@ -1083,3 +1083,83 @@ TEST_CASE("WidgetTextInput.textarea_max_rows_grows_with_text")
 	document->Close();
 	TestsShell::ShutdownShell();
 }
+
+namespace {
+
+// Records what the platform is asked to do with the on-screen keyboard.
+class KeyboardSystemInterface : public TestsSystemInterface {
+public:
+	void ActivateKeyboard(Vector2f /*caret_position*/, float /*line_height*/) override { active = true; }
+	void DeactivateKeyboard() override
+	{
+		active = false;
+		++deactivations;
+	}
+	bool active = false;
+	int deactivations = 0;
+};
+
+} // namespace
+
+TEST_CASE("the on-screen keyboard stays up when the focus moves from one text field to the next")
+{
+	// iPhone (TODO #84/#100): typing a PIN and tapping the confirm field closed the keyboard. The first field's blur
+	// stopped text input and the second field's focus started it again in the same call; UIKit dismissed the keyboard.
+	KeyboardSystemInterface system;
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+	// The shell installs its own system interface on initialization, so swap ours in afterwards.
+	SetSystemInterface(&system);
+
+	ElementDocument* document = context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>input, textarea, button { display: block; width: 300px; }</style>
+</head>
+<body>
+<input type="password" id="pin"/>
+<input type="password" id="confirm"/>
+<textarea id="note"></textarea>
+<input type="checkbox" id="check"/>
+<button id="ok">OK</button>
+</body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	context->Update();
+	context->Render();
+
+	Element* pin = document->GetElementById("pin");
+	REQUIRE(pin->Focus());
+	CHECK(system.active);
+	context->ProcessTextInput("1234");
+
+	REQUIRE(document->GetElementById("confirm")->Focus());
+	CHECK(system.active);
+	CHECK(system.deactivations == 0);
+
+	REQUIRE(document->GetElementById("note")->Focus());
+	CHECK(system.active);
+	CHECK(system.deactivations == 0);
+
+	// Leaving the text fields for a control that takes no typing closes the keyboard.
+	REQUIRE(document->GetElementById("check")->Focus());
+	CHECK_FALSE(system.active);
+	CHECK(system.deactivations == 1);
+
+	REQUIRE(pin->Focus());
+	CHECK(system.active);
+	REQUIRE(document->GetElementById("ok")->Focus());
+	CHECK_FALSE(system.active);
+
+	// A blur with nowhere text-editing to go (the app's own Blur()) closes it too.
+	REQUIRE(pin->Focus());
+	pin->Blur();
+	CHECK_FALSE(system.active);
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}

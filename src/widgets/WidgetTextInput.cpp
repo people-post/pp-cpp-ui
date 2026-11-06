@@ -5,6 +5,8 @@
 #include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/widgets/ElementFormControl.h>
+#include <ui/widgets/ElementFormControlInput.h>
+#include <ui/widgets/ElementFormControlTextArea.h>
 #include <ui/dom/Factory.h>
 #include <ui/font/FontEngineInterface.h>
 #include <ui/base/Input.h>
@@ -45,6 +47,18 @@ static bool IsEventForWidget(const Event& event, Element* parent)
 	if (target == parent)
 		return true;
 	return target && target->GetParentNode() == parent;
+}
+
+// Whether the element is a text field, whose focus raises the on-screen keyboard (ElementFormControlInput gives every
+// input type but these a text widget).
+static bool TakesTyping(Element* element)
+{
+	if (ui_dynamic_cast<ElementFormControlTextArea*>(element))
+		return true;
+	if (!ui_dynamic_cast<ElementFormControlInput*>(element))
+		return false;
+	const String type = element->GetAttribute<String>("type", "text");
+	return type != "radio" && type != "checkbox" && type != "range" && type != "submit" && type != "button";
 }
 
 static constexpr size_t UNDO_HISTORY_LIMIT = 100;
@@ -932,11 +946,18 @@ void WidgetTextInput::ProcessEvent(Event& event)
 	{
 		if (IsEventForWidget(event, parent))
 		{
+			// Focus moving straight to another text field keeps the on-screen keyboard: that field's focus takes it
+			// over. Stopping text input here and starting it again there closed the keyboard on iPhone (TODO #84,
+			// #100). A composition still in flight ends with the keyboard, so it cannot spill into the next field.
+			Element* next_focus = static_cast<Element*>(event.GetParameter<void*>("next_focus", nullptr));
+			const bool hand_over_keyboard = !IsComposing() && TakesTyping(next_focus);
 			if (TextInputHandler* handler = GetTextInputHandler())
 				handler->OnDeactivate(text_input_context.get());
 			if (ClearSelection())
 				FormatText();
-			ShowCursor(false, false);
+			ShowCursor(false, false, hand_over_keyboard);
+			if (hand_over_keyboard)
+				keyboard_showed = false;
 		}
 	}
 	break;
