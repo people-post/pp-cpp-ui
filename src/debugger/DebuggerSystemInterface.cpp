@@ -52,9 +52,9 @@ void DebuggerSystemInterface::GetClipboardText(String& text)
 	application_interface->GetClipboardText(text);
 }
 
-void DebuggerSystemInterface::ActivateKeyboard(ui::Vector2f caret_position, float line_height)
+void DebuggerSystemInterface::ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type)
 {
-	application_interface->ActivateKeyboard(caret_position, line_height);
+	application_interface->ActivateKeyboard(caret_position, line_height, type);
 }
 
 void DebuggerSystemInterface::DeactivateKeyboard()

@@ -7,6 +7,10 @@
 
 namespace ui {
 
+/// The on-screen keyboard a focused text field asks for. A password field asks for the platform's secure entry: no
+/// suggestions, no autocorrect, nothing learned by the keyboard.
+enum class KeyboardType { Text, Password };
+
 /**
     pp-cpp-ui's system interface provides an interface for time, translation, logging, and other system utilities.
 
@@ -56,7 +60,8 @@ public:
 	/// Activate keyboard (for touchscreen devices).
 	/// @param[in] caret_position Position of the caret in absolute window coordinates.
 	/// @param[in] line_height Height of the current line being edited.
-	virtual void ActivateKeyboard(ui::Vector2f caret_position, float line_height);
+	/// @param[in] type The keyboard the focused field asks for.
+	virtual void ActivateKeyboard(ui::Vector2f caret_position, float line_height, KeyboardType type);
 
 	/// Deactivate keyboard (for touchscreen devices).
 	virtual void DeactivateKeyboard();

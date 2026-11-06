@@ -99,9 +99,13 @@ bool FocusController::OnFocusChange(Element* new_focus, bool focus_visible)
 		element = element->GetParentNode();
 	}
 
-	// Send out blur/focus events.
+	// Send out blur/focus events. A blur names the element taking the focus (the DOM's relatedTarget): a text field
+	// hands the on-screen keyboard to the next one instead of closing it.
+	Dictionary blur_parameters;
+	blur_parameters["next_focus"] = (void*)new_focus;
+	Context::SendEvents(old_chain, new_chain, EventId::Blur, blur_parameters);
+
 	Dictionary parameters;
-	Context::SendEvents(old_chain, new_chain, EventId::Blur, parameters);
 
 	if (focus_visible)
 		parameters["focus_visible"] = true;

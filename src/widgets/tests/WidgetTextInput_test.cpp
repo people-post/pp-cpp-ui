@@ -1,6 +1,7 @@
 #include "TestsShell.h"
 #include "TestsInterface.h"
 #include <ui/core/Core.h>
+#include <ui/data/DataModelHandle.h>
 #include <ui/base/TextInputContext.h>
 #include <ui/base/TextInputHandler.h>
 #include <ui/base/TextInputMethodEditor.h>
@@ -12,6 +13,7 @@
 #include <ui/widgets/ElementFormControlInput.h>
 #include <ui/widgets/ElementFormControlTextArea.h>
 #include <doctest.h>
+#include <random>
 
 using namespace ui;
 
@@ -1082,4 +1084,279 @@ TEST_CASE("WidgetTextInput.textarea_max_rows_grows_with_text")
 
 	document->Close();
 	TestsShell::ShutdownShell();
+}
+
+namespace {
+
+// Records what the platform is asked to do with the on-screen keyboard.
+class KeyboardSystemInterface : public TestsSystemInterface {
+public:
+	void ActivateKeyboard(Vector2f /*caret_position*/, float /*line_height*/, KeyboardType keyboard_type) override
+	{
+		active = true;
+		type = keyboard_type;
+	}
+	void DeactivateKeyboard() override
+	{
+		active = false;
+		++deactivations;
+	}
+	bool active = false;
+	KeyboardType type = KeyboardType::Text;
+	int deactivations = 0;
+};
+
+} // namespace
+
+TEST_CASE("the on-screen keyboard stays up when the focus moves from one text field to the next")
+{
+	// iPhone (TODO #84/#100): typing a PIN and tapping the confirm field closed the keyboard. The first field's blur
+	// stopped text input and the second field's focus started it again in the same call; UIKit dismissed the keyboard.
+	KeyboardSystemInterface system;
+	Context* context = TestsShell::GetContext();
+	REQUIRE(context);
+	// The shell installs its own system interface on initialization, so swap ours in afterwards.
+	SetSystemInterface(&system);
+
+	ElementDocument* document = context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>input, textarea, button { display: block; width: 300px; }</style>
+</head>
+<body>
+<input type="password" id="pin"/>
+<input type="password" id="confirm"/>
+<textarea id="note"></textarea>
+<input type="text" id="name"/>
+<input type="checkbox" id="check"/>
+<button id="ok">OK</button>
+</body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	context->Update();
+	context->Render();
+
+	Element* pin = document->GetElementById("pin");
+	REQUIRE(pin->Focus());
+	CHECK(system.active);
+	CHECK(system.type == KeyboardType::Password);
+	context->ProcessTextInput("1234");
+
+	REQUIRE(document->GetElementById("confirm")->Focus());
+	CHECK(system.active);
+	CHECK(system.type == KeyboardType::Password);
+	CHECK(system.deactivations == 0);
+
+	// A text field asks for the ordinary keyboard; the platform switches the type (SystemInterface_SDL restarts text
+	// input only when the type changes).
+	REQUIRE(document->GetElementById("note")->Focus());
+	CHECK(system.active);
+	CHECK(system.type == KeyboardType::Text);
+	CHECK(system.deactivations == 0);
+	REQUIRE(document->GetElementById("name")->Focus());
+	CHECK(system.type == KeyboardType::Text);
+	REQUIRE(pin->Focus());
+	CHECK(system.type == KeyboardType::Password);
+	CHECK(system.deactivations == 0);
+
+	// Leaving the text fields for a control that takes no typing closes the keyboard.
+	REQUIRE(document->GetElementById("check")->Focus());
+	CHECK_FALSE(system.active);
+	CHECK(system.deactivations == 1);
+
+	REQUIRE(pin->Focus());
+	CHECK(system.active);
+	REQUIRE(document->GetElementById("ok")->Focus());
+	CHECK_FALSE(system.active);
+
+	// A blur with nowhere text-editing to go (the app's own Blur()) closes it too.
+	REQUIRE(pin->Focus());
+	pin->Blur();
+	CHECK_FALSE(system.active);
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
+
+
+TEST_CASE("a value set from outside keeps the caret on a whole character, so the next text does not split one")
+{
+	// "群xy聊" with the caret after y (byte 5); the app then sets "群聊", where byte 5 is inside 聊.
+	const String QUN = "\xe7\xbe\xa4", LIAO = "\xe8\x81\x8a", COMMA = "\xef\xbc\x8c"; // 群 聊 ，
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		Fixture f(id);
+		f.Type(QUN + "xy" + LIAO);
+		f.Key(Input::KI_LEFT);
+		f.control->SetValue(QUN + LIAO);
+		f.Type(COMMA);
+		CHECK(f.Value() == QUN + COMMA + LIAO);
+
+		// The same for a selection whose ends fall inside a character.
+		f.control->SetValue(QUN + "xy" + LIAO + "z");
+		f.Key(Input::KI_END);
+		f.Key(Input::KI_LEFT);
+		f.Key(Input::KI_LEFT, Input::KM_SHIFT);
+		f.Key(Input::KI_LEFT, Input::KM_SHIFT); // "y聊" selected, bytes 4 to 8
+		f.control->SetValue(QUN + LIAO + LIAO + "z");
+		f.Type("w");
+		for (size_t i = 0; i < f.Value().size();)
+		{
+			const unsigned char lead = (unsigned char)f.Value()[i];
+			REQUIRE((lead & 0xC0) != 0x80);
+			i += lead < 0x80 ? 1 : lead < 0xE0 ? 2 : lead < 0xF0 ? 3 : 4;
+		}
+	}
+}
+
+TEST_CASE("the data model catching up with the committed text does not end an IME composition")
+{
+	// A commit and the next syllable's composition can arrive before the data model updates (one event batch on a
+	// phone). The model then writes back the committed text, which lacks the composition shown in the field.
+	REQUIRE(TestsShell::GetContext());
+	TestTextInputMethodEditor ime;
+	Context* ime_context = CreateContext("ime_data_value", Vector2i(1024, 768), nullptr, &ime);
+	REQUIRE(ime_context);
+	const String QUN = "\xe7\xbe\xa4", LIAO = "\xe8\x81\x8a", NI = "\xe4\xbd\xa0", HA = "\xe5\x93\x88";
+	String title = QUN + LIAO;
+	{
+		DataModelConstructor constructor = ime_context->CreateDataModel("group");
+		REQUIRE(constructor);
+		constructor.Bind("title", &title);
+	}
+	ElementDocument* document = ime_context->LoadDocumentFromMemory(R"(
+<rml>
+<head>
+	<link type="text/rcss" href="/assets/rml.rcss"/>
+	<link type="text/rcss" href="/assets/invader.rcss"/>
+	<style>input { display: block; width: 300px; }</style>
+</head>
+<body><div data-model="group"><label><span>Name</span><input type="text" id="name" data-value="title"/></label></div></body>
+</rml>
+)");
+	REQUIRE(document);
+	document->Show();
+	ime_context->Update();
+	ime_context->Render();
+	auto* control = ui_dynamic_cast<ElementFormControl*>(document->GetElementById("name"));
+	REQUIRE(control);
+	control->Focus();
+	ime_context->ProcessKeyDown(Input::KI_HOME, 0);
+	ime_context->ProcessKeyDown(Input::KI_RIGHT, 0);
+	ime_context->Update();
+
+	// 你 is committed the way SDL reports it (the composition cleared, then the text), and "h" starts the next one.
+	ime.SetComposition("ni", -1);
+	ime.SetComposition("", 0);
+	ime_context->ProcessTextInput(NI);
+	ime.SetComposition("h", -1);
+	ime_context->Update();
+	CHECK(title == QUN + NI + LIAO);
+	CHECK(ime.IsComposing());
+	CHECK(control->GetValue() == QUN + NI + "h" + LIAO);
+
+	ime.SetComposition("ha", -1);
+	CHECK(control->GetValue() == QUN + NI + "ha" + LIAO);
+	ime.SetComposition("", 0);
+	ime_context->ProcessTextInput(HA);
+	ime_context->Update();
+	CHECK(control->GetValue() == QUN + NI + HA + LIAO);
+	CHECK(title == control->GetValue());
+
+	// A different value from the app still ends the composition.
+	ime.SetComposition("x", -1);
+	title = "abc";
+	ime_context->GetDataModel("group").GetModelHandle().DirtyVariable("title");
+	ime_context->Update();
+	CHECK_FALSE(ime.IsComposing());
+	CHECK(control->GetValue() == "abc");
+
+	document->Close();
+	TestsShell::ShutdownShell();
+}
+
+namespace {
+
+// True when the bytes are whole UTF-8 characters: no continuation byte without its lead, no lead cut short.
+bool IsWholeUtf8(const String& s)
+{
+	for (size_t i = 0; i < s.size();)
+	{
+		const unsigned char lead = (unsigned char)s[i];
+		const size_t length = lead < 0x80 ? 1 : (lead & 0xE0) == 0xC0 ? 2 : (lead & 0xF0) == 0xE0 ? 3 : (lead & 0xF8) == 0xF0 ? 4 : 0;
+		if (length == 0 || i + length > s.size())
+			return false;
+		for (size_t k = 1; k < length; ++k)
+			if (((unsigned char)s[i + k] & 0xC0) != 0x80)
+				return false;
+		i += length;
+	}
+	return true;
+}
+
+} // namespace
+
+TEST_CASE("no sequence of edits splits a character of mixed Latin, CJK and emoji text")
+{
+	// Garbled glyphs on iPhone came from a CJK character cut in half by an insert at a byte inside it. Random typing,
+	// deleting, caret and selection moves, taps, IME compositions and values set from outside must keep whole characters.
+	const String tokens[] = {"a", "Z", " ", "\xe4\xbd\xa0", "\xe5\xa5\xbd", "\xef\xbc\x8c", "\xc3\xa9",
+		"\xf0\x9f\x91\x8d\xf0\x9f\x8f\xbd", "\xf0\x9f\x87\xa8\xf0\x9f\x87\xb3", "e\xcc\x81", "\n"};
+	const Input::KeyIdentifier keys[] = {Input::KI_BACK, Input::KI_DELETE, Input::KI_LEFT, Input::KI_RIGHT, Input::KI_UP,
+		Input::KI_DOWN, Input::KI_HOME, Input::KI_END};
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_fuzz", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		std::mt19937 random(20261106);
+		const auto pick = [&](int n) { return (int)(random() % (unsigned)n); };
+		const auto token = [&] { return tokens[pick((int)(sizeof(tokens) / sizeof(tokens[0])))]; };
+		f.Type("ab\xe7\xbe\xa4\xe8\x81\x8a\xf0\x9f\x91\x8d");
+
+		for (int step = 0; step < 400; ++step)
+		{
+			CAPTURE(step);
+			switch (pick(8))
+			{
+			case 0: f.Type(token()); break;
+			case 1: f.Key(keys[pick(8)], pick(3) == 0 ? Input::KM_SHIFT : 0); break;
+			case 2: f.Key(Input::KI_A, Input::KM_CTRL); break;
+			case 3:
+			{
+				// A tap somewhere in the field.
+				const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+				f.context->ProcessMouseMove(int(origin.x) + pick(300), int(origin.y) + pick(40), 0);
+				f.context->ProcessMouseButtonDown(0, 0);
+				f.context->ProcessMouseButtonUp(0, 0);
+				break;
+			}
+			case 4:
+			{
+				// The app sets a value: the current one with a few bytes cut from the front, re-aligned to whole
+				// characters (as a bound value that lost some text would), or a fresh token string.
+				String value = f.Value();
+				size_t cut = value.empty() ? 0 : (size_t)pick((int)value.size());
+				while (cut < value.size() && ((unsigned char)value[cut] & 0xC0) == 0x80)
+					++cut;
+				f.control->SetValue(pick(2) ? value.substr(cut) : token() + token());
+				break;
+			}
+			case 5: ime.SetComposition(pick(2) ? String("ni") : token(), pick(4) - 1); break;
+			case 6: ime.Commit(token()); break;
+			case 7: ime.SetComposition("", 0); break;
+			}
+			f.context->Update();
+			REQUIRE(IsWholeUtf8(f.Value()));
+		}
+	}
 }
