@@ -5,6 +5,8 @@
 #include <ui/dom/ElementText.h>
 #include <ui/dom/ElementUtilities.h>
 #include <ui/widgets/ElementFormControl.h>
+#include <ui/widgets/ElementFormControlInput.h>
+#include <ui/widgets/ElementFormControlTextArea.h>
 #include <ui/dom/Factory.h>
 #include <ui/font/FontEngineInterface.h>
 #include <ui/base/Input.h>
@@ -47,6 +49,18 @@ static bool IsEventForWidget(const Event& event, Element* parent)
 	return target && target->GetParentNode() == parent;
 }
 
+// Whether the element is a text field, whose focus raises the on-screen keyboard (ElementFormControlInput gives every
+// input type but these a text widget).
+static bool TakesTyping(Element* element)
+{
+	if (ui_dynamic_cast<ElementFormControlTextArea*>(element))
+		return true;
+	if (!ui_dynamic_cast<ElementFormControlInput*>(element))
+		return false;
+	const String type = element->GetAttribute<String>("type", "text");
+	return type != "radio" && type != "checkbox" && type != "range" && type != "submit" && type != "button";
+}
+
 static constexpr size_t UNDO_HISTORY_LIMIT = 100;
 static constexpr double UNDO_TYPING_PAUSE = 1.0; // [s] A longer pause between typed characters starts a new undo step.
 
@@ -63,6 +77,22 @@ struct HistorySuspend {
 	HistorySuspend& operator=(const HistorySuspend&) = delete;
 	int& counter;
 };
+
+// Text positions are byte indices into UTF-8 and must never fall inside a character: an insert or erase there splits it
+// into invalid UTF-8, which is shaped and drawn as replacement glyphs. Every position that edits the text goes through
+// this: clamped into the value and moved back to the start of the character it falls in.
+static int SnapToCharacterStart(const String& value, int index)
+{
+	index = Math::Clamp(index, 0, (int)value.size());
+	while (index > 0 && index < (int)value.size() && ((unsigned char)value[(size_t)index] & 0xC0) == 0x80)
+		--index;
+	return index;
+}
+
+[[maybe_unused]] static bool IsCharacterStart(const String& value, int index)
+{
+	return index >= 0 && index <= (int)value.size() && SnapToCharacterStart(value, index) == index;
+}
 
 // Clamps the value to the given maximum number of unicode code points. Returns true if the value was changed.
 static bool ClampValue(String& value, int max_length)
@@ -132,8 +162,8 @@ void WidgetTextInputContext::SetText(StringView text, int start, int end)
 {
 	String value = owner->GetAttributeValue();
 
-	start = StringUtilities::ConvertCharacterOffsetToByteOffset(value, start);
-	end = StringUtilities::ConvertCharacterOffsetToByteOffset(value, end);
+	start = SnapToCharacterStart(value, StringUtilities::ConvertCharacterOffsetToByteOffset(value, start));
+	end = SnapToCharacterStart(value, StringUtilities::ConvertCharacterOffsetToByteOffset(value, end));
 
 	UI_ASSERTMSG(end >= start, "Invalid end character offset.");
 	value.replace(start, end - start, text.begin(), text.size());
@@ -165,6 +195,8 @@ void WidgetTextInputContext::CommitComposition(StringView composition)
 		return;
 
 	String value = owner->GetAttributeValue();
+	start_byte = SnapToCharacterStart(value, start_byte);
+	end_byte = SnapToCharacterStart(value, end_byte);
 
 	// If the text input has a length restriction, we have to shorten the composition string.
 	if (owner->GetMaxLength() >= 0)
@@ -179,7 +211,7 @@ void WidgetTextInputContext::CommitComposition(StringView composition)
 		if (value_length + composition_length - (start - end) > owner->GetMaxLength())
 		{
 			int new_length = owner->GetMaxLength() - (value_length - composition_length);
-			int new_length_byte = StringUtilities::ConvertCharacterOffsetToByteOffset(composition, new_length);
+			int new_length_byte = StringUtilities::ConvertCharacterOffsetToByteOffset(composition, Math::Max(new_length, 0));
 			composition = StringView(composition.begin(), composition.begin() + new_length_byte);
 		}
 	}
@@ -298,6 +330,7 @@ void WidgetTextInput::SetValue(String value)
 		return;
 	}
 
+	const String untransformed = value;
 	TransformValue(value);
 
 	// Skip reformatting when the displayed value is unchanged. Data-model write-back
@@ -305,6 +338,21 @@ void WidgetTextInput::SetValue(String value)
 	// cursor there makes characters appear to mutate while typing.
 	if (value == GetValue())
 		return;
+
+	// The same write-back while an IME composes: listeners never see the composition, so a bound value catching up
+	// with the text last reported to them arrives without it (a commit and the next syllable in one event batch). That
+	// is not a new value; keep the composition and put it back into the attribute the IME edits. Any other value, an
+	// emptied composer included, replaces the text and ends the composition.
+	if (history_suspend == 0 && IsComposing() && value == untransformed && value == reported_value)
+	{
+		String committed = GetValue();
+		committed.erase((size_t)ime_composition_begin_index, size_t(ime_composition_end_index - ime_composition_begin_index));
+		if (value == committed)
+		{
+			parent->SetAttribute("value", GetValue());
+			return;
+		}
+	}
 
 	// Not our own write, so the app replaced the text (for example emptied the composer after sending): the old
 	// states must not come back through undo.
@@ -318,11 +366,25 @@ void WidgetTextInput::SetValue(String value)
 	ime_composition_end_index = 0;
 	UpdateComposingPseudoClass();
 
+	// The caret and selection are byte indices into the old text. In the new one they may fall inside a character,
+	// and text typed there would split it into invalid UTF-8 (garbled characters). Move them to a character start.
+	SnapIndicesToCharacters();
+
 	FormatElement();
 	UpdateCursorPosition(true);
 }
 
 void WidgetTextInput::TransformValue(String& /*value*/) {}
+
+void WidgetTextInput::SnapIndicesToCharacters()
+{
+	const String& value = GetValue();
+	const int selection_end_index = SnapToCharacterStart(value, selection_begin_index + selection_length);
+	absolute_cursor_index = SnapToCharacterStart(value, absolute_cursor_index);
+	selection_anchor_index = SnapToCharacterStart(value, selection_anchor_index);
+	selection_begin_index = SnapToCharacterStart(value, selection_begin_index);
+	selection_length = Math::Max(0, selection_end_index - selection_begin_index);
+}
 
 int WidgetTextInput::DisplayIndexToAttributeIndex(int display_index, const String& /*attribute_value*/)
 {
@@ -408,8 +470,8 @@ void WidgetTextInput::GetSelection(int* selection_start, int* selection_end, Str
 void WidgetTextInput::SetCompositionRange(int range_start, int range_end)
 {
 	const String& value = GetValue();
-	const int byte_start = StringUtilities::ConvertCharacterOffsetToByteOffset(value, range_start);
-	const int byte_end = StringUtilities::ConvertCharacterOffsetToByteOffset(value, range_end);
+	const int byte_start = SnapToCharacterStart(value, StringUtilities::ConvertCharacterOffsetToByteOffset(value, range_start));
+	const int byte_end = SnapToCharacterStart(value, StringUtilities::ConvertCharacterOffsetToByteOffset(value, range_end));
 
 	if (byte_end > byte_start)
 	{
@@ -568,7 +630,8 @@ bool WidgetTextInput::IsFocused() const
 void WidgetTextInput::DispatchChangeEvent(bool linebreak)
 {
 	Dictionary parameters;
-	parameters["value"] = GetAttributeValue();
+	reported_value = GetAttributeValue();
+	parameters["value"] = reported_value;
 	parameters["linebreak"] = Variant(linebreak);
 	GetElement()->DispatchEvent(EventId::Change, parameters);
 }
@@ -932,11 +995,18 @@ void WidgetTextInput::ProcessEvent(Event& event)
 	{
 		if (IsEventForWidget(event, parent))
 		{
+			// Focus moving straight to another text field keeps the on-screen keyboard: that field's focus takes it
+			// over. Stopping text input here and starting it again there closed the keyboard on iPhone (TODO #84,
+			// #100). A composition still in flight ends with the keyboard, so it cannot spill into the next field.
+			Element* next_focus = static_cast<Element*>(event.GetParameter<void*>("next_focus", nullptr));
+			const bool hand_over_keyboard = !IsComposing() && TakesTyping(next_focus);
 			if (TextInputHandler* handler = GetTextInputHandler())
 				handler->OnDeactivate(text_input_context.get());
 			if (ClearSelection())
 				FormatText();
-			ShowCursor(false, false);
+			ShowCursor(false, false, hand_over_keyboard);
+			if (hand_over_keyboard)
+				keyboard_showed = false;
 		}
 	}
 	break;
@@ -1073,9 +1143,11 @@ bool WidgetTextInput::AddCharacters(String string)
 	if (string.empty())
 		return false;
 
+	SnapIndicesToCharacters();
 	String value = GetAttributeValue();
-	const int attribute_insert_index = DisplayIndexToAttributeIndex(absolute_cursor_index, value);
-	value.insert(std::min<size_t>((size_t)attribute_insert_index, value.size()), string);
+	const int attribute_insert_index = SnapToCharacterStart(value, DisplayIndexToAttributeIndex(absolute_cursor_index, value));
+	UI_ASSERT(IsCharacterStart(value, attribute_insert_index));
+	value.insert((size_t)attribute_insert_index, string);
 
 	const int new_cursor_attribute_index = AttributeIndexToDisplayIndex(attribute_insert_index + (int)string.size(), value);
 	absolute_cursor_index = new_cursor_attribute_index;
@@ -1471,6 +1543,7 @@ void WidgetTextInput::SetCursorFromRelativeIndices(int cursor_line_index, int cu
 
 	for (int i = 0; i < cursor_line_index; i++)
 		absolute_cursor_index += lines[i].size;
+	absolute_cursor_index = SnapToCharacterStart(GetValue(), absolute_cursor_index);
 
 	// Only wrap down if we're not located at the end of the line.
 	cursor_wrap_down = (cursor_character_index < lines[cursor_line_index].editable_length);
@@ -1813,7 +1886,7 @@ Vector2f WidgetTextInput::FormatText(float height_constraint)
 	} while (!last_line && content_area.y <= height_constraint + OVERFLOW_TOLERANCE);
 
 	// Clamp the cursor to a valid range.
-	absolute_cursor_index = Math::Min(absolute_cursor_index, (int)GetValue().size());
+	absolute_cursor_index = SnapToCharacterStart(GetValue(), absolute_cursor_index);
 
 	selection_composition_geometry = parent->GetRenderManager()->MakeGeometry(std::move(selection_composition_mesh));
 
@@ -1887,6 +1960,10 @@ void WidgetTextInput::UpdateCursorPosition(bool update_ideal_cursor_position)
 
 bool WidgetTextInput::UpdateSelection(bool selecting)
 {
+	const String& value = GetValue();
+	absolute_cursor_index = SnapToCharacterStart(value, absolute_cursor_index);
+	selection_anchor_index = SnapToCharacterStart(value, selection_anchor_index);
+
 	bool selection_changed = false;
 	if (!selecting)
 	{
@@ -1935,10 +2012,13 @@ void WidgetTextInput::DeleteSelection()
 {
 	if (selection_length > 0)
 	{
+		SnapIndicesToCharacters();
 		String new_value = GetAttributeValue();
-		const int selection_begin_index_attribute = DisplayIndexToAttributeIndex(selection_begin_index, new_value);
-		const int selection_end_index_attribute = DisplayIndexToAttributeIndex(selection_begin_index + selection_length, new_value);
+		const int selection_begin_index_attribute = SnapToCharacterStart(new_value, DisplayIndexToAttributeIndex(selection_begin_index, new_value));
+		const int selection_end_index_attribute =
+			SnapToCharacterStart(new_value, DisplayIndexToAttributeIndex(selection_begin_index + selection_length, new_value));
 		UI_ASSERT(selection_end_index_attribute >= selection_begin_index_attribute);
+		UI_ASSERT(IsCharacterStart(new_value, selection_begin_index_attribute) && IsCharacterStart(new_value, selection_end_index_attribute));
 
 		const size_t selection_begin = std::min((size_t)selection_begin_index_attribute, (size_t)new_value.size());
 		const size_t attribute_selection_length = size_t(selection_end_index_attribute - selection_begin_index_attribute);
@@ -2005,7 +2085,7 @@ void WidgetTextInput::SetKeyboardActive(bool active)
 			// Activate the keyboard and submit the cursor position and line height to enable clients to adjust the input method editor (IME).
 			const Vector2f element_offset = parent->BoxModel().GetAbsoluteOffset() - Vector2f{parent->Scroll().GetScrollLeft(), parent->Scroll().GetScrollTop()};
 			const Vector2f absolute_cursor_position = element_offset + cursor_position;
-			system->ActivateKeyboard(absolute_cursor_position, cursor_size.y);
+			system->ActivateKeyboard(absolute_cursor_position, cursor_size.y, GetKeyboardType());
 		}
 		else
 		{

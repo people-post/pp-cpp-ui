@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ui/base/SystemInterface.h>
 #include <ui/dom/EventListener.h>
 #include <ui/paint/Geometry.h>
 #include <ui/paint/Vertex.h>
@@ -116,6 +117,9 @@ protected:
 	/// Transforms the displayed value of the text box, typically used for password fields.
 	/// @note Only use this for transforming characters, do not modify the length of the string.
 	virtual void TransformValue(String& value);
+
+	/// The on-screen keyboard this field asks for.
+	virtual KeyboardType GetKeyboardType() const { return KeyboardType::Text; }
 	/// Converts a display index to an attribute index.
 	/// @param[in] display_index Absolute index into the displayed value (see GetValue).
 	/// @param[in] attribute_value The attribute value to be considered.
@@ -215,6 +219,8 @@ private:
 	/// anchor for future selections.
 	/// @return True if selection was changed.
 	bool UpdateSelection(bool selecting);
+	/// Moves the caret, the selection anchor and the selection ends to character starts in the current value.
+	void SnapIndicesToCharacters();
 	/// Removes the selection of text.
 	/// @return True if selection was changed.
 	bool ClearSelection();
@@ -337,6 +343,8 @@ private:
 	int undo_epoch = 0;
 	// Non-zero while the widget itself writes the value; such writes must not clear the history.
 	int history_suspend = 0;
+	// The value last sent to change listeners (a data binding holds it).
+	String reported_value;
 	bool in_edit_scope = false;
 	// State before the first change of the IME composition in progress.
 	bool ime_edit_pending = false;

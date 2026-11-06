@@ -563,7 +563,7 @@ void TestNavigator::StartGoTo()
 {
 	goto_index = 0;
 	const ui::Rectanglef area = viewer->GetGoToArea();
-	ui::GetSystemInterface()->ActivateKeyboard(area.TopLeft(), area.Height());
+	ui::GetSystemInterface()->ActivateKeyboard(area.TopLeft(), area.Height(), ui::KeyboardType::Text);
 }
 
 void TestNavigator::CancelGoTo()

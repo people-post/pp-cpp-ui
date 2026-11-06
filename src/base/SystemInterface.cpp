@@ -96,7 +96,7 @@ void SystemInterface::JoinPath(String& translated_path, const String& document_p
 	translated_path = Replace(url.GetPathedFileName(), '|', ':');
 }
 
-void SystemInterface::ActivateKeyboard(ui::Vector2f /*caret_position*/, float /*line_height*/) {}
+void SystemInterface::ActivateKeyboard(ui::Vector2f /*caret_position*/, float /*line_height*/, KeyboardType /*type*/) {}
 
 void SystemInterface::DeactivateKeyboard() {}
 

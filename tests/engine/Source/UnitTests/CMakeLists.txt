@@ -21,6 +21,7 @@ target_include_directories(${TARGET_NAME} PRIVATE
 target_link_libraries(${TARGET_NAME} PRIVATE
 	ui_tests_common
 	ui_core
+	SDL::SDL
 	doctest::doctest
 	trompeloeil::trompeloeil
 )

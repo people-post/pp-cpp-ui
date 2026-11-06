@@ -1,4 +1,7 @@
 #include <ui/platform/Platform_SDL.h>
+#if UI_SDL_VERSION_MAJOR >= 3
+	#include <ui/platform/TextInputProperties_SDL.h>
+#endif
 #include <ui/dom/Context.h>
 #include <ui/base/Input.h>
 #include <ui/base/StringUtilities.h>
@@ -122,7 +125,7 @@ void SystemInterface_SDL::GetClipboardText(ui::String& text)
 	SDL_free(raw_text);
 }
 
-void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float line_height)
+void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type)
 {
 	if (window)
 	{
@@ -136,6 +139,11 @@ void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float li
 		const SDL_Rect rect = {int(caret_position.x / scale + 0.5f), int(caret_position.y / scale + 0.5f), 1,
 			app_handles_keyboard_inset_ ? 0 : (caret_h > 0 ? caret_h : 1)};
 
+		// The keyboard type is fixed while text input runs: focus moving between a password field and a text field
+		// restarts it with the new type. Between two fields of the same type the keyboard stays up.
+		if (SDL_TextInputActive(window) && type != active_keyboard_type_)
+			SDL_StopTextInput(window);
+
 		// ShowCursor() calls this on every keystroke. Re-issuing StartTextInput / thrashing
 		// SetTextInputArea makes UIKit dismiss+reshow the soft keyboard (worse on small sims
 		// where safe-area republish from UpdateTextInputArea is more visible).
@@ -147,11 +155,16 @@ void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float li
 			last_text_input_rect_ = rect;
 		}
 		if (!already_active) {
-			SDL_StartTextInput(window);
+			const SDL_PropertiesID props = SDL_CreateProperties();
+			RmlSDL::SetTextInputProperties(props, type);
+			SDL_StartTextInputWithProperties(window, props);
+			SDL_DestroyProperties(props);
+			active_keyboard_type_ = type;
 		}
 #else
 		(void)caret_position;
 		(void)line_height;
+		(void)type;
 		SDL_StartTextInput();
 #endif
 	}

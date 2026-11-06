@@ -28,7 +28,7 @@ public:
 	void SetClipboardText(const ui::String& text) override;
 	void GetClipboardText(ui::String& text) override;
 
-	void ActivateKeyboard(ui::Vector2f caret_position, float line_height) override;
+	void ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type) override;
 	void DeactivateKeyboard() override;
 
 private:

@@ -96,7 +96,7 @@ void SystemInterface_SDL::GetClipboardText(ui::String& text)
 	SDL_free(raw_text);
 }
 
-void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float line_height)
+void SystemInterface_SDL::ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType /*type*/)
 {
 	if (window)
 	{

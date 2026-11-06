@@ -28,7 +28,7 @@ public:
 	void SetClipboardText(const ui::String& text) override;
 	void GetClipboardText(ui::String& text) override;
 
-	void ActivateKeyboard(ui::Vector2f caret_position, float line_height) override;
+	void ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type) override;
 	void DeactivateKeyboard() override;
 
 	// Set when the app lifts its own layout above the on-screen keyboard. The text input area is then sent
@@ -41,6 +41,7 @@ private:
 
 #if UI_SDL_VERSION_MAJOR >= 3
 	SDL_Rect last_text_input_rect_{};
+	ui::KeyboardType active_keyboard_type_ = ui::KeyboardType::Text;
 #endif
 
 	SDL_Cursor* cursor_default = nullptr;
