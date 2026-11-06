@@ -13,6 +13,7 @@
 #include <ui/widgets/ElementFormControlInput.h>
 #include <ui/widgets/ElementFormControlTextArea.h>
 #include <doctest.h>
+#include <random>
 
 using namespace ui;
 
@@ -1277,4 +1278,85 @@ TEST_CASE("the data model catching up with the committed text does not end an IM
 
 	document->Close();
 	TestsShell::ShutdownShell();
+}
+
+namespace {
+
+// True when the bytes are whole UTF-8 characters: no continuation byte without its lead, no lead cut short.
+bool IsWholeUtf8(const String& s)
+{
+	for (size_t i = 0; i < s.size();)
+	{
+		const unsigned char lead = (unsigned char)s[i];
+		const size_t length = lead < 0x80 ? 1 : (lead & 0xE0) == 0xC0 ? 2 : (lead & 0xF0) == 0xE0 ? 3 : (lead & 0xF8) == 0xF0 ? 4 : 0;
+		if (length == 0 || i + length > s.size())
+			return false;
+		for (size_t k = 1; k < length; ++k)
+			if (((unsigned char)s[i + k] & 0xC0) != 0x80)
+				return false;
+		i += length;
+	}
+	return true;
+}
+
+} // namespace
+
+TEST_CASE("no sequence of edits splits a character of mixed Latin, CJK and emoji text")
+{
+	// Garbled glyphs on iPhone came from a CJK character cut in half by an insert at a byte inside it. Random typing,
+	// deleting, caret and selection moves, taps, IME compositions and values set from outside must keep whole characters.
+	const String tokens[] = {"a", "Z", " ", "\xe4\xbd\xa0", "\xe5\xa5\xbd", "\xef\xbc\x8c", "\xc3\xa9",
+		"\xf0\x9f\x91\x8d\xf0\x9f\x8f\xbd", "\xf0\x9f\x87\xa8\xf0\x9f\x87\xb3", "e\xcc\x81", "\n"};
+	const Input::KeyIdentifier keys[] = {Input::KI_BACK, Input::KI_DELETE, Input::KI_LEFT, Input::KI_RIGHT, Input::KI_UP,
+		Input::KI_DOWN, Input::KI_HOME, Input::KI_END};
+	TestTextInputMethodEditor ime;
+	for (const char* id : {"input", "area"})
+	{
+		CAPTURE(id);
+		REQUIRE(TestsShell::GetContext());
+		Context* ime_context = CreateContext("ime_fuzz", Vector2i(1024, 768), nullptr, &ime);
+		REQUIRE(ime_context);
+		Fixture f(id, ime_context);
+		REQUIRE(ime.context);
+		std::mt19937 random(20261106);
+		const auto pick = [&](int n) { return (int)(random() % (unsigned)n); };
+		const auto token = [&] { return tokens[pick((int)(sizeof(tokens) / sizeof(tokens[0])))]; };
+		f.Type("ab\xe7\xbe\xa4\xe8\x81\x8a\xf0\x9f\x91\x8d");
+
+		for (int step = 0; step < 400; ++step)
+		{
+			CAPTURE(step);
+			switch (pick(8))
+			{
+			case 0: f.Type(token()); break;
+			case 1: f.Key(keys[pick(8)], pick(3) == 0 ? Input::KM_SHIFT : 0); break;
+			case 2: f.Key(Input::KI_A, Input::KM_CTRL); break;
+			case 3:
+			{
+				// A tap somewhere in the field.
+				const Vector2f origin = f.control->GetAbsoluteOffset(BoxArea::Content);
+				f.context->ProcessMouseMove(int(origin.x) + pick(300), int(origin.y) + pick(40), 0);
+				f.context->ProcessMouseButtonDown(0, 0);
+				f.context->ProcessMouseButtonUp(0, 0);
+				break;
+			}
+			case 4:
+			{
+				// The app sets a value: the current one with a few bytes cut from the front, re-aligned to whole
+				// characters (as a bound value that lost some text would), or a fresh token string.
+				String value = f.Value();
+				size_t cut = value.empty() ? 0 : (size_t)pick((int)value.size());
+				while (cut < value.size() && ((unsigned char)value[cut] & 0xC0) == 0x80)
+					++cut;
+				f.control->SetValue(pick(2) ? value.substr(cut) : token() + token());
+				break;
+			}
+			case 5: ime.SetComposition(pick(2) ? String("ni") : token(), pick(4) - 1); break;
+			case 6: ime.Commit(token()); break;
+			case 7: ime.SetComposition("", 0); break;
+			}
+			f.context->Update();
+			REQUIRE(IsWholeUtf8(f.Value()));
+		}
+	}
 }

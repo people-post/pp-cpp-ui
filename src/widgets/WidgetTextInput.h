@@ -219,6 +219,8 @@ private:
 	/// anchor for future selections.
 	/// @return True if selection was changed.
 	bool UpdateSelection(bool selecting);
+	/// Moves the caret, the selection anchor and the selection ends to character starts in the current value.
+	void SnapIndicesToCharacters();
 	/// Removes the selection of text.
 	/// @return True if selection was changed.
 	bool ClearSelection();
