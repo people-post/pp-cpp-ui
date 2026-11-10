@@ -9,227 +9,221 @@ using namespace ui;
 
 namespace {
 
-String EvalExpression(DataExpressionInterface& expression_interface, const String& expression)
-{
-	DataExpression data_expression(expression);
-	if (!data_expression.Parse(expression_interface, false))
-	{
-		FAIL_CHECK("Could not parse expression: " << expression);
-		return {};
-	}
+String EvalExpression(DataExpressionInterface& expression_interface, const String& expression) {
+  DataExpression data_expression(expression);
+  if (!data_expression.Parse(expression_interface, false)) {
+    FAIL_CHECK("Could not parse expression: " << expression);
+    return {};
+  }
 
-	Variant result;
-	if (!data_expression.Run(expression_interface, result))
-	{
-		FAIL_CHECK("Could not execute expression: " << expression);
-		return {};
-	}
-	return result.Get<String>();
+  Variant result;
+  if (!data_expression.Run(expression_interface, result)) {
+    FAIL_CHECK("Could not execute expression: " << expression);
+    return {};
+  }
+  return result.Get<String>();
 }
 
-bool EvalAssignment(DataExpressionInterface& expression_interface, const String& expression)
-{
-	DataExpression data_expression(expression);
-	if (!data_expression.Parse(expression_interface, true))
-	{
-		FAIL_CHECK("Could not parse assignment expression: " << expression);
-		return false;
-	}
+bool EvalAssignment(DataExpressionInterface& expression_interface, const String& expression) {
+  DataExpression data_expression(expression);
+  if (!data_expression.Parse(expression_interface, true)) {
+    FAIL_CHECK("Could not parse assignment expression: " << expression);
+    return false;
+  }
 
-	Variant unused;
-	if (!data_expression.Run(expression_interface, unused))
-	{
-		FAIL_CHECK("Could not execute assignment expression: " << expression);
-		return false;
-	}
-	return true;
+  Variant unused;
+  if (!data_expression.Run(expression_interface, unused)) {
+    FAIL_CHECK("Could not execute assignment expression: " << expression);
+    return false;
+  }
+  return true;
 }
 
 } // namespace
 
-TEST_CASE("Data expressions")
-{
-	DataTypeRegister type_register;
-	DataModel model(&type_register);
-	DataExpressionInterface expression_interface(&model, nullptr);
+TEST_CASE("Data expressions") {
+  DataTypeRegister type_register;
+  DataModel model(&type_register);
+  DataExpressionInterface expression_interface(&model, nullptr);
 
-	auto TestExpression = [&](const String& expression) { return EvalExpression(expression_interface, expression); };
-	auto TestAssignment = [&](const String& expression) { return EvalAssignment(expression_interface, expression); };
+  auto TestExpression = [&](const String& expression) { return EvalExpression(expression_interface, expression); };
+  auto TestAssignment = [&](const String& expression) { return EvalAssignment(expression_interface, expression); };
 
-	float radius = 8.7f;
-	int num_trolls = 1;
-	String color_name = "color";
-	Colourb color_value = Colourb(180, 100, 255);
-	std::vector<String> num_multi = {"left", "right"};
+  float radius = 8.7f;
+  int num_trolls = 1;
+  String color_name = "color";
+  Colourb color_value = Colourb(180, 100, 255);
+  std::vector<String> num_multi = {"left", "right"};
 
-	DataModelConstructor constructor(&model);
-	constructor.RegisterArray<std::vector<String>>();
+  DataModelConstructor constructor(&model);
+  constructor.RegisterArray<std::vector<String>>();
 
-	constructor.Bind("radius", &radius);
-	constructor.Bind("color_name", &color_name);
-	constructor.Bind("num_trolls", &num_trolls);
-	constructor.Bind("num_multi", &num_multi);
-	constructor.BindFunc("color_value", [&](Variant& variant) { variant = ToString(color_value); });
+  constructor.Bind("radius", &radius);
+  constructor.Bind("color_name", &color_name);
+  constructor.Bind("num_trolls", &num_trolls);
+  constructor.Bind("num_multi", &num_multi);
+  constructor.BindFunc("color_value", [&](Variant& variant) { variant = ToString(color_value); });
 
-	constructor.RegisterTransformFunc("concatenate", [](const VariantList& arguments) -> Variant {
-		StringList list;
-		list.reserve(arguments.size());
-		for (const Variant& argument : arguments)
-			list.push_back(argument.Get<String>());
-		String result;
-		StringUtilities::JoinString(result, list);
-		return Variant(std::move(result));
-	});
-	constructor.RegisterTransformFunc("number_suffix", [](const VariantList& arguments) -> Variant {
-		if (arguments.size() != 3)
-			return {};
-		String suffix = (arguments[0].Get<double>() == 1.0 ? arguments[1] : arguments[2]).Get<String>();
-		return Variant(arguments[0].Get<String>() + ' ' + suffix);
-	});
-	DataModelHandle handle = constructor.GetModelHandle();
+  constructor.RegisterTransformFunc("concatenate", [](const VariantList& arguments) -> Variant {
+    StringList list;
+    list.reserve(arguments.size());
+    for (const Variant& argument : arguments)
+      list.push_back(argument.Get<String>());
+    String result;
+    StringUtilities::JoinString(result, list);
+    return Variant(std::move(result));
+  });
+  constructor.RegisterTransformFunc("number_suffix", [](const VariantList& arguments) -> Variant {
+    if (arguments.size() != 3)
+      return {};
+    String suffix = (arguments[0].Get<double>() == 1.0 ? arguments[1] : arguments[2]).Get<String>();
+    return Variant(arguments[0].Get<String>() + ' ' + suffix);
+  });
+  DataModelHandle handle = constructor.GetModelHandle();
 
-	CHECK(TestExpression("3.62345 | round | format(2)") == "4.00");
+  CHECK(TestExpression("3.62345 | round | format(2)") == "4.00");
 
-	CHECK(TestExpression("'a' | to_upper") == "A");
-	CHECK(TestExpression("!!10 - 1 ? 'hello' : 'world' | to_upper") == "WORLD");
-	CHECK(TestExpression("(color_name) + (': ' + color_value)") == "color: #b464ff");
-	CHECK(TestExpression("'hello world' | to_upper | concatenate(5 + 12 == 17 ? 'yes' : 'no', 9*2)") == "HELLO WORLD,yes,18");
-	CHECK(TestExpression("true == false") == "0");
-	CHECK(TestExpression("true != false") == "1");
-	CHECK(TestExpression("true") == "1");
+  CHECK(TestExpression("'a' | to_upper") == "A");
+  CHECK(TestExpression("!!10 - 1 ? 'hello' : 'world' | to_upper") == "WORLD");
+  CHECK(TestExpression("(color_name) + (': ' + color_value)") == "color: #b464ff");
+  CHECK(TestExpression("'hello world' | to_upper | concatenate(5 + 12 == 17 ? 'yes' : 'no', 9*2)") ==
+        "HELLO WORLD,yes,18");
+  CHECK(TestExpression("true == false") == "0");
+  CHECK(TestExpression("true != false") == "1");
+  CHECK(TestExpression("true") == "1");
 
-	CHECK(TestExpression("true || false ? true && 3==1+2 ? 'Absolutely!' : 'well..' : 'no'") == "Absolutely!");
-	CHECK(TestExpression(R"('It\'s a fit')") == R"(It's a fit)");
-	CHECK(TestExpression("2 * 2") == "4");
-	CHECK(TestExpression("50000 / 1500") == "33.333");
-	CHECK(TestExpression("5*1+2") == "7");
-	CHECK(TestExpression("5*(1+2)") == "15");
-	CHECK(TestExpression("2*(-2)/4") == "-1");
-	CHECK(TestExpression("5.2 + 19 + 'px'") == "24.2px");
+  CHECK(TestExpression("true || false ? true && 3==1+2 ? 'Absolutely!' : 'well..' : 'no'") == "Absolutely!");
+  CHECK(TestExpression(R"('It\'s a fit')") == R"(It's a fit)");
+  CHECK(TestExpression("2 * 2") == "4");
+  CHECK(TestExpression("50000 / 1500") == "33.333");
+  CHECK(TestExpression("5*1+2") == "7");
+  CHECK(TestExpression("5*(1+2)") == "15");
+  CHECK(TestExpression("2*(-2)/4") == "-1");
+  CHECK(TestExpression("5.2 + 19 + 'px'") == "24.2px");
 
-	CHECK(TestExpression("(radius | format(2)) + 'm'") == "8.70m");
-	CHECK(TestExpression("radius < 10.5 ? 'smaller' : 'larger'") == "smaller");
-	CHECK(TestAssignment("radius = 15"));
-	CHECK(radius == doctest::Approx(15.f));
-	CHECK(TestExpression("radius < 10.5 ? 'smaller' : 'larger'") == "larger");
-	CHECK(TestAssignment("radius = 4; color_name = 'image-color'"));
-	CHECK(radius == doctest::Approx(4.f));
-	CHECK(color_name == "image-color");
-	CHECK(TestExpression("radius == 4 && color_name == 'image-color'") == "1");
+  CHECK(TestExpression("(radius | format(2)) + 'm'") == "8.70m");
+  CHECK(TestExpression("radius < 10.5 ? 'smaller' : 'larger'") == "smaller");
+  CHECK(TestAssignment("radius = 15"));
+  CHECK(radius == doctest::Approx(15.f));
+  CHECK(TestExpression("radius < 10.5 ? 'smaller' : 'larger'") == "larger");
+  CHECK(TestAssignment("radius = 4; color_name = 'image-color'"));
+  CHECK(radius == doctest::Approx(4.f));
+  CHECK(color_name == "image-color");
+  CHECK(TestExpression("radius == 4 && color_name == 'image-color'") == "1");
 
-	CHECK(TestAssignment("color_name = 'a' | concatenate('b')"));
-	CHECK(color_name == "a,b");
-	CHECK(TestAssignment("color_name = concatenate('c','d')"));
-	CHECK(color_name == "c,d");
+  CHECK(TestAssignment("color_name = 'a' | concatenate('b')"));
+  CHECK(color_name == "a,b");
+  CHECK(TestAssignment("color_name = concatenate('c','d')"));
+  CHECK(color_name == "c,d");
 
-	CHECK(TestExpression("5 == 1 + 2*2 || 8 == 1 + 4  ? 'yes' : 'no'") == "yes");
-	CHECK(TestExpression("!!('fa' + 'lse')") == "0");
-	CHECK(TestExpression("!!('tr' + 'ue')") == "1");
-	CHECK(TestExpression("'fox' + 'dog' ? 'FoxyDog' : 'hot' + 'dog' | to_upper") == "HOTDOG");
+  CHECK(TestExpression("5 == 1 + 2*2 || 8 == 1 + 4  ? 'yes' : 'no'") == "yes");
+  CHECK(TestExpression("!!('fa' + 'lse')") == "0");
+  CHECK(TestExpression("!!('tr' + 'ue')") == "1");
+  CHECK(TestExpression("'fox' + 'dog' ? 'FoxyDog' : 'hot' + 'dog' | to_upper") == "HOTDOG");
 
-	CHECK(TestExpression("3.62345 | round") == "4");
-	CHECK(TestExpression("3.62345 | format(0)") == "4");
-	CHECK(TestExpression("3.62345 | format(2)") == "3.62");
-	CHECK(TestExpression("3.62345 | format(10)") == "3.6234500000");
-	CHECK(TestExpression("3.62345 | format(10, true)") == "3.62345");
-	CHECK(TestExpression("3.62345 | round | format(2)") == "4.00");
-	CHECK(TestExpression("3.0001 | format(2, false)") == "3.00");
-	CHECK(TestExpression("3.0001 | format(2, true)") == "3");
-	CHECK(TestExpression("format(3.0001, 2, true)") == "3");
+  CHECK(TestExpression("3.62345 | round") == "4");
+  CHECK(TestExpression("3.62345 | format(0)") == "4");
+  CHECK(TestExpression("3.62345 | format(2)") == "3.62");
+  CHECK(TestExpression("3.62345 | format(10)") == "3.6234500000");
+  CHECK(TestExpression("3.62345 | format(10, true)") == "3.62345");
+  CHECK(TestExpression("3.62345 | round | format(2)") == "4.00");
+  CHECK(TestExpression("3.0001 | format(2, false)") == "3.00");
+  CHECK(TestExpression("3.0001 | format(2, true)") == "3");
+  CHECK(TestExpression("format(3.0001, 2, true)") == "3");
 
-	CHECK(TestExpression("0.2 + 3.42345 | round") == "4");
-	CHECK(TestExpression("(3.42345 | round) + 0.2") == "3.2");
-	CHECK(TestExpression("(3.42345 | format(0)) + 0.2") == "30.2"); // Here, format(0) returns a string, so the + means string concatenation.
+  CHECK(TestExpression("0.2 + 3.42345 | round") == "4");
+  CHECK(TestExpression("(3.42345 | round) + 0.2") == "3.2");
+  CHECK(TestExpression("(3.42345 | format(0)) + 0.2") ==
+        "30.2"); // Here, format(0) returns a string, so the + means string concatenation.
 
-	CHECK(TestExpression("'Hi' | concatenate") == "Hi");
-	CHECK(TestExpression("'Hi' | concatenate('there')") == "Hi,there");
-	CHECK(TestExpression("'A' | concatenate('b','c', 'd','e')") == "A,b,c,d,e");
-	CHECK(TestExpression("3.6 | concatenate") == "3.6");
+  CHECK(TestExpression("'Hi' | concatenate") == "Hi");
+  CHECK(TestExpression("'Hi' | concatenate('there')") == "Hi,there");
+  CHECK(TestExpression("'A' | concatenate('b','c', 'd','e')") == "A,b,c,d,e");
+  CHECK(TestExpression("3.6 | concatenate") == "3.6");
 
-	CHECK(TestExpression("concatenate()") == "");
-	CHECK(TestExpression("concatenate('Hi')") == "Hi");
-	CHECK(TestExpression("concatenate( 'Hi',  'there' )") == "Hi,there");
-	CHECK(TestExpression("concatenate('A', 'b'+'c', 'd','e')") == "A,bc,d,e");
-	CHECK(TestExpression("concatenate('r', 2*radius)") == "r,8");
-	CHECK(TestExpression("concatenate(3.6)") == "3.6");
-	CHECK(TestExpression("concatenate(3.6+1)") == "4.6");
-	CHECK(TestExpression("concatenate(3.6+1) | round | format(3, false)") == "5.000");
-	CHECK(TestExpression("concatenate(3.6+1 | round, 'x')") == "5,x");
+  CHECK(TestExpression("concatenate()") == "");
+  CHECK(TestExpression("concatenate('Hi')") == "Hi");
+  CHECK(TestExpression("concatenate( 'Hi',  'there' )") == "Hi,there");
+  CHECK(TestExpression("concatenate('A', 'b'+'c', 'd','e')") == "A,bc,d,e");
+  CHECK(TestExpression("concatenate('r', 2*radius)") == "r,8");
+  CHECK(TestExpression("concatenate(3.6)") == "3.6");
+  CHECK(TestExpression("concatenate(3.6+1)") == "4.6");
+  CHECK(TestExpression("concatenate(3.6+1) | round | format(3, false)") == "5.000");
+  CHECK(TestExpression("concatenate(3.6+1 | round, 'x')") == "5,x");
 
-	CHECK(TestExpression("num_trolls | number_suffix('troll','trolls')") == "1 troll");
-	CHECK(TestExpression("concatenate('It takes', num_trolls*3 + ' goats', 'to outsmart', num_trolls | number_suffix('troll','trolls'))") ==
-		"It takes,3 goats,to outsmart,1 troll");
-	num_trolls = 3;
-	handle.DirtyVariable("num_trolls");
-	CHECK(TestExpression("concatenate('It takes', num_trolls*3 + ' goats', 'to outsmart', num_trolls | number_suffix('troll','trolls'))") ==
-		"It takes,9 goats,to outsmart,3 trolls");
+  CHECK(TestExpression("num_trolls | number_suffix('troll','trolls')") == "1 troll");
+  CHECK(TestExpression("concatenate('It takes', num_trolls*3 + ' goats', 'to outsmart', num_trolls | "
+                       "number_suffix('troll','trolls'))") == "It takes,3 goats,to outsmart,1 troll");
+  num_trolls = 3;
+  handle.DirtyVariable("num_trolls");
+  CHECK(TestExpression("concatenate('It takes', num_trolls*3 + ' goats', 'to outsmart', num_trolls | "
+                       "number_suffix('troll','trolls'))") == "It takes,9 goats,to outsmart,3 trolls");
 
-	// Test that only one side of ternary is evaluated
-	CHECK(TestExpression("true ? num_multi[0] : num_multi[999]") == "left");
-	CHECK(TestExpression("false ? num_multi[999] : num_multi[1]") == "right");
+  // Test that only one side of ternary is evaluated
+  CHECK(TestExpression("true ? num_multi[0] : num_multi[999]") == "left");
+  CHECK(TestExpression("false ? num_multi[999] : num_multi[1]") == "right");
 }
 
-TEST_CASE("Data expressions.deeply_nested")
-{
-	// Excessive nesting is rejected with a parse error instead of overflowing the stack.
-	DataTypeRegister type_register;
-	DataModel model(&type_register);
-	DataExpressionInterface expression_interface(&model, nullptr);
+TEST_CASE("Data expressions.deeply_nested") {
+  // Excessive nesting is rejected with a parse error instead of overflowing the stack.
+  DataTypeRegister type_register;
+  DataModel model(&type_register);
+  DataExpressionInterface expression_interface(&model, nullptr);
 
-	const String deeply_nested_parens = String(10000, '(') + "1" + String(10000, ')');
-	DataExpression parens_expression(deeply_nested_parens);
-	CHECK_FALSE(parens_expression.Parse(expression_interface, false));
+  const String deeply_nested_parens = String(10000, '(') + "1" + String(10000, ')');
+  DataExpression parens_expression(deeply_nested_parens);
+  CHECK_FALSE(parens_expression.Parse(expression_interface, false));
 
-	const String deeply_nested_not = String(10000, '!') + "true";
-	DataExpression not_expression(deeply_nested_not);
-	CHECK_FALSE(not_expression.Parse(expression_interface, false));
+  const String deeply_nested_not = String(10000, '!') + "true";
+  DataExpression not_expression(deeply_nested_not);
+  CHECK_FALSE(not_expression.Parse(expression_interface, false));
 
-	const String deeply_nested_member_access = "a" + String(10000, '.') + "b";
-	DataExpression member_expression(deeply_nested_member_access);
-	member_expression.Parse(expression_interface, false); // Must not crash; success/failure both acceptable.
+  const String deeply_nested_member_access = "a" + String(10000, '.') + "b";
+  DataExpression member_expression(deeply_nested_member_access);
+  member_expression.Parse(expression_interface, false); // Must not crash; success/failure both acceptable.
 
-	String deeply_nested_ternary;
-	for (int i = 0; i < 10000; i++)
-		deeply_nested_ternary += "true ? 1 : ";
-	deeply_nested_ternary += "0";
-	DataExpression ternary_expression(deeply_nested_ternary);
-	CHECK_FALSE(ternary_expression.Parse(expression_interface, false));
+  String deeply_nested_ternary;
+  for (int i = 0; i < 10000; i++)
+    deeply_nested_ternary += "true ? 1 : ";
+  deeply_nested_ternary += "0";
+  DataExpression ternary_expression(deeply_nested_ternary);
+  CHECK_FALSE(ternary_expression.Parse(expression_interface, false));
 
-	String nested_condition;
-	for (int i = 0; i < 10000; i++)
-		nested_condition += "1 ? ";
-	nested_condition += "1";
-	for (int i = 0; i < 10000; i++)
-		nested_condition += " : 0";
-	DataExpression condition_expression(nested_condition);
-	CHECK_FALSE(condition_expression.Parse(expression_interface, false));
+  String nested_condition;
+  for (int i = 0; i < 10000; i++)
+    nested_condition += "1 ? ";
+  nested_condition += "1";
+  for (int i = 0; i < 10000; i++)
+    nested_condition += " : 0";
+  DataExpression condition_expression(nested_condition);
+  CHECK_FALSE(condition_expression.Parse(expression_interface, false));
 
-	String deeply_nested_pipe;
-	for (int i = 0; i < 10000; i++)
-		deeply_nested_pipe += "1 | f(";
-	deeply_nested_pipe += "1" + String(10000, ')');
-	DataExpression pipe_expression(deeply_nested_pipe);
-	CHECK_FALSE(pipe_expression.Parse(expression_interface, false));
+  String deeply_nested_pipe;
+  for (int i = 0; i < 10000; i++)
+    deeply_nested_pipe += "1 | f(";
+  deeply_nested_pipe += "1" + String(10000, ')');
+  DataExpression pipe_expression(deeply_nested_pipe);
+  CHECK_FALSE(pipe_expression.Parse(expression_interface, false));
 
-	String deeply_nested_function;
-	for (int i = 0; i < 10000; i++)
-		deeply_nested_function += "f(";
-	deeply_nested_function += "1" + String(10000, ')');
-	DataExpression function_expression(deeply_nested_function);
-	CHECK_FALSE(function_expression.Parse(expression_interface, false));
+  String deeply_nested_function;
+  for (int i = 0; i < 10000; i++)
+    deeply_nested_function += "f(";
+  deeply_nested_function += "1" + String(10000, ')');
+  DataExpression function_expression(deeply_nested_function);
+  CHECK_FALSE(function_expression.Parse(expression_interface, false));
 
-	// Moderate nesting still parses.
-	String moderate_ternary;
-	for (int i = 0; i < 20; i++)
-		moderate_ternary += "true ? 1 : ";
-	moderate_ternary += "0";
-	DataExpression moderate_ternary_expression(moderate_ternary);
-	CHECK(moderate_ternary_expression.Parse(expression_interface, false));
+  // Moderate nesting still parses.
+  String moderate_ternary;
+  for (int i = 0; i < 20; i++)
+    moderate_ternary += "true ? 1 : ";
+  moderate_ternary += "0";
+  DataExpression moderate_ternary_expression(moderate_ternary);
+  CHECK(moderate_ternary_expression.Parse(expression_interface, false));
 
-	String moderate_pipe;
-	for (int i = 0; i < 20; i++)
-		moderate_pipe += "1 | f(";
-	moderate_pipe += "1" + String(20, ')');
-	DataExpression moderate_pipe_expression(moderate_pipe);
-	CHECK(moderate_pipe_expression.Parse(expression_interface, false));
+  String moderate_pipe;
+  for (int i = 0; i < 20; i++)
+    moderate_pipe += "1 | f(";
+  moderate_pipe += "1" + String(20, ')');
+  DataExpression moderate_pipe_expression(moderate_pipe);
+  CHECK(moderate_pipe_expression.Parse(expression_interface, false));
 }

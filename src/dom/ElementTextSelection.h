@@ -5,8 +5,8 @@ namespace ui {
 
 class SelectionStyleClient {
 public:
-	virtual ~SelectionStyleClient() = default;
-	virtual void OnSelectionStyleChanged() = 0;
+  virtual ~SelectionStyleClient() = default;
+  virtual void OnSelectionStyleChanged() = 0;
 };
 
 /**
@@ -15,18 +15,18 @@ public:
 
 class ElementTextSelection : public Element {
 public:
-	UI_RTTI_DefineWithParent(ElementTextSelection, Element)
+  UI_RTTI_DefineWithParent(ElementTextSelection, Element)
 
-	ElementTextSelection(const String& tag);
-	virtual ~ElementTextSelection();
+      ElementTextSelection(const String& tag);
+  virtual ~ElementTextSelection();
 
-	void SetClient(SelectionStyleClient* client);
+  void SetClient(SelectionStyleClient* client);
 
 protected:
-	void OnPropertyChange(const PropertyIdSet& changed_properties) override;
+  void OnPropertyChange(const PropertyIdSet& changed_properties) override;
 
 private:
-	SelectionStyleClient* client;
+  SelectionStyleClient* client;
 };
 
 } // namespace ui

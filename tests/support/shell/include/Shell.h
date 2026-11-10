@@ -18,6 +18,7 @@ void LoadFonts();
 
 // Process key down events to handle shortcuts common to all samples.
 // @return True if the event is still propagating, false if it was handled here.
-bool ProcessKeyDownShortcuts(ui::Context* context, ui::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority);
+bool ProcessKeyDownShortcuts(ui::Context* context, ui::Input::KeyIdentifier key, int key_modifier,
+                             float native_dp_ratio, bool priority);
 
 } // namespace Shell

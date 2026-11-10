@@ -37,22 +37,21 @@ static const String document_decorator_rml = R"(
 </rml>
 )";
 
-TEST_CASE("elementstyle.inline_decorator_images")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("elementstyle.inline_decorator_images") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	// There should be no warnings loading this document. There should be three images visible.
-	ElementDocument* document = context->LoadDocumentFromMemory(document_decorator_rml, "assets/");
-	REQUIRE(document);
-	document->Show();
+  // There should be no warnings loading this document. There should be three images visible.
+  ElementDocument* document = context->LoadDocumentFromMemory(document_decorator_rml, "assets/");
+  REQUIRE(document);
+  document->Show();
 
-	context->Update();
-	context->Render();
+  context->Update();
+  context->Render();
 
-	TestsShell::RenderLoop();
+  TestsShell::RenderLoop();
 
-	document->Close();
+  document->Close();
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

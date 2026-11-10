@@ -23,63 +23,65 @@ class FontFaceHandleHarfBuzz;
 
 class FontProvider {
 public:
-	static bool Initialise();
-	static void Shutdown();
+  static bool Initialise();
+  static void Shutdown();
 
-	/// Returns a handle to a font face that can be used to position and render text. This will return the closest match
-	/// it can find, but in the event a font family is requested that does not exist, nullptr will be returned instead of a
-	/// valid handle.
-	/// @param[in] family The family of the desired font handle.
-	/// @param[in] style The style of the desired font handle.
-	/// @param[in] weight The weight of the desired font handle.
-	/// @param[in] size The size of desired handle, in points.
-	/// @return A valid handle if a matching (or closely matching) font face was found, nullptr otherwise.
-	static FontFaceHandleHarfBuzz* GetFontFaceHandle(const String& family, Style::FontStyle style, Style::FontWeight weight, int size);
+  /// Returns a handle to a font face that can be used to position and render text. This will return the closest match
+  /// it can find, but in the event a font family is requested that does not exist, nullptr will be returned instead of a
+  /// valid handle.
+  /// @param[in] family The family of the desired font handle.
+  /// @param[in] style The style of the desired font handle.
+  /// @param[in] weight The weight of the desired font handle.
+  /// @param[in] size The size of desired handle, in points.
+  /// @return A valid handle if a matching (or closely matching) font face was found, nullptr otherwise.
+  static FontFaceHandleHarfBuzz* GetFontFaceHandle(const String& family, Style::FontStyle style,
+                                                   Style::FontWeight weight, int size);
 
-	/// Adds a new font face to the database. The face's family, style and weight will be determined from the face itself.
-	static bool LoadFontFace(const String& file_name, int face_index, bool fallback_face, Style::FontWeight weight = Style::FontWeight::Auto);
+  /// Adds a new font face to the database. The face's family, style and weight will be determined from the face itself.
+  static bool LoadFontFace(const String& file_name, int face_index, bool fallback_face,
+                           Style::FontWeight weight = Style::FontWeight::Auto);
 
-	/// Adds a new font face from memory.
-	static bool LoadFontFace(Span<const byte> data, int face_index, const String& font_family, Style::FontStyle style, Style::FontWeight weight, bool fallback_face);
+  /// Adds a new font face from memory.
+  static bool LoadFontFace(Span<const byte> data, int face_index, const String& font_family, Style::FontStyle style,
+                           Style::FontWeight weight, bool fallback_face);
 
-	/// Return the number of fallback font faces.
-	static int CountFallbackFontFaces();
+  /// Return the number of fallback font faces.
+  static int CountFallbackFontFaces();
 
-	/// Return a font face handle with the given index, at the given font size, for text of the given weight.
-	/// Fallback families keep the order they were first added in; within a family the face nearest to the weight comes
-	/// first (on a tie, the heavier face above 500, otherwise the lighter), then the family's other faces by distance.
-	static FontFaceHandleHarfBuzz* GetFallbackFontFace(int index, int font_size, Style::FontWeight weight);
+  /// Return a font face handle with the given index, at the given font size, for text of the given weight.
+  /// Fallback families keep the order they were first added in; within a family the face nearest to the weight comes
+  /// first (on a tie, the heavier face above 500, otherwise the lighter), then the family's other faces by distance.
+  static FontFaceHandleHarfBuzz* GetFallbackFontFace(int index, int font_size, Style::FontWeight weight);
 
-	/// Releases resources owned by sized font faces, including their textures and rendered glyphs.
-	static void ReleaseFontResources();
+  /// Releases resources owned by sized font faces, including their textures and rendered glyphs.
+  static void ReleaseFontResources();
 
 private:
-	FontProvider();
-	~FontProvider();
+  FontProvider();
+  ~FontProvider();
 
-	static FontProvider& Get();
+  static FontProvider& Get();
 
-	bool LoadFontFace(Span<const byte> data, int face_index, bool fallback_face, UniquePtr<byte[]> face_memory, const String& source, String font_family,
-		Style::FontStyle style,
-		Style::FontWeight weight);
+  bool LoadFontFace(Span<const byte> data, int face_index, bool fallback_face, UniquePtr<byte[]> face_memory,
+                    const String& source, String font_family, Style::FontStyle style, Style::FontWeight weight);
 
-	bool AddFace(FontFaceHandleFreetype face, const String& family, Style::FontStyle style, Style::FontWeight weight,
-		bool fallback_face, UniquePtr<byte[]> face_memory);
+  bool AddFace(FontFaceHandleFreetype face, const String& family, Style::FontStyle style, Style::FontWeight weight,
+               bool fallback_face, UniquePtr<byte[]> face_memory);
 
-	const Vector<FontFace*>& GetFallbackOrder(Style::FontWeight weight);
+  const Vector<FontFace*>& GetFallbackOrder(Style::FontWeight weight);
 
-	struct FallbackFace {
-		FontFace* face;
-		int family_order; // Order in which the face's family first appeared among fallback faces.
-	};
-	using FallbackFaceList = Vector<FallbackFace>;
-	using FontFamilyMap = UnorderedMap<String, UniquePtr<FontFamily>>;
+  struct FallbackFace {
+    FontFace* face;
+    int family_order; // Order in which the face's family first appeared among fallback faces.
+  };
+  using FallbackFaceList = Vector<FallbackFace>;
+  using FontFamilyMap = UnorderedMap<String, UniquePtr<FontFamily>>;
 
-	FontFamilyMap font_families;
-	FallbackFaceList fallback_font_faces;
-	Vector<String> fallback_families;
-	// Fallback faces in lookup order, per requested weight. Cleared when a fallback face is added.
-	UnorderedMap<int, Vector<FontFace*>> fallback_order_by_weight;
+  FontFamilyMap font_families;
+  FallbackFaceList fallback_font_faces;
+  Vector<String> fallback_families;
+  // Fallback faces in lookup order, per requested weight. Cleared when a fallback face is added.
+  UnorderedMap<int, Vector<FontFace*>> fallback_order_by_weight;
 
-	static const String debugger_font_family_name;
+  static const String debugger_font_family_name;
 };

@@ -14,21 +14,21 @@ class ElementDefinitionIterator;
 
 class ElementDefinition : public NonCopyMoveable {
 public:
-	ElementDefinition(const Vector<const StyleSheetNode*>& style_sheet_nodes);
+  ElementDefinition(const Vector<const StyleSheetNode*>& style_sheet_nodes);
 
-	/// Returns a specific property from the element definition.
-	/// @param[in] id The id of the property to return.
-	/// @return The property defined against the give name, or nullptr if no such property was found.
-	const Property* GetProperty(PropertyId id) const;
+  /// Returns a specific property from the element definition.
+  /// @param[in] id The id of the property to return.
+  /// @return The property defined against the give name, or nullptr if no such property was found.
+  const Property* GetProperty(PropertyId id) const;
 
-	/// Returns the list of property ids this element definition defines.
-	const PropertyIdSet& GetPropertyIds() const;
+  /// Returns the list of property ids this element definition defines.
+  const PropertyIdSet& GetPropertyIds() const;
 
-	const PropertyDictionary& GetProperties() const { return properties; }
+  const PropertyDictionary& GetProperties() const { return properties; }
 
 private:
-	PropertyDictionary properties;
-	PropertyIdSet property_ids;
+  PropertyDictionary properties;
+  PropertyIdSet property_ids;
 };
 
 } // namespace ui

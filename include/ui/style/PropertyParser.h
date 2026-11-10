@@ -13,14 +13,14 @@ using ParameterMap = UnorderedMap<String, int>;
 
 class UI_CORE_API PropertyParser {
 public:
-	virtual ~PropertyParser() {}
+  virtual ~PropertyParser() {}
 
-	/// Called to parse a RCSS declaration.
-	/// @param[out] property The property to set the parsed value on.
-	/// @param[in] value The raw value defined for this property.
-	/// @param[in] parameters The list of parameters defined for this property.
-	/// @return True if the value was parsed successfully, false otherwise.
-	virtual bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const = 0;
+  /// Called to parse a RCSS declaration.
+  /// @param[out] property The property to set the parsed value on.
+  /// @param[in] value The raw value defined for this property.
+  /// @param[in] parameters The list of parameters defined for this property.
+  /// @return True if the value was parsed successfully, false otherwise.
+  virtual bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const = 0;
 };
 
 } // namespace ui

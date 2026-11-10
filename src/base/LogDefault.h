@@ -10,7 +10,7 @@ namespace ui {
 
 class LogDefault {
 public:
-	static bool LogMessage(Log::Type type, const String& message);
+  static bool LogMessage(Log::Type type, const String& message);
 };
 
 } // namespace ui

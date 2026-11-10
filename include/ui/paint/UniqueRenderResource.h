@@ -13,44 +13,42 @@ class RenderManager;
 template <typename Derived, typename Handle, Handle InvalidHandleValue>
 class UI_CORE_API UniqueRenderResource {
 public:
-	static constexpr Handle InvalidHandle() { return InvalidHandleValue; }
+  static constexpr Handle InvalidHandle() { return InvalidHandleValue; }
 
-	explicit operator bool() const { return resource_handle != InvalidHandleValue; }
+  explicit operator bool() const { return resource_handle != InvalidHandleValue; }
 
 protected:
-	UniqueRenderResource() = default;
-	UniqueRenderResource(RenderManager* render_manager, Handle resource_handle) : render_manager(render_manager), resource_handle(resource_handle) {}
+  UniqueRenderResource() = default;
+  UniqueRenderResource(RenderManager* render_manager, Handle resource_handle)
+      : render_manager(render_manager), resource_handle(resource_handle) {}
 
-	~UniqueRenderResource() noexcept { ReleaseInDerived(); }
+  ~UniqueRenderResource() noexcept { ReleaseInDerived(); }
 
-	UniqueRenderResource(const UniqueRenderResource&) = delete;
-	UniqueRenderResource& operator=(const UniqueRenderResource&) = delete;
+  UniqueRenderResource(const UniqueRenderResource&) = delete;
+  UniqueRenderResource& operator=(const UniqueRenderResource&) = delete;
 
-	UniqueRenderResource(UniqueRenderResource&& other) noexcept { MoveFrom(other); }
-	UniqueRenderResource& operator=(UniqueRenderResource&& other) noexcept
-	{
-		ReleaseInDerived();
-		MoveFrom(other);
-		return *this;
-	}
+  UniqueRenderResource(UniqueRenderResource&& other) noexcept { MoveFrom(other); }
+  UniqueRenderResource& operator=(UniqueRenderResource&& other) noexcept {
+    ReleaseInDerived();
+    MoveFrom(other);
+    return *this;
+  }
 
-	void Clear() noexcept
-	{
-		render_manager = nullptr;
-		resource_handle = InvalidHandleValue;
-	}
+  void Clear() noexcept {
+    render_manager = nullptr;
+    resource_handle = InvalidHandleValue;
+  }
 
-	RenderManager* render_manager = nullptr;
-	Handle resource_handle = InvalidHandleValue;
+  RenderManager* render_manager = nullptr;
+  Handle resource_handle = InvalidHandleValue;
 
 private:
-	void ReleaseInDerived() { static_cast<Derived*>(this)->Release(); }
+  void ReleaseInDerived() { static_cast<Derived*>(this)->Release(); }
 
-	void MoveFrom(UniqueRenderResource& other) noexcept
-	{
-		render_manager = std::exchange(other.render_manager, nullptr);
-		resource_handle = std::exchange(other.resource_handle, InvalidHandleValue);
-	}
+  void MoveFrom(UniqueRenderResource& other) noexcept {
+    render_manager = std::exchange(other.render_manager, nullptr);
+    resource_handle = std::exchange(other.resource_handle, InvalidHandleValue);
+  }
 };
 
 } // namespace ui

@@ -29,7 +29,6 @@ UI_CORE_API void Shutdown();
 /// @return The version number.
 UI_CORE_API String GetVersion();
 
-
 /// Sets the interface through which all rendering requests are made. This is not required to be called, but if it is,
 /// it must be called before Initialise(). If no render interface is specified, then all contexts must specify a render
 /// interface when created.
@@ -38,9 +37,6 @@ UI_CORE_API String GetVersion();
 UI_CORE_API void SetRenderInterface(RenderInterface* render_interface);
 /// Returns pp-cpp-ui's default's render interface.
 UI_CORE_API RenderInterface* GetRenderInterface();
-
-
-
 
 /// Creates a new element context.
 /// @param[in] name The new name of the context. This must be unique.
@@ -52,7 +48,7 @@ UI_CORE_API RenderInterface* GetRenderInterface();
 ///           destroyed, and a subsequent call has been made to ui::ReleaseRenderManagers.
 /// @return A non-owning pointer to the new context, or nullptr if the context could not be created.
 UI_CORE_API Context* CreateContext(const String& name, Vector2i dimensions, RenderInterface* render_interface = nullptr,
-	TextInputHandler* text_input_handler = nullptr);
+                                   TextInputHandler* text_input_handler = nullptr);
 /// Removes and destroys a context.
 /// @param[in] name The name of the context to remove.
 /// @return True if the name is a valid context, false otherwise.
@@ -77,8 +73,8 @@ UI_CORE_API int GetNumContexts();
 /// loads all found font weights.
 /// @param[in] face_index The index of the font face within a font collection.
 /// @return True if the face was loaded successfully, false otherwise.
-UI_CORE_API bool LoadFontFace(const String& file_path, bool fallback_face = false, Style::FontWeight weight = Style::FontWeight::Auto,
-	int face_index = 0);
+UI_CORE_API bool LoadFontFace(const String& file_path, bool fallback_face = false,
+                              Style::FontWeight weight = Style::FontWeight::Auto, int face_index = 0);
 /// Adds a new font face from memory to the font engine. The face's family, style, and weight are given by the parameters.
 /// @param[in] data The font data.
 /// @param[in] family The family to register the font as.
@@ -90,7 +86,8 @@ UI_CORE_API bool LoadFontFace(const String& file_path, bool fallback_face = fals
 /// @return True if the face was loaded successfully, false otherwise.
 /// @lifetime The pointed to 'data' must remain available until after the call to ui::Shutdown.
 UI_CORE_API bool LoadFontFace(Span<const byte> data, const String& family, Style::FontStyle style,
-	Style::FontWeight weight = Style::FontWeight::Auto, bool fallback_face = false, int face_index = 0);
+                              Style::FontWeight weight = Style::FontWeight::Auto, bool fallback_face = false,
+                              int face_index = 0);
 
 /// Registers a generic pp-cpp-ui plugin.
 UI_CORE_API void RegisterPlugin(Plugin* plugin);
@@ -105,7 +102,7 @@ UI_CORE_API void UnregisterPlugin(Plugin* plugin);
 /// @param[in] default_action_phase Defines during which phase(s) the 'Element::ProcessDefaultAction' method is called.
 /// @return The EventId of the newly created type, or existing type if 'type' is an internal type.
 UI_CORE_API EventId RegisterEventType(const String& type, bool interruptible, bool bubbles,
-	DefaultActionPhase default_action_phase = DefaultActionPhase::None);
+                                      DefaultActionPhase default_action_phase = DefaultActionPhase::None);
 
 /// Returns a list of source URLs to textures in all loaded documents.
 UI_CORE_API StringList GetTextureSourceList();

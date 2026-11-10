@@ -250,50 +250,38 @@ static const String simple_doc14_rml = R"(
 </rml>
 )";
 
-TEST_CASE("specificity.mediaquery")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("specificity.mediaquery") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	struct Test {
-		const String* document_rml;
-		float expected_width;
-	};
+  struct Test {
+    const String* document_rml;
+    float expected_width;
+  };
 
-	Test tests[] = {
-		{&simple_doc1_rml, 50.f},
-		{&simple_doc2_rml, 100.f},
-		{&simple_doc3_rml, 50.f},
-		{&simple_doc4_rml, 50.f},
-		{&simple_doc5_rml, 200.f},
-		{&simple_doc6_rml, 100.f},
-		{&simple_doc7_rml, 100.f},
-		{&simple_doc8_rml, 200.f},
-		{&simple_doc9_rml, 400.f},
-		{&simple_doc10_rml, 300.f},
-		{&simple_doc11_rml, 400.f},
-		{&simple_doc12_rml, 300.f},
-		{&simple_doc13_rml, 300.f},
-		{&simple_doc14_rml, 100.f},
-	};
+  Test tests[] = {
+      {&simple_doc1_rml, 50.f},   {&simple_doc2_rml, 100.f},  {&simple_doc3_rml, 50.f},   {&simple_doc4_rml, 50.f},
+      {&simple_doc5_rml, 200.f},  {&simple_doc6_rml, 100.f},  {&simple_doc7_rml, 100.f},  {&simple_doc8_rml, 200.f},
+      {&simple_doc9_rml, 400.f},  {&simple_doc10_rml, 300.f}, {&simple_doc11_rml, 400.f}, {&simple_doc12_rml, 300.f},
+      {&simple_doc13_rml, 300.f}, {&simple_doc14_rml, 100.f},
+  };
 
-	int i = 1;
-	for (const Test& test : tests)
-	{
-		ElementDocument* document = context->LoadDocumentFromMemory(*test.document_rml);
-		REQUIRE(document);
-		document->Show();
+  int i = 1;
+  for (const Test& test : tests) {
+    ElementDocument* document = context->LoadDocumentFromMemory(*test.document_rml);
+    REQUIRE(document);
+    document->Show();
 
-		context->Update();
-		context->Render();
+    context->Update();
+    context->Render();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		CHECK_MESSAGE(document->GetBox().GetSize().x == test.expected_width, "Document " << i);
+    CHECK_MESSAGE(document->GetBox().GetSize().x == test.expected_width, "Document " << i);
 
-		document->Close();
-		i++;
-	}
+    document->Close();
+    i++;
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

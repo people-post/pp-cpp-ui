@@ -6,160 +6,135 @@
 
 namespace ui {
 
-ElementFormControlSelect::ElementFormControlSelect(const String& tag) : ElementFormControl(tag), widget(nullptr)
-{
-	widget = new WidgetDropDown(this);
+ElementFormControlSelect::ElementFormControlSelect(const String& tag) : ElementFormControl(tag), widget(nullptr) {
+  widget = new WidgetDropDown(this);
 }
 
-ElementFormControlSelect::~ElementFormControlSelect()
-{
-	delete widget;
+ElementFormControlSelect::~ElementFormControlSelect() {
+  delete widget;
 }
 
-String ElementFormControlSelect::GetValue() const
-{
-	return GetAttribute("value", String());
+String ElementFormControlSelect::GetValue() const {
+  return GetAttribute("value", String());
 }
 
-void ElementFormControlSelect::SetValue(const String& value)
-{
-	MoveChildren();
+void ElementFormControlSelect::SetValue(const String& value) {
+  MoveChildren();
 
-	SetAttribute("value", value);
+  SetAttribute("value", value);
 }
 
-void ElementFormControlSelect::SetSelection(int selection)
-{
-	MoveChildren();
+void ElementFormControlSelect::SetSelection(int selection) {
+  MoveChildren();
 
-	widget->SetSelection(widget->GetOption(selection));
+  widget->SetSelection(widget->GetOption(selection));
 }
 
-int ElementFormControlSelect::GetSelection() const
-{
-	return widget->GetSelection();
+int ElementFormControlSelect::GetSelection() const {
+  return widget->GetSelection();
 }
 
-Element* ElementFormControlSelect::GetOption(int index)
-{
-	MoveChildren();
+Element* ElementFormControlSelect::GetOption(int index) {
+  MoveChildren();
 
-	return widget->GetOption(index);
+  return widget->GetOption(index);
 }
 
-int ElementFormControlSelect::GetNumOptions()
-{
-	MoveChildren();
+int ElementFormControlSelect::GetNumOptions() {
+  MoveChildren();
 
-	return widget->GetNumOptions();
+  return widget->GetNumOptions();
 }
 
-int ElementFormControlSelect::Add(const String& rml, const String& value, int before, bool selectable)
-{
-	MoveChildren();
+int ElementFormControlSelect::Add(const String& rml, const String& value, int before, bool selectable) {
+  MoveChildren();
 
-	return widget->AddOption(rml, value, before, false, selectable);
+  return widget->AddOption(rml, value, before, false, selectable);
 }
 
-int ElementFormControlSelect::Add(ElementPtr element, int before)
-{
-	MoveChildren();
+int ElementFormControlSelect::Add(ElementPtr element, int before) {
+  MoveChildren();
 
-	return widget->AddOption(std::move(element), before);
+  return widget->AddOption(std::move(element), before);
 }
 
-void ElementFormControlSelect::Remove(int index)
-{
-	MoveChildren();
+void ElementFormControlSelect::Remove(int index) {
+  MoveChildren();
 
-	widget->RemoveOption(index);
+  widget->RemoveOption(index);
 }
 
-void ElementFormControlSelect::RemoveAll()
-{
-	MoveChildren();
+void ElementFormControlSelect::RemoveAll() {
+  MoveChildren();
 
-	widget->ClearOptions();
+  widget->ClearOptions();
 }
 
-void ElementFormControlSelect::ShowSelectBox()
-{
-	widget->ShowSelectBox();
+void ElementFormControlSelect::ShowSelectBox() {
+  widget->ShowSelectBox();
 }
 
-void ElementFormControlSelect::HideSelectBox()
-{
-	widget->HideSelectBox();
+void ElementFormControlSelect::HideSelectBox() {
+  widget->HideSelectBox();
 }
-void ElementFormControlSelect::CancelSelectBox()
-{
-	widget->CancelSelectBox();
+void ElementFormControlSelect::CancelSelectBox() {
+  widget->CancelSelectBox();
 }
 
-bool ElementFormControlSelect::IsSelectBoxVisible()
-{
-	return widget->IsSelectBoxVisible();
+bool ElementFormControlSelect::IsSelectBoxVisible() {
+  return widget->IsSelectBoxVisible();
 }
 
-void ElementFormControlSelect::OnUpdate()
-{
-	ElementFormControl::OnUpdate();
+void ElementFormControlSelect::OnUpdate() {
+  ElementFormControl::OnUpdate();
 
-	MoveChildren();
+  MoveChildren();
 
-	widget->OnUpdate();
+  widget->OnUpdate();
 }
 
-void ElementFormControlSelect::OnRender()
-{
-	ElementFormControl::OnRender();
+void ElementFormControlSelect::OnRender() {
+  ElementFormControl::OnRender();
 
-	widget->OnRender();
+  widget->OnRender();
 }
 
-void ElementFormControlSelect::OnLayout()
-{
-	widget->OnLayout();
+void ElementFormControlSelect::OnLayout() {
+  widget->OnLayout();
 }
 
-void ElementFormControlSelect::OnChildAdd(Element* child)
-{
-	if (widget)
-		widget->OnChildAdd(child);
+void ElementFormControlSelect::OnChildAdd(Element* child) {
+  if (widget)
+    widget->OnChildAdd(child);
 }
 
-void ElementFormControlSelect::OnChildRemove(Element* child)
-{
-	if (widget)
-		widget->OnChildRemove(child);
+void ElementFormControlSelect::OnChildRemove(Element* child) {
+  if (widget)
+    widget->OnChildRemove(child);
 }
 
-void ElementFormControlSelect::MoveChildren()
-{
-	// Move any child elements into the widget (except for the three functional elements).
-	while (Element* raw_child = GetFirstChild())
-	{
-		ElementPtr child = RemoveChild(raw_child);
-		widget->AddOption(std::move(child), -1);
-	}
+void ElementFormControlSelect::MoveChildren() {
+  // Move any child elements into the widget (except for the three functional elements).
+  while (Element* raw_child = GetFirstChild()) {
+    ElementPtr child = RemoveChild(raw_child);
+    widget->AddOption(std::move(child), -1);
+  }
 }
 
-bool ElementFormControlSelect::GetIntrinsicDimensions(Vector2f& intrinsic_dimensions, float& /*ratio*/)
-{
-	intrinsic_dimensions.x = 128;
-	intrinsic_dimensions.y = 16;
-	return true;
+bool ElementFormControlSelect::GetIntrinsicDimensions(Vector2f& intrinsic_dimensions, float& /*ratio*/) {
+  intrinsic_dimensions.x = 128;
+  intrinsic_dimensions.y = 16;
+  return true;
 }
 
-void ElementFormControlSelect::OnAttributeChange(const ElementAttributes& changed_attributes)
-{
-	UI_ASSERT(widget);
+void ElementFormControlSelect::OnAttributeChange(const ElementAttributes& changed_attributes) {
+  UI_ASSERT(widget);
 
-	ElementFormControl::OnAttributeChange(changed_attributes);
+  ElementFormControl::OnAttributeChange(changed_attributes);
 
-	auto it = changed_attributes.find("value");
-	if (it != changed_attributes.end())
-		widget->OnValueChange(it->second.Get<String>());
+  auto it = changed_attributes.find("value");
+  if (it != changed_attributes.end())
+    widget->OnValueChange(it->second.Get<String>());
 }
 
 } // namespace ui

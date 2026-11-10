@@ -36,97 +36,96 @@ static const String document_rml = R"(
 </rml>
 )";
 
-TEST_CASE("WidgetTextInput")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("WidgetTextInput") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  REQUIRE(document);
+  document->Show();
 
-	auto el = ui_dynamic_cast<ElementFormControlTextArea*>(document->GetElementById("textarea"));
-	REQUIRE(el);
+  auto el = ui_dynamic_cast<ElementFormControlTextArea*>(document->GetElementById("textarea"));
+  REQUIRE(el);
 
-	auto IncrementTime = [system_interface = TestsShell::GetTestsSystemInterface(), t = 0.0]() mutable {
-		constexpr double dt = 0.5;
-		t += dt;
-		system_interface->SetManualTime(t);
-	};
-	struct TestCase {
-		String name;
-		String base;
-	};
-	const TestCase test_cases[] = {
-		{"ascii", "abc"},
-		{"emoji", "😍🌐😎"},
-		{"japanese", "こんに"},
-	};
+  auto IncrementTime = [system_interface = TestsShell::GetTestsSystemInterface(), t = 0.0]() mutable {
+    constexpr double dt = 0.5;
+    t += dt;
+    system_interface->SetManualTime(t);
+  };
+  struct TestCase {
+    String name;
+    String base;
+  };
+  const TestCase test_cases[] = {
+      {"ascii", "abc"},
+      {"emoji", "😍🌐😎"},
+      {"japanese", "こんに"},
+  };
 
-	nanobench::Bench bench;
-	bench.timeUnit(std::chrono::microseconds(1), "us");
-	bench.relative(true);
-	bench.complexityN(1);
+  nanobench::Bench bench;
+  bench.timeUnit(std::chrono::microseconds(1), "us");
+  bench.relative(true);
+  bench.complexityN(1);
 
-	SUBCASE("FormatText")
-	{
-		bench.title("WidgetTextInput.FormatText");
+  SUBCASE("FormatText") {
+    bench.title("WidgetTextInput.FormatText");
 
-		for (const TestCase& test_case : test_cases)
-		{
-			for (int num_character_repeats : {10, 20, 50, 100, 200})
-			{
-				String value;
-				for (int i = 0; i < num_character_repeats; i++)
-					value += test_case.base;
+    for (const TestCase& test_case : test_cases) {
+      for (int num_character_repeats : {10, 20, 50, 100, 200}) {
+        String value;
+        for (int i = 0; i < num_character_repeats; i++)
+          value += test_case.base;
 
-				bench.complexityN(num_character_repeats).epochs(1).epochIterations(num_character_repeats >= 100 ? 1 : 0).run(test_case.name, [&] {
-					el->SetValue(value);
-					context->Update();
-				});
-			}
-		}
-	}
+        bench.complexityN(num_character_repeats)
+            .epochs(1)
+            .epochIterations(num_character_repeats >= 100 ? 1 : 0)
+            .run(test_case.name, [&] {
+              el->SetValue(value);
+              context->Update();
+            });
+      }
+    }
+  }
 
-	SUBCASE("CalculateCharacterIndex")
-	{
-		bench.title("WidgetTextInput.CalculateCharacterIndex");
+  SUBCASE("CalculateCharacterIndex") {
+    bench.title("WidgetTextInput.CalculateCharacterIndex");
 
-		el->SetWordWrap(false);
-		context->Update();
+    el->SetWordWrap(false);
+    context->Update();
 
-		for (const TestCase& test_case : test_cases)
-		{
-			for (int num_character_repeats : {20, 50, 100, 200, 500})
-			{
-				String value;
-				for (int i = 0; i < num_character_repeats; i++)
-					value += test_case.base;
+    for (const TestCase& test_case : test_cases) {
+      for (int num_character_repeats : {20, 50, 100, 200, 500}) {
+        String value;
+        for (int i = 0; i < num_character_repeats; i++)
+          value += test_case.base;
 
-				el->SetValue(value);
-				el->Focus();
-				context->ProcessKeyDown(Input::KI_END, 0);
-				context->ProcessKeyUp(Input::KI_END, 0);
-				context->Update();
+        el->SetValue(value);
+        el->Focus();
+        context->ProcessKeyDown(Input::KI_END, 0);
+        context->ProcessKeyUp(Input::KI_END, 0);
+        context->Update();
 
-				bench.complexityN(num_character_repeats).epochs(1).epochIterations(num_character_repeats >= 100 ? 1 : 0).run(test_case.name, [&] {
-					context->ProcessMouseMove(250, 50, 0);
-					context->ProcessMouseButtonDown(0, 0);
-					context->ProcessMouseMove(350, 50, 0);
-					context->ProcessMouseButtonUp(0, 0);
-					IncrementTime();
-					context->Update();
-				});
+        bench.complexityN(num_character_repeats)
+            .epochs(1)
+            .epochIterations(num_character_repeats >= 100 ? 1 : 0)
+            .run(test_case.name, [&] {
+              context->ProcessMouseMove(250, 50, 0);
+              context->ProcessMouseButtonDown(0, 0);
+              context->ProcessMouseMove(350, 50, 0);
+              context->ProcessMouseButtonUp(0, 0);
+              IncrementTime();
+              context->Update();
+            });
 
-				// Sanity check that the above produces a selection as intended.
-				int selection_start = 0, selection_end = 0;
-				el->GetSelection(&selection_start, &selection_end, nullptr);
-				REQUIRE(selection_end - selection_start > 0);
-			}
-		}
-	}
+        // Sanity check that the above produces a selection as intended.
+        int selection_start = 0, selection_end = 0;
+        el->GetSelection(&selection_start, &selection_end, nullptr);
+        REQUIRE(selection_end - selection_start > 0);
+      }
+    }
+  }
 
-	TestsShell::RenderLoop();
+  TestsShell::RenderLoop();
 
-	document->Close();
+  document->Close();
 }

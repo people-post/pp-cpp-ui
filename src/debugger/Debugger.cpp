@@ -5,66 +5,58 @@
 namespace ui {
 namespace Debugger {
 
-bool Initialise(Context* context)
-{
-	if (DebuggerPlugin::GetInstance() != nullptr)
-	{
-		Log::Message(Log::LT_WARNING, "Unable to initialise debugger plugin, already initialised!");
-		return false;
-	}
+bool Initialise(Context* context) {
+  if (DebuggerPlugin::GetInstance() != nullptr) {
+    Log::Message(Log::LT_WARNING, "Unable to initialise debugger plugin, already initialised!");
+    return false;
+  }
 
-	DebuggerPlugin* plugin = new DebuggerPlugin();
-	if (!plugin->Initialise(context))
-	{
-		Log::Message(Log::LT_WARNING, "Unable to initialise debugger plugin.");
+  DebuggerPlugin* plugin = new DebuggerPlugin();
+  if (!plugin->Initialise(context)) {
+    Log::Message(Log::LT_WARNING, "Unable to initialise debugger plugin.");
 
-		delete plugin;
-		return false;
-	}
+    delete plugin;
+    return false;
+  }
 
-	SetContext(context);
-	RegisterPlugin(plugin);
+  SetContext(context);
+  RegisterPlugin(plugin);
 
-	return true;
+  return true;
 }
 
-void Shutdown()
-{
-	DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
-	if (!plugin)
-	{
-		Log::Message(Log::LT_WARNING, "Unable to shutdown debugger plugin, it was not initialised!");
-		return;
-	}
+void Shutdown() {
+  DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
+  if (!plugin) {
+    Log::Message(Log::LT_WARNING, "Unable to shutdown debugger plugin, it was not initialised!");
+    return;
+  }
 
-	UnregisterPlugin(plugin);
+  UnregisterPlugin(plugin);
 }
 
-bool SetContext(Context* context)
-{
-	DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
-	if (plugin == nullptr)
-		return false;
+bool SetContext(Context* context) {
+  DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
+  if (plugin == nullptr)
+    return false;
 
-	plugin->SetContext(context);
+  plugin->SetContext(context);
 
-	return true;
+  return true;
 }
 
-void SetVisible(bool visibility)
-{
-	DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
-	if (plugin != nullptr)
-		plugin->SetVisible(visibility);
+void SetVisible(bool visibility) {
+  DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
+  if (plugin != nullptr)
+    plugin->SetVisible(visibility);
 }
 
-bool IsVisible()
-{
-	DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
-	if (plugin == nullptr)
-		return false;
+bool IsVisible() {
+  DebuggerPlugin* plugin = DebuggerPlugin::GetInstance();
+  if (plugin == nullptr)
+    return false;
 
-	return plugin->IsVisible();
+  return plugin->IsVisible();
 }
 
 } // namespace Debugger

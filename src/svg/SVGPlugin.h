@@ -3,7 +3,7 @@
 namespace ui {
 namespace SVG {
 
-	void Initialise();
+void Initialise();
 
 }
 } // namespace ui

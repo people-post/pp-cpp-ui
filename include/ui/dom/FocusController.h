@@ -19,30 +19,30 @@ class ElementDocument;
 
 class UI_CORE_API FocusController {
 public:
-	explicit FocusController(Context* context);
+  explicit FocusController(Context* context);
 
-	Element* GetFocusElement() const { return focus; }
-	void SetFocusElement(Element* element) { focus = element; }
+  Element* GetFocusElement() const { return focus; }
+  void SetFocusElement(Element* element) { focus = element; }
 
-	/// Apply a focus change: modal/unload checks, blur/focus events, history, z-order.
-	/// @return False if the request was denied.
-	bool OnFocusChange(Element* new_focus, bool focus_visible);
+  /// Apply a focus change: modal/unload checks, blur/focus events, history, z-order.
+  /// @return False if the request was denied.
+  bool OnFocusChange(Element* new_focus, bool focus_visible);
 
-	void UnfocusDocument(ElementDocument* document);
-	void OnDocumentUnload(ElementDocument* document);
-	void OnElementDetach(Element* element);
+  void UnfocusDocument(ElementDocument* document);
+  void OnDocumentUnload(ElementDocument* document);
+  void OnElementDetach(Element* element);
 
-	/// Push a document (or the context root) onto the focus history, moving it to the top if present.
-	void PushDocument(Element* document);
-	void RemoveDocument(Element* document);
+  /// Push a document (or the context root) onto the focus history, moving it to the top if present.
+  void PushDocument(Element* document);
+  void RemoveDocument(Element* document);
 
-	bool HasDocumentFocusHistory() const { return !document_focus_history.empty(); }
-	Element* GetTopDocument() const;
+  bool HasDocumentFocusHistory() const { return !document_focus_history.empty(); }
+  Element* GetTopDocument() const;
 
 private:
-	Context* context = nullptr;
-	Element* focus = nullptr;
-	ElementList document_focus_history;
+  Context* context = nullptr;
+  Element* focus = nullptr;
+  ElementList document_focus_history;
 };
 
 } // namespace ui

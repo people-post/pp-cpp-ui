@@ -9,28 +9,28 @@ namespace Debugger {
 
 class ElementDataModels : public ElementDebugDocument, public EventListener {
 public:
-	UI_RTTI_DefineWithParent(ElementDataModels, ElementDebugDocument)
+  UI_RTTI_DefineWithParent(ElementDataModels, ElementDebugDocument)
 
-	ElementDataModels(const String& tag);
-	~ElementDataModels();
+      ElementDataModels(const String& tag);
+  ~ElementDataModels();
 
-	bool Initialise(Context* debug_context);
-	void Reset();
+  bool Initialise(Context* debug_context);
+  void Reset();
 
-	void SetDebugContext(Context* debug_context);
+  void SetDebugContext(Context* debug_context);
 
 protected:
-	void ProcessEvent(Event& event) override;
-	void OnUpdate() override;
+  void ProcessEvent(Event& event) override;
+  void OnUpdate() override;
 
 private:
-	void UpdateContent();
+  void UpdateContent();
 
-	Context* debug_context = nullptr;
+  Context* debug_context = nullptr;
 
-	double previous_update_time = {};
+  double previous_update_time = {};
 
-	SmallOrderedMap<String, String> model_rml_map;
+  SmallOrderedMap<String, String> model_rml_map;
 };
 
 } // namespace Debugger

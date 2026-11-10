@@ -9,65 +9,68 @@ class RenderInterface;
 
 class CallbackTextureDatabase : NonCopyMoveable {
 public:
-	CallbackTextureDatabase();
-	~CallbackTextureDatabase();
+  CallbackTextureDatabase();
+  ~CallbackTextureDatabase();
 
-	StableVectorIndex CreateTexture(CallbackTextureFunction&& callback);
-	void ReleaseTexture(RenderInterface* render_interface, StableVectorIndex callback_index);
+  StableVectorIndex CreateTexture(CallbackTextureFunction&& callback);
+  void ReleaseTexture(RenderInterface* render_interface, StableVectorIndex callback_index);
 
-	Vector2i GetDimensions(RenderManager* render_manager, RenderInterface* render_interface, StableVectorIndex callback_index);
-	TextureHandle GetHandle(RenderManager* render_manager, RenderInterface* render_interface, StableVectorIndex callback_index);
+  Vector2i GetDimensions(RenderManager* render_manager, RenderInterface* render_interface,
+                         StableVectorIndex callback_index);
+  TextureHandle GetHandle(RenderManager* render_manager, RenderInterface* render_interface,
+                          StableVectorIndex callback_index);
 
-	size_t size() const;
+  size_t size() const;
 
-	void ReleaseAllTextures(RenderInterface* render_interface);
+  void ReleaseAllTextures(RenderInterface* render_interface);
 
 private:
-	struct CallbackTextureEntry {
-		CallbackTextureFunction callback;
-		TextureHandle texture_handle = {};
-		Vector2i dimensions;
-		bool load_failed = false;
-	};
+  struct CallbackTextureEntry {
+    CallbackTextureFunction callback;
+    TextureHandle texture_handle = {};
+    Vector2i dimensions;
+    bool load_failed = false;
+  };
 
-	CallbackTextureEntry& EnsureLoaded(RenderManager* render_manager, RenderInterface* render_interface, StableVectorIndex callback_index);
+  CallbackTextureEntry& EnsureLoaded(RenderManager* render_manager, RenderInterface* render_interface,
+                                     StableVectorIndex callback_index);
 
-	StableVector<CallbackTextureEntry> texture_list;
+  StableVector<CallbackTextureEntry> texture_list;
 };
 
 class FileTextureDatabase : NonCopyMoveable {
 public:
-	FileTextureDatabase();
-	~FileTextureDatabase();
+  FileTextureDatabase();
+  ~FileTextureDatabase();
 
-	TextureFileIndex InsertTexture(const String& source);
+  TextureFileIndex InsertTexture(const String& source);
 
-	TextureHandle GetHandle(RenderInterface* render_interface, TextureFileIndex index);
-	Vector2i GetDimensions(RenderInterface* render_interface, TextureFileIndex index);
+  TextureHandle GetHandle(RenderInterface* render_interface, TextureFileIndex index);
+  Vector2i GetDimensions(RenderInterface* render_interface, TextureFileIndex index);
 
-	void GetSourceList(StringList& source_list) const;
+  void GetSourceList(StringList& source_list) const;
 
-	bool ReleaseTexture(RenderInterface* render_interface, const String& source);
-	void ReleaseAllTextures(RenderInterface* render_interface);
+  bool ReleaseTexture(RenderInterface* render_interface, const String& source);
+  void ReleaseAllTextures(RenderInterface* render_interface);
 
 private:
-	struct FileTextureEntry {
-		TextureHandle texture_handle = {};
-		Vector2i dimensions;
-		bool load_texture_failed = false;
-	};
+  struct FileTextureEntry {
+    TextureHandle texture_handle = {};
+    Vector2i dimensions;
+    bool load_texture_failed = false;
+  };
 
-	FileTextureEntry LoadTextureEntry(RenderInterface* render_interface, const String& source);
-	FileTextureEntry& EnsureLoaded(RenderInterface* render_interface, TextureFileIndex index);
+  FileTextureEntry LoadTextureEntry(RenderInterface* render_interface, const String& source);
+  FileTextureEntry& EnsureLoaded(RenderInterface* render_interface, TextureFileIndex index);
 
-	Vector<FileTextureEntry> texture_list;
-	UnorderedMap<String, TextureFileIndex> texture_map; // key: source, value: index into 'texture_list'
+  Vector<FileTextureEntry> texture_list;
+  UnorderedMap<String, TextureFileIndex> texture_map; // key: source, value: index into 'texture_list'
 };
 
 class TextureDatabase {
 public:
-	FileTextureDatabase file_database;
-	CallbackTextureDatabase callback_database;
+  FileTextureDatabase file_database;
+  CallbackTextureDatabase callback_database;
 };
 
 } // namespace ui

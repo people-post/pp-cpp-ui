@@ -6,29 +6,24 @@ namespace ui {
 
 FileInterfaceDefault::~FileInterfaceDefault() {}
 
-FileHandle FileInterfaceDefault::Open(const String& path)
-{
-	return (FileHandle)fopen(path.c_str(), "rb");
+FileHandle FileInterfaceDefault::Open(const String& path) {
+  return (FileHandle)fopen(path.c_str(), "rb");
 }
 
-void FileInterfaceDefault::Close(FileHandle file)
-{
-	fclose((FILE*)file);
+void FileInterfaceDefault::Close(FileHandle file) {
+  fclose((FILE*)file);
 }
 
-size_t FileInterfaceDefault::Read(void* buffer, size_t size, FileHandle file)
-{
-	return fread(buffer, 1, size, (FILE*)file);
+size_t FileInterfaceDefault::Read(void* buffer, size_t size, FileHandle file) {
+  return fread(buffer, 1, size, (FILE*)file);
 }
 
-bool FileInterfaceDefault::Seek(FileHandle file, long offset, int origin)
-{
-	return fseek((FILE*)file, offset, origin) == 0;
+bool FileInterfaceDefault::Seek(FileHandle file, long offset, int origin) {
+  return fseek((FILE*)file, offset, origin) == 0;
 }
 
-size_t FileInterfaceDefault::Tell(FileHandle file)
-{
-	return ftell((FILE*)file);
+size_t FileInterfaceDefault::Tell(FileHandle file) {
+  return ftell((FILE*)file);
 }
 
 } // namespace ui

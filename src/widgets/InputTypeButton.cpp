@@ -8,34 +8,30 @@ InputTypeButton::InputTypeButton(ElementFormControlInput* element) : InputType(e
 
 InputTypeButton::~InputTypeButton() {}
 
-bool InputTypeButton::IsSubmitted()
-{
-	// Buttons are never submitted.
-	return false;
+bool InputTypeButton::IsSubmitted() {
+  // Buttons are never submitted.
+  return false;
 }
 
-bool InputTypeButton::OnAttributeChange(const ElementAttributes& changed_attributes)
-{
-	if (changed_attributes.find("value") != changed_attributes.end())
-	{
-		auto value = element->GetAttribute<String>("value", "");
-		if (!value.empty() && !value_element)
-			value_element =
-				ui_static_cast<ElementText*>(element->AppendChild(Factory::InstanceElement(element, "#text", "", XMLAttributes()), true));
+bool InputTypeButton::OnAttributeChange(const ElementAttributes& changed_attributes) {
+  if (changed_attributes.find("value") != changed_attributes.end()) {
+    auto value = element->GetAttribute<String>("value", "");
+    if (!value.empty() && !value_element)
+      value_element = ui_static_cast<ElementText*>(
+          element->AppendChild(Factory::InstanceElement(element, "#text", "", XMLAttributes()), true));
 
-		if (value_element)
-			value_element->SetText(value);
+    if (value_element)
+      value_element->SetText(value);
 
-		return false;
-	}
-	return true;
+    return false;
+  }
+  return true;
 }
 
 void InputTypeButton::ProcessDefaultAction(Event& /*event*/) {}
 
-bool InputTypeButton::GetIntrinsicDimensions(Vector2f& /*dimensions*/, float& /*ratio*/)
-{
-	return false;
+bool InputTypeButton::GetIntrinsicDimensions(Vector2f& /*dimensions*/, float& /*ratio*/) {
+  return false;
 }
 
 } // namespace ui

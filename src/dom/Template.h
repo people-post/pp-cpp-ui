@@ -13,28 +13,28 @@ class Element;
 
 class Template {
 public:
-	Template();
-	~Template();
+  Template();
+  ~Template();
 
-	/// Load a template from the given stream
-	bool Load(Stream* stream);
+  /// Load a template from the given stream
+  bool Load(Stream* stream);
 
-	/// Get the ID of the template
-	const String& GetName() const;
+  /// Get the ID of the template
+  const String& GetName() const;
 
-	/// Parse the template into the given element
-	/// @param element Element to parse into
-	/// @returns The element to continue the parse from
-	Element* ParseTemplate(Element* element);
+  /// Parse the template into the given element
+  /// @param element Element to parse into
+  /// @returns The element to continue the parse from
+  Element* ParseTemplate(Element* element);
 
-	/// Get the template header
-	const DocumentHeader* GetHeader();
+  /// Get the template header
+  const DocumentHeader* GetHeader();
 
 private:
-	String name;
-	String content;
-	DocumentHeader header;
-	UniquePtr<StreamMemory> body;
+  String name;
+  String content;
+  DocumentHeader header;
+  UniquePtr<StreamMemory> body;
 };
 
 } // namespace ui

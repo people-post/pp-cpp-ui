@@ -13,40 +13,40 @@ struct StructuralSelector;
 
 class StyleSheetFactory {
 public:
-	~StyleSheetFactory();
+  ~StyleSheetFactory();
 
-	/// Initialise the style factory
-	static bool Initialise();
-	/// Shutdown style manager
-	static void Shutdown();
+  /// Initialise the style factory
+  static bool Initialise();
+  /// Shutdown style manager
+  static void Shutdown();
 
-	/// Gets the named sheet, retrieving it from the cache if its already been loaded.
-	/// @param sheet name of sheet to load
-	/// @lifetime Returned pointer is valid until the next call to ClearStyleSheetCache or Shutdown, it should not be stored around.
-	static const StyleSheetContainer* GetStyleSheetContainer(const String& sheet);
+  /// Gets the named sheet, retrieving it from the cache if its already been loaded.
+  /// @param sheet name of sheet to load
+  /// @lifetime Returned pointer is valid until the next call to ClearStyleSheetCache or Shutdown, it should not be stored around.
+  static const StyleSheetContainer* GetStyleSheetContainer(const String& sheet);
 
-	/// Clear the style sheet cache.
-	static void ClearStyleSheetCache();
+  /// Clear the style sheet cache.
+  static void ClearStyleSheetCache();
 
-	/// Returns one of the available node selectors.
-	/// @param name[in] The name of the desired selector.
-	/// @param out_invalid_rule[out] Set to true if the selector invalidates the whole selector it is part of, such as an invalid ':not(...)'.
-	/// @return The selector registered with the given name, or nullptr if none exists.
-	static StructuralSelector GetSelector(const String& name, bool* out_invalid_rule = nullptr);
+  /// Returns one of the available node selectors.
+  /// @param name[in] The name of the desired selector.
+  /// @param out_invalid_rule[out] Set to true if the selector invalidates the whole selector it is part of, such as an invalid ':not(...)'.
+  /// @return The selector registered with the given name, or nullptr if none exists.
+  static StructuralSelector GetSelector(const String& name, bool* out_invalid_rule = nullptr);
 
 private:
-	StyleSheetFactory();
+  StyleSheetFactory();
 
-	// Loads an individual style sheet
-	UniquePtr<const StyleSheetContainer> LoadStyleSheetContainer(const String& sheet);
+  // Loads an individual style sheet
+  UniquePtr<const StyleSheetContainer> LoadStyleSheetContainer(const String& sheet);
 
-	// Individual loaded stylesheets
-	using StyleSheets = UnorderedMap<String, UniquePtr<const StyleSheetContainer>>;
-	StyleSheets stylesheets;
+  // Individual loaded stylesheets
+  using StyleSheets = UnorderedMap<String, UniquePtr<const StyleSheetContainer>>;
+  StyleSheets stylesheets;
 
-	// Custom complex selectors available for style sheets.
-	using SelectorMap = UnorderedMap<String, StructuralSelectorType>;
-	SelectorMap selectors;
+  // Custom complex selectors available for style sheets.
+  using SelectorMap = UnorderedMap<String, StructuralSelectorType>;
+  SelectorMap selectors;
 };
 
 } // namespace ui

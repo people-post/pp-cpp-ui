@@ -6,12 +6,11 @@
 
 using namespace ui;
 
-TEST_CASE("svg.max_texture_size")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("svg.max_texture_size") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(R"(
+  ElementDocument* document = context->LoadDocumentFromMemory(R"(
 <rml>
 <head><title>svg-size</title></head>
 <body>
@@ -21,14 +20,14 @@ TEST_CASE("svg.max_texture_size")
 </body>
 </rml>
 )",
-		"assets/");
-	REQUIRE(document);
-	document->Show();
+                                                              "assets/");
+  REQUIRE(document);
+  document->Show();
 
-	TestsShell::SetNumExpectedWarnings(2);
-	TestsShell::RenderLoop();
-	TestsShell::SetNumExpectedWarnings(0);
+  TestsShell::SetNumExpectedWarnings(2);
+  TestsShell::RenderLoop();
+  TestsShell::SetNumExpectedWarnings(0);
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }

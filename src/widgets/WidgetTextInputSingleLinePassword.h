@@ -6,16 +6,16 @@ namespace ui {
 
 class WidgetTextInputSingleLinePassword : public WidgetTextInputSingleLine {
 public:
-	WidgetTextInputSingleLinePassword(ElementFormControl* parent);
+  WidgetTextInputSingleLinePassword(ElementFormControl* parent);
 
 protected:
-	void TransformValue(String& value) override;
+  void TransformValue(String& value) override;
 
-	KeyboardType GetKeyboardType() const override { return KeyboardType::Password; }
+  KeyboardType GetKeyboardType() const override { return KeyboardType::Password; }
 
-	int DisplayIndexToAttributeIndex(int display_index, const String& attribute_value) override;
+  int DisplayIndexToAttributeIndex(int display_index, const String& attribute_value) override;
 
-	int AttributeIndexToDisplayIndex(int attribute_index, const String& attribute_value) override;
+  int AttributeIndexToDisplayIndex(int attribute_index, const String& attribute_value) override;
 };
 
 } // namespace ui

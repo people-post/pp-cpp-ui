@@ -14,10 +14,10 @@ class StyleSheetContainer;
  */
 class UserAgentStyleSheet {
 public:
-	static bool Initialise();
-	static void Shutdown();
+  static bool Initialise();
+  static void Shutdown();
 
-	static const StyleSheetContainer* GetStyleSheetContainer();
+  static const StyleSheetContainer* GetStyleSheetContainer();
 };
 
 } // namespace ui

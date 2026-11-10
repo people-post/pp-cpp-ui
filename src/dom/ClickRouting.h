@@ -22,11 +22,13 @@ bool IsAncestorOf(Element* ancestor, Element* node);
 bool InSameClickTree(Element* a, Element* b);
 
 /// Resolve the element that should receive a synthesized click on mouseup.
-Element* ResolveClickTarget(Element* press_hover, Element* release_hover, Vector2f mouse_point, FindFocusElementFn find_focus);
+Element* ResolveClickTarget(Element* press_hover, Element* release_hover, Vector2f mouse_point,
+                            FindFocusElementFn find_focus);
 
 /// Same as ResolveClickTarget with a custom point-in-element predicate (used by unit tests).
-Element* ResolveClickTargetWithPredicate(Element* press_hover, Element* release_hover, Vector2f mouse_point, FindFocusElementFn find_focus,
-	PointWithinFn point_within, void* point_within_context);
+Element* ResolveClickTargetWithPredicate(Element* press_hover, Element* release_hover, Vector2f mouse_point,
+                                         FindFocusElementFn find_focus, PointWithinFn point_within,
+                                         void* point_within_context);
 
 } // namespace ClickRouting
 } // namespace ui

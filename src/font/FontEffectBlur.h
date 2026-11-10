@@ -11,20 +11,21 @@ namespace ui {
 
 class FontEffectBlur : public FontEffect {
 public:
-	FontEffectBlur();
-	virtual ~FontEffectBlur();
+  FontEffectBlur();
+  virtual ~FontEffectBlur();
 
-	bool Initialise(int width);
+  bool Initialise(int width);
 
-	bool HasUniqueTexture() const override;
+  bool HasUniqueTexture() const override;
 
-	bool GetGlyphMetrics(Vector2i& origin, Vector2i& dimensions, const FontGlyph& glyph) const override;
+  bool GetGlyphMetrics(Vector2i& origin, Vector2i& dimensions, const FontGlyph& glyph) const override;
 
-	void GenerateGlyphTexture(byte* destination_data, Vector2i destination_dimensions, int destination_stride, const FontGlyph& glyph) const override;
+  void GenerateGlyphTexture(byte* destination_data, Vector2i destination_dimensions, int destination_stride,
+                            const FontGlyph& glyph) const override;
 
 private:
-	int width;
-	ConvolutionFilter filter_x, filter_y;
+  int width;
+  ConvolutionFilter filter_x, filter_y;
 };
 
 /**
@@ -33,13 +34,13 @@ private:
 
 class FontEffectBlurInstancer : public FontEffectInstancer {
 public:
-	FontEffectBlurInstancer();
-	virtual ~FontEffectBlurInstancer();
+  FontEffectBlurInstancer();
+  virtual ~FontEffectBlurInstancer();
 
-	SharedPtr<FontEffect> InstanceFontEffect(const String& name, const PropertyDictionary& properties) override;
+  SharedPtr<FontEffect> InstanceFontEffect(const String& name, const PropertyDictionary& properties) override;
 
 private:
-	PropertyId id_width, id_color;
+  PropertyId id_width, id_color;
 };
 
 } // namespace ui

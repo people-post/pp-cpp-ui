@@ -6,21 +6,20 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <doctest.h>
 
-int main(int argc, char** argv)
-{
-	// Initialize and run doctest
-	doctest::Context doctest_context;
+int main(int argc, char** argv) {
+  // Initialize and run doctest
+  doctest::Context doctest_context;
 
-	doctest_context.applyCommandLine(argc, argv);
+  doctest_context.applyCommandLine(argc, argv);
 
-	int doctest_result = doctest_context.run();
+  int doctest_result = doctest_context.run();
 
-	if (doctest_context.shouldExit())
-		return doctest_result;
+  if (doctest_context.shouldExit())
+    return doctest_result;
 
-	// pp-cpp-ui is initialized during doctest run above as necessary.
-	// Clean everything up here.
-	TestsShell::ShutdownShell();
+  // pp-cpp-ui is initialized during doctest run above as necessary.
+  // Clean everything up here.
+  TestsShell::ShutdownShell();
 
-	return doctest_result;
+  return doctest_result;
 }

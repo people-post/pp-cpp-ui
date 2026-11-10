@@ -24,29 +24,30 @@ class RenderInterfaceAdapter;
 
 class UI_CORE_API RenderInterfaceCompatibility : public NonCopyMoveable {
 public:
-	RenderInterfaceCompatibility();
-	virtual ~RenderInterfaceCompatibility();
+  RenderInterfaceCompatibility();
+  virtual ~RenderInterfaceCompatibility();
 
-	virtual void RenderGeometry(Vertex* vertices, int num_vertices, int* indices, int num_indices, TextureHandle texture,
-		const Vector2f& translation) = 0;
+  virtual void RenderGeometry(Vertex* vertices, int num_vertices, int* indices, int num_indices, TextureHandle texture,
+                              const Vector2f& translation) = 0;
 
-	virtual CompiledGeometryHandle CompileGeometry(Vertex* vertices, int num_vertices, int* indices, int num_indices, TextureHandle texture);
-	virtual void RenderCompiledGeometry(CompiledGeometryHandle geometry, const Vector2f& translation);
-	virtual void ReleaseCompiledGeometry(CompiledGeometryHandle geometry);
+  virtual CompiledGeometryHandle CompileGeometry(Vertex* vertices, int num_vertices, int* indices, int num_indices,
+                                                 TextureHandle texture);
+  virtual void RenderCompiledGeometry(CompiledGeometryHandle geometry, const Vector2f& translation);
+  virtual void ReleaseCompiledGeometry(CompiledGeometryHandle geometry);
 
-	virtual void EnableScissorRegion(bool enable) = 0;
-	virtual void SetScissorRegion(int x, int y, int width, int height) = 0;
+  virtual void EnableScissorRegion(bool enable) = 0;
+  virtual void SetScissorRegion(int x, int y, int width, int height) = 0;
 
-	virtual bool LoadTexture(TextureHandle& texture_handle, Vector2i& texture_dimensions, const String& source);
-	virtual bool GenerateTexture(TextureHandle& texture_handle, const byte* source, const Vector2i& source_dimensions);
-	virtual void ReleaseTexture(TextureHandle texture);
+  virtual bool LoadTexture(TextureHandle& texture_handle, Vector2i& texture_dimensions, const String& source);
+  virtual bool GenerateTexture(TextureHandle& texture_handle, const byte* source, const Vector2i& source_dimensions);
+  virtual void ReleaseTexture(TextureHandle texture);
 
-	virtual void SetTransform(const Matrix4f* transform);
+  virtual void SetTransform(const Matrix4f* transform);
 
-	RenderInterface* GetAdaptedInterface();
+  RenderInterface* GetAdaptedInterface();
 
 private:
-	UniquePtr<RenderInterfaceAdapter> adapter;
+  UniquePtr<RenderInterfaceAdapter> adapter;
 };
 
 /*
@@ -55,36 +56,36 @@ private:
 */
 class UI_CORE_API RenderInterfaceAdapter : public RenderInterface {
 public:
-	CompiledGeometryHandle CompileGeometry(Span<const Vertex> vertices, Span<const int> indices) override;
-	void RenderGeometry(CompiledGeometryHandle handle, Vector2f translation, TextureHandle texture) override;
-	void ReleaseGeometry(CompiledGeometryHandle handle) override;
+  CompiledGeometryHandle CompileGeometry(Span<const Vertex> vertices, Span<const int> indices) override;
+  void RenderGeometry(CompiledGeometryHandle handle, Vector2f translation, TextureHandle texture) override;
+  void ReleaseGeometry(CompiledGeometryHandle handle) override;
 
-	void EnableScissorRegion(bool enable) override;
-	void SetScissorRegion(Rectanglei region) override;
+  void EnableScissorRegion(bool enable) override;
+  void SetScissorRegion(Rectanglei region) override;
 
-	TextureHandle LoadTexture(Vector2i& texture_dimensions, const String& source) override;
-	TextureHandle GenerateTexture(Span<const byte> source_data, Vector2i source_dimensions) override;
-	void ReleaseTexture(TextureHandle texture_handle) override;
+  TextureHandle LoadTexture(Vector2i& texture_dimensions, const String& source) override;
+  TextureHandle GenerateTexture(Span<const byte> source_data, Vector2i source_dimensions) override;
+  void ReleaseTexture(TextureHandle texture_handle) override;
 
-	void EnableClipMask(bool enable) override;
-	void RenderToClipMask(ClipMaskOperation operation, CompiledGeometryHandle geometry, Vector2f translation) override;
+  void EnableClipMask(bool enable) override;
+  void RenderToClipMask(ClipMaskOperation operation, CompiledGeometryHandle geometry, Vector2f translation) override;
 
-	void SetTransform(const Matrix4f* transform) override;
+  void SetTransform(const Matrix4f* transform) override;
 
 private:
-	using LegacyCompiledGeometryHandle = CompiledGeometryHandle;
+  using LegacyCompiledGeometryHandle = CompiledGeometryHandle;
 
-	struct AdaptedGeometry {
-		Vector<Vertex> vertices;
-		Vector<int> indices;
-		SmallUnorderedMap<TextureHandle, LegacyCompiledGeometryHandle> textures;
-	};
+  struct AdaptedGeometry {
+    Vector<Vertex> vertices;
+    Vector<int> indices;
+    SmallUnorderedMap<TextureHandle, LegacyCompiledGeometryHandle> textures;
+  };
 
-	RenderInterfaceAdapter(RenderInterfaceCompatibility& legacy);
+  RenderInterfaceAdapter(RenderInterfaceCompatibility& legacy);
 
-	RenderInterfaceCompatibility& legacy;
+  RenderInterfaceCompatibility& legacy;
 
-	friend ui::RenderInterfaceCompatibility::RenderInterfaceCompatibility();
+  friend ui::RenderInterfaceCompatibility::RenderInterfaceCompatibility();
 };
 
 } // namespace ui

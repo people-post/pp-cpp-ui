@@ -32,69 +32,69 @@ namespace ui {
 
 class UI_CORE_API ElementImage : public Element {
 public:
-	UI_RTTI_DefineWithParent(ElementImage, Element)
+  UI_RTTI_DefineWithParent(ElementImage, Element)
 
-	/// Constructs a new ElementImage. This should not be called directly; use the Factory instead.
-	/// @param[in] tag The tag the element was declared as in RML.
-	ElementImage(const String& tag);
-	virtual ~ElementImage();
+      /// Constructs a new ElementImage. This should not be called directly; use the Factory instead.
+      /// @param[in] tag The tag the element was declared as in RML.
+      ElementImage(const String& tag);
+  virtual ~ElementImage();
 
-	/// Returns the element's inherent size.
-	bool GetIntrinsicDimensions(Vector2f& dimensions, float& ratio) override;
+  /// Returns the element's inherent size.
+  bool GetIntrinsicDimensions(Vector2f& dimensions, float& ratio) override;
 
-	/// Loads the current source file if needed. This normally happens automatically during layouting.
-	void EnsureSourceLoaded();
+  /// Loads the current source file if needed. This normally happens automatically during layouting.
+  void EnsureSourceLoaded();
 
 protected:
-	/// Renders the image.
-	void OnRender() override;
+  /// Renders the image.
+  void OnRender() override;
 
-	/// Regenerates the element's geometry.
-	void OnResize() override;
+  /// Regenerates the element's geometry.
+  void OnResize() override;
 
-	/// Our intrinsic dimensions may change with the dp-ratio.
-	void OnDpRatioChange() override;
+  /// Our intrinsic dimensions may change with the dp-ratio.
+  void OnDpRatioChange() override;
 
-	/// The sprite may have changed when the style sheet is recompiled.
-	void OnStyleSheetChange() override;
+  /// The sprite may have changed when the style sheet is recompiled.
+  void OnStyleSheetChange() override;
 
-	/// Checks for changes to the image's source or dimensions.
-	/// @param[in] changed_attributes A list of attributes changed on the element.
-	void OnAttributeChange(const ElementAttributes& changed_attributes) override;
+  /// Checks for changes to the image's source or dimensions.
+  /// @param[in] changed_attributes A list of attributes changed on the element.
+  void OnAttributeChange(const ElementAttributes& changed_attributes) override;
 
-	/// Called when properties on the element are changed.
-	/// @param[in] changed_properties The properties changed on the element.
-	void OnPropertyChange(const PropertyIdSet& changed_properties) override;
+  /// Called when properties on the element are changed.
+  /// @param[in] changed_properties The properties changed on the element.
+  void OnPropertyChange(const PropertyIdSet& changed_properties) override;
 
-	/// Detect when we have been added to the document.
-	void OnChildAdd(Element* child) override;
+  /// Detect when we have been added to the document.
+  void OnChildAdd(Element* child) override;
 
 private:
-	// Generates the element's geometry.
-	void GenerateGeometry();
-	// Loads the element's texture, as specified by the 'src' attribute.
-	bool LoadTexture();
-	// Loads the rect value from the element's attribute, but only if we're not a sprite.
-	void UpdateRect();
+  // Generates the element's geometry.
+  void GenerateGeometry();
+  // Loads the element's texture, as specified by the 'src' attribute.
+  bool LoadTexture();
+  // Loads the rect value from the element's attribute, but only if we're not a sprite.
+  void UpdateRect();
 
-	// The texture this element is rendering from.
-	Texture texture;
-	// True if we need to refetch the texture's source from the element's attributes.
-	bool texture_dirty;
-	// A factor which scales the intrinsic dimensions based on the dp-ratio and image scale.
-	float dimensions_scale;
-	// The element's computed intrinsic dimensions. If either of these values are set to -1, then
-	// that dimension has not been computed yet.
-	Vector2f dimensions;
+  // The texture this element is rendering from.
+  Texture texture;
+  // True if we need to refetch the texture's source from the element's attributes.
+  bool texture_dirty;
+  // A factor which scales the intrinsic dimensions based on the dp-ratio and image scale.
+  float dimensions_scale;
+  // The element's computed intrinsic dimensions. If either of these values are set to -1, then
+  // that dimension has not been computed yet.
+  Vector2f dimensions;
 
-	// The rectangle extracted from the sprite or 'rect' attribute. The rect_source will be None if
-	// these have not been specified or are invalid.
-	Rectanglef rect;
-	enum class RectSource { None, Attribute, Sprite } rect_source;
+  // The rectangle extracted from the sprite or 'rect' attribute. The rect_source will be None if
+  // these have not been specified or are invalid.
+  Rectanglef rect;
+  enum class RectSource { None, Attribute, Sprite } rect_source;
 
-	// The geometry used to render this element.
-	Geometry geometry;
-	bool geometry_dirty;
+  // The geometry used to render this element.
+  Geometry geometry;
+  bool geometry_dirty;
 };
 
 } // namespace ui

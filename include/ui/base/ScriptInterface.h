@@ -12,11 +12,11 @@ namespace ui {
 
 class UI_CORE_API ScriptInterface : public Releasable {
 public:
-	UI_RTTI_Define(ScriptInterface)
+  UI_RTTI_Define(ScriptInterface)
 
-	virtual ~ScriptInterface() {}
+      virtual ~ScriptInterface() {}
 
-	virtual ScriptObject GetScriptObject() const { return nullptr; }
+  virtual ScriptObject GetScriptObject() const { return nullptr; }
 };
 
 } // namespace ui

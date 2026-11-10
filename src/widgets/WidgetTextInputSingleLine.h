@@ -10,13 +10,13 @@ namespace ui {
 
 class WidgetTextInputSingleLine : public WidgetTextInput {
 public:
-	WidgetTextInputSingleLine(ElementFormControl* parent);
+  WidgetTextInputSingleLine(ElementFormControl* parent);
 
 protected:
-	/// Removes any invalid characters from the string.
-	void SanitizeValue(String& value) override;
-	/// Called when the user pressed enter.
-	void LineBreak() override;
+  /// Removes any invalid characters from the string.
+  void SanitizeValue(String& value) override;
+  /// Called when the user pressed enter.
+  void LineBreak() override;
 };
 
 } // namespace ui

@@ -18,120 +18,117 @@ UI_CORE_API String CreateString(const char* format, ...) UI_ATTRIBUTE_FORMAT_PRI
 UI_CORE_API int FormatString(String& string, const char* format, ...) UI_ATTRIBUTE_FORMAT_PRINTF(2, 3);
 
 namespace StringUtilities {
-	/// Expands character-delimited list of values in a single string to a whitespace-trimmed list
-	/// of values.
-	/// @param[out] string_list Resulting list of values.
-	/// @param[in] string String to expand.
-	/// @param[in] delimiter Delimiter found between entries in the string list.
-	/// @param[in] ignore_repeated_delimiters If true, repeated values of the delimiter will not add additional entries to the list.
-	UI_CORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter = ',',
-		bool ignore_repeated_delimiters = false);
-	/// Expands character-delimited list of values with custom quote characters.
-	/// @param[out] string_list Resulting list of values.
-	/// @param[in] string String to expand.
-	/// @param[in] delimiter Delimiter found between entries in the string list.
-	/// @param[in] quote_character Begin quote
-	/// @param[in] unquote_character End quote
-	/// @param[in] ignore_repeated_delimiters If true, repeated values of the delimiter will not add additional entries to the list.
-	UI_CORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter, char quote_character, char unquote_character,
-		bool ignore_repeated_delimiters = false);
-	/// Joins a list of string values into a single string separated by a character delimiter.
-	/// @param[out] string Resulting concatenated string.
-	/// @param[in] string_list Input list of string values.
-	/// @param[in] delimiter Delimiter to insert between the individual values.
-	UI_CORE_API void JoinString(String& string, const StringList& string_list, const char delimiter = ',');
+/// Expands character-delimited list of values in a single string to a whitespace-trimmed list
+/// of values.
+/// @param[out] string_list Resulting list of values.
+/// @param[in] string String to expand.
+/// @param[in] delimiter Delimiter found between entries in the string list.
+/// @param[in] ignore_repeated_delimiters If true, repeated values of the delimiter will not add additional entries to the list.
+UI_CORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter = ',',
+                              bool ignore_repeated_delimiters = false);
+/// Expands character-delimited list of values with custom quote characters.
+/// @param[out] string_list Resulting list of values.
+/// @param[in] string String to expand.
+/// @param[in] delimiter Delimiter found between entries in the string list.
+/// @param[in] quote_character Begin quote
+/// @param[in] unquote_character End quote
+/// @param[in] ignore_repeated_delimiters If true, repeated values of the delimiter will not add additional entries to the list.
+UI_CORE_API void ExpandString(StringList& string_list, const String& string, const char delimiter, char quote_character,
+                              char unquote_character, bool ignore_repeated_delimiters = false);
+/// Joins a list of string values into a single string separated by a character delimiter.
+/// @param[out] string Resulting concatenated string.
+/// @param[in] string_list Input list of string values.
+/// @param[in] delimiter Delimiter to insert between the individual values.
+UI_CORE_API void JoinString(String& string, const StringList& string_list, const char delimiter = ',');
 
-	/// Converts upper-case characters in string to lower-case.
-	UI_CORE_API String ToLower(String string);
-	/// Converts lower-case characters in string to upper-case.
-	UI_CORE_API String ToUpper(String string);
+/// Converts upper-case characters in string to lower-case.
+UI_CORE_API String ToLower(String string);
+/// Converts lower-case characters in string to upper-case.
+UI_CORE_API String ToUpper(String string);
 
-	/// Encode RML characters, eg. '<' to '&lt;'
-	UI_CORE_API String EncodeRml(const String& string);
+/// Encode RML characters, eg. '<' to '&lt;'
+UI_CORE_API String EncodeRml(const String& string);
 
-	/// Decode RML characters, eg. '&lt;' to '<'
-	UI_CORE_API String DecodeRml(const String& string);
+/// Decode RML characters, eg. '&lt;' to '<'
+UI_CORE_API String DecodeRml(const String& string);
 
-	// Replaces all occurrences of 'search' in 'subject' with 'replace'.
-	UI_CORE_API String Replace(String subject, const String& search, const String& replace);
-	// Replaces all occurrences of 'search' in 'subject' with 'replace'.
-	UI_CORE_API String Replace(String subject, char search, char replace);
+// Replaces all occurrences of 'search' in 'subject' with 'replace'.
+UI_CORE_API String Replace(String subject, const String& search, const String& replace);
+// Replaces all occurrences of 'search' in 'subject' with 'replace'.
+UI_CORE_API String Replace(String subject, char search, char replace);
 
-	/// Checks if a given value is a whitespace character.
-	inline bool IsWhitespace(const char x)
-	{
-		return (x == '\r' || x == '\n' || x == ' ' || x == '\t');
-	}
+/// Checks if a given value is a whitespace character.
+inline bool IsWhitespace(const char x) {
+  return (x == '\r' || x == '\n' || x == ' ' || x == '\t');
+}
 
-	/// Checks if a code point is CJK (Han, kana, Hangul syllables, CJK symbols and punctuation, fullwidth forms).
-	UI_CORE_API bool IsCjk(Character character);
-	/// Checks if a line must not break before this code point (kinsoku: closing punctuation, small kana, combining marks).
-	UI_CORE_API bool IsNoBreakBefore(Character character);
-	/// Checks if a line must not break after this code point (kinsoku: opening punctuation).
-	UI_CORE_API bool IsNoBreakAfter(Character character);
-	/// Checks if a line may break between two adjacent code points, without any white-space between them. Unless
-	/// 'break_anywhere' is set, only pairs involving a CJK character are break opportunities. Kinsoku applies either way.
-	UI_CORE_API bool CanBreakBetween(Character before, Character after, bool break_anywhere);
+/// Checks if a code point is CJK (Han, kana, Hangul syllables, CJK symbols and punctuation, fullwidth forms).
+UI_CORE_API bool IsCjk(Character character);
+/// Checks if a line must not break before this code point (kinsoku: closing punctuation, small kana, combining marks).
+UI_CORE_API bool IsNoBreakBefore(Character character);
+/// Checks if a line must not break after this code point (kinsoku: opening punctuation).
+UI_CORE_API bool IsNoBreakAfter(Character character);
+/// Checks if a line may break between two adjacent code points, without any white-space between them. Unless
+/// 'break_anywhere' is set, only pairs involving a CJK character are break opportunities. Kinsoku applies either way.
+UI_CORE_API bool CanBreakBetween(Character before, Character after, bool break_anywhere);
 
-	/// Strip whitespace characters from the beginning and end of a string.
-	UI_CORE_API String StripWhitespace(const String& string);
+/// Strip whitespace characters from the beginning and end of a string.
+UI_CORE_API String StripWhitespace(const String& string);
 
-	/// Strip whitespace characters from the beginning and end of a string.
-	UI_CORE_API String StripWhitespace(StringView string);
+/// Strip whitespace characters from the beginning and end of a string.
+UI_CORE_API String StripWhitespace(StringView string);
 
-	/// Trim trailing zeros and the dot from a string-representation of a number with a decimal point.
-	/// @warning If the string does not represent a number _with_ a decimal point, the result is ill-defined.
-	UI_CORE_API void TrimTrailingDotZeros(String& string);
+/// Trim trailing zeros and the dot from a string-representation of a number with a decimal point.
+/// @warning If the string does not represent a number _with_ a decimal point, the result is ill-defined.
+UI_CORE_API void TrimTrailingDotZeros(String& string);
 
-	/// Returns true if the string starts with the given value.
-	UI_CORE_API bool StartsWith(StringView string, StringView start);
-	/// Returns true if the string ends with the given value.
-	UI_CORE_API bool EndsWith(StringView string, StringView end);
+/// Returns true if the string starts with the given value.
+UI_CORE_API bool StartsWith(StringView string, StringView start);
+/// Returns true if the string ends with the given value.
+UI_CORE_API bool EndsWith(StringView string, StringView end);
 
-	/// Case insensitive string comparison. Returns true if they compare equal.
-	UI_CORE_API bool StringCompareCaseInsensitive(StringView lhs, StringView rhs);
+/// Case insensitive string comparison. Returns true if they compare equal.
+UI_CORE_API bool StringCompareCaseInsensitive(StringView lhs, StringView rhs);
 
-	// Decode the first code point in a zero-terminated UTF-8 string.
-	UI_CORE_API Character ToCharacter(const char* p, const char* p_end);
+// Decode the first code point in a zero-terminated UTF-8 string.
+UI_CORE_API Character ToCharacter(const char* p, const char* p_end);
 
-	/// Returns number of bytes in a UTF-8 character.
-	UI_CORE_API size_t BytesUTF8(Character character);
+/// Returns number of bytes in a UTF-8 character.
+UI_CORE_API size_t BytesUTF8(Character character);
 
-	// Encode a single code point as a UTF-8 string.
-	UI_CORE_API String ToUTF8(Character character);
+// Encode a single code point as a UTF-8 string.
+UI_CORE_API String ToUTF8(Character character);
 
-	// Encode an array of code points as a UTF-8 string.
-	UI_CORE_API String ToUTF8(const Character* characters, int num_characters);
+// Encode an array of code points as a UTF-8 string.
+UI_CORE_API String ToUTF8(const Character* characters, int num_characters);
 
-	/// Returns number of characters in a UTF-8 string.
-	UI_CORE_API size_t LengthUTF8(StringView string_view);
+/// Returns number of characters in a UTF-8 string.
+UI_CORE_API size_t LengthUTF8(StringView string_view);
 
-	// Seek forward in a UTF-8 string, skipping continuation bytes.
-	inline const char* SeekForwardUTF8(const char* p, const char* p_end)
-	{
-		while (p != p_end && (*p & 0b1100'0000) == 0b1000'0000)
-			++p;
-		return p;
-	}
-	// Seek backward in a UTF-8 string, skipping continuation bytes.
-	inline const char* SeekBackwardUTF8(const char* p, const char* p_begin)
-	{
-		while ((p + 1) != p_begin && (*p & 0b1100'0000) == 0b1000'0000)
-			--p;
-		return p;
-	}
+// Seek forward in a UTF-8 string, skipping continuation bytes.
+inline const char* SeekForwardUTF8(const char* p, const char* p_end) {
+  while (p != p_end && (*p & 0b1100'0000) == 0b1000'0000)
+    ++p;
+  return p;
+}
+// Seek backward in a UTF-8 string, skipping continuation bytes.
+inline const char* SeekBackwardUTF8(const char* p, const char* p_begin) {
+  while ((p + 1) != p_begin && (*p & 0b1100'0000) == 0b1000'0000)
+    --p;
+  return p;
+}
 
-	/// Seek forward one extended grapheme cluster (emoji ZWJ / skin tone / VS16 / flags).
-	/// `p` must point at a code-point boundary (or end).
-	UI_CORE_API const char* SeekForwardGraphemeCluster(const char* p, const char* p_end);
-	/// Seek backward one extended grapheme cluster. `p` is a boundary (or begin).
-	UI_CORE_API const char* SeekBackwardGraphemeCluster(const char* p, const char* p_begin);
+/// Seek forward one extended grapheme cluster (emoji ZWJ / skin tone / VS16 / flags).
+/// `p` must point at a code-point boundary (or end).
+UI_CORE_API const char* SeekForwardGraphemeCluster(const char* p, const char* p_end);
+/// Seek backward one extended grapheme cluster. `p` is a boundary (or begin).
+UI_CORE_API const char* SeekBackwardGraphemeCluster(const char* p, const char* p_begin);
 
-	/// Converts a character position in a UTF-8 string to a byte offset.
-	UI_CORE_API int ConvertCharacterOffsetToByteOffset(StringView string, int character_offset);
+/// Converts a character position in a UTF-8 string to a byte offset.
+UI_CORE_API int ConvertCharacterOffsetToByteOffset(StringView string, int character_offset);
 
-	/// Converts a byte offset of a UTF-8 string to a character position.
-	UI_CORE_API int ConvertByteOffsetToCharacterOffset(StringView string, int byte_offset);
+/// Converts a byte offset of a UTF-8 string to a character position.
+UI_CORE_API int ConvertByteOffsetToCharacterOffset(StringView string, int byte_offset);
 } // namespace StringUtilities
 
 /*
@@ -142,34 +139,33 @@ namespace StringUtilities {
 
 class UI_CORE_API StringView {
 public:
-	StringView();
-	StringView(const char* p_begin, const char* p_end);
-	StringView(const String& string);
-	StringView(const String& string, size_t offset);
-	StringView(const String& string, size_t offset, size_t count);
+  StringView();
+  StringView(const char* p_begin, const char* p_end);
+  StringView(const String& string);
+  StringView(const String& string, size_t offset);
+  StringView(const String& string, size_t offset, size_t count);
 
-	// Constructor for null-terminated string literals.
-	template <size_t N>
-	StringView(const char (&string)[N]) : p_begin(string), p_end(string + (N - 1))
-	{
-		static_assert(N >= 1, "");
-	}
+  // Constructor for null-terminated string literals.
+  template <size_t N>
+  StringView(const char (&string)[N]) : p_begin(string), p_end(string + (N - 1)) {
+    static_assert(N >= 1, "");
+  }
 
-	// String comparison to another view
-	bool operator==(const StringView& other) const;
-	inline bool operator!=(const StringView& other) const { return !(*this == other); }
+  // String comparison to another view
+  bool operator==(const StringView& other) const;
+  inline bool operator!=(const StringView& other) const { return !(*this == other); }
 
-	inline const char* begin() const { return p_begin; }
-	inline const char* end() const { return p_end; }
+  inline const char* begin() const { return p_begin; }
+  inline const char* end() const { return p_end; }
 
-	inline bool empty() const { return p_begin == p_end; }
-	inline size_t size() const { return size_t(p_end - p_begin); }
+  inline bool empty() const { return p_begin == p_end; }
+  inline size_t size() const { return size_t(p_end - p_begin); }
 
-	explicit inline operator String() const { return String(p_begin, p_end); }
+  explicit inline operator String() const { return String(p_begin, p_end); }
 
 private:
-	const char* p_begin;
-	const char* p_end;
+  const char* p_begin;
+  const char* p_end;
 };
 
 /*
@@ -182,39 +178,39 @@ private:
 
 class UI_CORE_API StringIteratorU8 {
 public:
-	StringIteratorU8(const char* p_begin, const char* p, const char* p_end);
-	StringIteratorU8(StringView string);
-	StringIteratorU8(const String& string);
-	StringIteratorU8(const String& string, size_t offset);
-	StringIteratorU8(const String& string, size_t offset, size_t count);
+  StringIteratorU8(const char* p_begin, const char* p, const char* p_end);
+  StringIteratorU8(StringView string);
+  StringIteratorU8(const String& string);
+  StringIteratorU8(const String& string, size_t offset);
+  StringIteratorU8(const String& string, size_t offset, size_t count);
 
-	// Seeks forward to the next UTF-8 character. Iterator must be valid.
-	StringIteratorU8& operator++();
-	// Seeks back to the previous UTF-8 character. Iterator must be valid.
-	StringIteratorU8& operator--();
+  // Seeks forward to the next UTF-8 character. Iterator must be valid.
+  StringIteratorU8& operator++();
+  // Seeks back to the previous UTF-8 character. Iterator must be valid.
+  StringIteratorU8& operator--();
 
-	// Returns the codepoint at the current position. The iterator must be dereferencable.
-	inline Character operator*() const { return StringUtilities::ToCharacter(p, view.end()); }
+  // Returns the codepoint at the current position. The iterator must be dereferencable.
+  inline Character operator*() const { return StringUtilities::ToCharacter(p, view.end()); }
 
-	// Returns false when the iterator is located just outside the valid part of the string.
-	explicit inline operator bool() const { return (p != view.begin() - 1) && (p != view.end()); }
+  // Returns false when the iterator is located just outside the valid part of the string.
+  explicit inline operator bool() const { return (p != view.begin() - 1) && (p != view.end()); }
 
-	bool operator==(const StringIteratorU8& other) const { return p == other.p; }
-	bool operator!=(const StringIteratorU8& other) const { return !(*this == other); }
+  bool operator==(const StringIteratorU8& other) const { return p == other.p; }
+  bool operator!=(const StringIteratorU8& other) const { return !(*this == other); }
 
-	// Return a pointer to the current position.
-	inline const char* get() const { return p; }
+  // Return a pointer to the current position.
+  inline const char* get() const { return p; }
 
-	// Return offset from the beginning of string. Note: Can return negative if decremented.
-	std::ptrdiff_t offset() const { return p - view.begin(); }
+  // Return offset from the beginning of string. Note: Can return negative if decremented.
+  std::ptrdiff_t offset() const { return p - view.begin(); }
 
 private:
-	StringView view;
-	// 'p' can be dereferenced if and only if inside [view.begin, view.end)
-	const char* p;
+  StringView view;
+  // 'p' can be dereferenced if and only if inside [view.begin, view.end)
+  const char* p;
 
-	inline void SeekForward();
-	inline void SeekBack();
+  inline void SeekForward();
+  inline void SeekBack();
 };
 
 } // namespace ui

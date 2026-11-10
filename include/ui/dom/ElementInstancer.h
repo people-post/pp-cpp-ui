@@ -25,17 +25,17 @@ class Element;
 
 class UI_CORE_API ElementInstancer : public NonCopyMoveable {
 public:
-	virtual ~ElementInstancer();
+  virtual ~ElementInstancer();
 
-	/// Instances an element given the tag name and attributes.
-	/// @param[in] parent The element the new element is destined to be parented to.
-	/// @param[in] tag The tag of the element to instance.
-	/// @param[in] attributes Dictionary of attributes.
-	/// @return A unique pointer to the instanced element.
-	virtual ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) = 0;
-	/// Releases an element instanced by this instancer.
-	/// @param[in] element The element to release.
-	virtual void ReleaseElement(Element* element) = 0;
+  /// Instances an element given the tag name and attributes.
+  /// @param[in] parent The element the new element is destined to be parented to.
+  /// @param[in] tag The tag of the element to instance.
+  /// @param[in] attributes Dictionary of attributes.
+  /// @return A unique pointer to the instanced element.
+  virtual ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) = 0;
+  /// Releases an element instanced by this instancer.
+  /// @param[in] element The element to release.
+  virtual void ReleaseElement(Element* element) = 0;
 };
 
 /**
@@ -46,9 +46,9 @@ public:
 
 class UI_CORE_API ElementInstancerElement : public ElementInstancer {
 public:
-	ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) override;
-	void ReleaseElement(Element* element) override;
-	~ElementInstancerElement();
+  ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) override;
+  void ReleaseElement(Element* element) override;
+  ~ElementInstancerElement();
 };
 
 /**
@@ -59,8 +59,8 @@ public:
 
 class UI_CORE_API ElementInstancerText : public ElementInstancer {
 public:
-	ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) override;
-	void ReleaseElement(Element* element) override;
+  ElementPtr InstanceElement(Element* parent, const String& tag, const XMLAttributes& attributes) override;
+  void ReleaseElement(Element* element) override;
 };
 
 /**
@@ -71,24 +71,22 @@ public:
 template <typename T>
 class ElementInstancerGeneric : public ElementInstancer {
 public:
-	virtual ~ElementInstancerGeneric() {}
+  virtual ~ElementInstancerGeneric() {}
 
-	ElementPtr InstanceElement(Element* /*parent*/, const String& tag, const XMLAttributes& /*attributes*/) override
-	{
-		UI_ZoneScopedN("ElementGenericInstance");
-		return ElementPtr(new T(tag));
-	}
+  ElementPtr InstanceElement(Element* /*parent*/, const String& tag, const XMLAttributes& /*attributes*/) override {
+    UI_ZoneScopedN("ElementGenericInstance");
+    return ElementPtr(new T(tag));
+  }
 
-	void ReleaseElement(Element* element) override
-	{
-		UI_ZoneScopedN("ElementGenericRelease");
-		delete element;
-	}
+  void ReleaseElement(Element* element) override {
+    UI_ZoneScopedN("ElementGenericRelease");
+    delete element;
+  }
 };
 
 namespace Detail {
-	void InitializeElementInstancerPools();
-	void ShutdownElementInstancerPools();
+void InitializeElementInstancerPools();
+void ShutdownElementInstancerPools();
 } // namespace Detail
 
 } // namespace ui

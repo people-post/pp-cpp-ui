@@ -10,17 +10,17 @@ namespace ui {
 
 class FontEffectShadow : public FontEffect {
 public:
-	FontEffectShadow();
-	virtual ~FontEffectShadow();
+  FontEffectShadow();
+  virtual ~FontEffectShadow();
 
-	bool Initialise(Vector2i offset);
+  bool Initialise(Vector2i offset);
 
-	bool HasUniqueTexture() const override;
+  bool HasUniqueTexture() const override;
 
-	bool GetGlyphMetrics(Vector2i& origin, Vector2i& dimensions, const FontGlyph& glyph) const override;
+  bool GetGlyphMetrics(Vector2i& origin, Vector2i& dimensions, const FontGlyph& glyph) const override;
 
 private:
-	Vector2i offset;
+  Vector2i offset;
 };
 
 /**
@@ -29,13 +29,13 @@ private:
 
 class FontEffectShadowInstancer : public FontEffectInstancer {
 public:
-	FontEffectShadowInstancer();
-	virtual ~FontEffectShadowInstancer();
+  FontEffectShadowInstancer();
+  virtual ~FontEffectShadowInstancer();
 
-	SharedPtr<FontEffect> InstanceFontEffect(const String& name, const PropertyDictionary& properties) override;
+  SharedPtr<FontEffect> InstanceFontEffect(const String& name, const PropertyDictionary& properties) override;
 
 private:
-	PropertyId id_offset_x, id_offset_y, id_color;
+  PropertyId id_offset_x, id_offset_y, id_color;
 };
 
 } // namespace ui

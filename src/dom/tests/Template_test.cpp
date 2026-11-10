@@ -7,9 +7,8 @@
 
 using namespace ui;
 
-TEST_CASE("template.body")
-{
-	static const String document_rml = R"(
+TEST_CASE("template.body") {
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/window.rml"/>
@@ -30,30 +29,29 @@ TEST_CASE("template.body")
 </rml>
 )";
 
-	static const String p_address = "p#p < div#content < div#window < body#body.window < #root#main";
+  static const String p_address = "p#p < div#content < div#window < body#body.window < #root#main";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	INFO("Expected warning: Body 'class' attribute overridden by template.");
-	TestsShell::SetNumExpectedWarnings(1);
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	TestsShell::SetNumExpectedWarnings(0);
+  INFO("Expected warning: Body 'class' attribute overridden by template.");
+  TestsShell::SetNumExpectedWarnings(1);
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  TestsShell::SetNumExpectedWarnings(0);
 
-	document->Show();
-	TestsShell::RenderLoop();
+  document->Show();
+  TestsShell::RenderLoop();
 
-	Element* el_p = document->GetElementById("p");
-	REQUIRE(el_p);
-	CHECK(el_p->GetAddress() == p_address);
+  Element* el_p = document->GetElementById("p");
+  REQUIRE(el_p);
+  CHECK(el_p->GetAddress() == p_address);
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.body+inline")
-{
-	static const String document_rml = R"(
+TEST_CASE("template.body+inline") {
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/window.rml"/>
@@ -80,30 +78,30 @@ TEST_CASE("template.body+inline")
 </rml>
 )";
 
-	static const String p_address = "p#p < div#content < div#window < body#body.window < #root#main";
-	static const String span_address = "span#span < p#text < div#basic_wrapper < div#content < div#window < body#body.window < #root#main";
+  static const String p_address = "p#p < div#content < div#window < body#body.window < #root#main";
+  static const String span_address =
+      "span#span < p#text < div#basic_wrapper < div#content < div#window < body#body.window < #root#main";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	document->Show();
-	TestsShell::RenderLoop();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	Element* el_p = document->GetElementById("p");
-	Element* el_span = document->GetElementById("span");
-	REQUIRE(el_p);
-	REQUIRE(el_span);
-	CHECK(el_p->GetAddress() == p_address);
-	CHECK(el_span->GetAddress() == span_address);
+  Element* el_p = document->GetElementById("p");
+  Element* el_span = document->GetElementById("span");
+  REQUIRE(el_p);
+  REQUIRE(el_span);
+  CHECK(el_p->GetAddress() == p_address);
+  CHECK(el_span->GetAddress() == span_address);
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.inline")
-{
-	static const String document_rml = R"(
+TEST_CASE("template.inline") {
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/window.rml"/>
@@ -129,26 +127,26 @@ TEST_CASE("template.inline")
 </rml>
 )";
 
-	static const String p_address = "p#p < div#content < div#window < div#template_parent < body#body.inline < #root#main";
+  static const String p_address =
+      "p#p < div#content < div#window < div#template_parent < body#body.inline < #root#main";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	document->Show();
-	TestsShell::RenderLoop();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	Element* el_p = document->GetElementById("p");
-	REQUIRE(el_p);
-	CHECK(el_p->GetAddress() == p_address);
+  Element* el_p = document->GetElementById("p");
+  REQUIRE(el_p);
+  CHECK(el_p->GetAddress() == p_address);
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.inline+inline.unique")
-{
-	static const String document_rml = R"(
+TEST_CASE("template.inline+inline.unique") {
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/window.rml"/>
@@ -180,30 +178,31 @@ TEST_CASE("template.inline+inline.unique")
 </rml>
 )";
 
-	static const String p_address = "p#p < div#content < div#window < div#template_parent < body#body.inline < #root#main";
-	static const String span_address = "span#span < p#text < div#basic_wrapper < div#template_parent < body#body.inline < #root#main";
+  static const String p_address =
+      "p#p < div#content < div#window < div#template_parent < body#body.inline < #root#main";
+  static const String span_address =
+      "span#span < p#text < div#basic_wrapper < div#template_parent < body#body.inline < #root#main";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	document->Show();
-	TestsShell::RenderLoop();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	Element* el_p = document->GetElementById("p");
-	Element* el_span = document->GetElementById("span");
-	REQUIRE(el_p);
-	REQUIRE(el_span);
-	CHECK(el_p->GetAddress() == p_address);
-	CHECK(el_span->GetAddress() == span_address);
+  Element* el_p = document->GetElementById("p");
+  Element* el_span = document->GetElementById("span");
+  REQUIRE(el_p);
+  REQUIRE(el_span);
+  CHECK(el_p->GetAddress() == p_address);
+  CHECK(el_span->GetAddress() == span_address);
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.inline+inline.identical.wrapped")
-{
-	static const String document_rml = R"(
+TEST_CASE("template.inline+inline.identical.wrapped") {
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/window.rml"/>
@@ -239,27 +238,27 @@ TEST_CASE("template.inline+inline.identical.wrapped")
 </rml>
 )";
 
-	static const String s1_address = "span#s1 < p#text < div#wrap_t1 < body#body.inline < #root#main";
-	static const String s2_address = "span#s2 < p#text < div#wrap_t2 < body#body.inline < #root#main";
+  static const String s1_address = "span#s1 < p#text < div#wrap_t1 < body#body.inline < #root#main";
+  static const String s2_address = "span#s2 < p#text < div#wrap_t2 < body#body.inline < #root#main";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	document->Show();
-	TestsShell::RenderLoop();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	CHECK(document->GetElementById("s1")->GetAddress() == s1_address);
-	CHECK(document->GetElementById("s2")->GetAddress() == s2_address);
-	CHECK(StringUtilities::StripWhitespace(document->QuerySelector("#wrap_t1 p#text")->GetInnerRML()) == R"(Enable<span id="s1">X</span>)");
+  CHECK(document->GetElementById("s1")->GetAddress() == s1_address);
+  CHECK(document->GetElementById("s2")->GetAddress() == s2_address);
+  CHECK(StringUtilities::StripWhitespace(document->QuerySelector("#wrap_t1 p#text")->GetInnerRML()) ==
+        R"(Enable<span id="s1">X</span>)");
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.inline+inline.identical.siblings")
-{
-	static const String document_rml = R"(
+TEST_CASE("template.inline+inline.identical.siblings") {
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/window.rml"/>
@@ -291,27 +290,26 @@ TEST_CASE("template.inline+inline.identical.siblings")
 </rml>
 )";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	document->Show();
-	TestsShell::RenderLoop();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	ElementList p_elements;
-	document->GetElementsByTagName(p_elements, "p");
-	REQUIRE(p_elements.size() == 2);
-	CHECK(StringUtilities::StripWhitespace(p_elements[0]->GetInnerRML()) == R"(Enable<span id="s1">X</span>)");
-	CHECK(StringUtilities::StripWhitespace(p_elements[1]->GetInnerRML()) == R"(Disable<span id="s2">Y</span>)");
+  ElementList p_elements;
+  document->GetElementsByTagName(p_elements, "p");
+  REQUIRE(p_elements.size() == 2);
+  CHECK(StringUtilities::StripWhitespace(p_elements[0]->GetInnerRML()) == R"(Enable<span id="s1">X</span>)");
+  CHECK(StringUtilities::StripWhitespace(p_elements[1]->GetInnerRML()) == R"(Disable<span id="s2">Y</span>)");
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.self_recursive")
-{
-	// Expansion stops at the maximum template expansion depth.
-	static const String document_rml = R"(
+TEST_CASE("template.self_recursive") {
+  // Expansion stops at the maximum template expansion depth.
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/recursive_template.rml"/>
@@ -323,41 +321,38 @@ TEST_CASE("template.self_recursive")
 </rml>
 )";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	INFO("Expected error: template expansion depth exceeded.");
-	TestsShell::SetNumExpectedWarnings(1);
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	TestsShell::SetNumExpectedWarnings(0);
+  INFO("Expected error: template expansion depth exceeded.");
+  TestsShell::SetNumExpectedWarnings(1);
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  TestsShell::SetNumExpectedWarnings(0);
 
-	document->Show();
-	TestsShell::RenderLoop();
+  document->Show();
+  TestsShell::RenderLoop();
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-static int CountDescendants(Element* element)
-{
-	int count = 0;
-	for (int i = 0; i < element->GetNumChildren(); i++)
-		count += 1 + CountDescendants(element->GetChild(i));
-	return count;
+static int CountDescendants(Element* element) {
+  int count = 0;
+  for (int i = 0; i < element->GetNumChildren(); i++)
+    count += 1 + CountDescendants(element->GetChild(i));
+  return count;
 }
 
-static int GetMaxDepth(Element* element)
-{
-	int max_child_depth = 0;
-	for (int i = 0; i < element->GetNumChildren(); i++)
-		max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
-	return 1 + max_child_depth;
+static int GetMaxDepth(Element* element) {
+  int max_child_depth = 0;
+  for (int i = 0; i < element->GetNumChildren(); i++)
+    max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
+  return 1 + max_child_depth;
 }
 
-TEST_CASE("template.self_recursive_fanout")
-{
-	// Expansion stops at the maximum number of template expansions.
-	static const String document_rml = R"(
+TEST_CASE("template.self_recursive_fanout") {
+  // Expansion stops at the maximum number of template expansions.
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/recursive_template_fanout.rml"/>
@@ -369,29 +364,28 @@ TEST_CASE("template.self_recursive_fanout")
 </rml>
 )";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	TestsShell::SetNumExpectedWarnings(2);
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	TestsShell::SetNumExpectedWarnings(0);
-	REQUIRE(document);
+  TestsShell::SetNumExpectedWarnings(2);
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  TestsShell::SetNumExpectedWarnings(0);
+  REQUIRE(document);
 
-	Element* body = document->GetElementById("body");
-	REQUIRE(body);
-	CHECK(CountDescendants(body) <= 256);
+  Element* body = document->GetElementById("body");
+  REQUIRE(body);
+  CHECK(CountDescendants(body) <= 256);
 
-	document->Show();
-	TestsShell::RenderLoop();
+  document->Show();
+  TestsShell::RenderLoop();
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("template.max_document_depth")
-{
-	// Document depth is counted across nested template expansions.
-	static const String document_rml = R"(
+TEST_CASE("template.max_document_depth") {
+  // Document depth is counted across nested template expansions.
+  static const String document_rml = R"(
 <rml>
 <head>
 	<link type="text/template" href="/assets/deep_recursive_template.rml"/>
@@ -403,19 +397,19 @@ TEST_CASE("template.max_document_depth")
 </rml>
 )";
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	TestsShell::SetNumExpectedWarnings(1);
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	TestsShell::SetNumExpectedWarnings(0);
-	REQUIRE(document);
+  TestsShell::SetNumExpectedWarnings(1);
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  TestsShell::SetNumExpectedWarnings(0);
+  REQUIRE(document);
 
-	CHECK(GetMaxDepth(document) <= 512);
+  CHECK(GetMaxDepth(document) <= 512);
 
-	document->Show();
-	TestsShell::RenderLoop();
+  document->Show();
+  TestsShell::RenderLoop();
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }

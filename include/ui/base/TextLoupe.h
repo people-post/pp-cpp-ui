@@ -10,12 +10,13 @@ namespace ui {
 class RenderManager;
 
 struct TextLoupeState {
-	bool active = false;
-	Vector2f anchor;
+  bool active = false;
+  Vector2f anchor;
 };
 
 enum class TextLoupePhase { Capture, Draw };
 
-using TextLoupeRenderCallback = std::function<void(TextLoupePhase phase, const TextLoupeState& state, RenderManager& render_manager)>;
+using TextLoupeRenderCallback =
+    std::function<void(TextLoupePhase phase, const TextLoupeState& state, RenderManager& render_manager)>;
 
 } // namespace ui

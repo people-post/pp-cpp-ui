@@ -11,41 +11,38 @@
 namespace ui {
 namespace SVG {
 
-	class SVGPlugin : public Plugin {
-	public:
-		void OnInitialise() override
-		{
-			SVGCache::Initialize();
+class SVGPlugin : public Plugin {
+public:
+  void OnInitialise() override {
+    SVGCache::Initialize();
 
-			element_instancer = MakeUnique<ElementInstancerGeneric<ElementSVG>>();
-			Factory::RegisterElementInstancer("svg", element_instancer.get());
+    element_instancer = MakeUnique<ElementInstancerGeneric<ElementSVG>>();
+    Factory::RegisterElementInstancer("svg", element_instancer.get());
 
-			decorator_instancer = MakeUnique<DecoratorSVGInstancer>();
-			Factory::RegisterDecoratorInstancer("svg", decorator_instancer.get());
+    decorator_instancer = MakeUnique<DecoratorSVGInstancer>();
+    Factory::RegisterDecoratorInstancer("svg", decorator_instancer.get());
 
-			XMLParser::RegisterNodeHandler("svg", MakeShared<XMLNodeHandlerSVG>());
-			XMLParser::RegisterPersistentCDATATag("svg");
+    XMLParser::RegisterNodeHandler("svg", MakeShared<XMLNodeHandlerSVG>());
+    XMLParser::RegisterPersistentCDATATag("svg");
 
-			Log::Message(Log::LT_INFO, "SVG plugin initialised.");
-		}
+    Log::Message(Log::LT_INFO, "SVG plugin initialised.");
+  }
 
-		void OnShutdown() override
-		{
-			delete this;
-			SVGCache::Shutdown();
-		}
+  void OnShutdown() override {
+    delete this;
+    SVGCache::Shutdown();
+  }
 
-		int GetEventClasses() override { return Plugin::EVT_BASIC; }
+  int GetEventClasses() override { return Plugin::EVT_BASIC; }
 
-	private:
-		UniquePtr<ElementInstancerGeneric<ElementSVG>> element_instancer;
-		UniquePtr<DecoratorSVGInstancer> decorator_instancer;
-	};
+private:
+  UniquePtr<ElementInstancerGeneric<ElementSVG>> element_instancer;
+  UniquePtr<DecoratorSVGInstancer> decorator_instancer;
+};
 
-	void Initialise()
-	{
-		RegisterPlugin(new SVGPlugin);
-	}
+void Initialise() {
+  RegisterPlugin(new SVGPlugin);
+}
 
 } // namespace SVG
 } // namespace ui

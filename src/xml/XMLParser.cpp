@@ -14,9 +14,9 @@
 namespace ui {
 
 struct XmlParserData {
-	UnorderedMap<String, SharedPtr<XMLNodeHandler>> node_handlers;
-	UnorderedSet<String> cdata_tags;
-	SharedPtr<XMLNodeHandler> default_node_handler;
+  UnorderedMap<String, SharedPtr<XMLNodeHandler>> node_handlers;
+  UnorderedSet<String> cdata_tags;
+  SharedPtr<XMLNodeHandler> default_node_handler;
 };
 
 static ControlledLifetimeResource<XmlParserData> xml_parser_data;
@@ -24,211 +24,187 @@ static ControlledLifetimeResource<XmlParserData> xml_parser_data;
 // Maximum DOM depth of elements created by the parser, counted from the root of the element tree.
 static constexpr int MAX_DOCUMENT_DEPTH = 512;
 
-static bool ExceedsMaxDocumentDepth(const Element* parent)
-{
-	int depth = 0;
-	for (const Element* e = parent; e; e = e->GetParentNode())
-	{
-		if (++depth >= MAX_DOCUMENT_DEPTH)
-			return true;
-	}
-	return false;
+static bool ExceedsMaxDocumentDepth(const Element* parent) {
+  int depth = 0;
+  for (const Element* e = parent; e; e = e->GetParentNode()) {
+    if (++depth >= MAX_DOCUMENT_DEPTH)
+      return true;
+  }
+  return false;
 }
 
-XMLParser::XMLParser(Element* root)
-{
-	for (const String& cdata_tag : xml_parser_data->cdata_tags)
-		RegisterCDATATag(cdata_tag);
+XMLParser::XMLParser(Element* root) {
+  for (const String& cdata_tag : xml_parser_data->cdata_tags)
+    RegisterCDATATag(cdata_tag);
 
-	for (const String& name : Factory::GetStructuralDataViewAttributeNames())
-		RegisterInnerXMLAttribute(name);
+  for (const String& name : Factory::GetStructuralDataViewAttributeNames())
+    RegisterInnerXMLAttribute(name);
 
-	// Add the first frame.
-	ParseFrame frame;
-	frame.element = root;
-	if (root != nullptr)
-	{
-		frame.tag = root->GetTagName();
-		auto itr = xml_parser_data->node_handlers.find(root->GetTagName());
-		if (itr != xml_parser_data->node_handlers.end())
-		{
-			frame.node_handler = itr->second.get();
-		}
-		else
-		{
-			frame.node_handler = xml_parser_data->default_node_handler.get();
-		}
-	}
-	stack.push(frame);
+  // Add the first frame.
+  ParseFrame frame;
+  frame.element = root;
+  if (root != nullptr) {
+    frame.tag = root->GetTagName();
+    auto itr = xml_parser_data->node_handlers.find(root->GetTagName());
+    if (itr != xml_parser_data->node_handlers.end()) {
+      frame.node_handler = itr->second.get();
+    } else {
+      frame.node_handler = xml_parser_data->default_node_handler.get();
+    }
+  }
+  stack.push(frame);
 
-	active_handler = nullptr;
+  active_handler = nullptr;
 
-	header = MakeUnique<DocumentHeader>();
+  header = MakeUnique<DocumentHeader>();
 
-	XMLParseTools::BeginParser();
+  XMLParseTools::BeginParser();
 }
 
-XMLParser::~XMLParser()
-{
-	XMLParseTools::EndParser();
+XMLParser::~XMLParser() {
+  XMLParseTools::EndParser();
 }
 
-void XMLParser::RegisterPersistentCDATATag(const String& _tag)
-{
-	if (!xml_parser_data)
-		xml_parser_data.Initialize();
+void XMLParser::RegisterPersistentCDATATag(const String& _tag) {
+  if (!xml_parser_data)
+    xml_parser_data.Initialize();
 
-	String tag = StringUtilities::ToLower(_tag);
+  String tag = StringUtilities::ToLower(_tag);
 
-	if (tag.empty())
-		return;
+  if (tag.empty())
+    return;
 
-	xml_parser_data->cdata_tags.insert(tag);
+  xml_parser_data->cdata_tags.insert(tag);
 }
 
-XMLNodeHandler* XMLParser::RegisterNodeHandler(const String& _tag, SharedPtr<XMLNodeHandler> handler)
-{
-	if (!xml_parser_data)
-		xml_parser_data.Initialize();
+XMLNodeHandler* XMLParser::RegisterNodeHandler(const String& _tag, SharedPtr<XMLNodeHandler> handler) {
+  if (!xml_parser_data)
+    xml_parser_data.Initialize();
 
-	String tag = StringUtilities::ToLower(_tag);
+  String tag = StringUtilities::ToLower(_tag);
 
-	// Check for a default node registration.
-	if (tag.empty())
-	{
-		xml_parser_data->default_node_handler = std::move(handler);
-		return xml_parser_data->default_node_handler.get();
-	}
+  // Check for a default node registration.
+  if (tag.empty()) {
+    xml_parser_data->default_node_handler = std::move(handler);
+    return xml_parser_data->default_node_handler.get();
+  }
 
-	XMLNodeHandler* result = handler.get();
-	xml_parser_data->node_handlers[tag] = std::move(handler);
-	return result;
+  XMLNodeHandler* result = handler.get();
+  xml_parser_data->node_handlers[tag] = std::move(handler);
+  return result;
 }
 
-XMLNodeHandler* XMLParser::GetNodeHandler(const String& tag)
-{
-	auto it = xml_parser_data->node_handlers.find(tag);
-	if (it != xml_parser_data->node_handlers.end())
-		return it->second.get();
+XMLNodeHandler* XMLParser::GetNodeHandler(const String& tag) {
+  auto it = xml_parser_data->node_handlers.find(tag);
+  if (it != xml_parser_data->node_handlers.end())
+    return it->second.get();
 
-	return nullptr;
+  return nullptr;
 }
 
-void XMLParser::ReleaseHandlers()
-{
-	xml_parser_data.Shutdown();
+void XMLParser::ReleaseHandlers() {
+  xml_parser_data.Shutdown();
 }
 
-DocumentHeader* XMLParser::GetDocumentHeader()
-{
-	return header.get();
+DocumentHeader* XMLParser::GetDocumentHeader() {
+  return header.get();
 }
 
-void XMLParser::PushDefaultHandler()
-{
-	active_handler = xml_parser_data->default_node_handler.get();
+void XMLParser::PushDefaultHandler() {
+  active_handler = xml_parser_data->default_node_handler.get();
 }
 
-bool XMLParser::PushHandler(const String& tag)
-{
-	auto it = xml_parser_data->node_handlers.find(StringUtilities::ToLower(tag));
-	if (it == xml_parser_data->node_handlers.end())
-		return false;
+bool XMLParser::PushHandler(const String& tag) {
+  auto it = xml_parser_data->node_handlers.find(StringUtilities::ToLower(tag));
+  if (it == xml_parser_data->node_handlers.end())
+    return false;
 
-	active_handler = it->second.get();
-	return true;
+  active_handler = it->second.get();
+  return true;
 }
 
-const XMLParser::ParseFrame* XMLParser::GetParseFrame() const
-{
-	return &stack.top();
+const XMLParser::ParseFrame* XMLParser::GetParseFrame() const {
+  return &stack.top();
 }
 
-const URL& XMLParser::GetSourceURL() const
-{
-	UI_ASSERT(GetSourceURLPtr());
-	return *GetSourceURLPtr();
+const URL& XMLParser::GetSourceURL() const {
+  UI_ASSERT(GetSourceURLPtr());
+  return *GetSourceURLPtr();
 }
 
-void XMLParser::HandleElementStart(const String& _name, const XMLAttributes& attributes)
-{
-	UI_ZoneScoped;
-	const String name = StringUtilities::ToLower(_name);
+void XMLParser::HandleElementStart(const String& _name, const XMLAttributes& attributes) {
+  UI_ZoneScoped;
+  const String name = StringUtilities::ToLower(_name);
 
-	// Discard the whole subtree of an element that would exceed the maximum document depth.
-	if (discard_depth > 0 || ExceedsMaxDocumentDepth(stack.top().element))
-	{
-		if (discard_depth == 0)
-			Log::Message(Log::LT_WARNING, "Element '%s' on line %d exceeds the maximum document depth (%d) and was discarded.", name.c_str(),
-				GetLineNumber(), MAX_DOCUMENT_DEPTH);
-		discard_depth++;
+  // Discard the whole subtree of an element that would exceed the maximum document depth.
+  if (discard_depth > 0 || ExceedsMaxDocumentDepth(stack.top().element)) {
+    if (discard_depth == 0)
+      Log::Message(Log::LT_WARNING,
+                   "Element '%s' on line %d exceeds the maximum document depth (%d) and was discarded.", name.c_str(),
+                   GetLineNumber(), MAX_DOCUMENT_DEPTH);
+    discard_depth++;
 
-		ParseFrame frame;
-		frame.element = stack.top().element;
-		frame.tag = name;
-		stack.push(frame);
-		active_handler = nullptr;
-		return;
-	}
+    ParseFrame frame;
+    frame.element = stack.top().element;
+    frame.tag = name;
+    stack.push(frame);
+    active_handler = nullptr;
+    return;
+  }
 
-	// Check for a specific handler that will override the child handler.
-	auto itr = xml_parser_data->node_handlers.find(name);
-	if (itr != xml_parser_data->node_handlers.end())
-		active_handler = itr->second.get();
+  // Check for a specific handler that will override the child handler.
+  auto itr = xml_parser_data->node_handlers.find(name);
+  if (itr != xml_parser_data->node_handlers.end())
+    active_handler = itr->second.get();
 
-	// Store the current active handler, so we can use it through this function (as active handler may change)
-	XMLNodeHandler* node_handler = active_handler;
+  // Store the current active handler, so we can use it through this function (as active handler may change)
+  XMLNodeHandler* node_handler = active_handler;
 
-	Element* element = nullptr;
+  Element* element = nullptr;
 
-	// Get the handler to handle the open tag
-	if (node_handler)
-	{
-		element = node_handler->ElementStart(this, name, attributes);
-	}
+  // Get the handler to handle the open tag
+  if (node_handler) {
+    element = node_handler->ElementStart(this, name, attributes);
+  }
 
-	// Push onto the stack
-	ParseFrame frame;
-	frame.node_handler = node_handler;
-	frame.child_handler = active_handler;
-	frame.element = (element ? element : stack.top().element);
-	frame.tag = name;
-	stack.push(frame);
+  // Push onto the stack
+  ParseFrame frame;
+  frame.node_handler = node_handler;
+  frame.child_handler = active_handler;
+  frame.element = (element ? element : stack.top().element);
+  frame.tag = name;
+  stack.push(frame);
 }
 
-void XMLParser::HandleElementEnd(const String& _name)
-{
-	UI_ZoneScoped;
-	String name = StringUtilities::ToLower(_name);
+void XMLParser::HandleElementEnd(const String& _name) {
+  UI_ZoneScoped;
+  String name = StringUtilities::ToLower(_name);
 
-	// Copy the top of the stack
-	ParseFrame frame = stack.top();
-	// Pop the frame
-	stack.pop();
-	if (discard_depth > 0)
-		discard_depth--;
-	// Restore active handler to the previous frame's child handler
-	active_handler = stack.top().child_handler;
+  // Copy the top of the stack
+  ParseFrame frame = stack.top();
+  // Pop the frame
+  stack.pop();
+  if (discard_depth > 0)
+    discard_depth--;
+  // Restore active handler to the previous frame's child handler
+  active_handler = stack.top().child_handler;
 
-	// Check frame names
-	if (name != frame.tag)
-	{
-		Log::Message(Log::LT_ERROR, "Closing tag '%s' mismatched on %s:%d was expecting '%s'.", name.c_str(), GetSourceURL().GetURL().c_str(),
-			GetLineNumber(), frame.tag.c_str());
-	}
+  // Check frame names
+  if (name != frame.tag) {
+    Log::Message(Log::LT_ERROR, "Closing tag '%s' mismatched on %s:%d was expecting '%s'.", name.c_str(),
+                 GetSourceURL().GetURL().c_str(), GetLineNumber(), frame.tag.c_str());
+  }
 
-	// Call element end handler
-	if (frame.node_handler)
-	{
-		frame.node_handler->ElementEnd(this, name);
-	}
+  // Call element end handler
+  if (frame.node_handler) {
+    frame.node_handler->ElementEnd(this, name);
+  }
 }
 
-void XMLParser::HandleData(const String& data, XMLDataType type)
-{
-	UI_ZoneScoped;
-	if (stack.top().node_handler)
-		stack.top().node_handler->ElementData(this, data, type);
+void XMLParser::HandleData(const String& data, XMLDataType type) {
+  UI_ZoneScoped;
+  if (stack.top().node_handler)
+    stack.top().node_handler->ElementData(this, data, type);
 }
 
 } // namespace ui
