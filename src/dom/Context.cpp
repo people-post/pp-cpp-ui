@@ -668,8 +668,12 @@ void Context::UpdateTouchGestures() {
       state.selection_armed = true;
     }
 
-    if (touch_long_press_callback)
+    if (touch_long_press_callback) {
+      // A long press is not a tap: the focus held back from a text field is dropped, so releasing the finger
+      // does not blur the field (and close the on-screen keyboard) under whatever the callback opens.
+      state.tap_focus = {};
       touch_long_press_callback(position, target);
+    }
   }
 }
 

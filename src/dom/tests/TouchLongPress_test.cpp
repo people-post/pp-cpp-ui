@@ -268,3 +268,105 @@ TEST_CASE("touch_focus.scroll_keeps_the_field_focused_tap_blurs_on_release") {
   document->Close();
   TestsShell::ShutdownShell();
 }
+
+// A long press is not a tap: the focus a touch held back from a text field must not move on release once
+// the long-press callback has fired, so the on-screen keyboard stays up under whatever the callback opens.
+TEST_CASE("touch_focus.long_press_does_not_move_focus_on_release") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
+  TestsSystemInterface* system_interface = TestsShell::GetTestsSystemInterface();
+
+  ElementDocument* document = context->LoadDocumentFromMemory(touch_focus_doc_rml);
+  REQUIRE(document);
+  document->Show();
+  context->Update();
+  context->Render();
+
+  Element* field = document->GetElementById("field");
+  Element* message = document->GetElementById("message");
+  const Vector2f on_message = message->GetAbsoluteOffset(BoxArea::Border) + Vector2f(20.f, 60.f);
+
+  int fired = 0;
+  Element* focus_in_callback = nullptr;
+  context->SetTouchLongPressCallback([&](Vector2i, Element*) {
+    ++fired;
+    if (focus_in_callback)
+      focus_in_callback->Focus();
+  });
+
+  double now = 20.0;
+  system_interface->SetManualTime(now);
+  field->Focus();
+  REQUIRE(context->GetFocusElement() == field);
+  context->ProcessTouchStart(TouchList{Touch{TouchId(1), on_message}}, 0);
+
+  SUBCASE("a held touch keeps the field focused on release") {
+    system_interface->SetManualTime(now + 0.6);
+    context->Update();
+    REQUIRE(fired == 1);
+    context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message}}, 0);
+    CHECK(context->GetFocusElement() == field);
+  }
+
+  SUBCASE("a touch released before the threshold still moves the focus") {
+    system_interface->SetManualTime(now + 0.2);
+    context->Update();
+    context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message}}, 0);
+    CHECK(fired == 0);
+    CHECK(context->GetFocusElement() != field);
+  }
+
+  SUBCASE("a touch that scrolls keeps the focus where it was") {
+    context->ProcessTouchMove(TouchList{Touch{TouchId(1), on_message + Vector2f(0.f, -40.f)}}, 0);
+    system_interface->SetManualTime(now + 0.6);
+    context->Update();
+    context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message + Vector2f(0.f, -40.f)}}, 0);
+    CHECK(fired == 0);
+    CHECK(context->GetFocusElement() == field);
+  }
+
+  SUBCASE("a focus the callback sets itself is kept on release") {
+    focus_in_callback = document->GetElementById("send");
+    system_interface->SetManualTime(now + 0.6);
+    context->Update();
+    REQUIRE(fired == 1);
+    context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message}}, 0);
+    CHECK(context->GetFocusElement() == focus_in_callback);
+  }
+
+  context->SetTouchLongPressCallback({});
+  document->Close();
+  TestsShell::ShutdownShell();
+}
+
+TEST_CASE("touch_focus.long_press_without_a_field_focused_is_unchanged") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
+  TestsSystemInterface* system_interface = TestsShell::GetTestsSystemInterface();
+
+  ElementDocument* document = context->LoadDocumentFromMemory(touch_focus_doc_rml);
+  REQUIRE(document);
+  document->Show();
+  context->Update();
+  context->Render();
+
+  Element* field = document->GetElementById("field");
+  const Vector2f on_message =
+      document->GetElementById("message")->GetAbsoluteOffset(BoxArea::Border) + Vector2f(20.f, 60.f);
+
+  int fired = 0;
+  context->SetTouchLongPressCallback([&fired](Vector2i, Element*) { ++fired; });
+
+  system_interface->SetManualTime(30.0);
+  REQUIRE(context->GetFocusElement() != field);
+  context->ProcessTouchStart(TouchList{Touch{TouchId(1), on_message}}, 0);
+  system_interface->SetManualTime(30.6);
+  context->Update();
+  CHECK(fired == 1);
+  context->ProcessTouchEnd(TouchList{Touch{TouchId(1), on_message}}, 0);
+  CHECK(context->GetFocusElement() != field);
+
+  context->SetTouchLongPressCallback({});
+  document->Close();
+  TestsShell::ShutdownShell();
+}
