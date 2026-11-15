@@ -266,20 +266,39 @@ static bool CheckCameraPermissions(SDL_Camera *device)
 
     - (void) captureOutput:(AVCaptureOutput *)output didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
     {
-        SDL_Camera *device = self.device;
-        if (!device || !device->hidden) {
-            return;  // oh well.
+        // COREMEDIA_CloseDevice clears self.device in this same @synchronized section before it
+        //  releases `hidden`, so a `hidden` read here is alive and our strong reference keeps it so.
+        SDL_Camera *device = NULL;
+        SDLPrivateCameraData *hidden = nil;
+        @synchronized(self) {
+            device = self.device;
+            if (device) {
+                hidden = (__bridge SDLPrivateCameraData *) device->hidden;
+            }
         }
 
-        if (!CheckCameraPermissions(device)) {
-            return;  // nothing to do right now, dump what is probably a completely black frame.
+        if (!device || !hidden || SDL_GetAtomicInt(&device->shutdown)) {
+            return;  // closing or closed.
         }
 
-        SDLPrivateCameraData *hidden = (__bridge SDLPrivateCameraData *) device->hidden;
-        COREMEDIA_ApplyZoom(device, hidden);
-        hidden.current_sample = sampleBuffer;
-        SDL_CameraThreadIterate(device);
-        hidden.current_sample = NULL;
+        // The device struct outlives its destruction on this backend, so locking it is safe here.
+        if (!SDL_LockCameraUnlessShutdown(device)) {
+            return;  // closing or closed.
+        }
+
+        if (device->hidden != (__bridge struct SDL_PrivateCameraData *) hidden) {
+            SDL_UnlockMutex(device->lock);
+            return;  // closed and reopened meanwhile; this frame belongs to the old session.
+        }
+
+        if (CheckCameraPermissions(device)) {
+            COREMEDIA_ApplyZoom(device, hidden);
+            hidden.current_sample = sampleBuffer;
+            SDL_CameraThreadIterate(device);
+            hidden.current_sample = NULL;
+        }  // else nothing to do right now, dump what is probably a completely black frame.
+
+        SDL_UnlockMutex(device->lock);
     }
 
     - (void)captureOutput:(AVCaptureOutput *)output didDropSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
@@ -301,7 +320,9 @@ static SDL_CameraFrameResult COREMEDIA_AcquireFrame(SDL_Camera *device, SDL_Surf
     SDLPrivateCameraData *hidden = (__bridge SDLPrivateCameraData *) device->hidden;
     CMSampleBufferRef sample_buffer = hidden.current_sample;
     hidden.current_sample = NULL;
-    SDL_assert(sample_buffer != NULL);  // should only have been called from our delegate with a new frame.
+    if (sample_buffer == NULL) {
+        return SDL_CAMERA_FRAME_SKIP;  // should only have been called from our delegate with a new frame.
+    }
 
     CMSampleTimingInfo timinginfo;
     if (CMSampleBufferGetSampleTimingInfo(sample_buffer, 0, &timinginfo) == noErr) {
@@ -411,6 +432,12 @@ static void COREMEDIA_ReleaseFrame(SDL_Camera *device, SDL_Surface *frame)
 static void COREMEDIA_CloseDevice(SDL_Camera *device)
 {
     if (device && device->hidden) {
+        // First stop new frame callbacks from reaching `hidden` (see captureOutput:).
+        SDLCaptureVideoDataOutputSampleBufferDelegate *delegate = ((__bridge SDLPrivateCameraData *) device->hidden).delegate;
+        @synchronized(delegate) {
+            delegate.device = NULL;
+        }
+
         #ifdef USE_UIKIT_DEVICE_ROTATION
         [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
         #endif

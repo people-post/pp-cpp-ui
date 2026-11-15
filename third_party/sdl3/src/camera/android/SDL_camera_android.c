@@ -397,7 +397,16 @@ static void onImageAvailable(void *context, AImageReader *reader)
     SDL_Log("CAMERA: CB onImageAvailable");
     #endif
     SDL_Camera *device = (SDL_Camera *) context;
+    // The device struct outlives its destruction on this backend, so locking it is safe here.
+    if (!SDL_LockCameraUnlessShutdown(device)) {
+        return;  // closing or closed.
+    }
+    if (device->hidden->reader != reader) {
+        SDL_UnlockMutex(device->lock);
+        return;  // closed and reopened meanwhile; this callback belongs to the old reader.
+    }
     SDL_CameraThreadIterate(device);
+    SDL_UnlockMutex(device->lock);
 }
 
 static void onDisconnected(void *context, ACameraDevice *device)
@@ -405,7 +414,11 @@ static void onDisconnected(void *context, ACameraDevice *device)
     #if DEBUG_CAMERA
     SDL_Log("CAMERA: CB onDisconnected");
     #endif
-    SDL_CameraDisconnected((SDL_Camera *) context);
+    SDL_Camera *dev = (SDL_Camera *) context;
+    if (SDL_LockCameraUnlessShutdown(dev)) {  // ignored while closing or closed.
+        SDL_CameraDisconnected(dev);
+        SDL_UnlockMutex(dev->lock);
+    }
 }
 
 static void onError(void *context, ACameraDevice *device, int error)
@@ -413,7 +426,11 @@ static void onError(void *context, ACameraDevice *device, int error)
     #if DEBUG_CAMERA
     SDL_Log("CAMERA: CB onError");
     #endif
-    SDL_CameraDisconnected((SDL_Camera *) context);
+    SDL_Camera *dev = (SDL_Camera *) context;
+    if (SDL_LockCameraUnlessShutdown(dev)) {  // ignored while closing or closed.
+        SDL_CameraDisconnected(dev);
+        SDL_UnlockMutex(dev->lock);
+    }
 }
 
 static void onClosed(void* context, ACameraCaptureSession *session)

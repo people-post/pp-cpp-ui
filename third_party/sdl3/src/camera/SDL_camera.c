@@ -242,7 +242,8 @@ static void ClosePhysicalCamera(SDL_Camera *device)
 
     SDL_SetAtomicInt(&device->shutdown, 1);
 
-// !!! FIXME: the close_cond stuff from audio might help the race condition here.
+    // SDL_CameraThreadIterate holds the device lock for its whole body, so once we have the lock
+    //  below, no iterate is halfway through a frame. Callbacks that come later see `shutdown` and leave.
 
     if (device->thread != NULL) {
         SDL_WaitThread(device->thread, NULL);
@@ -317,6 +318,29 @@ static void ObtainPhysicalCameraObj(SDL_Camera *device) SDL_NO_THREAD_SAFETY_ANA
     if (device) {
         RefPhysicalCamera(device);
         SDL_LockMutex(device->lock);
+    }
+}
+
+// Backend callbacks (and SDL_CameraThreadIterate) lock the device with this. Returns true with the
+//  device locked only if the device is open and not shutting down. It never queues on the lock:
+//  ClosePhysicalCamera sets `shutdown` before it takes the lock, so a callback either got the lock
+//  first (and close waits for it), or sees `shutdown` within about a millisecond and leaves. So a
+//  backend's CloseDevice, which runs with the device lock held, may wait for its callbacks to
+//  return without deadlocking. Does not change the refcount.
+bool SDL_LockCameraUnlessShutdown(SDL_Camera *device) SDL_NO_THREAD_SAFETY_ANALYSIS  // !!! FIXME: SDL_ACQUIRE
+{
+    for (;;) {
+        if (SDL_GetAtomicInt(&device->shutdown)) {
+            return false;
+        }
+        if (SDL_TryLockMutex(device->lock)) {
+            if (SDL_GetAtomicInt(&device->shutdown) || (device->hidden == NULL)) {
+                SDL_UnlockMutex(device->lock);
+                return false;
+            }
+            return true;
+        }
+        SDL_Delay(1);
     }
 }
 
@@ -815,28 +839,31 @@ void SDL_CameraThreadSetup(SDL_Camera *device)
 
 bool SDL_CameraThreadIterate(SDL_Camera *device)
 {
-    SDL_LockMutex(device->lock);
-
-    if (SDL_GetAtomicInt(&device->shutdown)) {
-        SDL_UnlockMutex(device->lock);
-        return false;  // we're done, shut it down.
-    }
-
-    const int permission = device->permission;
-    if (permission <= SDL_CAMERA_PERMISSION_STATE_PENDING) {
-        SDL_UnlockMutex(device->lock);
-        return (permission < SDL_CAMERA_PERMISSION_STATE_PENDING) ? false : true;  // if permission was denied, shut it down. if undecided, we're done for now.
-    }
-
+    bool result = true;  // always go on if not shutting down, even if device failed.
     bool failed = false;  // set to true if disaster worthy of treating the device as lost has happened.
     SDL_Surface *acquired = NULL;
     SDL_Surface *output_surface = NULL;
     SurfaceList *slist = NULL;
     Uint64 timestampNS = 0;
     float rotation = 0.0f;
+    int permission;
+    SDL_CameraFrameResult rc;
+
+    // The lock is held for the whole frame, conversion included, so ClosePhysicalCamera (which
+    //  closes the backend and destroys the surfaces with the lock held) can never run in the middle of one.
+    if (!SDL_LockCameraUnlessShutdown(device)) {
+        result = false;  // we're done, shut it down.
+        goto done;
+    }
+
+    permission = device->permission;
+    if (permission <= SDL_CAMERA_PERMISSION_STATE_PENDING) {
+        result = (permission < SDL_CAMERA_PERMISSION_STATE_PENDING) ? false : true;  // if permission was denied, shut it down. if undecided, we're done for now.
+        goto unlock;
+    }
 
     // AcquireFrame SHOULD NOT BLOCK, as we are holding a lock right now. Block in WaitDevice instead!
-    const SDL_CameraFrameResult rc = device->AcquireFrame(device, device->acquire_surface, &timestampNS, &rotation);
+    rc = device->AcquireFrame(device, device->acquire_surface, &timestampNS, &rotation);
 
     if (rc == SDL_CAMERA_FRAME_READY) {  // new frame acquired!
         #if DEBUG_CAMERA
@@ -883,13 +910,14 @@ bool SDL_CameraThreadIterate(SDL_Camera *device)
         failed = true;
     }
 
-    // we can let go of the lock once we've tried to grab a frame of video and maybe moved the output frame off the empty list.
-    // this lets us chew up the CPU for conversion and scaling without blocking other threads.
-    SDL_UnlockMutex(device->lock);
+    // We keep the lock through conversion and until the frame is queued: a close that is waiting
+    //  for it must not destroy the surfaces or close the backend while this frame still uses them.
 
     if (failed) {
         SDL_assert(slist == NULL);
         SDL_assert(acquired == NULL);
+        // Still locked and open, so this marks only this opening as lost. The open reference keeps
+        //  the device alive here; the device lock is reentrant.
         SDL_CameraDisconnected(device);  // doh.
     } else if (acquired) {  // we have a new frame, scale/convert if necessary and queue it for the app!
         SDL_assert(slist != NULL);
@@ -933,13 +961,14 @@ bool SDL_CameraThreadIterate(SDL_Camera *device)
         SDL_SetFloatProperty(SDL_GetSurfaceProperties(output_surface), SDL_PROP_SURFACE_ROTATION_FLOAT, rotation);
 
         // make the filled output surface available to the app.
-        SDL_LockMutex(device->lock);
         slist->next = device->filled_output_surfaces.next;
         device->filled_output_surfaces.next = slist;
-        SDL_UnlockMutex(device->lock);
     }
 
-    return true;  // always go on if not shutting down, even if device failed.
+unlock:
+    SDL_UnlockMutex(device->lock);
+done:
+    return result;
 }
 
 void SDL_CameraThreadShutdown(SDL_Camera *device)
@@ -1472,6 +1501,23 @@ static void SDLCALL DestroyCameraHashItem(void *userdata, const void *key, const
 
     ClosePhysicalCamera(device);
     camera_driver.impl.FreeDeviceHandle(device);
+
+    if (camera_driver.impl.ProvidesOwnCallbackThread) {
+        // The backend's own callback thread may still hold this pointer and be about to lock it.
+        //  The struct and its lock are left allocated on purpose (the OS reclaims them at exit):
+        //  such a callback finds `shutdown` set and leaves. Only fields no callback reads are freed.
+        //  Normal open/close never destroys a device; this happens when a lost device is closed,
+        //  an open fails midway, or the subsystem quits.
+        SDL_SetAtomicInt(&device->shutdown, 1);
+        device->handle = NULL;
+        SDL_free(device->all_specs);
+        device->all_specs = NULL;
+        device->num_specs = 0;
+        SDL_free(device->name);
+        device->name = NULL;
+        return;
+    }
+
     SDL_DestroyMutex(device->lock);
     SDL_free(device->all_specs);
     SDL_free(device->name);

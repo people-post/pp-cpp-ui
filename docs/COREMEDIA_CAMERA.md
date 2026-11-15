@@ -18,6 +18,36 @@ show the rate that was actually applied.
 Apple API contract: [activeFormat](https://developer.apple.com/documentation/avfoundation/avcapturedevice/activeformat).
 Local patch: `third_party/sdl3/src/camera/coremedia/SDL_camera_coremedia.m` (SDL 3.4.16).
 
+## Closing while a frame is in flight
+
+Upstream SDL (3.4.16, and main as of this patch, where `ClosePhysicalCamera` still carries the
+"close_cond" FIXME) lets `SDL_CameraThreadIterate` drop the device lock while it converts a frame.
+On backends that deliver frames on their own thread (CoreMedia, Android) close does not wait for that
+frame: a late frame then writes into surfaces close has destroyed, or puts an output node into the
+lists of the next opening so the filled list becomes a cycle and `SDL_AcquireCameraFrame` spins
+forever holding the device lock. `-[AVCaptureSession stopRunning]` does not wait for a delegate
+callback that is already running (measured on macOS), so CoreMedia cannot rely on it either.
+
+Local patch (re-apply when bumping SDL; the list is in `third_party/UPSTREAM.json`):
+
+- `SDL_camera.c`: `SDL_CameraThreadIterate` holds the device lock for the whole frame, conversion
+  included, and marks a failed device lost while still holding it, so the loss applies only to that
+  opening. Callbacks lock through `SDL_LockCameraUnlessShutdown`, which never queues on the lock:
+  close sets `shutdown` before taking the lock, so a callback either got the lock first (close waits
+  for that one frame) or sees `shutdown` and leaves. A backend's `CloseDevice` runs with the lock held
+  and may therefore wait for its callbacks without deadlocking.
+- On backends with their own callback thread, destroying a device keeps the `SDL_Camera` struct and
+  its lock allocated (about 0.5 KB, reclaimed at process exit) so a callback that still holds the
+  pointer finds `shutdown` set. Normal open/close never destroys a device; this happens when a lost
+  device is closed, an open fails midway, the subsystem quits, or (Android) another app takes the camera.
+- CoreMedia: the frame callback reads `device` and a strong `hidden` in one `@synchronized(delegate)`
+  section; `COREMEDIA_CloseDevice` clears `delegate.device` in that section before it releases
+  `hidden`. Under the device lock the callback checks `device->hidden` is still its own, so a frame of
+  a closed session never reaches a reopened one. Permission and zoom handling now run under the device
+  lock. A missing sample is skipped instead of being passed to CoreMedia.
+- Android (compiled by CI only, not run): `onImageAvailable` checks its reader under the lock;
+  `onDisconnected` / `onError` use the same locking. `CameraPermissionCallback` is unchanged.
+
 ## iOS rear-camera zoom
 
 Properties returned by `SDL_GetCameraProperties(camera)` provide this opt-in interface:
