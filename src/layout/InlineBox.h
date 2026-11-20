@@ -9,21 +9,21 @@ class Element;
 
 class InlineBoxBase : public InlineLevelBox {
 public:
-	InlineLevelBox* AddChild(UniquePtr<InlineLevelBox> child);
+  InlineLevelBox* AddChild(UniquePtr<InlineLevelBox> child);
 
-	String DebugDumpTree(int depth) const override;
+  String DebugDumpTree(int depth) const override;
 
 protected:
-	InlineBoxBase(Element* element);
+  InlineBoxBase(Element* element);
 
-	// Get the total height above and depth below the baseline based on this element's line-height and font.
-	void GetStrut(float& out_total_height_above, float& out_total_depth_below) const;
+  // Get the total height above and depth below the baseline based on this element's line-height and font.
+  void GetStrut(float& out_total_height_above, float& out_total_depth_below) const;
 
 private:
-	using InlineLevelBoxList = Vector<UniquePtr<InlineLevelBox>>;
+  using InlineLevelBoxList = Vector<UniquePtr<InlineLevelBox>>;
 
-	// @performance Use first_child, next_sibling instead to build the tree?
-	InlineLevelBoxList children;
+  // @performance Use first_child, next_sibling instead to build the tree?
+  InlineLevelBoxList children;
 };
 
 /**
@@ -36,19 +36,19 @@ private:
  */
 class InlineBox final : public InlineBoxBase {
 public:
-	InlineBox(const InlineLevelBox* parent, Element* element, const Box& box);
+  InlineBox(const InlineLevelBox* parent, Element* element, const Box& box);
 
-	FragmentConstructor CreateFragment(InlineLayoutMode mode, float available_width, float right_spacing_width, bool first_box,
-		LayoutOverflowHandle overflow_handle) override;
+  FragmentConstructor CreateFragment(InlineLayoutMode mode, float available_width, float right_spacing_width,
+                                     bool first_box, LayoutOverflowHandle overflow_handle) override;
 
-	void Submit(const PlacedFragment& placed_fragment) override;
+  void Submit(const PlacedFragment& placed_fragment) override;
 
-	String DebugDumpNameValue() const override { return "InlineBox"; }
+  String DebugDumpNameValue() const override { return "InlineBox"; }
 
 private:
-	float baseline_to_border_height = 0;
-	Vector2f element_offset;
-	Box box;
+  float baseline_to_border_height = 0;
+  Vector2f element_offset;
+  Box box;
 };
 
 /**
@@ -58,14 +58,14 @@ private:
  */
 class InlineBoxRoot final : public InlineBoxBase {
 public:
-	InlineBoxRoot(Element* element);
+  InlineBoxRoot(Element* element);
 
-	FragmentConstructor CreateFragment(InlineLayoutMode mode, float available_width, float right_spacing_width, bool first_box,
-		LayoutOverflowHandle overflow_handle) override;
+  FragmentConstructor CreateFragment(InlineLayoutMode mode, float available_width, float right_spacing_width,
+                                     bool first_box, LayoutOverflowHandle overflow_handle) override;
 
-	void Submit(const PlacedFragment& placed_fragment) override;
+  void Submit(const PlacedFragment& placed_fragment) override;
 
-	String DebugDumpNameValue() const override { return "InlineBoxRoot"; }
+  String DebugDumpNameValue() const override { return "InlineBoxRoot"; }
 };
 
 } // namespace ui

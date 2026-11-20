@@ -10,14 +10,14 @@ namespace ui {
 
 class WidgetTextInputMultiLine : public WidgetTextInput {
 public:
-	WidgetTextInputMultiLine(ElementFormControl* parent);
-	virtual ~WidgetTextInputMultiLine();
+  WidgetTextInputMultiLine(ElementFormControl* parent);
+  virtual ~WidgetTextInputMultiLine();
 
 protected:
-	/// Removes any invalid characters from the string.
-	void SanitizeValue(String& value) override;
-	/// Called when the user pressed enter.
-	void LineBreak() override;
+  /// Removes any invalid characters from the string.
+  void SanitizeValue(String& value) override;
+  /// Called when the user pressed enter.
+  void LineBreak() override;
 };
 
 } // namespace ui

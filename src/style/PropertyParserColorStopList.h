@@ -12,14 +12,14 @@ namespace ui {
 
 class PropertyParserColorStopList : public PropertyParser {
 public:
-	PropertyParserColorStopList(PropertyParser* parser_color);
-	virtual ~PropertyParserColorStopList();
+  PropertyParserColorStopList(PropertyParser* parser_color);
+  virtual ~PropertyParserColorStopList();
 
-	bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const override;
+  bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const override;
 
 private:
-	PropertyParser* parser_color;
-	PropertyParserNumber parser_length_percent_angle;
+  PropertyParser* parser_color;
+  PropertyParserNumber parser_length_percent_angle;
 };
 
 } // namespace ui

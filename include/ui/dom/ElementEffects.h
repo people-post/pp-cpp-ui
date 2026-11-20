@@ -20,52 +20,52 @@ enum class RenderStage { Enter, Decoration, Exit };
 
 class UI_CORE_API ElementEffects {
 public:
-	explicit ElementEffects(Element* element);
-	~ElementEffects();
+  explicit ElementEffects(Element* element);
+  ~ElementEffects();
 
-	ElementEffects(const ElementEffects&) = delete;
-	ElementEffects& operator=(const ElementEffects&) = delete;
+  ElementEffects(const ElementEffects&) = delete;
+  ElementEffects& operator=(const ElementEffects&) = delete;
 
-	void InstanceEffects();
+  void InstanceEffects();
 
-	void RenderEffects(RenderStage render_stage);
+  void RenderEffects(RenderStage render_stage);
 
-	// Mark effects as dirty and force them to reset themselves.
-	void DirtyEffects();
-	// Mark the element data of effects as dirty.
-	void DirtyEffectsData();
+  // Mark effects as dirty and force them to reset themselves.
+  void DirtyEffects();
+  // Mark the element data of effects as dirty.
+  void DirtyEffectsData();
 
 private:
-	// Releases existing element data of effects, and regenerates it.
-	void ReloadEffectsData();
-	// Releases all existing effects and their element data.
-	void ReleaseEffects();
+  // Releases existing element data of effects, and regenerates it.
+  void ReloadEffectsData();
+  // Releases all existing effects and their element data.
+  void ReleaseEffects();
 
-	struct DecoratorEntry {
-		SharedPtr<const Decorator> decorator;
-		DecoratorDataHandle decorator_data;
-		BoxArea paint_area;
-	};
-	using DecoratorEntryList = Vector<DecoratorEntry>;
+  struct DecoratorEntry {
+    SharedPtr<const Decorator> decorator;
+    DecoratorDataHandle decorator_data;
+    BoxArea paint_area;
+  };
+  using DecoratorEntryList = Vector<DecoratorEntry>;
 
-	struct FilterEntry {
-		SharedPtr<const Filter> filter;
-		CompiledFilter compiled;
-	};
-	using FilterEntryList = Vector<FilterEntry>;
+  struct FilterEntry {
+    SharedPtr<const Filter> filter;
+    CompiledFilter compiled;
+  };
+  using FilterEntryList = Vector<FilterEntry>;
 
-	Element* element;
+  Element* element;
 
-	// The list of decorators and filters used by this element.
-	DecoratorEntryList decorators;
-	DecoratorEntryList mask_images;
-	FilterEntryList filters;
-	FilterEntryList backdrop_filters;
+  // The list of decorators and filters used by this element.
+  DecoratorEntryList decorators;
+  DecoratorEntryList mask_images;
+  FilterEntryList filters;
+  FilterEntryList backdrop_filters;
 
-	// If set, a full reload is necessary.
-	bool effects_dirty = false;
-	// If set, element data of all decorators need to be regenerated.
-	bool effects_data_dirty = false;
+  // If set, a full reload is necessary.
+  bool effects_dirty = false;
+  // If set, element data of all decorators need to be regenerated.
+  bool effects_data_dirty = false;
 };
 
 } // namespace ui

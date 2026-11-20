@@ -14,17 +14,17 @@ class DebuggerPlugin;
 
 class ElementContextHook : public ElementDebugDocument {
 public:
-	UI_RTTI_DefineWithParent(ElementContextHook, ElementDebugDocument)
+  UI_RTTI_DefineWithParent(ElementContextHook, ElementDebugDocument)
 
-	ElementContextHook(const String& tag);
-	virtual ~ElementContextHook();
+      ElementContextHook(const String& tag);
+  virtual ~ElementContextHook();
 
-	void Initialise(DebuggerPlugin* debugger);
+  void Initialise(DebuggerPlugin* debugger);
 
-	void OnRender() override;
+  void OnRender() override;
 
 private:
-	DebuggerPlugin* debugger;
+  DebuggerPlugin* debugger;
 };
 
 } // namespace Debugger

@@ -61,159 +61,153 @@ static const String document_rml = R"(
 )";
 
 struct StringWrap {
-	StringWrap(String val = "wrap_default") : val(val) {}
-	String val;
+  StringWrap(String val = "wrap_default") : val(val) {}
+  String val;
 };
 
 struct Globals {
-	int i0 = 0;
-	int* i1 = new int(1);
-	UniquePtr<int> i2 = MakeUnique<int>(2);
-	SharedPtr<int> i3 = MakeShared<int>(3);
+  int i0 = 0;
+  int* i1 = new int(1);
+  UniquePtr<int> i2 = MakeUnique<int>(2);
+  SharedPtr<int> i3 = MakeShared<int>(3);
 } globals;
 
 struct Basic {
-	int a = 1;
-	int* b = new int(2);
-	StringWrap* c = new StringWrap("basic.c");
+  int a = 1;
+  int* b = new int(2);
+  StringWrap* c = new StringWrap("basic.c");
 };
 
 struct Arrays {
-	Vector<int> a = {10, 11, 12};
-	Vector<int*> b = {new int(20), new int(21), new int(22)};
-	Vector<StringWrap> c = {StringWrap("c1"), StringWrap("c2"), StringWrap("c3")};
-	Vector<Basic> d = {Basic{10}, Basic{20}, Basic{30}};
+  Vector<int> a = {10, 11, 12};
+  Vector<int*> b = {new int(20), new int(21), new int(22)};
+  Vector<StringWrap> c = {StringWrap("c1"), StringWrap("c2"), StringWrap("c3")};
+  Vector<Basic> d = {Basic{10}, Basic{20}, Basic{30}};
 };
 
 static UniquePtr<Basic> basic;
 static UniquePtr<Arrays> arrays;
 
-static DataModelHandle InitializeDataBindings(Context* context)
-{
-	ui::DataModelConstructor constructor = context->CreateDataModel("basics");
-	if (!constructor)
-		return DataModelHandle();
+static DataModelHandle InitializeDataBindings(Context* context) {
+  ui::DataModelConstructor constructor = context->CreateDataModel("basics");
+  if (!constructor)
+    return DataModelHandle();
 
-	if (auto handle = constructor.RegisterStruct<StringWrap>())
-		handle.RegisterMember("val", &StringWrap::val);
+  if (auto handle = constructor.RegisterStruct<StringWrap>())
+    handle.RegisterMember("val", &StringWrap::val);
 
-	constructor.Bind("i0", &globals.i0);
-	constructor.Bind("i1", &globals.i1);
-	constructor.Bind("i2", &globals.i2);
-	constructor.Bind("i3", &globals.i3);
+  constructor.Bind("i0", &globals.i0);
+  constructor.Bind("i1", &globals.i1);
+  constructor.Bind("i2", &globals.i2);
+  constructor.Bind("i3", &globals.i3);
 
-	if (auto handle = constructor.RegisterStruct<Basic>())
-	{
-		handle.RegisterMember("a", &Basic::a);
-		handle.RegisterMember("b", &Basic::b);
-		handle.RegisterMember("c", &Basic::c);
-	}
-	basic = MakeUnique<Basic>();
-	constructor.Bind("basic", basic.get());
+  if (auto handle = constructor.RegisterStruct<Basic>()) {
+    handle.RegisterMember("a", &Basic::a);
+    handle.RegisterMember("b", &Basic::b);
+    handle.RegisterMember("c", &Basic::c);
+  }
+  basic = MakeUnique<Basic>();
+  constructor.Bind("basic", basic.get());
 
-	constructor.RegisterArray<decltype(Arrays::a)>();
-	constructor.RegisterArray<decltype(Arrays::b)>();
-	constructor.RegisterArray<decltype(Arrays::c)>();
-	constructor.RegisterArray<decltype(Arrays::d)>();
+  constructor.RegisterArray<decltype(Arrays::a)>();
+  constructor.RegisterArray<decltype(Arrays::b)>();
+  constructor.RegisterArray<decltype(Arrays::c)>();
+  constructor.RegisterArray<decltype(Arrays::d)>();
 
-	if (auto handle = constructor.RegisterStruct<Arrays>())
-	{
-		handle.RegisterMember("a", &Arrays::a);
-		handle.RegisterMember("b", &Arrays::b);
-		handle.RegisterMember("c", &Arrays::c);
-		handle.RegisterMember("d", &Arrays::d);
-	}
-	arrays = MakeUnique<Arrays>();
-	constructor.Bind("arrays", arrays.get());
+  if (auto handle = constructor.RegisterStruct<Arrays>()) {
+    handle.RegisterMember("a", &Arrays::a);
+    handle.RegisterMember("b", &Arrays::b);
+    handle.RegisterMember("c", &Arrays::c);
+    handle.RegisterMember("d", &Arrays::d);
+  }
+  arrays = MakeUnique<Arrays>();
+  constructor.Bind("arrays", arrays.get());
 
-	DataModelHandle model_handle = constructor.GetModelHandle();
+  DataModelHandle model_handle = constructor.GetModelHandle();
 
-	return model_handle;
+  return model_handle;
 }
 
-TEST_CASE("data_binding")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("data_binding") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	DataModelHandle model_handle = InitializeDataBindings(context);
+  DataModelHandle model_handle = InitializeDataBindings(context);
 
-	model_handle.DirtyAllVariables();
+  model_handle.DirtyAllVariables();
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  REQUIRE(document);
+  document->Show();
 
-	context->Update();
-	context->Render();
+  context->Update();
+  context->Render();
 
-	SUBCASE("dirty")
-	{
-		nanobench::Bench bench;
-		bench.title("Data bindings: Dirty variables");
-		bench.relative(true);
+  SUBCASE("dirty") {
+    nanobench::Bench bench;
+    bench.title("Data bindings: Dirty variables");
+    bench.relative(true);
 
-		bench.run("Reference (Update)", [&] { context->Update(); });
-		bench.run("Dirty one variable", [&] {
-			model_handle.DirtyVariable("i0");
-			context->Update();
-		});
-		bench.run("Dirty big variable", [&] {
-			model_handle.DirtyVariable("arrays");
-			context->Update();
-		});
-		bench.run("Dirty all variables", [&] {
-			model_handle.DirtyAllVariables();
-			context->Update();
-		});
-	}
+    bench.run("Reference (Update)", [&] { context->Update(); });
+    bench.run("Dirty one variable", [&] {
+      model_handle.DirtyVariable("i0");
+      context->Update();
+    });
+    bench.run("Dirty big variable", [&] {
+      model_handle.DirtyVariable("arrays");
+      context->Update();
+    });
+    bench.run("Dirty all variables", [&] {
+      model_handle.DirtyAllVariables();
+      context->Update();
+    });
+  }
 
-	SUBCASE("update")
-	{
-		Element* element_i = document->GetElementById("i");
-		Element* element_array = document->GetElementById("array");
+  SUBCASE("update") {
+    Element* element_i = document->GetElementById("i");
+    Element* element_array = document->GetElementById("array");
 
-		nanobench::Rng rng;
-		nanobench::Bench bench;
-		bench.title("Data bindings: Update");
-		bench.relative(true);
+    nanobench::Rng rng;
+    nanobench::Bench bench;
+    bench.title("Data bindings: Update");
+    bench.relative(true);
 
-		bench.run("Reference (Integer)", [&] {
-			element_i->SetInnerRML(ui::ToString(rng.bounded(1000)));
-			context->Update();
-		});
+    bench.run("Reference (Integer)", [&] {
+      element_i->SetInnerRML(ui::ToString(rng.bounded(1000)));
+      context->Update();
+    });
 
-		bench.run("Integer", [&] {
-			globals.i0 = rng.bounded(1000);
-			model_handle.DirtyVariable("i0");
-			context->Update();
-		});
+    bench.run("Integer", [&] {
+      globals.i0 = rng.bounded(1000);
+      model_handle.DirtyVariable("i0");
+      context->Update();
+    });
 
-		bench.run("Basic", [&] {
-			basic->a = rng.bounded(2000);
-			*basic->b = rng.bounded(3000);
-			basic->c->val = String("abc") + String(5, char('a' + rng.bounded('z' - 'a')));
-			model_handle.DirtyVariable("basic");
-			context->Update();
-		});
+    bench.run("Basic", [&] {
+      basic->a = rng.bounded(2000);
+      *basic->b = rng.bounded(3000);
+      basic->c->val = String("abc") + String(5, char('a' + rng.bounded('z' - 'a')));
+      model_handle.DirtyVariable("basic");
+      context->Update();
+    });
 
-		bench.run("Reference (Arrays)", [&] {
-			element_array->SetInnerRML(
-				ui::CreateString("<span>%d </span><span>%d </span><span>%d </span>", rng.bounded(5000), rng.bounded(5000), rng.bounded(5000)));
-			context->Update();
-		});
+    bench.run("Reference (Arrays)", [&] {
+      element_array->SetInnerRML(ui::CreateString("<span>%d </span><span>%d </span><span>%d </span>", rng.bounded(5000),
+                                                  rng.bounded(5000), rng.bounded(5000)));
+      context->Update();
+    });
 
-		bench.run("Arrays", [&] {
-			for (auto& v : arrays->a)
-				v = rng.bounded(5000);
-			model_handle.DirtyVariable("arrays");
-			context->Update();
-		});
-	}
+    bench.run("Arrays", [&] {
+      for (auto& v : arrays->a)
+        v = rng.bounded(5000);
+      model_handle.DirtyVariable("arrays");
+      context->Update();
+    });
+  }
 
-	TestsShell::RenderLoop();
+  TestsShell::RenderLoop();
 
-	document->Close();
+  document->Close();
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

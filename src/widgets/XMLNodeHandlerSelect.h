@@ -10,11 +10,11 @@ namespace ui {
 
 class XMLNodeHandlerSelect : public XMLNodeHandlerDefault {
 public:
-	XMLNodeHandlerSelect();
-	virtual ~XMLNodeHandlerSelect();
+  XMLNodeHandlerSelect();
+  virtual ~XMLNodeHandlerSelect();
 
-	/// Called when a new element start is opened
-	Element* ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes) override;
+  /// Called when a new element start is opened
+  Element* ElementStart(XMLParser* parser, const String& name, const XMLAttributes& attributes) override;
 };
 
 } // namespace ui

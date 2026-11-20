@@ -9,41 +9,41 @@
  */
 
 #ifdef UI_CUSTOM_CONFIGURATION_FILE
-	#include UI_CUSTOM_CONFIGURATION_FILE
+#include UI_CUSTOM_CONFIGURATION_FILE
 #else
-	#include <array>
-	#include <functional>
-	#include <list>
-	#include <map>
-	#include <memory>
-	#include <queue>
-	#include <stack>
-	#include <string>
-	#include <unordered_map>
-	#include <utility>
-	#include <vector>
+#include <array>
+#include <functional>
+#include <list>
+#include <map>
+#include <memory>
+#include <queue>
+#include <stack>
+#include <string>
+#include <unordered_map>
+#include <utility>
+#include <vector>
 
-	#ifdef UI_NO_THIRDPARTY_CONTAINERS
-		#include <set>
-		#include <unordered_set>
-	#else
-		#include <itlib/flat_map.hpp>
-		#include <itlib/flat_set.hpp>
-		#include <robin_hood.h>
-	#endif // UI_NO_THIRDPARTY_CONTAINERS
+#ifdef UI_NO_THIRDPARTY_CONTAINERS
+#include <set>
+#include <unordered_set>
+#else
+#include <itlib/flat_map.hpp>
+#include <itlib/flat_set.hpp>
+#include <robin_hood.h>
+#endif // UI_NO_THIRDPARTY_CONTAINERS
 
 namespace ui {
 
-	// Default matrix type to be used. This alias may be set to ColumnMajorMatrix4f or RowMajorMatrix4f. This alias can not
-    // be set here because matrix types are defined after this include in Core/Types.h.
-	#ifdef UI_MATRIX_ROW_MAJOR
-		#define UI_MATRIX4_TYPE RowMajorMatrix4f
-	#else
-		#define UI_MATRIX4_TYPE ColumnMajorMatrix4f
-	#endif
+// Default matrix type to be used. This alias may be set to ColumnMajorMatrix4f or RowMajorMatrix4f. This alias can not
+// be set here because matrix types are defined after this include in Core/Types.h.
+#ifdef UI_MATRIX_ROW_MAJOR
+#define UI_MATRIX4_TYPE RowMajorMatrix4f
+#else
+#define UI_MATRIX4_TYPE ColumnMajorMatrix4f
+#endif
 
-	// A way to disable 'final' specified for ui::Releaser class. It breaks EASTL.
-	#define UI_RELEASER_FINAL final
+// A way to disable 'final' specified for ui::Releaser class. It breaks EASTL.
+#define UI_RELEASER_FINAL final
 
 // Containers types.
 template <typename T>
@@ -65,7 +65,7 @@ using StableUnorderedMap = std::unordered_map<Key, Value>;
 template <typename Key, typename Value>
 using UnorderedMultimap = std::unordered_multimap<Key, Value>;
 
-	#ifdef UI_NO_THIRDPARTY_CONTAINERS
+#ifdef UI_NO_THIRDPARTY_CONTAINERS
 template <typename Key, typename Value>
 using UnorderedMap = std::unordered_map<Key, Value>;
 template <typename Key, typename Value>
@@ -78,7 +78,7 @@ template <typename T>
 using SmallUnorderedSet = std::unordered_set<T>;
 template <typename T>
 using SmallOrderedSet = std::set<T>;
-	#else
+#else
 template <typename Key, typename Value>
 using UnorderedMap = robin_hood::unordered_flat_map<Key, Value>;
 template <typename Key, typename Value>
@@ -91,7 +91,7 @@ template <typename T>
 using SmallUnorderedSet = itlib::flat_set<T>;
 template <typename T>
 using SmallOrderedSet = itlib::flat_set<T>;
-	#endif // UI_NO_THIRDPARTY_CONTAINERS
+#endif // UI_NO_THIRDPARTY_CONTAINERS
 
 // Utilities.
 template <typename T>
@@ -99,9 +99,8 @@ using Hash = std::hash<T>;
 template <typename T>
 using Function = std::function<T>;
 template <typename Iterator>
-inline std::move_iterator<Iterator> MakeMoveIterator(Iterator it)
-{
-	return std::make_move_iterator(it);
+inline std::move_iterator<Iterator> MakeMoveIterator(Iterator it) {
+  return std::make_move_iterator(it);
 }
 
 // Strings.
@@ -114,20 +113,18 @@ using UniquePtr = std::unique_ptr<T>;
 template <typename T>
 class Releaser;
 template <typename T>
-using UniqueReleaserPtr = std::unique_ptr<T, Releaser<T>>;
+using UniqueReleaserPtr = std::unique_ptr<T, Releaser<T> >;
 template <typename T>
 using SharedPtr = std::shared_ptr<T>;
 template <typename T>
 using WeakPtr = std::weak_ptr<T>;
 template <typename T, typename... Args>
-inline SharedPtr<T> MakeShared(Args&&... args)
-{
-	return std::make_shared<T, Args...>(std::forward<Args>(args)...);
+inline SharedPtr<T> MakeShared(Args&&... args) {
+  return std::make_shared<T, Args...>(std::forward<Args>(args)...);
 }
 template <typename T, typename... Args>
-inline UniquePtr<T> MakeUnique(Args&&... args)
-{
-	return std::make_unique<T, Args...>(std::forward<Args>(args)...);
+inline UniquePtr<T> MakeUnique(Args&&... args) {
+  return std::make_unique<T, Args...>(std::forward<Args>(args)...);
 }
 
 } // namespace ui

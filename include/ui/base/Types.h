@@ -90,8 +90,8 @@ using ContextPtr = UniqueReleaserPtr<Context>;
 using EventPtr = UniqueReleaserPtr<Event>;
 
 struct Touch {
-	TouchId identifier;
-	Vector2f position;
+  TouchId identifier;
+  Vector2f position;
 };
 using TouchList = Vector<Touch>;
 
@@ -114,8 +114,8 @@ using XMLAttributes = Dictionary;
 using AnimationList = Vector<Animation>;
 using FontEffectList = Vector<SharedPtr<const FontEffect>>;
 struct FontEffects {
-	FontEffectList list;
-	String value;
+  FontEffectList list;
+  String value;
 };
 using ColorStopList = Vector<ColorStop>;
 using BoxShadowList = Vector<BoxShadow>;
@@ -139,29 +139,26 @@ namespace std {
 // Hash specialization for enum class types (required on some older compilers)
 template <>
 struct hash<::ui::PropertyId> {
-	using utype = ::std::underlying_type_t<::ui::PropertyId>;
-	size_t operator()(const ::ui::PropertyId& t) const noexcept
-	{
-		::std::hash<utype> h;
-		return h(static_cast<utype>(t));
-	}
+  using utype = ::std::underlying_type_t<::ui::PropertyId>;
+  size_t operator()(const ::ui::PropertyId& t) const noexcept {
+    ::std::hash<utype> h;
+    return h(static_cast<utype>(t));
+  }
 };
 template <>
 struct hash<::ui::Character> {
-	using utype = ::std::underlying_type_t<::ui::Character>;
-	size_t operator()(const ::ui::Character& t) const noexcept
-	{
-		::std::hash<utype> h;
-		return h(static_cast<utype>(t));
-	}
+  using utype = ::std::underlying_type_t<::ui::Character>;
+  size_t operator()(const ::ui::Character& t) const noexcept {
+    ::std::hash<utype> h;
+    return h(static_cast<utype>(t));
+  }
 };
 template <>
 struct hash<::ui::FamilyId> {
-	using utype = ::std::underlying_type_t<::ui::FamilyId>;
-	size_t operator()(const ::ui::FamilyId& t) const noexcept
-	{
-		::std::hash<utype> h;
-		return h(static_cast<utype>(t));
-	}
+  using utype = ::std::underlying_type_t<::ui::FamilyId>;
+  size_t operator()(const ::ui::FamilyId& t) const noexcept {
+    ::std::hash<utype> h;
+    return h(static_cast<utype>(t));
+  }
 };
 } // namespace std

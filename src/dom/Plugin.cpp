@@ -3,9 +3,8 @@ namespace ui {
 
 Plugin::~Plugin() {}
 
-int Plugin::GetEventClasses()
-{
-	return EVT_ALL;
+int Plugin::GetEventClasses() {
+  return EVT_ALL;
 }
 
 void Plugin::OnInitialise() {}

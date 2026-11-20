@@ -11,40 +11,40 @@ namespace ui {
 
 class UI_CORE_API ElementHandle : public Element {
 public:
-	UI_RTTI_DefineWithParent(ElementHandle, Element)
+  UI_RTTI_DefineWithParent(ElementHandle, Element)
 
-	ElementHandle(const String& tag);
-	virtual ~ElementHandle();
+      ElementHandle(const String& tag);
+  virtual ~ElementHandle();
 
-	struct MoveData {
-		Vector2f original_position_top_left;
-		Vector2f original_position_bottom_right;
-		Vector2<bool> top_left;
-		Vector2<bool> bottom_right;
-	};
+  struct MoveData {
+    Vector2f original_position_top_left;
+    Vector2f original_position_bottom_right;
+    Vector2<bool> top_left;
+    Vector2<bool> bottom_right;
+  };
 
-	struct SizeData {
-		Vector2f original_size;
-		Vector2f original_position_bottom_right;
-		Vector2<bool> width_height;
-		Vector2<bool> bottom_right;
-	};
+  struct SizeData {
+    Vector2f original_size;
+    Vector2f original_position_bottom_right;
+    Vector2<bool> width_height;
+    Vector2<bool> bottom_right;
+  };
 
 protected:
-	void OnAttributeChange(const ElementAttributes& changed_attributes) override;
-	void ProcessDefaultAction(Event& event) override;
+  void OnAttributeChange(const ElementAttributes& changed_attributes) override;
+  void ProcessDefaultAction(Event& event) override;
 
-	bool initialised;
-	Element* move_target;
-	Element* size_target;
-	Array<NumericValue, 4> edge_margin = {};
+  bool initialised;
+  Element* move_target;
+  Element* size_target;
+  Array<NumericValue, 4> edge_margin = {};
 
-	Vector2f drag_start;
-	Vector2f drag_delta_min;
-	Vector2f drag_delta_max;
+  Vector2f drag_start;
+  Vector2f drag_delta_min;
+  Vector2f drag_delta_max;
 
-	MoveData move_data;
-	SizeData size_data;
+  MoveData move_data;
+  SizeData size_data;
 };
 
 } // namespace ui

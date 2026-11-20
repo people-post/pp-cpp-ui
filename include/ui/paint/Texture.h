@@ -16,23 +16,23 @@ class RenderManager;
  */
 class UI_CORE_API Texture {
 public:
-	Texture() = default;
+  Texture() = default;
 
-	Vector2i GetDimensions() const;
+  Vector2i GetDimensions() const;
 
-	explicit operator bool() const;
-	bool operator==(const Texture& other) const;
+  explicit operator bool() const;
+  bool operator==(const Texture& other) const;
 
 private:
-	Texture(RenderManager* render_manager, TextureFileIndex file_index);
-	Texture(RenderManager* render_manager, StableVectorIndex callback_index);
+  Texture(RenderManager* render_manager, TextureFileIndex file_index);
+  Texture(RenderManager* render_manager, StableVectorIndex callback_index);
 
-	RenderManager* render_manager = nullptr;
-	TextureFileIndex file_index = TextureFileIndex::Invalid;
-	StableVectorIndex callback_index = StableVectorIndex::Invalid;
+  RenderManager* render_manager = nullptr;
+  TextureFileIndex file_index = TextureFileIndex::Invalid;
+  StableVectorIndex callback_index = StableVectorIndex::Invalid;
 
-	friend class RenderManager;
-	friend class CallbackTexture;
+  friend class RenderManager;
+  friend class CallbackTexture;
 };
 
 /**
@@ -40,18 +40,18 @@ private:
  */
 class UI_CORE_API TextureSource : NonCopyMoveable {
 public:
-	TextureSource() = default;
-	TextureSource(String source, String document_path);
+  TextureSource() = default;
+  TextureSource(String source, String document_path);
 
-	Texture GetTexture(RenderManager& render_manager) const;
+  Texture GetTexture(RenderManager& render_manager) const;
 
-	const String& GetSource() const;
-	const String& GetDefinitionSource() const;
+  const String& GetSource() const;
+  const String& GetDefinitionSource() const;
 
 private:
-	String source;
-	String document_path;
-	mutable SmallUnorderedMap<RenderManager*, Texture> textures;
+  String source;
+  String document_path;
+  mutable SmallUnorderedMap<RenderManager*, Texture> textures;
 };
 
 } // namespace ui

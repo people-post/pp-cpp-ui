@@ -4,50 +4,44 @@ namespace ui {
 
 static FileInterface* g_file_interface = nullptr;
 
-void SetFileInterface(FileInterface* file_interface)
-{
-	g_file_interface = file_interface;
+void SetFileInterface(FileInterface* file_interface) {
+  g_file_interface = file_interface;
 }
 
-FileInterface* GetFileInterface()
-{
-	return g_file_interface;
+FileInterface* GetFileInterface() {
+  return g_file_interface;
 }
-
 
 FileInterface::FileInterface() {}
 
 FileInterface::~FileInterface() {}
 
-size_t FileInterface::Length(FileHandle file)
-{
-	size_t current_position = Tell(file);
-	Seek(file, 0, SEEK_END);
-	size_t length = Tell(file);
-	Seek(file, (long)current_position, SEEK_SET);
-	return length;
+size_t FileInterface::Length(FileHandle file) {
+  size_t current_position = Tell(file);
+  Seek(file, 0, SEEK_END);
+  size_t length = Tell(file);
+  Seek(file, (long)current_position, SEEK_SET);
+  return length;
 }
 
-bool FileInterface::LoadFile(const String& path, String& out_data)
-{
-	FileHandle handle = Open(path);
-	if (!handle)
-		return false;
+bool FileInterface::LoadFile(const String& path, String& out_data) {
+  FileHandle handle = Open(path);
+  if (!handle)
+    return false;
 
-	const size_t length = Length(handle);
+  const size_t length = Length(handle);
 
-	out_data = String(length, 0);
+  out_data = String(length, 0);
 
-	const size_t read_length = Read(&out_data[0], length, handle);
+  const size_t read_length = Read(&out_data[0], length, handle);
 
-	if (length != read_length)
-	{
-		Log::Message(Log::LT_WARNING, "Could only read %zu of %zu bytes from file %s", read_length, length, path.c_str());
-	}
+  if (length != read_length) {
+    Log::Message(Log::LT_WARNING, "Could only read %zu of %zu bytes from file %s", read_length, length, path.c_str());
+  }
 
-	Close(handle);
+  Close(handle);
 
-	return true;
+  return true;
 }
 
 } // namespace ui

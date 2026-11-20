@@ -30,101 +30,99 @@ static const char spritesheet_with_path_string_encoding[] = R"(
 
 using namespace ui;
 
-TEST_CASE("style_sheet_parser.spritesheet")
-{
-	Context* context = TestsShell::GetContext();
+TEST_CASE("style_sheet_parser.spritesheet") {
+  Context* context = TestsShell::GetContext();
 
-	{
-		StyleSheetContainer style_sheet_container;
-		StreamMemory spritesheet_stream{reinterpret_cast<const byte*>(spritesheet), sizeof(spritesheet) - 1};
-		style_sheet_container.LoadStyleSheetContainer(&spritesheet_stream, 0);
+  {
+    StyleSheetContainer style_sheet_container;
+    StreamMemory spritesheet_stream{reinterpret_cast<const byte*>(spritesheet), sizeof(spritesheet) - 1};
+    style_sheet_container.LoadStyleSheetContainer(&spritesheet_stream, 0);
 
-		style_sheet_container.UpdateCompiledStyleSheet(context);
-		const auto* style_sheet = style_sheet_container.GetCompiledStyleSheet();
-		CHECK(style_sheet != nullptr);
+    style_sheet_container.UpdateCompiledStyleSheet(context);
+    const auto* style_sheet = style_sheet_container.GetCompiledStyleSheet();
+    CHECK(style_sheet != nullptr);
 
-		const auto* sprite00 = style_sheet->GetSprite("test00");
-		CHECK(sprite00 != nullptr);
-		CHECK(sprite00->sprite_sheet->name == "test_sheet");
-		CHECK(sprite00->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
-		CHECK(sprite00->rectangle.TopLeft() == Vector2f(0.f, 0.f));
-		CHECK(sprite00->rectangle.BottomRight() == Vector2f(64.f, 64.f));
-		CHECK(sprite00->sprite_sheet->display_scale == 1.f);
+    const auto* sprite00 = style_sheet->GetSprite("test00");
+    CHECK(sprite00 != nullptr);
+    CHECK(sprite00->sprite_sheet->name == "test_sheet");
+    CHECK(sprite00->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
+    CHECK(sprite00->rectangle.TopLeft() == Vector2f(0.f, 0.f));
+    CHECK(sprite00->rectangle.BottomRight() == Vector2f(64.f, 64.f));
+    CHECK(sprite00->sprite_sheet->display_scale == 1.f);
 
-		const auto* sprite01 = style_sheet->GetSprite("test01");
-		CHECK(sprite01 != nullptr);
-		CHECK(sprite01->sprite_sheet->name == "test_sheet");
-		CHECK(sprite01->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
-		CHECK(sprite01->rectangle.TopLeft() == Vector2f(64.f, 0.f));
-		CHECK(sprite01->rectangle.BottomRight() == Vector2f(128.f, 64.f));
-		CHECK(sprite01->sprite_sheet->display_scale == 1.f);
+    const auto* sprite01 = style_sheet->GetSprite("test01");
+    CHECK(sprite01 != nullptr);
+    CHECK(sprite01->sprite_sheet->name == "test_sheet");
+    CHECK(sprite01->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
+    CHECK(sprite01->rectangle.TopLeft() == Vector2f(64.f, 0.f));
+    CHECK(sprite01->rectangle.BottomRight() == Vector2f(128.f, 64.f));
+    CHECK(sprite01->sprite_sheet->display_scale == 1.f);
 
-		const auto* sprite10 = style_sheet->GetSprite("test10");
-		CHECK(sprite10 != nullptr);
-		CHECK(sprite10->sprite_sheet->name == "test_sheet");
-		CHECK(sprite10->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
-		CHECK(sprite10->rectangle.TopLeft() == Vector2f(0.f, 64.f));
-		CHECK(sprite10->rectangle.BottomRight() == Vector2f(64.f, 128.f));
-		CHECK(sprite10->sprite_sheet->display_scale == 1.f);
+    const auto* sprite10 = style_sheet->GetSprite("test10");
+    CHECK(sprite10 != nullptr);
+    CHECK(sprite10->sprite_sheet->name == "test_sheet");
+    CHECK(sprite10->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
+    CHECK(sprite10->rectangle.TopLeft() == Vector2f(0.f, 64.f));
+    CHECK(sprite10->rectangle.BottomRight() == Vector2f(64.f, 128.f));
+    CHECK(sprite10->sprite_sheet->display_scale == 1.f);
 
-		const auto* sprite11 = style_sheet->GetSprite("test11");
-		CHECK(sprite11 != nullptr);
-		CHECK(sprite11->sprite_sheet->name == "test_sheet");
-		CHECK(sprite11->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
-		CHECK(sprite11->rectangle.TopLeft() == Vector2f(64.f, 64.f));
-		CHECK(sprite11->rectangle.BottomRight() == Vector2f(128.f, 128.f));
-		CHECK(sprite11->sprite_sheet->display_scale == 1.f);
-	}
+    const auto* sprite11 = style_sheet->GetSprite("test11");
+    CHECK(sprite11 != nullptr);
+    CHECK(sprite11->sprite_sheet->name == "test_sheet");
+    CHECK(sprite11->sprite_sheet->texture_source.GetSource() == "/assets/high_scores_alien_3.tga");
+    CHECK(sprite11->rectangle.TopLeft() == Vector2f(64.f, 64.f));
+    CHECK(sprite11->rectangle.BottomRight() == Vector2f(128.f, 128.f));
+    CHECK(sprite11->sprite_sheet->display_scale == 1.f);
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("style_sheet_parser.spritesheet_with_path_string_encoding")
-{
-	Context* context = TestsShell::GetContext();
+TEST_CASE("style_sheet_parser.spritesheet_with_path_string_encoding") {
+  Context* context = TestsShell::GetContext();
 
-	{
-		StyleSheetContainer style_sheet_container;
-		StreamMemory spritesheet_stream{reinterpret_cast<const byte*>(spritesheet_with_path_string_encoding),
-			sizeof(spritesheet_with_path_string_encoding) - 1};
-		style_sheet_container.LoadStyleSheetContainer(&spritesheet_stream, 0);
+  {
+    StyleSheetContainer style_sheet_container;
+    StreamMemory spritesheet_stream{reinterpret_cast<const byte*>(spritesheet_with_path_string_encoding),
+                                    sizeof(spritesheet_with_path_string_encoding) - 1};
+    style_sheet_container.LoadStyleSheetContainer(&spritesheet_stream, 0);
 
-		style_sheet_container.UpdateCompiledStyleSheet(context);
-		const auto* style_sheet = style_sheet_container.GetCompiledStyleSheet();
-		CHECK(style_sheet != nullptr);
+    style_sheet_container.UpdateCompiledStyleSheet(context);
+    const auto* style_sheet = style_sheet_container.GetCompiledStyleSheet();
+    CHECK(style_sheet != nullptr);
 
-		const auto* sprite00 = style_sheet->GetSprite("test00");
-		CHECK(sprite00 != nullptr);
-		CHECK(sprite00->sprite_sheet->name == "test_sheet_with_path_string_encoding");
-		CHECK(sprite00->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
-		CHECK(sprite00->rectangle.TopLeft() == Vector2f(0.f, 0.f));
-		CHECK(sprite00->rectangle.BottomRight() == Vector2f(128.f, 128.f));
-		CHECK(sprite00->sprite_sheet->display_scale == 0.5f);
+    const auto* sprite00 = style_sheet->GetSprite("test00");
+    CHECK(sprite00 != nullptr);
+    CHECK(sprite00->sprite_sheet->name == "test_sheet_with_path_string_encoding");
+    CHECK(sprite00->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
+    CHECK(sprite00->rectangle.TopLeft() == Vector2f(0.f, 0.f));
+    CHECK(sprite00->rectangle.BottomRight() == Vector2f(128.f, 128.f));
+    CHECK(sprite00->sprite_sheet->display_scale == 0.5f);
 
-		const auto* sprite01 = style_sheet->GetSprite("test01");
-		CHECK(sprite01 != nullptr);
-		CHECK(sprite01->sprite_sheet->name == "test_sheet_with_path_string_encoding");
-		CHECK(sprite01->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
-		CHECK(sprite01->rectangle.TopLeft() == Vector2f(128.f, 0.f));
-		CHECK(sprite01->rectangle.BottomRight() == Vector2f(256.f, 128.f));
-		CHECK(sprite01->sprite_sheet->display_scale == 0.5f);
+    const auto* sprite01 = style_sheet->GetSprite("test01");
+    CHECK(sprite01 != nullptr);
+    CHECK(sprite01->sprite_sheet->name == "test_sheet_with_path_string_encoding");
+    CHECK(sprite01->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
+    CHECK(sprite01->rectangle.TopLeft() == Vector2f(128.f, 0.f));
+    CHECK(sprite01->rectangle.BottomRight() == Vector2f(256.f, 128.f));
+    CHECK(sprite01->sprite_sheet->display_scale == 0.5f);
 
-		const auto* sprite10 = style_sheet->GetSprite("test10");
-		CHECK(sprite10 != nullptr);
-		CHECK(sprite10->sprite_sheet->name == "test_sheet_with_path_string_encoding");
-		CHECK(sprite10->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
-		CHECK(sprite10->rectangle.TopLeft() == Vector2f(0.f, 128.f));
-		CHECK(sprite10->rectangle.BottomRight() == Vector2f(128.f, 256.f));
-		CHECK(sprite10->sprite_sheet->display_scale == 0.5f);
+    const auto* sprite10 = style_sheet->GetSprite("test10");
+    CHECK(sprite10 != nullptr);
+    CHECK(sprite10->sprite_sheet->name == "test_sheet_with_path_string_encoding");
+    CHECK(sprite10->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
+    CHECK(sprite10->rectangle.TopLeft() == Vector2f(0.f, 128.f));
+    CHECK(sprite10->rectangle.BottomRight() == Vector2f(128.f, 256.f));
+    CHECK(sprite10->sprite_sheet->display_scale == 0.5f);
 
-		const auto* sprite11 = style_sheet->GetSprite("test11");
-		CHECK(sprite11 != nullptr);
-		CHECK(sprite11->sprite_sheet->name == "test_sheet_with_path_string_encoding");
-		CHECK(sprite11->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
-		CHECK(sprite11->rectangle.TopLeft() == Vector2f(128.f, 128.f));
-		CHECK(sprite11->rectangle.BottomRight() == Vector2f(256.f, 256.f));
-		CHECK(sprite11->sprite_sheet->display_scale == 0.5f);
-	}
+    const auto* sprite11 = style_sheet->GetSprite("test11");
+    CHECK(sprite11 != nullptr);
+    CHECK(sprite11->sprite_sheet->name == "test_sheet_with_path_string_encoding");
+    CHECK(sprite11->sprite_sheet->texture_source.GetSource() == "/assets/test.tga");
+    CHECK(sprite11->rectangle.TopLeft() == Vector2f(128.f, 128.f));
+    CHECK(sprite11->rectangle.BottomRight() == Vector2f(256.f, 256.f));
+    CHECK(sprite11->sprite_sheet->display_scale == 0.5f);
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

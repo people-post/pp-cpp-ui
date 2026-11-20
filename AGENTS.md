@@ -8,6 +8,7 @@ Read `docs/SRC_LAYOUT.md` and `docs/PROVENANCE.md` for module boundaries and ups
   `third_party/sdl3/src/camera/`.
 - Module tests: `src/*/tests/`, registered in each module's CMake file; shared harness: `tests/`.
 - Keep vendored changes focused and document their reason and upstream source.
+- Format C/C++ with `./scripts/check_format.sh --fix` (clang-format 23.1.5 exactly); CI checks every first-party file.
 - Native camera configuration must keep the requested format and frame duration consistent;
   compiling the driver does not establish actual device FPS or first-frame latency.
 - Local pp-browser builds may consume this checkout directly; preserve unrelated edits and

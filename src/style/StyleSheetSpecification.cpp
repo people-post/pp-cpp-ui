@@ -21,233 +21,207 @@ namespace ui {
 static StyleSheetSpecification* instance = nullptr;
 
 struct DefaultStyleSheetParsers : NonCopyMoveable {
-	PropertyParserNumber number = PropertyParserNumber(Unit::NUMBER);
-	PropertyParserNumber length = PropertyParserNumber(Unit::LENGTH, Unit::PX);
-	PropertyParserNumber length_percent = PropertyParserNumber(Unit::LENGTH_PERCENT, Unit::PX);
-	PropertyParserNumber number_percent = PropertyParserNumber(Unit::NUMBER_PERCENT);
-	PropertyParserNumber number_length_percent = PropertyParserNumber(Unit::NUMBER_LENGTH_PERCENT, Unit::PX);
-	PropertyParserNumber angle = PropertyParserNumber(Unit::ANGLE, Unit::RAD);
-	PropertyParserKeyword keyword = PropertyParserKeyword();
-	PropertyParserString string = PropertyParserString();
-	PropertyParserAnimation animation = PropertyParserAnimation(PropertyParserAnimation::ANIMATION_PARSER);
-	PropertyParserAnimation transition = PropertyParserAnimation(PropertyParserAnimation::TRANSITION_PARSER);
-	PropertyParserColour color = PropertyParserColour();
-	PropertyParserColorStopList color_stop_list = PropertyParserColorStopList(&color);
-	PropertyParserDecorator decorator = PropertyParserDecorator();
-	PropertyParserFilter filter = PropertyParserFilter();
-	PropertyParserFontEffect font_effect = PropertyParserFontEffect();
-	PropertyParserTransform transform = PropertyParserTransform();
-	PropertyParserRatio ratio = PropertyParserRatio();
-	PropertyParserNumber resolution = PropertyParserNumber(Unit::X);
-	PropertyParserBoxShadow box_shadow = PropertyParserBoxShadow(&color, &length);
+  PropertyParserNumber number = PropertyParserNumber(Unit::NUMBER);
+  PropertyParserNumber length = PropertyParserNumber(Unit::LENGTH, Unit::PX);
+  PropertyParserNumber length_percent = PropertyParserNumber(Unit::LENGTH_PERCENT, Unit::PX);
+  PropertyParserNumber number_percent = PropertyParserNumber(Unit::NUMBER_PERCENT);
+  PropertyParserNumber number_length_percent = PropertyParserNumber(Unit::NUMBER_LENGTH_PERCENT, Unit::PX);
+  PropertyParserNumber angle = PropertyParserNumber(Unit::ANGLE, Unit::RAD);
+  PropertyParserKeyword keyword = PropertyParserKeyword();
+  PropertyParserString string = PropertyParserString();
+  PropertyParserAnimation animation = PropertyParserAnimation(PropertyParserAnimation::ANIMATION_PARSER);
+  PropertyParserAnimation transition = PropertyParserAnimation(PropertyParserAnimation::TRANSITION_PARSER);
+  PropertyParserColour color = PropertyParserColour();
+  PropertyParserColorStopList color_stop_list = PropertyParserColorStopList(&color);
+  PropertyParserDecorator decorator = PropertyParserDecorator();
+  PropertyParserFilter filter = PropertyParserFilter();
+  PropertyParserFontEffect font_effect = PropertyParserFontEffect();
+  PropertyParserTransform transform = PropertyParserTransform();
+  PropertyParserRatio ratio = PropertyParserRatio();
+  PropertyParserNumber resolution = PropertyParserNumber(Unit::X);
+  PropertyParserBoxShadow box_shadow = PropertyParserBoxShadow(&color, &length);
 };
 
-StyleSheetSpecification::StyleSheetSpecification() :
-	// Reserve space for all defined ids and some more for custom properties
-	properties((size_t)PropertyId::MaxNumIds, 2 * (size_t)ShorthandId::NumDefinedIds)
-{
-	UI_ASSERT(instance == nullptr);
-	instance = this;
+StyleSheetSpecification::StyleSheetSpecification()
+    : // Reserve space for all defined ids and some more for custom properties
+      properties((size_t)PropertyId::MaxNumIds, 2 * (size_t)ShorthandId::NumDefinedIds) {
+  UI_ASSERT(instance == nullptr);
+  instance = this;
 
-	default_parsers.reset(new DefaultStyleSheetParsers);
+  default_parsers.reset(new DefaultStyleSheetParsers);
 }
 
-StyleSheetSpecification::~StyleSheetSpecification()
-{
-	UI_ASSERT(instance == this);
-	instance = nullptr;
+StyleSheetSpecification::~StyleSheetSpecification() {
+  UI_ASSERT(instance == this);
+  instance = nullptr;
 }
 
-PropertyDefinition& StyleSheetSpecification::RegisterProperty(PropertyId id, const String& property_name, const String& default_value, bool inherited,
-	bool forces_layout)
-{
-	return properties.RegisterProperty(property_name, default_value, inherited, forces_layout, id);
+PropertyDefinition& StyleSheetSpecification::RegisterProperty(PropertyId id, const String& property_name,
+                                                              const String& default_value, bool inherited,
+                                                              bool forces_layout) {
+  return properties.RegisterProperty(property_name, default_value, inherited, forces_layout, id);
 }
 
-ShorthandId StyleSheetSpecification::RegisterShorthand(ShorthandId id, const String& shorthand_name, const String& property_names, ShorthandType type)
-{
-	return properties.RegisterShorthand(shorthand_name, property_names, type, id);
+ShorthandId StyleSheetSpecification::RegisterShorthand(ShorthandId id, const String& shorthand_name,
+                                                       const String& property_names, ShorthandType type) {
+  return properties.RegisterShorthand(shorthand_name, property_names, type, id);
 }
 
-void StyleSheetSpecification::Initialise()
-{
-	UI_ASSERT(!instance);
+void StyleSheetSpecification::Initialise() {
+  UI_ASSERT(!instance);
 
-	PropertyParserAnimation::Initialize();
-	PropertyParserColour::Initialize();
-	PropertyParserDecorator::Initialize();
-	PropertyParserNumber::Initialize();
+  PropertyParserAnimation::Initialize();
+  PropertyParserColour::Initialize();
+  PropertyParserDecorator::Initialize();
+  PropertyParserNumber::Initialize();
 
-	new StyleSheetSpecification();
+  new StyleSheetSpecification();
 
-	instance->RegisterDefaultParsers();
-	instance->RegisterDefaultProperties();
+  instance->RegisterDefaultParsers();
+  instance->RegisterDefaultProperties();
 }
 
-void StyleSheetSpecification::Shutdown()
-{
-	UI_ASSERT(instance);
+void StyleSheetSpecification::Shutdown() {
+  UI_ASSERT(instance);
 
-	delete instance;
+  delete instance;
 
-	PropertyParserAnimation::Shutdown();
-	PropertyParserColour::Shutdown();
-	PropertyParserDecorator::Shutdown();
-	PropertyParserNumber::Shutdown();
+  PropertyParserAnimation::Shutdown();
+  PropertyParserColour::Shutdown();
+  PropertyParserDecorator::Shutdown();
+  PropertyParserNumber::Shutdown();
 }
 
-bool StyleSheetSpecification::RegisterParser(const String& parser_name, PropertyParser* parser)
-{
-	ParserMap::iterator iterator = instance->parsers.find(parser_name);
-	if (iterator != instance->parsers.end())
-	{
-		Log::Message(Log::LT_WARNING, "Parser with name %s already exists!", parser_name.c_str());
-		return false;
-	}
+bool StyleSheetSpecification::RegisterParser(const String& parser_name, PropertyParser* parser) {
+  ParserMap::iterator iterator = instance->parsers.find(parser_name);
+  if (iterator != instance->parsers.end()) {
+    Log::Message(Log::LT_WARNING, "Parser with name %s already exists!", parser_name.c_str());
+    return false;
+  }
 
-	instance->parsers[parser_name] = parser;
-	return true;
+  instance->parsers[parser_name] = parser;
+  return true;
 }
 
-PropertyParser* StyleSheetSpecification::GetParser(const String& parser_name)
-{
-	ParserMap::iterator iterator = instance->parsers.find(parser_name);
-	if (iterator == instance->parsers.end())
-		return nullptr;
+PropertyParser* StyleSheetSpecification::GetParser(const String& parser_name) {
+  ParserMap::iterator iterator = instance->parsers.find(parser_name);
+  if (iterator == instance->parsers.end())
+    return nullptr;
 
-	return (*iterator).second;
+  return (*iterator).second;
 }
 
-PropertyDefinition& StyleSheetSpecification::RegisterProperty(const String& property_name, const String& default_value, bool inherited,
-	bool forces_layout)
-{
-	UI_ASSERTMSG((size_t)instance->properties.property_map->GetId(property_name) < (size_t)PropertyId::FirstCustomId,
-		"Custom property name matches an internal property, please make a unique name for the given property.");
-	return instance->RegisterProperty(PropertyId::Invalid, property_name, default_value, inherited, forces_layout);
+PropertyDefinition& StyleSheetSpecification::RegisterProperty(const String& property_name, const String& default_value,
+                                                              bool inherited, bool forces_layout) {
+  UI_ASSERTMSG((size_t)instance->properties.property_map->GetId(property_name) < (size_t)PropertyId::FirstCustomId,
+               "Custom property name matches an internal property, please make a unique name for the given property.");
+  return instance->RegisterProperty(PropertyId::Invalid, property_name, default_value, inherited, forces_layout);
 }
 
-const PropertyDefinition* StyleSheetSpecification::GetProperty(const String& property_name)
-{
-	return instance->properties.GetProperty(property_name);
+const PropertyDefinition* StyleSheetSpecification::GetProperty(const String& property_name) {
+  return instance->properties.GetProperty(property_name);
 }
 
-const PropertyDefinition* StyleSheetSpecification::GetProperty(PropertyId id)
-{
-	return instance->properties.GetProperty(id);
+const PropertyDefinition* StyleSheetSpecification::GetProperty(PropertyId id) {
+  return instance->properties.GetProperty(id);
 }
 
-const PropertyIdSet& StyleSheetSpecification::GetRegisteredProperties()
-{
-	return instance->properties.GetRegisteredProperties();
+const PropertyIdSet& StyleSheetSpecification::GetRegisteredProperties() {
+  return instance->properties.GetRegisteredProperties();
 }
 
-const PropertyIdSet& StyleSheetSpecification::GetRegisteredInheritedProperties()
-{
-	return instance->properties.GetRegisteredInheritedProperties();
+const PropertyIdSet& StyleSheetSpecification::GetRegisteredInheritedProperties() {
+  return instance->properties.GetRegisteredInheritedProperties();
 }
 
-const PropertyIdSet& StyleSheetSpecification::GetRegisteredPropertiesForcingLayout()
-{
-	return instance->properties.GetRegisteredPropertiesForcingLayout();
+const PropertyIdSet& StyleSheetSpecification::GetRegisteredPropertiesForcingLayout() {
+  return instance->properties.GetRegisteredPropertiesForcingLayout();
 }
 
-ShorthandId StyleSheetSpecification::RegisterShorthand(const String& shorthand_name, const String& property_names, ShorthandType type)
-{
-	UI_ASSERTMSG(instance->properties.property_map->GetId(shorthand_name) == PropertyId::Invalid,
-		"Custom shorthand name matches a property name, please make a unique name.");
-	UI_ASSERTMSG((size_t)instance->properties.shorthand_map->GetId(shorthand_name) < (size_t)ShorthandId::FirstCustomId,
-		"Custom shorthand name matches an internal shorthand, please make a unique name for the given shorthand property.");
-	return instance->properties.RegisterShorthand(shorthand_name, property_names, type);
+ShorthandId StyleSheetSpecification::RegisterShorthand(const String& shorthand_name, const String& property_names,
+                                                       ShorthandType type) {
+  UI_ASSERTMSG(instance->properties.property_map->GetId(shorthand_name) == PropertyId::Invalid,
+               "Custom shorthand name matches a property name, please make a unique name.");
+  UI_ASSERTMSG((size_t)instance->properties.shorthand_map->GetId(shorthand_name) < (size_t)ShorthandId::FirstCustomId,
+               "Custom shorthand name matches an internal shorthand, please make a unique name for the given shorthand "
+               "property.");
+  return instance->properties.RegisterShorthand(shorthand_name, property_names, type);
 }
 
-const ShorthandDefinition* StyleSheetSpecification::GetShorthand(const String& shorthand_name)
-{
-	return instance->properties.GetShorthand(shorthand_name);
+const ShorthandDefinition* StyleSheetSpecification::GetShorthand(const String& shorthand_name) {
+  return instance->properties.GetShorthand(shorthand_name);
 }
 
-const ShorthandDefinition* StyleSheetSpecification::GetShorthand(ShorthandId id)
-{
-	return instance->properties.GetShorthand(id);
+const ShorthandDefinition* StyleSheetSpecification::GetShorthand(ShorthandId id) {
+  return instance->properties.GetShorthand(id);
 }
 
-bool StyleSheetSpecification::ParsePropertyDeclaration(PropertyDictionary& dictionary, const String& property_name, const String& property_value)
-{
-	return instance->properties.ParsePropertyDeclaration(dictionary, property_name, property_value);
+bool StyleSheetSpecification::ParsePropertyDeclaration(PropertyDictionary& dictionary, const String& property_name,
+                                                       const String& property_value) {
+  return instance->properties.ParsePropertyDeclaration(dictionary, property_name, property_value);
 }
 
-PropertyId StyleSheetSpecification::GetPropertyId(const String& property_name)
-{
-	return instance->properties.property_map->GetId(property_name);
+PropertyId StyleSheetSpecification::GetPropertyId(const String& property_name) {
+  return instance->properties.property_map->GetId(property_name);
 }
 
-ShorthandId StyleSheetSpecification::GetShorthandId(const String& shorthand_name)
-{
-	return instance->properties.shorthand_map->GetId(shorthand_name);
+ShorthandId StyleSheetSpecification::GetShorthandId(const String& shorthand_name) {
+  return instance->properties.shorthand_map->GetId(shorthand_name);
 }
 
-const String& StyleSheetSpecification::GetPropertyName(PropertyId id)
-{
-	return instance->properties.property_map->GetName(id);
+const String& StyleSheetSpecification::GetPropertyName(PropertyId id) {
+  return instance->properties.property_map->GetName(id);
 }
 
-const String& StyleSheetSpecification::GetShorthandName(ShorthandId id)
-{
-	return instance->properties.shorthand_map->GetName(id);
+const String& StyleSheetSpecification::GetShorthandName(ShorthandId id) {
+  return instance->properties.shorthand_map->GetName(id);
 }
 
-PropertyIdSet StyleSheetSpecification::GetShorthandUnderlyingProperties(ShorthandId id)
-{
-	PropertyIdSet result;
-	const ShorthandDefinition* shorthand = instance->properties.GetShorthand(id);
-	if (!shorthand)
-		return result;
+PropertyIdSet StyleSheetSpecification::GetShorthandUnderlyingProperties(ShorthandId id) {
+  PropertyIdSet result;
+  const ShorthandDefinition* shorthand = instance->properties.GetShorthand(id);
+  if (!shorthand)
+    return result;
 
-	for (auto& item : shorthand->items)
-	{
-		if (item.type == ShorthandItemType::Property)
-		{
-			result.Insert(item.property_id);
-		}
-		else if (item.type == ShorthandItemType::Shorthand)
-		{
-			// When we have a shorthand pointing to another shorthands, call us recursively. Add the union of the previous result and new properties.
-			result |= GetShorthandUnderlyingProperties(item.shorthand_id);
-		}
-	}
-	return result;
+  for (auto& item : shorthand->items) {
+    if (item.type == ShorthandItemType::Property) {
+      result.Insert(item.property_id);
+    } else if (item.type == ShorthandItemType::Shorthand) {
+      // When we have a shorthand pointing to another shorthands, call us recursively. Add the union of the previous result and new properties.
+      result |= GetShorthandUnderlyingProperties(item.shorthand_id);
+    }
+  }
+  return result;
 }
 
-const PropertySpecification& StyleSheetSpecification::GetPropertySpecification()
-{
-	return instance->properties;
+const PropertySpecification& StyleSheetSpecification::GetPropertySpecification() {
+  return instance->properties;
 }
 
-void StyleSheetSpecification::RegisterDefaultParsers()
-{
-	RegisterParser("number", &default_parsers->number);
-	RegisterParser("length", &default_parsers->length);
-	RegisterParser("length_percent", &default_parsers->length_percent);
-	RegisterParser("number_percent", &default_parsers->number_percent);
-	RegisterParser("number_length_percent", &default_parsers->number_length_percent);
-	RegisterParser("angle", &default_parsers->angle);
-	RegisterParser("keyword", &default_parsers->keyword);
-	RegisterParser("string", &default_parsers->string);
-	RegisterParser("animation", &default_parsers->animation);
-	RegisterParser("transition", &default_parsers->transition);
-	RegisterParser("color", &default_parsers->color);
-	RegisterParser("color_stop_list", &default_parsers->color_stop_list);
-	RegisterParser("decorator", &default_parsers->decorator);
-	RegisterParser("filter", &default_parsers->filter);
-	RegisterParser("font_effect", &default_parsers->font_effect);
-	RegisterParser("transform", &default_parsers->transform);
-	RegisterParser("ratio", &default_parsers->ratio);
-	RegisterParser("resolution", &default_parsers->resolution);
-	RegisterParser("box_shadow", &default_parsers->box_shadow);
+void StyleSheetSpecification::RegisterDefaultParsers() {
+  RegisterParser("number", &default_parsers->number);
+  RegisterParser("length", &default_parsers->length);
+  RegisterParser("length_percent", &default_parsers->length_percent);
+  RegisterParser("number_percent", &default_parsers->number_percent);
+  RegisterParser("number_length_percent", &default_parsers->number_length_percent);
+  RegisterParser("angle", &default_parsers->angle);
+  RegisterParser("keyword", &default_parsers->keyword);
+  RegisterParser("string", &default_parsers->string);
+  RegisterParser("animation", &default_parsers->animation);
+  RegisterParser("transition", &default_parsers->transition);
+  RegisterParser("color", &default_parsers->color);
+  RegisterParser("color_stop_list", &default_parsers->color_stop_list);
+  RegisterParser("decorator", &default_parsers->decorator);
+  RegisterParser("filter", &default_parsers->filter);
+  RegisterParser("font_effect", &default_parsers->font_effect);
+  RegisterParser("transform", &default_parsers->transform);
+  RegisterParser("ratio", &default_parsers->ratio);
+  RegisterParser("resolution", &default_parsers->resolution);
+  RegisterParser("box_shadow", &default_parsers->box_shadow);
 }
 
-void StyleSheetSpecification::RegisterDefaultProperties()
-{
-	/*
+void StyleSheetSpecification::RegisterDefaultProperties() {
+  /*
 	    Style property specifications (ala RCSS).
 
 	    Note: Whenever keywords or default values are changed, make sure its computed value is
@@ -258,7 +232,7 @@ void StyleSheetSpecification::RegisterDefaultProperties()
 
 	*/
 
-	// clang-format off
+  // clang-format off
 	RegisterProperty(PropertyId::MarginTop, "margin-top", "0px", false, true)
 		.AddParser("keyword", "auto")
 		.AddParser("length_percent").SetRelativeTarget(RelativeTarget::ContainingBlockWidth);
@@ -435,7 +409,7 @@ void StyleSheetSpecification::RegisterDefaultProperties()
 
 	UI_ASSERTMSG(instance->properties.shorthand_map->AssertAllInserted(ShorthandId::NumDefinedIds), "Missing specification for one or more Shorthand IDs.");
 	UI_ASSERTMSG(instance->properties.property_map->AssertAllInserted(PropertyId::NumDefinedIds), "Missing specification for one or more Property IDs.");
-	// clang-format on
+  // clang-format on
 }
 
 } // namespace ui

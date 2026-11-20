@@ -12,7 +12,8 @@
 #include <SDL3/SDL.h>
 #endif
 
-using KeyDownCallback = bool (*)(ui::Context* context, ui::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority);
+using KeyDownCallback = bool (*)(ui::Context* context, ui::Input::KeyIdentifier key, int key_modifier,
+                                 float native_dp_ratio, bool priority);
 #if UI_SDL_VERSION_MAJOR >= 3
 using PreProcessEventCallback = bool (*)(ui::Context* context, SDL_Event& event, bool& propagate_event);
 #endif

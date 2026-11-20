@@ -4,55 +4,56 @@
 #include <ui/base/SystemInterface.h>
 #include <ui/base/Types.h>
 #if UI_SDL_VERSION_MAJOR == 3
-	#include <SDL3/SDL.h>
+#include <SDL3/SDL.h>
 #elif UI_SDL_VERSION_MAJOR == 2
-	#include <SDL.h>
+#include <SDL.h>
 #else
-	#error "Unspecified UI_SDL_VERSION_MAJOR. Please set this definition to the major version of the SDL library being linked to."
+#error \
+    "Unspecified UI_SDL_VERSION_MAJOR. Please set this definition to the major version of the SDL library being linked to."
 #endif
 
 class SystemInterface_SDL : public ui::SystemInterface {
 public:
-	SystemInterface_SDL();
-	~SystemInterface_SDL();
+  SystemInterface_SDL();
+  ~SystemInterface_SDL();
 
-	// Optionally, provide or change the window to be used for setting the mouse cursors.
-	void SetWindow(SDL_Window* window);
+  // Optionally, provide or change the window to be used for setting the mouse cursors.
+  void SetWindow(SDL_Window* window);
 
-	// -- Inherited from ui::SystemInterface  --
+  // -- Inherited from ui::SystemInterface  --
 
-	double GetElapsedTime() override;
+  double GetElapsedTime() override;
 
-	void SetMouseCursor(const ui::String& cursor_name) override;
+  void SetMouseCursor(const ui::String& cursor_name) override;
 
-	void SetClipboardText(const ui::String& text) override;
-	void GetClipboardText(ui::String& text) override;
+  void SetClipboardText(const ui::String& text) override;
+  void GetClipboardText(ui::String& text) override;
 
-	void ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type) override;
-	void DeactivateKeyboard() override;
+  void ActivateKeyboard(ui::Vector2f caret_position, float line_height, ui::KeyboardType type) override;
+  void DeactivateKeyboard() override;
 
-	// Set when the app lifts its own layout above the on-screen keyboard. The text input area is then sent
-	// with zero height, so SDL (iOS) does not also pan the view by the caret line.
-	void SetAppHandlesKeyboardInset(bool app_handles);
+  // Set when the app lifts its own layout above the on-screen keyboard. The text input area is then sent
+  // with zero height, so SDL (iOS) does not also pan the view by the caret line.
+  void SetAppHandlesKeyboardInset(bool app_handles);
 
 private:
-	SDL_Window* window = nullptr;
-	bool app_handles_keyboard_inset_ = false;
+  SDL_Window* window = nullptr;
+  bool app_handles_keyboard_inset_ = false;
 
 #if UI_SDL_VERSION_MAJOR >= 3
-	SDL_Rect last_text_input_rect_{};
-	ui::KeyboardType active_keyboard_type_ = ui::KeyboardType::Text;
+  SDL_Rect last_text_input_rect_{};
+  ui::KeyboardType active_keyboard_type_ = ui::KeyboardType::Text;
 #endif
 
-	SDL_Cursor* cursor_default = nullptr;
-	SDL_Cursor* cursor_move = nullptr;
-	SDL_Cursor* cursor_pointer = nullptr;
-	SDL_Cursor* cursor_resize = nullptr;
-	SDL_Cursor* cursor_ew_resize = nullptr;
-	SDL_Cursor* cursor_ns_resize = nullptr;
-	SDL_Cursor* cursor_cross = nullptr;
-	SDL_Cursor* cursor_text = nullptr;
-	SDL_Cursor* cursor_unavailable = nullptr;
+  SDL_Cursor* cursor_default = nullptr;
+  SDL_Cursor* cursor_move = nullptr;
+  SDL_Cursor* cursor_pointer = nullptr;
+  SDL_Cursor* cursor_resize = nullptr;
+  SDL_Cursor* cursor_ew_resize = nullptr;
+  SDL_Cursor* cursor_ns_resize = nullptr;
+  SDL_Cursor* cursor_cross = nullptr;
+  SDL_Cursor* cursor_text = nullptr;
+  SDL_Cursor* cursor_unavailable = nullptr;
 };
 
 namespace RmlSDL {

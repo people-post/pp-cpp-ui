@@ -12,8 +12,8 @@ class ElementText;
 class RenderManager;
 
 enum class SelectionColorFallback {
-	EditorInverse,
-	StaticDefault,
+  EditorInverse,
+  StaticDefault,
 };
 
 /// Locate the hidden RCSS style-probe child (tag "selection") on @p style_root.
@@ -21,11 +21,11 @@ Element* FindSelectionStyleElement(Element* style_root);
 
 /// Resolve selection background fill; optionally resolve selected-text foreground for editors.
 void ResolveSelectionBackground(Element* style_root, ColourbPremultiplied& fill, Colourb* selected_text_color,
-	SelectionColorFallback fallback);
+                                SelectionColorFallback fallback);
 
 /// Build highlight quads for a character range on @p text_element (local indices into its content).
 bool BuildTextSelectionGeometry(ElementText* text_element, int local_start, int local_end, ColourbPremultiplied fill,
-	Geometry& out_geometry, RenderManager& render_manager);
+                                Geometry& out_geometry, RenderManager& render_manager);
 
 /// Append a single selection background quad to an existing mesh.
 void AppendSelectionQuad(Mesh& mesh, Vector2f position, Vector2f size, ColourbPremultiplied fill);

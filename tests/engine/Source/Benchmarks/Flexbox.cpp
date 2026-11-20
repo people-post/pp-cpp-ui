@@ -311,158 +311,158 @@ overflow: visible
 </div>
 )";
 
-TEST_CASE("flexbox")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("flexbox") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	{
-		nanobench::Bench bench;
-		bench.title("Flexbox basic layout");
-		bench.relative(true);
+  {
+    nanobench::Bench bench;
+    bench.title("Flexbox basic layout");
+    bench.relative(true);
 
-		// Construct the flexbox layout document.
-		ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_basic_document);
-		REQUIRE(document);
-		document->Show();
+    // Construct the flexbox layout document.
+    ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_basic_document);
+    REQUIRE(document);
+    document->Show();
 
-		document->SetInnerRML(rml_flexbox_basic_body);
-		context->Update();
-		context->Render();
+    document->SetInnerRML(rml_flexbox_basic_body);
+    context->Update();
+    context->Render();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		// Compare to an almost equivalent fast flexbox layout where we try to eliminate any content-based sizing. Uses the same body rml.
-		ElementDocument* document_fast = context->LoadDocumentFromMemory(rml_flexbox_basic_document_fast);
-		REQUIRE(document_fast);
-		document_fast->Show();
+    // Compare to an almost equivalent fast flexbox layout where we try to eliminate any content-based sizing. Uses the same body rml.
+    ElementDocument* document_fast = context->LoadDocumentFromMemory(rml_flexbox_basic_document_fast);
+    REQUIRE(document_fast);
+    document_fast->Show();
 
-		document_fast->SetInnerRML(rml_flexbox_basic_body);
-		context->Update();
-		context->Render();
+    document_fast->SetInnerRML(rml_flexbox_basic_body);
+    context->Update();
+    context->Render();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		// Finally, add a reference document based on layout with float boxes instead of flexbox. Uses the same body rml.
-		ElementDocument* document_float_reference = context->LoadDocumentFromMemory(rml_flexbox_basic_document_float_reference);
-		REQUIRE(document_float_reference);
-		document_float_reference->Show();
+    // Finally, add a reference document based on layout with float boxes instead of flexbox. Uses the same body rml.
+    ElementDocument* document_float_reference =
+        context->LoadDocumentFromMemory(rml_flexbox_basic_document_float_reference);
+    REQUIRE(document_float_reference);
+    document_float_reference->Show();
 
-		document_float_reference->SetInnerRML(rml_flexbox_basic_body);
-		context->Update();
-		context->Render();
+    document_float_reference->SetInnerRML(rml_flexbox_basic_body);
+    context->Update();
+    context->Render();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		bench.run("Update (unmodified)", [&] { context->Update(); });
+    bench.run("Update (unmodified)", [&] { context->Update(); });
 
-		bench.run("Render", [&] { context->Render(); });
+    bench.run("Render", [&] { context->Render(); });
 
-		bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_flexbox_scroll_body); });
+    bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_flexbox_scroll_body); });
 
-		bench.run("SetInnerRML + Update (float reference)", [&] {
-			document_float_reference->SetInnerRML(rml_flexbox_basic_body);
-			context->Update();
-		});
-		bench.run("SetInnerRML + Update (fast version)", [&] {
-			document_fast->SetInnerRML(rml_flexbox_basic_body);
-			context->Update();
-		});
-		bench.run("SetInnerRML + Update", [&] {
-			document->SetInnerRML(rml_flexbox_basic_body);
-			context->Update();
-		});
+    bench.run("SetInnerRML + Update (float reference)", [&] {
+      document_float_reference->SetInnerRML(rml_flexbox_basic_body);
+      context->Update();
+    });
+    bench.run("SetInnerRML + Update (fast version)", [&] {
+      document_fast->SetInnerRML(rml_flexbox_basic_body);
+      context->Update();
+    });
+    bench.run("SetInnerRML + Update", [&] {
+      document->SetInnerRML(rml_flexbox_basic_body);
+      context->Update();
+    });
 
-		bench.run("SetInnerRML + Update + Render (float reference)", [&] {
-			document_float_reference->SetInnerRML(rml_flexbox_basic_body);
-			context->Update();
-			context->Render();
-		});
-		bench.run("SetInnerRML + Update + Render (fast version)", [&] {
-			document_fast->SetInnerRML(rml_flexbox_basic_body);
-			context->Update();
-			context->Render();
-		});
-		bench.run("SetInnerRML + Update + Render", [&] {
-			document->SetInnerRML(rml_flexbox_basic_body);
-			context->Update();
-			context->Render();
-		});
+    bench.run("SetInnerRML + Update + Render (float reference)", [&] {
+      document_float_reference->SetInnerRML(rml_flexbox_basic_body);
+      context->Update();
+      context->Render();
+    });
+    bench.run("SetInnerRML + Update + Render (fast version)", [&] {
+      document_fast->SetInnerRML(rml_flexbox_basic_body);
+      context->Update();
+      context->Render();
+    });
+    bench.run("SetInnerRML + Update + Render", [&] {
+      document->SetInnerRML(rml_flexbox_basic_body);
+      context->Update();
+      context->Render();
+    });
 
-		document->Close();
-		document_fast->Close();
-		document_float_reference->Close();
-	}
+    document->Close();
+    document_fast->Close();
+    document_float_reference->Close();
+  }
 
-	{
-		nanobench::Bench bench;
-		bench.title("Flexbox mixed");
-		bench.relative(true);
+  {
+    nanobench::Bench bench;
+    bench.title("Flexbox mixed");
+    bench.relative(true);
 
-		ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_mixed_document);
-		REQUIRE(document);
-		document->Show();
+    ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_mixed_document);
+    REQUIRE(document);
+    document->Show();
 
-		document->SetInnerRML(rml_flexbox_mixed_body);
-		context->Update();
-		context->Render();
+    document->SetInnerRML(rml_flexbox_mixed_body);
+    context->Update();
+    context->Render();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		bench.run("Update (unmodified)", [&] { context->Update(); });
+    bench.run("Update (unmodified)", [&] { context->Update(); });
 
-		bench.run("Render", [&] { context->Render(); });
+    bench.run("Render", [&] { context->Render(); });
 
-		bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_flexbox_scroll_body); });
+    bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_flexbox_scroll_body); });
 
-		bench.run("SetInnerRML + Update", [&] {
-			document->SetInnerRML(rml_flexbox_mixed_body);
-			context->Update();
-		});
+    bench.run("SetInnerRML + Update", [&] {
+      document->SetInnerRML(rml_flexbox_mixed_body);
+      context->Update();
+    });
 
-		bench.run("SetInnerRML + Update + Render", [&] {
-			document->SetInnerRML(rml_flexbox_mixed_body);
-			context->Update();
-			context->Render();
-		});
+    bench.run("SetInnerRML + Update + Render", [&] {
+      document->SetInnerRML(rml_flexbox_mixed_body);
+      context->Update();
+      context->Render();
+    });
 
-		document->Close();
-	}
+    document->Close();
+  }
 
-	{
-		nanobench::Bench bench;
-		bench.title("Flexbox scroll");
-		bench.relative(true);
+  {
+    nanobench::Bench bench;
+    bench.title("Flexbox scroll");
+    bench.relative(true);
 
-		ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_scroll_document);
-		REQUIRE(document);
-		document->Show();
+    ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_scroll_document);
+    REQUIRE(document);
+    document->Show();
 
-		document->SetInnerRML(rml_flexbox_scroll_body);
-		context->Update();
-		context->Render();
+    document->SetInnerRML(rml_flexbox_scroll_body);
+    context->Update();
+    context->Render();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		bench.run("Update (unmodified)", [&] { context->Update(); });
+    bench.run("Update (unmodified)", [&] { context->Update(); });
 
-		bench.run("Render", [&] { context->Render(); });
+    bench.run("Render", [&] { context->Render(); });
 
-		bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_flexbox_scroll_body); });
+    bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_flexbox_scroll_body); });
 
-		bench.run("SetInnerRML + Update", [&] {
-			document->SetInnerRML(rml_flexbox_scroll_body);
-			context->Update();
-		});
+    bench.run("SetInnerRML + Update", [&] {
+      document->SetInnerRML(rml_flexbox_scroll_body);
+      context->Update();
+    });
 
-		bench.run("SetInnerRML + Update + Render", [&] {
-			document->SetInnerRML(rml_flexbox_scroll_body);
-			context->Update();
-			context->Render();
-		});
+    bench.run("SetInnerRML + Update + Render", [&] {
+      document->SetInnerRML(rml_flexbox_scroll_body);
+      context->Update();
+      context->Render();
+    });
 
-		document->Close();
-	}
+    document->Close();
+  }
 }
 
 static const String rml_flexbox_chatbox = R"(
@@ -495,53 +495,52 @@ static const String rml_flexbox_chatbox = R"(
 </rml>
 )";
 
-TEST_CASE("flexbox.chat")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("flexbox.chat") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	nanobench::Bench bench;
-	bench.title("Flexbox chat");
-	bench.relative(true);
-	// bench.epochs(100);
+  nanobench::Bench bench;
+  bench.title("Flexbox chat");
+  bench.relative(true);
+  // bench.epochs(100);
 
-	auto MakeFlexItemsRml = [](int number_items, const String& item_text) {
-		String rml;
-		for (int i = 0; i < number_items; i++)
-			rml += "<div>" + item_text + "</div>";
-		return rml;
-	};
+  auto MakeFlexItemsRml = [](int number_items, const String& item_text) {
+    String rml;
+    for (int i = 0; i < number_items; i++)
+      rml += "<div>" + item_text + "</div>";
+    return rml;
+  };
 
-	const String short_words =
-		MakeFlexItemsRml(10, "aaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaaaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaa");
-	const String long_words =
-		MakeFlexItemsRml(10, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  const String short_words = MakeFlexItemsRml(
+      10, "aaaaaaaaaaaaaaa aaaaaaaaaaaaaa aaaaaaaaa aaaaaaaaaaaa aaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaa");
+  const String long_words = MakeFlexItemsRml(
+      10, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-	// The flex items will essentially be formatted four times each:
-	//   - Two times during flex formatting, first to get their height, then to do their actual formatting.
-	//   - Then flex formatting is itself done twice, since the body adds a scrollbar, thereby modifying the available width.
-	// The long words take longer to format, since we do a naive approach to breaking up words in ElementText::GenerateLine, making us calculate
-	// string widths repeatedly. Removing the 'word-break' property should make the long word-case much faster.
-	ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_chatbox);
-	Element* chat = document->GetElementById("chat");
-	chat->SetInnerRML(short_words + long_words);
-	document->Show();
-	TestsShell::RenderLoop();
+  // The flex items will essentially be formatted four times each:
+  //   - Two times during flex formatting, first to get their height, then to do their actual formatting.
+  //   - Then flex formatting is itself done twice, since the body adds a scrollbar, thereby modifying the available width.
+  // The long words take longer to format, since we do a naive approach to breaking up words in ElementText::GenerateLine, making us calculate
+  // string widths repeatedly. Removing the 'word-break' property should make the long word-case much faster.
+  ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_chatbox);
+  Element* chat = document->GetElementById("chat");
+  chat->SetInnerRML(short_words + long_words);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	bench.run("Short words", [&] {
-		chat->SetInnerRML(short_words);
-		context->Update();
-		context->Render();
-		UI_FrameMark;
-	});
-	bench.run("Long words", [&] {
-		chat->SetInnerRML(long_words);
-		context->Update();
-		context->Render();
-		UI_FrameMark;
-	});
+  bench.run("Short words", [&] {
+    chat->SetInnerRML(short_words);
+    context->Update();
+    context->Render();
+    UI_FrameMark;
+  });
+  bench.run("Long words", [&] {
+    chat->SetInnerRML(long_words);
+    context->Update();
+    context->Render();
+    UI_FrameMark;
+  });
 
-	document->Close();
+  document->Close();
 }
 
 static const String rml_flexbox_shrink_to_fit = R"(
@@ -600,43 +599,42 @@ static const String rml_flexbox_shrink_to_fit = R"(
 </rml>
 )";
 
-TEST_CASE("flexbox.shrink-to-fit")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("flexbox.shrink-to-fit") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	nanobench::Bench bench;
-	bench.title("Flexbox shrink-to-fit");
-	bench.relative(true);
+  nanobench::Bench bench;
+  bench.title("Flexbox shrink-to-fit");
+  bench.relative(true);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_shrink_to_fit);
-	Element* basic = document->GetElementById("basic");
-	Element* nested = document->GetElementById("nested");
+  ElementDocument* document = context->LoadDocumentFromMemory(rml_flexbox_shrink_to_fit);
+  Element* basic = document->GetElementById("basic");
+  Element* nested = document->GetElementById("nested");
 
-	document->Show();
-	TestsShell::RenderLoop();
+  document->Show();
+  TestsShell::RenderLoop();
 
-	basic->SetProperty(PropertyId::Display, Style::Display::None);
-	nested->SetProperty(PropertyId::Display, Style::Display::None);
+  basic->SetProperty(PropertyId::Display, Style::Display::None);
+  nested->SetProperty(PropertyId::Display, Style::Display::None);
 
-	bench.run("Reference", [&] {
-		document->SetProperty(PropertyId::Display, Style::Display::None);
-		document->RemoveProperty(PropertyId::Display);
-		context->Update();
-		context->Render();
-	});
-	bench.run("Basic shrink-to-fit", [&] {
-		basic->RemoveProperty(PropertyId::Display);
-		nested->SetProperty(PropertyId::Display, Style::Display::None);
-		context->Update();
-		context->Render();
-	});
-	bench.run("Nested shrink-to-fit", [&] {
-		basic->SetProperty(PropertyId::Display, Style::Display::None);
-		nested->RemoveProperty(PropertyId::Display);
-		context->Update();
-		context->Render();
-	});
+  bench.run("Reference", [&] {
+    document->SetProperty(PropertyId::Display, Style::Display::None);
+    document->RemoveProperty(PropertyId::Display);
+    context->Update();
+    context->Render();
+  });
+  bench.run("Basic shrink-to-fit", [&] {
+    basic->RemoveProperty(PropertyId::Display);
+    nested->SetProperty(PropertyId::Display, Style::Display::None);
+    context->Update();
+    context->Render();
+  });
+  bench.run("Nested shrink-to-fit", [&] {
+    basic->SetProperty(PropertyId::Display, Style::Display::None);
+    nested->RemoveProperty(PropertyId::Display);
+    context->Update();
+    context->Render();
+  });
 
-	document->Close();
+  document->Close();
 }

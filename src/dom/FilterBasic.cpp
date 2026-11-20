@@ -6,46 +6,45 @@
 #include <ui/paint/RenderManager.h>
 namespace ui {
 
-bool FilterBasic::Initialise(const String& in_name, float in_value)
-{
-	name = in_name;
-	value = in_value;
-	return true;
+bool FilterBasic::Initialise(const String& in_name, float in_value) {
+  name = in_name;
+  value = in_value;
+  return true;
 }
 
-CompiledFilter FilterBasic::CompileFilter(Element* element) const
-{
-	return element->GetRenderManager()->CompileFilter(name, Dictionary{{"value", Variant(value)}});
+CompiledFilter FilterBasic::CompileFilter(Element* element) const {
+  return element->GetRenderManager()->CompileFilter(name, Dictionary{{"value", Variant(value)}});
 }
 
-FilterBasicInstancer::FilterBasicInstancer(ValueType value_type, const char* default_value)
-{
-	switch (value_type)
-	{
-	case ValueType::NumberPercent: ids.value = RegisterProperty("value", default_value).AddParser("number_percent").GetId(); break;
-	case ValueType::Angle: ids.value = RegisterProperty("value", default_value).AddParser("angle").GetId(); break;
-	}
+FilterBasicInstancer::FilterBasicInstancer(ValueType value_type, const char* default_value) {
+  switch (value_type) {
+    case ValueType::NumberPercent:
+      ids.value = RegisterProperty("value", default_value).AddParser("number_percent").GetId();
+      break;
+    case ValueType::Angle:
+      ids.value = RegisterProperty("value", default_value).AddParser("angle").GetId();
+      break;
+  }
 
-	RegisterShorthand("filter", "value", ShorthandType::FallThrough);
+  RegisterShorthand("filter", "value", ShorthandType::FallThrough);
 }
 
-SharedPtr<Filter> FilterBasicInstancer::InstanceFilter(const String& name, const PropertyDictionary& properties)
-{
-	const Property* p_value = properties.GetProperty(ids.value);
-	if (!p_value)
-		return nullptr;
+SharedPtr<Filter> FilterBasicInstancer::InstanceFilter(const String& name, const PropertyDictionary& properties) {
+  const Property* p_value = properties.GetProperty(ids.value);
+  if (!p_value)
+    return nullptr;
 
-	float value = p_value->Get<float>();
-	if (p_value->unit == Unit::PERCENT)
-		value *= 0.01f;
-	else if (p_value->unit == Unit::DEG)
-		value = ui::Math::DegreesToRadians(value);
+  float value = p_value->Get<float>();
+  if (p_value->unit == Unit::PERCENT)
+    value *= 0.01f;
+  else if (p_value->unit == Unit::DEG)
+    value = ui::Math::DegreesToRadians(value);
 
-	auto filter = MakeShared<FilterBasic>();
-	if (filter->Initialise(name, value))
-		return filter;
+  auto filter = MakeShared<FilterBasic>();
+  if (filter->Initialise(name, value))
+    return filter;
 
-	return nullptr;
+  return nullptr;
 }
 
 } // namespace ui

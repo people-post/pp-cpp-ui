@@ -44,38 +44,50 @@ static const String doc_end = R"(
 </rml>
 )";
 
-enum class SelectorOp { None, RemoveElementsByIds, InsertElementBefore, RemoveClasses, RemoveId, RemoveChecked, RemoveAttributeUnit, SetHover };
-
-struct QuerySelector {
-	QuerySelector(String selector, String expected_ids, int expect_num_warnings = 0, int expect_num_query_warnings = 0) :
-		selector(std::move(selector)), expected_ids(std::move(expected_ids)), expect_num_warnings(expect_num_warnings),
-		expect_num_query_warnings(expect_num_query_warnings)
-	{}
-	QuerySelector(String selector, String expected_ids, SelectorOp operation, String operation_argument, String expected_ids_after_operation) :
-		selector(std::move(selector)), expected_ids(std::move(expected_ids)), operation(operation), operation_argument(std::move(operation_argument)),
-		expected_ids_after_operation(std::move(expected_ids_after_operation))
-	{}
-	String selector;
-	String expected_ids;
-
-	// If this rule should fail to parse or otherwise produce warnings, set these to non-zero values.
-	int expect_num_warnings = 0, expect_num_query_warnings = 0;
-
-	// Optionally also test the selector after dynamically making a structural operation on the document.
-	SelectorOp operation = SelectorOp::None;
-	String operation_argument;
-	String expected_ids_after_operation;
+enum class SelectorOp {
+  None,
+  RemoveElementsByIds,
+  InsertElementBefore,
+  RemoveClasses,
+  RemoveId,
+  RemoveChecked,
+  RemoveAttributeUnit,
+  SetHover
 };
 
-static String NestedNot(int depth, const String& inner)
-{
-	String result;
-	for (int i = 0; i < depth; i++)
-		result += ":not(";
-	result += inner;
-	for (int i = 0; i < depth; i++)
-		result += ")";
-	return result;
+struct QuerySelector {
+  QuerySelector(String selector, String expected_ids, int expect_num_warnings = 0, int expect_num_query_warnings = 0)
+      : selector(std::move(selector)),
+        expected_ids(std::move(expected_ids)),
+        expect_num_warnings(expect_num_warnings),
+        expect_num_query_warnings(expect_num_query_warnings) {}
+  QuerySelector(String selector, String expected_ids, SelectorOp operation, String operation_argument,
+                String expected_ids_after_operation)
+      : selector(std::move(selector)),
+        expected_ids(std::move(expected_ids)),
+        operation(operation),
+        operation_argument(std::move(operation_argument)),
+        expected_ids_after_operation(std::move(expected_ids_after_operation)) {}
+  String selector;
+  String expected_ids;
+
+  // If this rule should fail to parse or otherwise produce warnings, set these to non-zero values.
+  int expect_num_warnings = 0, expect_num_query_warnings = 0;
+
+  // Optionally also test the selector after dynamically making a structural operation on the document.
+  SelectorOp operation = SelectorOp::None;
+  String operation_argument;
+  String expected_ids_after_operation;
+};
+
+static String NestedNot(int depth, const String& inner) {
+  String result;
+  for (int i = 0; i < depth; i++)
+    result += ":not(";
+  result += inner;
+  for (int i = 0; i < depth; i++)
+    result += ")";
+  return result;
 }
 
 // clang-format off
@@ -282,247 +294,224 @@ static const Vector<ContainsSelector> contains_selectors =
 
 // Recursively iterate through 'element' and all of its descendants to find all
 // elements matching a particular property used to tag matching selectors.
-static void GetMatchingIds(String& matching_ids, Element* element)
-{
-	String id = element->GetId();
-	if (!id.empty() && element->GetProperty<int>("drag") == (int)Style::Drag::Drag)
-	{
-		if (!matching_ids.empty())
-			matching_ids += ' ';
-		matching_ids += id;
-	}
+static void GetMatchingIds(String& matching_ids, Element* element) {
+  String id = element->GetId();
+  if (!id.empty() && element->GetProperty<int>("drag") == (int)Style::Drag::Drag) {
+    if (!matching_ids.empty())
+      matching_ids += ' ';
+    matching_ids += id;
+  }
 
-	for (int i = 0; i < element->GetNumChildren(); i++)
-	{
-		GetMatchingIds(matching_ids, element->GetChild(i));
-	}
+  for (int i = 0; i < element->GetNumChildren(); i++) {
+    GetMatchingIds(matching_ids, element->GetChild(i));
+  }
 }
 
 // Return the list of IDs that should match the above 'selectors.expected_ids'.
-static String ElementListToIds(const ElementList& elements)
-{
-	String result;
+static String ElementListToIds(const ElementList& elements) {
+  String result;
 
-	for (Element* element : elements)
-	{
-		result += element->GetId() + ' ';
-	}
+  for (Element* element : elements) {
+    result += element->GetId() + ' ';
+  }
 
-	if (!result.empty())
-		result.pop_back();
+  if (!result.empty())
+    result.pop_back();
 
-	return result;
+  return result;
 }
 
-static void RemoveElementsWithIds(ElementDocument* document, const String& remove_ids)
-{
-	StringList remove_id_list;
-	StringUtilities::ExpandString(remove_id_list, remove_ids, ' ');
-	for (const String& id : remove_id_list)
-	{
-		if (Element* element = document->GetElementById(id))
-			element->GetParentNode()->RemoveChild(element);
-	}
+static void RemoveElementsWithIds(ElementDocument* document, const String& remove_ids) {
+  StringList remove_id_list;
+  StringUtilities::ExpandString(remove_id_list, remove_ids, ' ');
+  for (const String& id : remove_id_list) {
+    if (Element* element = document->GetElementById(id))
+      element->GetParentNode()->RemoveChild(element);
+  }
 }
-static void RemoveClassesFromAllElements(ElementDocument* document, const String& remove_classes)
-{
-	StringList class_list;
-	StringUtilities::ExpandString(class_list, remove_classes, ' ');
-	for (const String& name : class_list)
-	{
-		ElementList element_list;
-		document->GetElementsByClassName(element_list, name);
-		for (Element* element : element_list)
-			element->SetClass(name, false);
-	}
+static void RemoveClassesFromAllElements(ElementDocument* document, const String& remove_classes) {
+  StringList class_list;
+  StringUtilities::ExpandString(class_list, remove_classes, ' ');
+  for (const String& name : class_list) {
+    ElementList element_list;
+    document->GetElementsByClassName(element_list, name);
+    for (Element* element : element_list)
+      element->SetClass(name, false);
+  }
 }
-static void InsertElementBefore(ElementDocument* document, const String& before_id)
-{
-	Element* element = document->GetElementById(before_id);
-	ElementPtr new_element = document->CreateElement("p");
-	new_element->SetId("Inserted");
-	element->GetParentNode()->InsertBefore(std::move(new_element), element);
+static void InsertElementBefore(ElementDocument* document, const String& before_id) {
+  Element* element = document->GetElementById(before_id);
+  ElementPtr new_element = document->CreateElement("p");
+  new_element->SetId("Inserted");
+  element->GetParentNode()->InsertBefore(std::move(new_element), element);
 }
 
-TEST_CASE("Selectors")
-{
-	Context* context = TestsShell::GetContext();
+TEST_CASE("Selectors") {
+  Context* context = TestsShell::GetContext();
 
-	SUBCASE("RCSS document selectors")
-	{
-		for (const QuerySelector& selector : query_selectors)
-		{
-			TestsShell::SetNumExpectedWarnings(selector.expect_num_warnings);
-			const String selector_css = selector.selector + " { drag: drag; } ";
-			const String document_string = doc_begin + selector_css + doc_end;
-			ElementDocument* document = context->LoadDocumentFromMemory(document_string);
+  SUBCASE("RCSS document selectors") {
+    for (const QuerySelector& selector : query_selectors) {
+      TestsShell::SetNumExpectedWarnings(selector.expect_num_warnings);
+      const String selector_css = selector.selector + " { drag: drag; } ";
+      const String document_string = doc_begin + selector_css + doc_end;
+      ElementDocument* document = context->LoadDocumentFromMemory(document_string);
 
-			// Update the context to settle any dirty state.
-			context->Update();
+      // Update the context to settle any dirty state.
+      context->Update();
 
-			String matching_ids;
-			GetMatchingIds(matching_ids, document);
-			CHECK_MESSAGE(matching_ids == selector.expected_ids, "Selector: " << selector.selector);
+      String matching_ids;
+      GetMatchingIds(matching_ids, document);
+      CHECK_MESSAGE(matching_ids == selector.expected_ids, "Selector: " << selector.selector);
 
-			// Also check validity of selectors after structural document changes.
-			if (selector.operation != SelectorOp::None)
-			{
-				String operation_str;
-				switch (selector.operation)
-				{
-				case SelectorOp::RemoveElementsByIds:
-					RemoveElementsWithIds(document, selector.operation_argument);
-					operation_str = "RemoveElementsByIds";
-					break;
-				case SelectorOp::InsertElementBefore:
-					InsertElementBefore(document, selector.operation_argument);
-					operation_str = "InsertElementBefore";
-					break;
-				case SelectorOp::RemoveClasses:
-					RemoveClassesFromAllElements(document, selector.operation_argument);
-					operation_str = "RemoveClasses";
-					break;
-				case SelectorOp::RemoveChecked:
-					document->GetElementById(selector.operation_argument)->RemoveAttribute("checked");
-					operation_str = "RemoveChecked";
-					break;
-				case SelectorOp::RemoveId:
-					document->GetElementById(selector.operation_argument)->SetId("");
-					operation_str = "RemoveId";
-					break;
-				case SelectorOp::RemoveAttributeUnit:
-					document->GetElementById(selector.operation_argument)->RemoveAttribute("unit");
-					operation_str = "RemoveAttributeUnit";
-					break;
-				case SelectorOp::SetHover:
-					document->GetElementById(selector.operation_argument)->SetPseudoClass("hover", true);
-					operation_str = "SetHover";
-					break;
-				case SelectorOp::None: break;
-				}
-				context->Update();
+      // Also check validity of selectors after structural document changes.
+      if (selector.operation != SelectorOp::None) {
+        String operation_str;
+        switch (selector.operation) {
+          case SelectorOp::RemoveElementsByIds:
+            RemoveElementsWithIds(document, selector.operation_argument);
+            operation_str = "RemoveElementsByIds";
+            break;
+          case SelectorOp::InsertElementBefore:
+            InsertElementBefore(document, selector.operation_argument);
+            operation_str = "InsertElementBefore";
+            break;
+          case SelectorOp::RemoveClasses:
+            RemoveClassesFromAllElements(document, selector.operation_argument);
+            operation_str = "RemoveClasses";
+            break;
+          case SelectorOp::RemoveChecked:
+            document->GetElementById(selector.operation_argument)->RemoveAttribute("checked");
+            operation_str = "RemoveChecked";
+            break;
+          case SelectorOp::RemoveId:
+            document->GetElementById(selector.operation_argument)->SetId("");
+            operation_str = "RemoveId";
+            break;
+          case SelectorOp::RemoveAttributeUnit:
+            document->GetElementById(selector.operation_argument)->RemoveAttribute("unit");
+            operation_str = "RemoveAttributeUnit";
+            break;
+          case SelectorOp::SetHover:
+            document->GetElementById(selector.operation_argument)->SetPseudoClass("hover", true);
+            operation_str = "SetHover";
+            break;
+          case SelectorOp::None:
+            break;
+        }
+        context->Update();
 
-				String matching_ids_after_operation;
-				GetMatchingIds(matching_ids_after_operation, document);
-				CHECK_MESSAGE(matching_ids_after_operation == selector.expected_ids_after_operation, "Selector: ", selector.selector,
-					"  Operation: ", operation_str, "  Argument: ", selector.operation_argument);
-			}
+        String matching_ids_after_operation;
+        GetMatchingIds(matching_ids_after_operation, document);
+        CHECK_MESSAGE(matching_ids_after_operation == selector.expected_ids_after_operation,
+                      "Selector: ", selector.selector, "  Operation: ", operation_str,
+                      "  Argument: ", selector.operation_argument);
+      }
 
-			context->UnloadDocument(document);
-		}
-	}
+      context->UnloadDocument(document);
+    }
+  }
 
-	SUBCASE("QuerySelector(All)")
-	{
-		const String document_string = doc_begin + doc_end;
-		ElementDocument* document = context->LoadDocumentFromMemory(document_string);
-		REQUIRE(document);
+  SUBCASE("QuerySelector(All)") {
+    const String document_string = doc_begin + doc_end;
+    ElementDocument* document = context->LoadDocumentFromMemory(document_string);
+    REQUIRE(document);
 
-		for (const QuerySelector& selector : query_selectors)
-		{
-			TestsShell::SetNumExpectedWarnings(selector.expect_num_query_warnings);
+    for (const QuerySelector& selector : query_selectors) {
+      TestsShell::SetNumExpectedWarnings(selector.expect_num_query_warnings);
 
-			ElementList elements;
-			document->QuerySelectorAll(elements, selector.selector);
-			String matching_ids = ElementListToIds(elements);
+      ElementList elements;
+      document->QuerySelectorAll(elements, selector.selector);
+      String matching_ids = ElementListToIds(elements);
 
-			Element* first_element = document->QuerySelector(selector.selector);
-			if (first_element)
-			{
-				CHECK_MESSAGE(first_element == elements[0], "QuerySelector does not return the first match of QuerySelectorAll.");
-			}
-			else
-			{
-				CHECK_MESSAGE(elements.empty(), "QuerySelector found nothing, while QuerySelectorAll found " << elements.size() << " element(s).");
-			}
+      Element* first_element = document->QuerySelector(selector.selector);
+      if (first_element) {
+        CHECK_MESSAGE(first_element == elements[0],
+                      "QuerySelector does not return the first match of QuerySelectorAll.");
+      } else {
+        CHECK_MESSAGE(elements.empty(), "QuerySelector found nothing, while QuerySelectorAll found " << elements.size()
+                                                                                                     << " element(s).");
+      }
 
-			CHECK_MESSAGE(matching_ids == selector.expected_ids, "QuerySelector: " << selector.selector);
-		}
-		context->UnloadDocument(document);
-	}
+      CHECK_MESSAGE(matching_ids == selector.expected_ids, "QuerySelector: " << selector.selector);
+    }
+    context->UnloadDocument(document);
+  }
 
-	SUBCASE("Closest")
-	{
-		const String document_string = doc_begin + doc_end;
-		ElementDocument* document = context->LoadDocumentFromMemory(document_string);
-		REQUIRE(document);
+  SUBCASE("Closest") {
+    const String document_string = doc_begin + doc_end;
+    ElementDocument* document = context->LoadDocumentFromMemory(document_string);
+    REQUIRE(document);
 
-		for (const ClosestSelector& selector : closest_selectors)
-		{
-			Element* start = document->GetElementById(selector.start_id);
-			REQUIRE(start);
+    for (const ClosestSelector& selector : closest_selectors) {
+      Element* start = document->GetElementById(selector.start_id);
+      REQUIRE(start);
 
-			Element* match = start->Closest(selector.selector);
-			const String match_id = match ? match->GetId() : "";
-			CHECK_MESSAGE(match_id == selector.expected_id, "Closest() selector '" << selector.selector << "' from " << selector.start_id);
-		}
-		context->UnloadDocument(document);
-	}
+      Element* match = start->Closest(selector.selector);
+      const String match_id = match ? match->GetId() : "";
+      CHECK_MESSAGE(match_id == selector.expected_id,
+                    "Closest() selector '" << selector.selector << "' from " << selector.start_id);
+    }
+    context->UnloadDocument(document);
+  }
 
-	SUBCASE("Matches")
-	{
-		const String document_string = doc_begin + doc_end;
-		ElementDocument* document = context->LoadDocumentFromMemory(document_string);
-		REQUIRE(document);
+  SUBCASE("Matches") {
+    const String document_string = doc_begin + doc_end;
+    ElementDocument* document = context->LoadDocumentFromMemory(document_string);
+    REQUIRE(document);
 
-		for (const MatchesSelector& selector : matches_selectors)
-		{
-			Element* start = document->GetElementById(selector.id);
-			REQUIRE(start);
+    for (const MatchesSelector& selector : matches_selectors) {
+      Element* start = document->GetElementById(selector.id);
+      REQUIRE(start);
 
-			bool matches = start->Matches(selector.selector);
-			CHECK_MESSAGE(matches == selector.expected_result, "Matches() selector '" << selector.selector << "' from " << selector.id);
-		}
-		context->UnloadDocument(document);
-	}
+      bool matches = start->Matches(selector.selector);
+      CHECK_MESSAGE(matches == selector.expected_result,
+                    "Matches() selector '" << selector.selector << "' from " << selector.id);
+    }
+    context->UnloadDocument(document);
+  }
 
-	SUBCASE("Scope")
-	{
-		const String document_string = doc_begin + doc_end;
-		ElementDocument* document = context->LoadDocumentFromMemory(document_string);
-		REQUIRE(document);
+  SUBCASE("Scope") {
+    const String document_string = doc_begin + doc_end;
+    ElementDocument* document = context->LoadDocumentFromMemory(document_string);
+    REQUIRE(document);
 
-		for (const ScopeSelector& selector : scope_selectors)
-		{
-			Element* start = (selector.scope_selector.empty() ? document : document->QuerySelector(selector.scope_selector));
-			REQUIRE(start);
+    for (const ScopeSelector& selector : scope_selectors) {
+      Element* start = (selector.scope_selector.empty() ? document : document->QuerySelector(selector.scope_selector));
+      REQUIRE(start);
 
-			ElementList elements;
-			start->QuerySelectorAll(elements, selector.selector);
-			String matching_ids = ElementListToIds(elements);
+      ElementList elements;
+      start->QuerySelectorAll(elements, selector.selector);
+      String matching_ids = ElementListToIds(elements);
 
-			Element* first_element = start->QuerySelector(selector.selector);
-			if (first_element)
-			{
-				CHECK_MESSAGE(first_element == elements[0], "QuerySelector does not return the first match of QuerySelectorAll.");
-			}
-			else
-			{
-				CHECK_MESSAGE(elements.empty(), "QuerySelector found nothing, while QuerySelectorAll found " << elements.size() << " element(s).");
-			}
+      Element* first_element = start->QuerySelector(selector.selector);
+      if (first_element) {
+        CHECK_MESSAGE(first_element == elements[0],
+                      "QuerySelector does not return the first match of QuerySelectorAll.");
+      } else {
+        CHECK_MESSAGE(elements.empty(), "QuerySelector found nothing, while QuerySelectorAll found " << elements.size()
+                                                                                                     << " element(s).");
+      }
 
-			CHECK_MESSAGE(matching_ids == selector.expected_ids, "QuerySelector: " << selector.selector);
-		}
-		context->UnloadDocument(document);
-	}
+      CHECK_MESSAGE(matching_ids == selector.expected_ids, "QuerySelector: " << selector.selector);
+    }
+    context->UnloadDocument(document);
+  }
 
-	SUBCASE("Contains")
-	{
-		const String document_string = doc_begin + doc_end;
-		ElementDocument* document = context->LoadDocumentFromMemory(document_string);
-		REQUIRE(document);
+  SUBCASE("Contains") {
+    const String document_string = doc_begin + doc_end;
+    ElementDocument* document = context->LoadDocumentFromMemory(document_string);
+    REQUIRE(document);
 
-		for (const ContainsSelector& selector : contains_selectors)
-		{
-			Element* element = document->GetElementById(selector.element_id);
-			Element* target = document->GetElementById(selector.target_id);
-			REQUIRE(element);
-			REQUIRE(target);
-			CHECK_MESSAGE(element->Contains(target) == selector.expected_result,
-				"'" << selector.element_id << "' contains '" << selector.target_id << "'");
-		}
-		context->UnloadDocument(document);
-	}
+    for (const ContainsSelector& selector : contains_selectors) {
+      Element* element = document->GetElementById(selector.element_id);
+      Element* target = document->GetElementById(selector.target_id);
+      REQUIRE(element);
+      REQUIRE(target);
+      CHECK_MESSAGE(element->Contains(target) == selector.expected_result,
+                    "'" << selector.element_id << "' contains '" << selector.target_id << "'");
+    }
+    context->UnloadDocument(document);
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

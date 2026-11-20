@@ -55,73 +55,69 @@ static const String document_escaping_tags = R"(
 </rml>
 )";
 
-TEST_CASE("XMLParser")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("XMLParser") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	// Style nodes should accept XML reserved characters, see https://github.com/mikke89/pp-cpp-ui/issues/341
+  // Style nodes should accept XML reserved characters, see https://github.com/mikke89/pp-cpp-ui/issues/341
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_xml_tags_in_css);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_xml_tags_in_css);
+  REQUIRE(document);
+  document->Show();
 
-	TestsShell::RenderLoop();
+  TestsShell::RenderLoop();
 
-	const Colourb background = document->GetComputedValues().background_color();
-	CHECK(background.red == 0);
-	CHECK(background.green == 0xff);
-	CHECK(background.blue == 0);
-	CHECK(background.alpha == 0xff);
+  const Colourb background = document->GetComputedValues().background_color();
+  CHECK(background.red == 0);
+  CHECK(background.green == 0xff);
+  CHECK(background.blue == 0);
+  CHECK(background.alpha == 0xff);
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("XMLParser.escaping")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("XMLParser.escaping") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_escaping);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_escaping);
+  REQUIRE(document);
+  document->Show();
 
-	TestsShell::RenderLoop();
+  TestsShell::RenderLoop();
 
-	auto element = document->GetElementById("p");
-	REQUIRE(element);
+  auto element = document->GetElementById("p");
+  REQUIRE(element);
 
-	CHECK(element->GetInnerRML() == "\xe2\x82\xac\xe2\x82\xac");
+  CHECK(element->GetInnerRML() == "\xe2\x82\xac\xe2\x82\xac");
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("XMLParser.escaping_tags")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("XMLParser.escaping_tags") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_escaping_tags);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_escaping_tags);
+  REQUIRE(document);
+  document->Show();
 
-	TestsShell::RenderLoop();
+  TestsShell::RenderLoop();
 
-	CHECK(document->GetNumChildren() == 1);
-	CHECK(document->GetFirstChild()->GetTagName() == "#text");
-	// Text-access should yield decoded value, while RML-access should yield encoded value
-	CHECK(static_cast<ElementText*>(document->GetFirstChild())->GetText() == "<p>&lt;span/&gt;</p>");
-	CHECK(document->GetInnerRML() == "&lt;p&gt;&amp;lt;span/&amp;gt;&lt;/p&gt;");
+  CHECK(document->GetNumChildren() == 1);
+  CHECK(document->GetFirstChild()->GetTagName() == "#text");
+  // Text-access should yield decoded value, while RML-access should yield encoded value
+  CHECK(static_cast<ElementText*>(document->GetFirstChild())->GetText() == "<p>&lt;span/&gt;</p>");
+  CHECK(document->GetInnerRML() == "&lt;p&gt;&amp;lt;span/&amp;gt;&lt;/p&gt;");
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("XMLParser.comments_and_cdata")
-{
-	const String document_source_pre = R"(
+TEST_CASE("XMLParser.comments_and_cdata") {
+  const String document_source_pre = R"(
 	<rml>
 	    <head>
 		<style>
@@ -131,78 +127,75 @@ TEST_CASE("XMLParser.comments_and_cdata")
 		</style>
 	    </head>
 	    <body>)";
-	const String document_source_post = R"(</body></rml>)";
+  const String document_source_post = R"(</body></rml>)";
 
-	struct TestCase {
-		String rml;
-		String expected_parsed_rml;
-	};
+  struct TestCase {
+    String rml;
+    String expected_parsed_rml;
+  };
 
-	const TestCase tests[] = {
-		{"<!-- <xyz> -->", ""},
-		{"<!--<xyz>-->", ""},
-		{"<!-- <xyz> ->-->", ""},
-		{"<!-- <xyz> -- >-->", ""},
-		{"<!-- <xyz> --->", ""},
-		{"<!-- <xyz> ---->", ""},
-		{"<!--- <xyz> ---->", ""},
-		{"<!-- <p> --><p>hello</p><!-- </p> -->", "<p>hello</p>"},
-		{"<![CDATA[hello]]>", "hello"},
-		{"<![CDATA[hello]]]>", "hello]"},
-		{"<![CDATA[hello]]world]]>", "hello]]world"},
-		{"<![CDATA[\"hello\"]]>", "&quot;hello&quot;"},
-		{"<![CDATA[<p>world</p>]]>", "<p>world</p>"},
-	};
+  const TestCase tests[] = {
+      {"<!-- <xyz> -->", ""},
+      {"<!--<xyz>-->", ""},
+      {"<!-- <xyz> ->-->", ""},
+      {"<!-- <xyz> -- >-->", ""},
+      {"<!-- <xyz> --->", ""},
+      {"<!-- <xyz> ---->", ""},
+      {"<!--- <xyz> ---->", ""},
+      {"<!-- <p> --><p>hello</p><!-- </p> -->", "<p>hello</p>"},
+      {"<![CDATA[hello]]>", "hello"},
+      {"<![CDATA[hello]]]>", "hello]"},
+      {"<![CDATA[hello]]world]]>", "hello]]world"},
+      {"<![CDATA[\"hello\"]]>", "&quot;hello&quot;"},
+      {"<![CDATA[<p>world</p>]]>", "<p>world</p>"},
+  };
 
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	for (const TestCase& test : tests)
-	{
-		ElementDocument* document = context->LoadDocumentFromMemory(document_source_pre + test.rml + document_source_post);
-		REQUIRE(document);
+  for (const TestCase& test : tests) {
+    ElementDocument* document = context->LoadDocumentFromMemory(document_source_pre + test.rml + document_source_post);
+    REQUIRE(document);
 
-		CHECK(document->GetInnerRML() == test.expected_parsed_rml);
+    CHECK(document->GetInnerRML() == test.expected_parsed_rml);
 
-		document->Close();
-		context->Update();
-	}
-	TestsShell::ShutdownShell();
+    document->Close();
+    context->Update();
+  }
+  TestsShell::ShutdownShell();
 }
 
-static int GetMaxDepth(Element* element)
-{
-	int max_child_depth = 0;
-	for (int i = 0; i < element->GetNumChildren(); i++)
-		max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
-	return 1 + max_child_depth;
+static int GetMaxDepth(Element* element) {
+  int max_child_depth = 0;
+  for (int i = 0; i < element->GetNumChildren(); i++)
+    max_child_depth = std::max(max_child_depth, GetMaxDepth(element->GetChild(i)));
+  return 1 + max_child_depth;
 }
 
-TEST_CASE("XMLParser.max_document_depth")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("XMLParser.max_document_depth") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	const int num_nested = 10000;
-	String document_rml = "<rml><body>";
-	for (int i = 0; i < num_nested; i++)
-		document_rml += "<div>";
-	for (int i = 0; i < num_nested; i++)
-		document_rml += "</div>";
-	document_rml += "<div id=\"after\"/></body></rml>";
+  const int num_nested = 10000;
+  String document_rml = "<rml><body>";
+  for (int i = 0; i < num_nested; i++)
+    document_rml += "<div>";
+  for (int i = 0; i < num_nested; i++)
+    document_rml += "</div>";
+  document_rml += "<div id=\"after\"/></body></rml>";
 
-	TestsShell::SetNumExpectedWarnings(1);
-	ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-	TestsShell::SetNumExpectedWarnings(0);
-	REQUIRE(document);
+  TestsShell::SetNumExpectedWarnings(1);
+  ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+  TestsShell::SetNumExpectedWarnings(0);
+  REQUIRE(document);
 
-	CHECK(GetMaxDepth(document) <= 512);
-	CHECK(GetMaxDepth(document) >= 500);
-	CHECK(document->GetElementById("after"));
+  CHECK(GetMaxDepth(document) <= 512);
+  CHECK(GetMaxDepth(document) >= 500);
+  CHECK(document->GetElementById("after"));
 
-	document->Show();
-	TestsShell::RenderLoop();
+  document->Show();
+  TestsShell::RenderLoop();
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }

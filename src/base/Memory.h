@@ -6,7 +6,7 @@ namespace ui {
 
 namespace Detail {
 
-	/**
+/**
 	    Basic stack allocator.
 
 	    A very cheap allocator which only moves a pointer up and down during allocation and deallocation, respectively.
@@ -16,21 +16,21 @@ namespace Detail {
 
 	    Do not use this class directly.
 	*/
-	class BasicStackAllocator {
-	public:
-		BasicStackAllocator(size_t N);
-		~BasicStackAllocator() noexcept;
+class BasicStackAllocator {
+public:
+  BasicStackAllocator(size_t N);
+  ~BasicStackAllocator() noexcept;
 
-		void* allocate(size_t alignment, size_t byte_size);
-		void deallocate(void* obj) noexcept;
+  void* allocate(size_t alignment, size_t byte_size);
+  void deallocate(void* obj) noexcept;
 
-	private:
-		const size_t N;
-		byte* data;
-		void* p;
-	};
+private:
+  const size_t N;
+  byte* data;
+  void* p;
+};
 
-	BasicStackAllocator& GetGlobalBasicStackAllocator();
+BasicStackAllocator& GetGlobalBasicStackAllocator();
 
 } /* namespace Detail */
 
@@ -49,27 +49,26 @@ namespace Detail {
 template <typename T>
 class GlobalStackAllocator {
 public:
-	using value_type = T;
+  using value_type = T;
 
-	GlobalStackAllocator() = default;
-	template <class U>
-	constexpr GlobalStackAllocator(const GlobalStackAllocator<U>&) noexcept
-	{}
+  GlobalStackAllocator() = default;
+  template <class U>
+  constexpr GlobalStackAllocator(const GlobalStackAllocator<U>&) noexcept {}
 
-	T* allocate(size_t num_objects) { return static_cast<T*>(Detail::GetGlobalBasicStackAllocator().allocate(alignof(T), num_objects * sizeof(T))); }
+  T* allocate(size_t num_objects) {
+    return static_cast<T*>(Detail::GetGlobalBasicStackAllocator().allocate(alignof(T), num_objects * sizeof(T)));
+  }
 
-	void deallocate(T* ptr, size_t) noexcept { Detail::GetGlobalBasicStackAllocator().deallocate(ptr); }
+  void deallocate(T* ptr, size_t) noexcept { Detail::GetGlobalBasicStackAllocator().deallocate(ptr); }
 };
 
 template <class T, class U>
-bool operator==(const GlobalStackAllocator<T>&, const GlobalStackAllocator<U>&)
-{
-	return true;
+bool operator==(const GlobalStackAllocator<T>&, const GlobalStackAllocator<U>&) {
+  return true;
 }
 template <class T, class U>
-bool operator!=(const GlobalStackAllocator<T>&, const GlobalStackAllocator<U>&)
-{
-	return false;
+bool operator!=(const GlobalStackAllocator<T>&, const GlobalStackAllocator<U>&) {
+  return false;
 }
 
 /**
@@ -81,26 +80,24 @@ bool operator!=(const GlobalStackAllocator<T>&, const GlobalStackAllocator<U>&)
 template <typename T, typename Alloc>
 class DynamicArray : Alloc, NonCopyMoveable {
 public:
-	DynamicArray(size_t N) : N(N)
-	{
-		p = Alloc::allocate(N);
-		for (size_t i = 0; i < N; i++)
-			new (p + i) T;
-	}
-	~DynamicArray() noexcept
-	{
-		for (size_t i = 0; i < N; i++)
-			p[i].~T();
-		Alloc::deallocate(p, N);
-	}
+  DynamicArray(size_t N) : N(N) {
+    p = Alloc::allocate(N);
+    for (size_t i = 0; i < N; i++)
+      new (p + i) T;
+  }
+  ~DynamicArray() noexcept {
+    for (size_t i = 0; i < N; i++)
+      p[i].~T();
+    Alloc::deallocate(p, N);
+  }
 
-	T* data() noexcept { return p; }
+  T* data() noexcept { return p; }
 
-	T& operator[](size_t i) noexcept { return p[i]; }
+  T& operator[](size_t i) noexcept { return p[i]; }
 
 private:
-	size_t N;
-	T* p;
+  size_t N;
+  T* p;
 };
 
 } // namespace ui

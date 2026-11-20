@@ -27,33 +27,31 @@ The quick brown fox jumps over the lazy dog.
 </rml>
 )";
 
-TEST_CASE("font_effect")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("font_effect") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	nanobench::Bench bench;
-	bench.title("Font effect");
-	bench.relative(true);
+  nanobench::Bench bench;
+  bench.title("Font effect");
+  bench.relative(true);
 
-	for (const char* effect_name : {"shadow", "blur", "outline", "glow"})
-	{
-		constexpr int effect_size = 8;
+  for (const char* effect_name : {"shadow", "blur", "outline", "glow"}) {
+    constexpr int effect_size = 8;
 
-		const String rml_document = CreateString(rml_font_effect_document.c_str(), effect_name, effect_size);
+    const String rml_document = CreateString(rml_font_effect_document.c_str(), effect_name, effect_size);
 
-		ElementDocument* document = context->LoadDocumentFromMemory(rml_document);
-		document->Show();
-		context->Update();
-		context->Render();
+    ElementDocument* document = context->LoadDocumentFromMemory(rml_document);
+    document->Show();
+    context->Update();
+    context->Render();
 
-		bench.run(effect_name, [&]() {
-			ui::ReleaseFontResources();
-			context->Render();
-		});
+    bench.run(effect_name, [&]() {
+      ui::ReleaseFontResources();
+      context->Render();
+    });
 
-		document->Close();
-	}
+    document->Close();
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

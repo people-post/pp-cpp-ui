@@ -40,97 +40,86 @@ static const String document_decorator_rml = R"(
 
 class DemoEventListenerInstancer : public ui::EventListenerInstancer {
 public:
-	ui::EventListener* InstanceEventListener(const ui::String& value, ui::Element* element) override;
-	bool has_exited = false;
+  ui::EventListener* InstanceEventListener(const ui::String& value, ui::Element* element) override;
+  bool has_exited = false;
 };
 
 class DemoEventListener : public ui::EventListener {
 public:
-	DemoEventListener(const ui::String& value, ui::Element* element, DemoEventListenerInstancer* instancer) :
-		value(value), element(element), instancer(instancer)
-	{}
+  DemoEventListener(const ui::String& value, ui::Element* element, DemoEventListenerInstancer* instancer)
+      : value(value), element(element), instancer(instancer) {}
 
-	void ProcessEvent(ui::Event& /*event*/) override
-	{
-		if (value == "exit")
-		{
-			// Test replacing the current element. Need to be careful with regard to lifetime issues. The event's
-			// current element will be destroyed, so we cannot use it after SetInnerRml(). The library should handle
-			// this case safely internally when propagating the event further.
-			Element* parent = element->GetParentNode();
-			parent->SetInnerRML("<button onclick='confirm_exit' onmouseout='cancel_exit' />");
-			if (Element* child = parent->GetChild(0))
-				child->Focus();
-		}
-		else if (value == "confirm_exit")
-		{
-			instancer->has_exited = true;
-		}
-		else if (value == "cancel_exit")
-		{
-			if (Element* parent = element->GetParentNode())
-				parent->SetInnerRML("<button id='exit' onclick='exit' />");
-		}
-	}
+  void ProcessEvent(ui::Event& /*event*/) override {
+    if (value == "exit") {
+      // Test replacing the current element. Need to be careful with regard to lifetime issues. The event's
+      // current element will be destroyed, so we cannot use it after SetInnerRml(). The library should handle
+      // this case safely internally when propagating the event further.
+      Element* parent = element->GetParentNode();
+      parent->SetInnerRML("<button onclick='confirm_exit' onmouseout='cancel_exit' />");
+      if (Element* child = parent->GetChild(0))
+        child->Focus();
+    } else if (value == "confirm_exit") {
+      instancer->has_exited = true;
+    } else if (value == "cancel_exit") {
+      if (Element* parent = element->GetParentNode())
+        parent->SetInnerRML("<button id='exit' onclick='exit' />");
+    }
+  }
 
-	void OnDetach(ui::Element* /*element*/) override { delete this; }
+  void OnDetach(ui::Element* /*element*/) override { delete this; }
 
 private:
-	ui::String value;
-	ui::Element* element;
-	DemoEventListenerInstancer* instancer;
+  ui::String value;
+  ui::Element* element;
+  DemoEventListenerInstancer* instancer;
 };
 
-ui::EventListener* DemoEventListenerInstancer::InstanceEventListener(const ui::String& value, ui::Element* element)
-{
-	return new DemoEventListener(value, element, this);
+ui::EventListener* DemoEventListenerInstancer::InstanceEventListener(const ui::String& value, ui::Element* element) {
+  return new DemoEventListener(value, element, this);
 }
 
-TEST_CASE("event_listener.replace_current_element")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("event_listener.replace_current_element") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	DemoEventListenerInstancer event_listener_instancer;
-	ui::Factory::RegisterEventListenerInstancer(&event_listener_instancer);
+  DemoEventListenerInstancer event_listener_instancer;
+  ui::Factory::RegisterEventListenerInstancer(&event_listener_instancer);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(document_decorator_rml, "assets/");
-	REQUIRE(document);
-	document->Show();
-	TestsShell::RenderLoop();
+  ElementDocument* document = context->LoadDocumentFromMemory(document_decorator_rml, "assets/");
+  REQUIRE(document);
+  document->Show();
+  TestsShell::RenderLoop();
 
-	context->ProcessMouseMove(32, 32, 0);
-	TestsShell::RenderLoop();
+  context->ProcessMouseMove(32, 32, 0);
+  TestsShell::RenderLoop();
 
-	context->ProcessMouseButtonDown(0, 0);
-	TestsShell::RenderLoop();
+  context->ProcessMouseButtonDown(0, 0);
+  TestsShell::RenderLoop();
 
-	context->ProcessMouseButtonUp(0, 0);
-	TestsShell::RenderLoop();
+  context->ProcessMouseButtonUp(0, 0);
+  TestsShell::RenderLoop();
 
-	bool exit_cancelled = false;
+  bool exit_cancelled = false;
 
-	SUBCASE("move_mouse_outside_button")
-	{
-		context->ProcessMouseMove(100, 100, 0);
-		TestsShell::RenderLoop();
-		exit_cancelled = true;
-	}
-	SUBCASE("move_mouse_within_button")
-	{
-		context->ProcessMouseMove(33, 33, 0);
-		TestsShell::RenderLoop();
-	}
+  SUBCASE("move_mouse_outside_button") {
+    context->ProcessMouseMove(100, 100, 0);
+    TestsShell::RenderLoop();
+    exit_cancelled = true;
+  }
+  SUBCASE("move_mouse_within_button") {
+    context->ProcessMouseMove(33, 33, 0);
+    TestsShell::RenderLoop();
+  }
 
-	context->ProcessMouseButtonDown(0, 0);
-	TestsShell::RenderLoop();
+  context->ProcessMouseButtonDown(0, 0);
+  TestsShell::RenderLoop();
 
-	context->ProcessMouseButtonUp(0, 0);
-	TestsShell::RenderLoop();
+  context->ProcessMouseButtonUp(0, 0);
+  TestsShell::RenderLoop();
 
-	CHECK(event_listener_instancer.has_exited == !exit_cancelled);
+  CHECK(event_listener_instancer.has_exited == !exit_cancelled);
 
-	document->Close();
-	ui::Factory::RegisterEventListenerInstancer(nullptr);
-	TestsShell::ShutdownShell();
+  document->Close();
+  ui::Factory::RegisterEventListenerInstancer(nullptr);
+  TestsShell::ShutdownShell();
 }

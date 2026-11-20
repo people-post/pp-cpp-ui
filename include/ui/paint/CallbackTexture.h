@@ -23,17 +23,19 @@ using CallbackTextureFunction = Function<bool(const CallbackTextureInterface& te
 
     Can be constructed through the render manager.
  */
-class UI_CORE_API CallbackTexture final : public UniqueRenderResource<CallbackTexture, StableVectorIndex, StableVectorIndex::Invalid> {
+class UI_CORE_API CallbackTexture final
+    : public UniqueRenderResource<CallbackTexture, StableVectorIndex, StableVectorIndex::Invalid> {
 public:
-	CallbackTexture() = default;
+  CallbackTexture() = default;
 
-	operator Texture() const;
+  operator Texture() const;
 
-	void Release();
+  void Release();
 
 private:
-	CallbackTexture(RenderManager* render_manager, StableVectorIndex resource_handle) : UniqueRenderResource(render_manager, resource_handle) {}
-	friend class RenderManager;
+  CallbackTexture(RenderManager* render_manager, StableVectorIndex resource_handle)
+      : UniqueRenderResource(render_manager, resource_handle) {}
+  friend class RenderManager;
 };
 
 /**
@@ -43,30 +45,31 @@ private:
  */
 class UI_CORE_API CallbackTextureInterface {
 public:
-	CallbackTextureInterface(RenderManager& render_manager, RenderInterface& render_interface, TextureHandle& texture_handle, Vector2i& dimensions);
+  CallbackTextureInterface(RenderManager& render_manager, RenderInterface& render_interface,
+                           TextureHandle& texture_handle, Vector2i& dimensions);
 
-	/// Generate texture from byte source.
-	/// @param[in] source Texture data in 8-bit RGBA (premultiplied) format.
-	/// @param[in] dimensions The width and height of the texture.
-	/// @return True on success.
-	bool GenerateTexture(Span<const byte> source, Vector2i dimensions) const;
+  /// Generate texture from byte source.
+  /// @param[in] source Texture data in 8-bit RGBA (premultiplied) format.
+  /// @param[in] dimensions The width and height of the texture.
+  /// @return True on success.
+  bool GenerateTexture(Span<const byte> source, Vector2i dimensions) const;
 
-	/// Store the current layer as a texture, so that it can be rendered with geometry later.
-	/// @note The texture will be extracted using the bounds defined by the active scissor region, thereby matching its size.
-	void SaveLayerAsTexture() const;
+  /// Store the current layer as a texture, so that it can be rendered with geometry later.
+  /// @note The texture will be extracted using the bounds defined by the active scissor region, thereby matching its size.
+  void SaveLayerAsTexture() const;
 
-	/// Manually set the texture directly from a custom texture handle.
-	/// @param[in] handle The handle that represents the texture.
-	/// @param[in] dimensions The width and height of the texture.
-	void SetTextureHandle(TextureHandle handle, Vector2i dimensions) const;
+  /// Manually set the texture directly from a custom texture handle.
+  /// @param[in] handle The handle that represents the texture.
+  /// @param[in] dimensions The width and height of the texture.
+  void SetTextureHandle(TextureHandle handle, Vector2i dimensions) const;
 
-	RenderManager& GetRenderManager() const;
+  RenderManager& GetRenderManager() const;
 
 private:
-	RenderManager& render_manager;
-	RenderInterface& render_interface;
-	TextureHandle& texture_handle;
-	Vector2i& dimensions;
+  RenderManager& render_manager;
+  RenderInterface& render_interface;
+  TextureHandle& texture_handle;
+  Vector2i& dimensions;
 };
 
 /**
@@ -76,21 +79,21 @@ private:
  */
 class UI_CORE_API CallbackTextureSource {
 public:
-	CallbackTextureSource() = default;
-	CallbackTextureSource(CallbackTextureFunction&& callback);
-	~CallbackTextureSource() = default;
+  CallbackTextureSource() = default;
+  CallbackTextureSource(CallbackTextureFunction&& callback);
+  ~CallbackTextureSource() = default;
 
-	CallbackTextureSource(const CallbackTextureSource&) = delete;
-	CallbackTextureSource& operator=(const CallbackTextureSource&) = delete;
+  CallbackTextureSource(const CallbackTextureSource&) = delete;
+  CallbackTextureSource& operator=(const CallbackTextureSource&) = delete;
 
-	CallbackTextureSource(CallbackTextureSource&& other) noexcept;
-	CallbackTextureSource& operator=(CallbackTextureSource&& other) noexcept;
+  CallbackTextureSource(CallbackTextureSource&& other) noexcept;
+  CallbackTextureSource& operator=(CallbackTextureSource&& other) noexcept;
 
-	Texture GetTexture(RenderManager& render_manager) const;
+  Texture GetTexture(RenderManager& render_manager) const;
 
 private:
-	CallbackTextureFunction callback;
-	mutable SmallUnorderedMap<RenderManager*, CallbackTexture> textures;
+  CallbackTextureFunction callback;
+  mutable SmallUnorderedMap<RenderManager*, CallbackTexture> textures;
 };
 
 } // namespace ui

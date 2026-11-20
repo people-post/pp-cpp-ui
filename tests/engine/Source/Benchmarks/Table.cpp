@@ -206,84 +206,82 @@ static const String rml_inline_block_element = R"(
 </table>
 )";
 
-TEST_CASE("table_basic")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("table_basic") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(rml_table_document);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(rml_table_document);
+  REQUIRE(document);
+  document->Show();
 
-	nanobench::Bench bench;
-	bench.title("Table basic");
-	bench.relative(true);
+  nanobench::Bench bench;
+  bench.title("Table basic");
+  bench.relative(true);
 
-	document->SetInnerRML(rml_table_element);
-	context->Update();
-	context->Render();
+  document->SetInnerRML(rml_table_element);
+  context->Update();
+  context->Render();
 
-	TestsShell::RenderLoop();
-	const String msg = TestsShell::GetRenderStats();
-	MESSAGE(msg);
+  TestsShell::RenderLoop();
+  const String msg = TestsShell::GetRenderStats();
+  MESSAGE(msg);
 
-	bench.run("Update (unmodified)", [&] { context->Update(); });
+  bench.run("Update (unmodified)", [&] { context->Update(); });
 
-	bench.run("Render", [&] { context->Render(); });
+  bench.run("Render", [&] { context->Render(); });
 
-	bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_table_element); });
+  bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_table_element); });
 
-	bench.run("SetInnerRML + Update", [&] {
-		document->SetInnerRML(rml_table_element);
-		context->Update();
-	});
+  bench.run("SetInnerRML + Update", [&] {
+    document->SetInnerRML(rml_table_element);
+    context->Update();
+  });
 
-	bench.run("SetInnerRML + Update + Render", [&] {
-		document->SetInnerRML(rml_table_element);
-		context->Update();
-		context->Render();
-	});
+  bench.run("SetInnerRML + Update + Render", [&] {
+    document->SetInnerRML(rml_table_element);
+    context->Update();
+    context->Render();
+  });
 
-	document->Close();
+  document->Close();
 }
 
-TEST_CASE("table_inline-block")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("table_inline-block") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(rml_inlineblock_document);
-	REQUIRE(document);
-	document->Show();
+  ElementDocument* document = context->LoadDocumentFromMemory(rml_inlineblock_document);
+  REQUIRE(document);
+  document->Show();
 
-	nanobench::Bench bench;
-	bench.title("Table inline-block");
-	bench.relative(true);
+  nanobench::Bench bench;
+  bench.title("Table inline-block");
+  bench.relative(true);
 
-	document->SetInnerRML(rml_inline_block_element);
-	context->Update();
-	context->Render();
+  document->SetInnerRML(rml_inline_block_element);
+  context->Update();
+  context->Render();
 
-	TestsShell::RenderLoop();
-	const String msg = TestsShell::GetRenderStats();
-	MESSAGE(msg);
+  TestsShell::RenderLoop();
+  const String msg = TestsShell::GetRenderStats();
+  MESSAGE(msg);
 
-	bench.run("Update (unmodified)", [&] { context->Update(); });
+  bench.run("Update (unmodified)", [&] { context->Update(); });
 
-	bench.run("Render", [&] { context->Render(); });
+  bench.run("Render", [&] { context->Render(); });
 
-	bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_inline_block_element); });
+  bench.run("SetInnerRML", [&] { document->SetInnerRML(rml_inline_block_element); });
 
-	bench.run("SetInnerRML + Update", [&] {
-		document->SetInnerRML(rml_inline_block_element);
-		context->Update();
-	});
+  bench.run("SetInnerRML + Update", [&] {
+    document->SetInnerRML(rml_inline_block_element);
+    context->Update();
+  });
 
-	bench.run("SetInnerRML + Update + Render", [&] {
-		document->SetInnerRML(rml_inline_block_element);
-		context->Update();
-		context->Render();
-	});
+  bench.run("SetInnerRML + Update + Render", [&] {
+    document->SetInnerRML(rml_inline_block_element);
+    context->Update();
+    context->Render();
+  });
 
-	document->Close();
+  document->Close();
 }

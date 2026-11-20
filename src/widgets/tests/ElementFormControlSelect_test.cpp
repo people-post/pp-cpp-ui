@@ -44,32 +44,29 @@ static const String data_model_doc_rml_post = R"(
 </rml>
 )";
 
-static String GetSelectValueRml(ElementFormControlSelect* select_element)
-{
-	for (int child_index = 0; child_index < select_element->GetNumChildren(true); child_index++)
-	{
-		Element* child = select_element->GetChild(child_index);
-		if (child->GetTagName() == "selectvalue")
-			return child->GetInnerRML();
-	}
+static String GetSelectValueRml(ElementFormControlSelect* select_element) {
+  for (int child_index = 0; child_index < select_element->GetNumChildren(true); child_index++) {
+    Element* child = select_element->GetChild(child_index);
+    if (child->GetTagName() == "selectvalue")
+      return child->GetInnerRML();
+  }
 
-	return String();
+  return String();
 }
 
-TEST_CASE("form.select.value")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("form.select.value") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	struct Test {
-		const String rml;
-		const String expected_value;
-		const String expected_value_rml;
-	};
+  struct Test {
+    const String rml;
+    const String expected_value;
+    const String expected_value_rml;
+  };
 
-	Test tests[] = {
-		{
-			R"(
+  Test tests[] = {
+      {
+          R"(
 			<select>
 				<option>A</option>
 				<option>B</option>
@@ -77,10 +74,10 @@ TEST_CASE("form.select.value")
 				<option>D</option>
 			</select>
 			)",
-			"", "A"},
+          "", "A"},
 
-		{
-			R"(
+      {
+          R"(
 			<select>
 				<option value="a">A</option>
 				<option>B</option>
@@ -88,10 +85,10 @@ TEST_CASE("form.select.value")
 				<option>D</option>
 			</select>
 			)",
-			"a", "A"},
+          "a", "A"},
 
-		{
-			R"(
+      {
+          R"(
 			<select value="z">
 				<option>A</option>
 				<option>B</option>
@@ -99,10 +96,10 @@ TEST_CASE("form.select.value")
 				<option>D</option>
 			</select>
 			)",
-			"", "A"},
+          "", "A"},
 
-		{
-			R"(
+      {
+          R"(
 			<select value="c">
 				<option value="a">A</option>
 				<option value="b">B</option>
@@ -110,10 +107,10 @@ TEST_CASE("form.select.value")
 				<option value="d">D</option>
 			</select>
 			)",
-			"c", "C"},
+          "c", "C"},
 
-		{
-			R"(
+      {
+          R"(
 			<select value="c">
 				<option value="a">A</option>
 				<option value="b">B</option>
@@ -121,10 +118,10 @@ TEST_CASE("form.select.value")
 				<option value="d" selected>D</option>
 			</select>
 			)",
-			"d", "D"},
+          "d", "D"},
 
-		{
-			R"(
+      {
+          R"(
 			<select value="c">
 				<option value="a" selected>A</option>
 				<option value="b">B</option>
@@ -132,10 +129,10 @@ TEST_CASE("form.select.value")
 				<option value="d">D</option>
 			</select>
 			)",
-			"a", "A"},
+          "a", "A"},
 
-		{
-			R"(
+      {
+          R"(
 			<select value="c">
 				<option value="a" selected>A</option>
 				<option value="b">B</option>
@@ -143,10 +140,10 @@ TEST_CASE("form.select.value")
 				<option value="d" selected>D</option>
 			</select>
 			)",
-			"d", "D"},
+          "d", "D"},
 
-		{
-			R"(
+      {
+          R"(
 			<select>
 				<option value="a">A</option>
 				<option value="b">B</option>
@@ -154,58 +151,56 @@ TEST_CASE("form.select.value")
 				<option value="d">D</option>
 			</select>
 			)",
-			"c", "C"},
-	};
+          "c", "C"},
+  };
 
-	ElementDocument* document = context->LoadDocumentFromMemory(basic_doc_rml);
-	REQUIRE(document);
+  ElementDocument* document = context->LoadDocumentFromMemory(basic_doc_rml);
+  REQUIRE(document);
 
-	document->Show();
-	context->Update();
-	context->Render();
+  document->Show();
+  context->Update();
+  context->Render();
 
-	int i = 0;
-	for (const Test& test : tests)
-	{
-		document->SetInnerRML(test.rml);
-		context->Update();
+  int i = 0;
+  for (const Test& test : tests) {
+    document->SetInnerRML(test.rml);
+    context->Update();
 
-		REQUIRE(document->GetNumChildren() == 1);
+    REQUIRE(document->GetNumChildren() == 1);
 
-		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(document->GetFirstChild());
-		REQUIRE(select_element);
+    ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(document->GetFirstChild());
+    REQUIRE(select_element);
 
-		const String value = select_element->GetValue();
-		const String selectvalue_rml = GetSelectValueRml(select_element);
+    const String value = select_element->GetValue();
+    const String selectvalue_rml = GetSelectValueRml(select_element);
 
-		CHECK_MESSAGE(value == test.expected_value, "Document " << i);
-		CHECK_MESSAGE(selectvalue_rml == test.expected_value_rml, "Document " << i);
+    CHECK_MESSAGE(value == test.expected_value, "Document " << i);
+    CHECK_MESSAGE(selectvalue_rml == test.expected_value_rml, "Document " << i);
 
-		i++;
-	}
+    i++;
+  }
 
-	document->Close();
-	TestsShell::ShutdownShell();
+  document->Close();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("form.select.data_binding")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("form.select.data_binding") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	struct Test {
-		const String rml;
-		const String expected_value;
-		const String expected_value_rml;
-	};
+  struct Test {
+    const String rml;
+    const String expected_value;
+    const String expected_value_rml;
+  };
 
-	int selected_index = 2;
-	String selected_value = "b";
-	Vector<String> values = {"a", "b", "c", "d"};
+  int selected_index = 2;
+  String selected_value = "b";
+  Vector<String> values = {"a", "b", "c", "d"};
 
-	Test tests[] = {
-		{
-			R"(
+  Test tests[] = {
+      {
+          R"(
 			<select data-value="selected_index">
 				<option value="0">A</option>
 				<option value="1">B</option>
@@ -213,10 +208,10 @@ TEST_CASE("form.select.data_binding")
 				<option value="3">D</option>
 			</select>
 			)",
-			"2", "C"},
+          "2", "C"},
 
-		{
-			R"(
+      {
+          R"(
 			<select data-value="selected_value">
 				<option value="a">A</option>
 				<option value="b">B</option>
@@ -224,10 +219,10 @@ TEST_CASE("form.select.data_binding")
 				<option value="d">D</option>
 			</select>
 			)",
-			"b", "B"},
+          "b", "B"},
 
-		{
-			R"(
+      {
+          R"(
 			<select>
 				<option value="a" data-attrif-selected="selected_value == 'a'">A</option>
 				<option value="b" data-attrif-selected="selected_value == 'b'">B</option>
@@ -235,187 +230,187 @@ TEST_CASE("form.select.data_binding")
 				<option value="d" data-attrif-selected="selected_value == 'd'">D</option>
 			</select>
 			)",
-			"b", "B"},
+          "b", "B"},
 
-		{
-			R"(
+      {
+          R"(
 			<select>
 				 <option data-for="s : subjects" data-attr-value="s" data-attrif-selected="s == selected_value">{{ s | to_upper }}</option>
 			</select>
 			)",
-			"b", "B"},
+          "b", "B"},
 
-		{
-			R"(
+      {
+          R"(
 			<select>
 				 <option data-for="s : subjects" data-attr-value="it_index" data-attrif-selected="it_index == selected_index">{{ s | to_upper }}</option>
 			</select>
 			)",
-			"2", "C"},
+          "2", "C"},
 
-		{
-			R"(
+      {
+          R"(
 			<select data-value="selected_value">
 				 <option data-for="s : subjects" data-attr-value="s">{{ s | to_upper }}</option>
 			</select>
 			)",
-			"b", "B"},
+          "b", "B"},
 
-		{
-			R"(
+      {
+          R"(
 			<select data-value="selected_index">
 				 <option data-for="s : subjects" data-attr-value="it_index">{{ s | to_upper }}</option>
 			</select>
 			)",
-			"2", "C"},
+          "2", "C"},
 
-		{
-			R"(
+      {
+          R"(
 			<select data-value="selected_index">
 				 <option data-for="s : subjects" data-attr-value="it_index"><p data-rml="s | to_upper"></p></option>
 			</select>
 			)",
-			"2", "<p data-rml=\"s | to_upper\">C</p>"},
-	};
+          "2", "<p data-rml=\"s | to_upper\">C</p>"},
+  };
 
-	DataModelConstructor constructor = context->CreateDataModel("select-test");
-	constructor.RegisterArray<Vector<String>>();
+  DataModelConstructor constructor = context->CreateDataModel("select-test");
+  constructor.RegisterArray<Vector<String>>();
 
-	constructor.Bind("selected_index", &selected_index);
-	constructor.Bind("selected_value", &selected_value);
-	constructor.Bind("subjects", &values);
+  constructor.Bind("selected_index", &selected_index);
+  constructor.Bind("selected_value", &selected_value);
+  constructor.Bind("subjects", &values);
 
-	int i = 0;
-	for (const Test& test : tests)
-	{
-		const String document_rml = data_model_doc_rml_pre + test.rml + data_model_doc_rml_post;
+  int i = 0;
+  for (const Test& test : tests) {
+    const String document_rml = data_model_doc_rml_pre + test.rml + data_model_doc_rml_post;
 
-		ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-		REQUIRE(document);
+    ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+    REQUIRE(document);
 
-		document->Show();
+    document->Show();
 
-		TestsShell::RenderLoop();
+    TestsShell::RenderLoop();
 
-		Element* wrapper_element = document->GetElementById("select_wrap");
-		REQUIRE(wrapper_element);
-		REQUIRE(wrapper_element->GetNumChildren() == 1);
+    Element* wrapper_element = document->GetElementById("select_wrap");
+    REQUIRE(wrapper_element);
+    REQUIRE(wrapper_element->GetNumChildren() == 1);
 
-		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
-		REQUIRE(select_element);
+    ElementFormControlSelect* select_element =
+        ui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
+    REQUIRE(select_element);
 
-		const String value = select_element->GetValue();
-		const String selectvalue_rml = GetSelectValueRml(select_element);
+    const String value = select_element->GetValue();
+    const String selectvalue_rml = GetSelectValueRml(select_element);
 
-		CHECK_MESSAGE(value == test.expected_value, "Document " << i);
-		CHECK_MESSAGE(selectvalue_rml == test.expected_value_rml, "Document " << i);
+    CHECK_MESSAGE(value == test.expected_value, "Document " << i);
+    CHECK_MESSAGE(selectvalue_rml == test.expected_value_rml, "Document " << i);
 
-		i++;
-		document->Close();
-	}
+    i++;
+    document->Close();
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }
 
-TEST_CASE("form.select.data-for")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("form.select.data-for") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	struct Test {
-		const String rml;
-		const String expected_value;
-		const String expected_value_rml;
-	};
+  struct Test {
+    const String rml;
+    const String expected_value;
+    const String expected_value_rml;
+  };
 
-	String selected_value = "b";
-	Vector<String> values = {"a", "b", "c", "d"};
+  String selected_value = "b";
+  Vector<String> values = {"a", "b", "c", "d"};
 
-	DataModelConstructor constructor = context->CreateDataModel("select-test");
-	constructor.RegisterArray<Vector<String>>();
+  DataModelConstructor constructor = context->CreateDataModel("select-test");
+  constructor.RegisterArray<Vector<String>>();
 
-	constructor.Bind("selected_value", &selected_value);
-	constructor.Bind("subjects", &values);
+  constructor.Bind("selected_value", &selected_value);
+  constructor.Bind("subjects", &values);
 
-	DataModelHandle handle = constructor.GetModelHandle();
+  DataModelHandle handle = constructor.GetModelHandle();
 
-	{
-		const String select_rml = R"(
+  {
+    const String select_rml = R"(
 			<select data-value="selected_value">
 				 <option data-for="s : subjects" data-attr-value="s">{{ s | to_upper }}</option>
 			</select>
 		)";
 
-		const String document_rml = data_model_doc_rml_pre + select_rml + data_model_doc_rml_post;
+    const String document_rml = data_model_doc_rml_pre + select_rml + data_model_doc_rml_post;
 
-		ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
-		REQUIRE(document);
+    ElementDocument* document = context->LoadDocumentFromMemory(document_rml);
+    REQUIRE(document);
 
-		document->Show();
+    document->Show();
 
-		Element* wrapper_element = document->GetElementById("select_wrap");
-		REQUIRE(wrapper_element);
-		REQUIRE(wrapper_element->GetNumChildren() == 1);
+    Element* wrapper_element = document->GetElementById("select_wrap");
+    REQUIRE(wrapper_element);
+    REQUIRE(wrapper_element->GetNumChildren() == 1);
 
-		ElementFormControlSelect* select_element = ui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
-		REQUIRE(select_element);
+    ElementFormControlSelect* select_element =
+        ui_dynamic_cast<ElementFormControlSelect*>(wrapper_element->GetFirstChild());
+    REQUIRE(select_element);
 
-		{
-			// TestsShell::RenderLoop();
+    {
+      // TestsShell::RenderLoop();
 
-			const String value = select_element->GetValue();
-			const int selected_index = select_element->GetSelection();
-			const String selectvalue_rml = GetSelectValueRml(select_element);
+      const String value = select_element->GetValue();
+      const int selected_index = select_element->GetSelection();
+      const String selectvalue_rml = GetSelectValueRml(select_element);
 
-			CHECK(value == "b");
-			CHECK(selected_index == 1);
-			CHECK(selectvalue_rml == "B");
-		}
+      CHECK(value == "b");
+      CHECK(selected_index == 1);
+      CHECK(selectvalue_rml == "B");
+    }
 
-		{
-			selected_value = "d";
-			handle.DirtyVariable("selected_value");
-			context->Update();
-			// TestsShell::RenderLoop();
+    {
+      selected_value = "d";
+      handle.DirtyVariable("selected_value");
+      context->Update();
+      // TestsShell::RenderLoop();
 
-			const String value = select_element->GetValue();
-			const int selected_index = select_element->GetSelection();
-			const String selectvalue_rml = GetSelectValueRml(select_element);
+      const String value = select_element->GetValue();
+      const int selected_index = select_element->GetSelection();
+      const String selectvalue_rml = GetSelectValueRml(select_element);
 
-			CHECK(value == "d");
-			CHECK(selected_index == 3);
-			CHECK(selectvalue_rml == "D");
-		}
+      CHECK(value == "d");
+      CHECK(selected_index == 3);
+      CHECK(selectvalue_rml == "D");
+    }
 
-		{
-			select_element->SetValue("a");
-			context->Update();
-			TestsShell::RenderLoop();
+    {
+      select_element->SetValue("a");
+      context->Update();
+      TestsShell::RenderLoop();
 
-			const String value = select_element->GetValue();
-			const int selected_index = select_element->GetSelection();
-			const String selectvalue_rml = GetSelectValueRml(select_element);
+      const String value = select_element->GetValue();
+      const int selected_index = select_element->GetSelection();
+      const String selectvalue_rml = GetSelectValueRml(select_element);
 
-			CHECK(selected_value == "a");
-			CHECK(value == "a");
-			CHECK(selected_index == 0);
-			CHECK(selectvalue_rml == "A");
-		}
+      CHECK(selected_value == "a");
+      CHECK(value == "a");
+      CHECK(selected_index == 0);
+      CHECK(selectvalue_rml == "A");
+    }
 
-		{
-			select_element->SetSelection(1);
-			context->Update();
-			TestsShell::RenderLoop();
+    {
+      select_element->SetSelection(1);
+      context->Update();
+      TestsShell::RenderLoop();
 
-			const String value = select_element->GetValue();
-			const int selected_index = select_element->GetSelection();
-			const String selectvalue_rml = GetSelectValueRml(select_element);
+      const String value = select_element->GetValue();
+      const int selected_index = select_element->GetSelection();
+      const String selectvalue_rml = GetSelectValueRml(select_element);
 
-			CHECK(selected_value == "b");
-			CHECK(value == "b");
-			CHECK(selected_index == 1);
-			CHECK(selectvalue_rml == "B");
-		}
+      CHECK(selected_value == "b");
+      CHECK(value == "b");
+      CHECK(selected_index == 1);
+      CHECK(selectvalue_rml == "B");
+    }
 
 #if 0
 		// These are not supported now, we may want to add support later.
@@ -453,10 +448,10 @@ TEST_CASE("form.select.data-for")
 		}
 #endif
 
-		document->Close();
-	}
+    document->Close();
+  }
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }
 
 static const String event_doc_rml = R"(
@@ -476,70 +471,67 @@ static const String event_doc_rml = R"(
 </rml>
 )";
 
-static void ClickAt(Context* context, int x, int y)
-{
-	context->Update();
-	context->Render();
-	context->ProcessMouseMove(x, y, 0);
-	context->Update();
-	context->Render();
-	context->ProcessMouseButtonDown(0, 0);
-	context->ProcessMouseButtonUp(0, 0);
-	context->Update();
-	context->Render();
+static void ClickAt(Context* context, int x, int y) {
+  context->Update();
+  context->Render();
+  context->ProcessMouseMove(x, y, 0);
+  context->Update();
+  context->Render();
+  context->ProcessMouseButtonDown(0, 0);
+  context->ProcessMouseButtonUp(0, 0);
+  context->Update();
+  context->Render();
 }
 
-TEST_CASE("form.select.event.change")
-{
-	Context* context = TestsShell::GetContext();
-	REQUIRE(context);
+TEST_CASE("form.select.event.change") {
+  Context* context = TestsShell::GetContext();
+  REQUIRE(context);
 
-	ElementDocument* document = context->LoadDocumentFromMemory(event_doc_rml);
-	REQUIRE(document);
+  ElementDocument* document = context->LoadDocumentFromMemory(event_doc_rml);
+  REQUIRE(document);
 
-	document->Show();
+  document->Show();
 
-	struct SelectionEventListener : public ui::EventListener {
-		void ProcessEvent(ui::Event& ev) override
-		{
-			num_events_processed += 1;
-			value = ev.GetParameter<ui::String>("value", "*empty*");
-		}
-		int num_events_processed = 0;
-		String value;
-	};
-	auto listener = MakeUnique<SelectionEventListener>();
-	document->GetElementById("sel")->AddEventListener(ui::EventId::Change, listener.get());
+  struct SelectionEventListener : public ui::EventListener {
+    void ProcessEvent(ui::Event& ev) override {
+      num_events_processed += 1;
+      value = ev.GetParameter<ui::String>("value", "*empty*");
+    }
+    int num_events_processed = 0;
+    String value;
+  };
+  auto listener = MakeUnique<SelectionEventListener>();
+  document->GetElementById("sel")->AddEventListener(ui::EventId::Change, listener.get());
 
-	ClickAt(context, 100, 20); // Open select
-	ClickAt(context, 100, 40); // Click option 'Cube'
-	CHECK(listener->num_events_processed == 0);
+  ClickAt(context, 100, 20); // Open select
+  ClickAt(context, 100, 40); // Click option 'Cube'
+  CHECK(listener->num_events_processed == 0);
 
-	ClickAt(context, 100, 20); // Open select
-	ClickAt(context, 100, 63); // Click option 'Cone'
-	CHECK(listener->num_events_processed == 1);
-	CHECK(listener->value == "");
+  ClickAt(context, 100, 20); // Open select
+  ClickAt(context, 100, 63); // Click option 'Cone'
+  CHECK(listener->num_events_processed == 1);
+  CHECK(listener->value == "");
 
-	ClickAt(context, 100, 20); // Open select again
-	ClickAt(context, 100, 85); // Click option 'Cylinder'
-	CHECK(listener->num_events_processed == 2);
-	CHECK(listener->value == "c");
+  ClickAt(context, 100, 20); // Open select again
+  ClickAt(context, 100, 85); // Click option 'Cylinder'
+  CHECK(listener->num_events_processed == 2);
+  CHECK(listener->value == "c");
 
-	ClickAt(context, 100, 20);             // Open select again
-	context->ProcessMouseMove(100, 85, 0); // Hover option 'Cylinder'
-	context->Update();
-	context->Render();
-	context->ProcessKeyDown(ui::Input::KI_DOWN, 0);
-	context->Update();
-	context->Render();
-	CHECK(listener->num_events_processed == 3);
-	CHECK(listener->value == "d");
-	context->ProcessKeyDown(ui::Input::KI_DOWN, 0);
-	context->Update();
-	context->Render();
-	CHECK(listener->num_events_processed == 3);
+  ClickAt(context, 100, 20);             // Open select again
+  context->ProcessMouseMove(100, 85, 0); // Hover option 'Cylinder'
+  context->Update();
+  context->Render();
+  context->ProcessKeyDown(ui::Input::KI_DOWN, 0);
+  context->Update();
+  context->Render();
+  CHECK(listener->num_events_processed == 3);
+  CHECK(listener->value == "d");
+  context->ProcessKeyDown(ui::Input::KI_DOWN, 0);
+  context->Update();
+  context->Render();
+  CHECK(listener->num_events_processed == 3);
 
-	document->Close();
+  document->Close();
 
-	TestsShell::ShutdownShell();
+  TestsShell::ShutdownShell();
 }

@@ -9,11 +9,11 @@ namespace ui {
 
 class PropertyParserFontEffect : public PropertyParser {
 public:
-	PropertyParserFontEffect();
-	virtual ~PropertyParserFontEffect();
+  PropertyParserFontEffect();
+  virtual ~PropertyParserFontEffect();
 
-	/// Called to parse a font-effect declaration.
-	bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const override;
+  /// Called to parse a font-effect declaration.
+  bool ParseValue(Property& property, const String& value, const ParameterMap& parameters) const override;
 };
 
 } // namespace ui

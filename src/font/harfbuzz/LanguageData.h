@@ -3,13 +3,13 @@
 #include <ui/Core.h>
 
 enum class TextFlowDirection {
-	LeftToRight,
-	RightToLeft,
+  LeftToRight,
+  RightToLeft,
 };
 
 struct LanguageData {
-	ui::String script_code;
-	TextFlowDirection text_flow_direction;
+  ui::String script_code;
+  TextFlowDirection text_flow_direction;
 };
 
 using LanguageDataMap = ui::UnorderedMap<ui::String, LanguageData>;

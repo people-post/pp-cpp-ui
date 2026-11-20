@@ -159,32 +159,28 @@ SharedPtr<StyleSheetContainer> user_agent_style_sheet;
 
 } // namespace
 
-bool UserAgentStyleSheet::Initialise()
-{
-	UI_ASSERT(!user_agent_style_sheet);
+bool UserAgentStyleSheet::Initialise() {
+  UI_ASSERT(!user_agent_style_sheet);
 
-	auto sheet = MakeShared<StyleSheetContainer>();
-	auto stream = MakeUnique<StreamMemory>((const byte*)user_agent_rcss, strlen(user_agent_rcss));
-	stream->SetSourceURL("user-agent.rcss");
+  auto sheet = MakeShared<StyleSheetContainer>();
+  auto stream = MakeUnique<StreamMemory>((const byte*)user_agent_rcss, strlen(user_agent_rcss));
+  stream->SetSourceURL("user-agent.rcss");
 
-	if (!sheet->LoadStyleSheetContainer(stream.get()))
-	{
-		Log::Message(Log::LT_ERROR, "Failed to load built-in user-agent stylesheet.");
-		return false;
-	}
+  if (!sheet->LoadStyleSheetContainer(stream.get())) {
+    Log::Message(Log::LT_ERROR, "Failed to load built-in user-agent stylesheet.");
+    return false;
+  }
 
-	user_agent_style_sheet = std::move(sheet);
-	return true;
+  user_agent_style_sheet = std::move(sheet);
+  return true;
 }
 
-void UserAgentStyleSheet::Shutdown()
-{
-	user_agent_style_sheet.reset();
+void UserAgentStyleSheet::Shutdown() {
+  user_agent_style_sheet.reset();
 }
 
-const StyleSheetContainer* UserAgentStyleSheet::GetStyleSheetContainer()
-{
-	return user_agent_style_sheet.get();
+const StyleSheetContainer* UserAgentStyleSheet::GetStyleSheetContainer() {
+  return user_agent_style_sheet.get();
 }
 
 } // namespace ui

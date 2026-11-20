@@ -8,188 +8,163 @@
 
 namespace ui {
 
-ElementFormControlTextArea::ElementFormControlTextArea(const String& tag) : ElementFormControl(tag)
-{
-	widget = MakeUnique<WidgetTextInputMultiLine>(this);
-	SetWordWrapProperties();
+ElementFormControlTextArea::ElementFormControlTextArea(const String& tag) : ElementFormControl(tag) {
+  widget = MakeUnique<WidgetTextInputMultiLine>(this);
+  SetWordWrapProperties();
 }
 
 ElementFormControlTextArea::~ElementFormControlTextArea() {}
 
-String ElementFormControlTextArea::GetValue() const
-{
-	return GetAttribute<String>("value", "");
+String ElementFormControlTextArea::GetValue() const {
+  return GetAttribute<String>("value", "");
 }
 
-void ElementFormControlTextArea::SetValue(const String& value)
-{
-	SetAttribute("value", value);
+void ElementFormControlTextArea::SetValue(const String& value) {
+  SetAttribute("value", value);
 }
 
-void ElementFormControlTextArea::SetNumColumns(int num_columns)
-{
-	SetAttribute<int>("cols", Math::Max(1, num_columns));
+void ElementFormControlTextArea::SetNumColumns(int num_columns) {
+  SetAttribute<int>("cols", Math::Max(1, num_columns));
 }
 
-int ElementFormControlTextArea::GetNumColumns() const
-{
-	return GetAttribute<int>("cols", 20);
+int ElementFormControlTextArea::GetNumColumns() const {
+  return GetAttribute<int>("cols", 20);
 }
 
-void ElementFormControlTextArea::SetNumRows(int num_rows)
-{
-	SetAttribute<int>("rows", Math::Max(1, num_rows));
+void ElementFormControlTextArea::SetNumRows(int num_rows) {
+  SetAttribute<int>("rows", Math::Max(1, num_rows));
 }
 
-int ElementFormControlTextArea::GetNumRows() const
-{
-	return GetAttribute<int>("rows", 2);
+int ElementFormControlTextArea::GetNumRows() const {
+  return GetAttribute<int>("rows", 2);
 }
 
-void ElementFormControlTextArea::SetMaxLength(int max_length)
-{
-	SetAttribute<int>("maxlength", max_length);
+void ElementFormControlTextArea::SetMaxLength(int max_length) {
+  SetAttribute<int>("maxlength", max_length);
 }
 
-int ElementFormControlTextArea::GetMaxLength() const
-{
-	return GetAttribute<int>("maxlength", -1);
+int ElementFormControlTextArea::GetMaxLength() const {
+  return GetAttribute<int>("maxlength", -1);
 }
 
-void ElementFormControlTextArea::SetWordWrap(bool word_wrap)
-{
-	if (word_wrap != GetWordWrap())
-	{
-		if (word_wrap)
-			RemoveAttribute("wrap");
-		else
-			SetAttribute("wrap", "nowrap");
-	}
+void ElementFormControlTextArea::SetWordWrap(bool word_wrap) {
+  if (word_wrap != GetWordWrap()) {
+    if (word_wrap)
+      RemoveAttribute("wrap");
+    else
+      SetAttribute("wrap", "nowrap");
+  }
 }
 
-bool ElementFormControlTextArea::GetWordWrap()
-{
-	String attribute = GetAttribute<String>("wrap", "");
-	return attribute != "nowrap";
+bool ElementFormControlTextArea::GetWordWrap() {
+  String attribute = GetAttribute<String>("wrap", "");
+  return attribute != "nowrap";
 }
 
-void ElementFormControlTextArea::Select()
-{
-	widget->Select();
+void ElementFormControlTextArea::Select() {
+  widget->Select();
 }
 
-void ElementFormControlTextArea::SetSelectionRange(int selection_start, int selection_end)
-{
-	widget->SetSelectionRange(selection_start, selection_end);
+void ElementFormControlTextArea::SetSelectionRange(int selection_start, int selection_end) {
+  widget->SetSelectionRange(selection_start, selection_end);
 }
 
-void ElementFormControlTextArea::GetSelection(int* selection_start, int* selection_end, String* selected_text) const
-{
-	widget->GetSelection(selection_start, selection_end, selected_text);
+void ElementFormControlTextArea::GetSelection(int* selection_start, int* selection_end, String* selected_text) const {
+  widget->GetSelection(selection_start, selection_end, selected_text);
 }
 
-void ElementFormControlTextArea::SetCompositionRange(int range_start, int range_end)
-{
-	widget->SetCompositionRange(range_start, range_end);
+void ElementFormControlTextArea::SetCompositionRange(int range_start, int range_end) {
+  widget->SetCompositionRange(range_start, range_end);
 }
 
-bool ElementFormControlTextArea::GetIntrinsicDimensions(Vector2f& dimensions, float& /*ratio*/)
-{
-	dimensions.x = (float)(GetNumColumns() * ElementUtilities::GetStringWidth(this, "m"));
-	displayed_rows = GetDisplayedRows();
-	dimensions.y = (float)displayed_rows * Math::Round(GetLineHeight());
+bool ElementFormControlTextArea::GetIntrinsicDimensions(Vector2f& dimensions, float& /*ratio*/) {
+  dimensions.x = (float)(GetNumColumns() * ElementUtilities::GetStringWidth(this, "m"));
+  displayed_rows = GetDisplayedRows();
+  dimensions.y = (float)displayed_rows * Math::Round(GetLineHeight());
 
-	return true;
+  return true;
 }
 
-int ElementFormControlTextArea::GetDisplayedRows() const
-{
-	const int rows = GetNumRows();
-	const int max_rows = GetAttribute<int>("max-rows", 0);
-	if (max_rows <= rows)
-		return rows;
-	return Math::Clamp(widget->GetNumLines(), rows, max_rows);
+int ElementFormControlTextArea::GetDisplayedRows() const {
+  const int rows = GetNumRows();
+  const int max_rows = GetAttribute<int>("max-rows", 0);
+  if (max_rows <= rows)
+    return rows;
+  return Math::Clamp(widget->GetNumLines(), rows, max_rows);
 }
 
-void ElementFormControlTextArea::OnUpdate()
-{
-	widget->OnUpdate();
+void ElementFormControlTextArea::OnUpdate() {
+  widget->OnUpdate();
 
-	// Grow or shrink with the text. Layout dirtied while formatting is ignored, so this is checked here.
-	if (displayed_rows != 0 && displayed_rows != GetDisplayedRows())
-		DirtyLayout();
+  // Grow or shrink with the text. Layout dirtied while formatting is ignored, so this is checked here.
+  if (displayed_rows != 0 && displayed_rows != GetDisplayedRows())
+    DirtyLayout();
 }
 
-void ElementFormControlTextArea::Render()
-{
-	Element::Render();
-	widget->OnRenderOverlays();
+void ElementFormControlTextArea::Render() {
+  Element::Render();
+  widget->OnRenderOverlays();
 }
 
-void ElementFormControlTextArea::OnRender()
-{
-	widget->OnRender();
+void ElementFormControlTextArea::OnRender() {
+  widget->OnRender();
 }
 
-void ElementFormControlTextArea::OnResize()
-{
-	widget->OnResize();
+void ElementFormControlTextArea::OnResize() {
+  widget->OnResize();
 }
 
-void ElementFormControlTextArea::OnLayout()
-{
-	widget->OnLayout();
+void ElementFormControlTextArea::OnLayout() {
+  widget->OnLayout();
 }
 
-void ElementFormControlTextArea::OnAttributeChange(const ElementAttributes& changed_attributes)
-{
-	ElementFormControl::OnAttributeChange(changed_attributes);
+void ElementFormControlTextArea::OnAttributeChange(const ElementAttributes& changed_attributes) {
+  ElementFormControl::OnAttributeChange(changed_attributes);
 
-	if (changed_attributes.find("wrap") != changed_attributes.end())
-		SetWordWrapProperties();
+  if (changed_attributes.find("wrap") != changed_attributes.end())
+    SetWordWrapProperties();
 
-	if (changed_attributes.find("rows") != changed_attributes.end() || changed_attributes.find("cols") != changed_attributes.end() ||
-		changed_attributes.find("max-rows") != changed_attributes.end())
-		DirtyLayout();
+  if (changed_attributes.find("rows") != changed_attributes.end() ||
+      changed_attributes.find("cols") != changed_attributes.end() ||
+      changed_attributes.find("max-rows") != changed_attributes.end())
+    DirtyLayout();
 
-	auto it = changed_attributes.find("maxlength");
-	if (it != changed_attributes.end())
-		widget->SetMaxLength(it->second.Get(-1));
+  auto it = changed_attributes.find("maxlength");
+  if (it != changed_attributes.end())
+    widget->SetMaxLength(it->second.Get(-1));
 
-	it = changed_attributes.find("value");
-	if (it != changed_attributes.end())
-		widget->SetValue(it->second.Get<String>());
+  it = changed_attributes.find("value");
+  if (it != changed_attributes.end())
+    widget->SetValue(it->second.Get<String>());
 }
 
-void ElementFormControlTextArea::OnPropertyChange(const PropertyIdSet& changed_properties)
-{
-	ElementFormControl::OnPropertyChange(changed_properties);
+void ElementFormControlTextArea::OnPropertyChange(const PropertyIdSet& changed_properties) {
+  ElementFormControl::OnPropertyChange(changed_properties);
 
-	// Some inherited properties require text formatting update, mainly font and line-height properties.
-	const PropertyIdSet changed_inherited_layout_properties = changed_properties &
-		(StyleSheetSpecification::GetRegisteredInheritedProperties() & StyleSheetSpecification::GetRegisteredPropertiesForcingLayout());
+  // Some inherited properties require text formatting update, mainly font and line-height properties.
+  const PropertyIdSet changed_inherited_layout_properties =
+      changed_properties & (StyleSheetSpecification::GetRegisteredInheritedProperties() &
+                            StyleSheetSpecification::GetRegisteredPropertiesForcingLayout());
 
-	if (!changed_inherited_layout_properties.Empty())
-		widget->ForceFormattingOnNextLayout();
+  if (!changed_inherited_layout_properties.Empty())
+    widget->ForceFormattingOnNextLayout();
 
-	if (changed_properties.Contains(PropertyId::Color) || changed_properties.Contains(PropertyId::BackgroundColor))
-		widget->UpdateSelectionColours();
+  if (changed_properties.Contains(PropertyId::Color) || changed_properties.Contains(PropertyId::BackgroundColor))
+    widget->UpdateSelectionColours();
 
-	if (changed_properties.Contains(PropertyId::CaretColor))
-		widget->GenerateCursor();
+  if (changed_properties.Contains(PropertyId::CaretColor))
+    widget->GenerateCursor();
 }
 
-void ElementFormControlTextArea::GetInnerRML(String& content) const
-{
-	content = GetValue();
+void ElementFormControlTextArea::GetInnerRML(String& content) const {
+  content = GetValue();
 }
 
-void ElementFormControlTextArea::SetWordWrapProperties()
-{
-	const bool word_wrap = GetWordWrap();
-	SetProperty(PropertyId::OverflowX, Property(word_wrap ? Style::Overflow::Hidden : Style::Overflow::Auto));
-	SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Auto));
-	SetProperty(PropertyId::WhiteSpace, Property(word_wrap ? Style::WhiteSpace::Prewrap : Style::WhiteSpace::Pre));
+void ElementFormControlTextArea::SetWordWrapProperties() {
+  const bool word_wrap = GetWordWrap();
+  SetProperty(PropertyId::OverflowX, Property(word_wrap ? Style::Overflow::Hidden : Style::Overflow::Auto));
+  SetProperty(PropertyId::OverflowY, Property(Style::Overflow::Auto));
+  SetProperty(PropertyId::WhiteSpace, Property(word_wrap ? Style::WhiteSpace::Prewrap : Style::WhiteSpace::Pre));
 }
 
 } // namespace ui

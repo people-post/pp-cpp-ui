@@ -21,25 +21,25 @@ class PropertiesIterator;
 
 class UI_CORE_API PropertiesIteratorView {
 public:
-	PropertiesIteratorView(UniquePtr<PropertiesIterator> ptr);
-	PropertiesIteratorView(PropertiesIteratorView&& other) noexcept;
-	PropertiesIteratorView& operator=(PropertiesIteratorView&& other) noexcept;
-	PropertiesIteratorView(const PropertiesIteratorView& other) = delete;
-	PropertiesIteratorView& operator=(const PropertiesIteratorView&) = delete;
-	~PropertiesIteratorView();
+  PropertiesIteratorView(UniquePtr<PropertiesIterator> ptr);
+  PropertiesIteratorView(PropertiesIteratorView&& other) noexcept;
+  PropertiesIteratorView& operator=(PropertiesIteratorView&& other) noexcept;
+  PropertiesIteratorView(const PropertiesIteratorView& other) = delete;
+  PropertiesIteratorView& operator=(const PropertiesIteratorView&) = delete;
+  ~PropertiesIteratorView();
 
-	PropertiesIteratorView& operator++();
+  PropertiesIteratorView& operator++();
 
-	// Returns true when all properties have been iterated over.
-	// @warning The getters and operator++ can only be called if the iterator is not at the end.
-	bool AtEnd() const;
+  // Returns true when all properties have been iterated over.
+  // @warning The getters and operator++ can only be called if the iterator is not at the end.
+  bool AtEnd() const;
 
-	PropertyId GetId() const;
-	const String& GetName() const;
-	const Property& GetProperty() const;
+  PropertyId GetId() const;
+  const String& GetName() const;
+  const Property& GetProperty() const;
 
 private:
-	UniquePtr<PropertiesIterator> ptr;
+  UniquePtr<PropertiesIterator> ptr;
 };
 
 } // namespace ui
