@@ -77,7 +77,7 @@ using namespace ui;  // or qualify ui::
 
 For a local sibling checkout (`../pp-cpp-ui`), pass `-DPP_CPP_UI_SOURCE_DIR=...`.
 
-Release flow: land on `develop` → merge to `main` → tag `vX.Y.Z` on `main`.
+Release flow: land on `main` (the only branch; there is no `develop`) → tag `vX.Y.Z` on `main`.
 
 ## Provenance
 
